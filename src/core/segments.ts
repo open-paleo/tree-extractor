@@ -216,16 +216,55 @@ function compareTopEdges(left: Box, right: Box): number
 }
 
 /**
+ * Whether any dark pixel lies in the gap between two collinear boxes, within a window across
+ * the line. A label box that cut a branch leaves its glyphs there; an empty gap means the two
+ * pieces were never one line.
+ *
+ * @param ink - All dark pixels of the image.
+ * @param first - The earlier box along the axis.
+ * @param second - The later box.
+ * @param alongX - Whether the boxes run along x.
+ * @param window - Extra rows (or columns) to include on each side of the boxes.
+ * @returns True when ink is found.
+ */
+function hasInkBetween(ink: Mask, first: Box, second: Box, alongX: boolean, window: number): boolean
+{
+    const x0 = alongX ? first.x1 : Math.max(0, Math.min(first.x0, second.x0) - window);
+    const x1 = alongX ? second.x0 : Math.min(ink.width, Math.max(first.x1, second.x1) + window);
+    const y0 = alongX ? Math.max(0, Math.min(first.y0, second.y0) - window) : first.y1;
+    const y1 = alongX ? Math.min(ink.height, Math.max(first.y1, second.y1) + window) : second.y0;
+
+    for (let y = y0; y < y1; y++)
+    {
+        for (let x = x0; x < x1; x++)
+        {
+            if (ink.data[y * ink.width + x] === 1)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
  * Joins collinear segments separated by a small gap, such as a branch cut by the white
  * background box of a support label. Two segments join when their cross-axis extents overlap
  * by at least half of the thinner one and the along-axis gap is at most maxGap.
  *
+ * Something must have cut the line: when the ink is given, a gap with no ink in it is a real
+ * gap, such as the space between a node's parent branch and the branch of a child two steps
+ * to the right in a staircase layout.
+ *
  * @param boxes - Segment boxes of one orientation.
  * @param alongX - Whether the segments run along x (horizontal).
  * @param maxGap - Largest gap to bridge, in pixels.
+ * @param ink - All dark pixels of the image, or null to bridge any gap.
+ * @param window - How far across the line to look for the ink that cut it.
  * @returns Merged boxes.
  */
-function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number): Array<Box>
+function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number, ink: Mask | null, window: number): Array<Box>
 {
     const merged = new Array<Box>();
 
@@ -262,7 +301,7 @@ function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number)
                     ? Math.min(first.y1 - first.y0, second.y1 - second.y0)
                     : Math.min(first.x1 - first.x0, second.x1 - second.x0);
 
-                if (overlap >= 0.5 * thinner)
+                if (overlap >= 0.5 * thinner && (ink === null || gap <= 0 || hasInkBetween(ink, first, second, alongX, window)))
                 {
                     first.x0 = Math.min(first.x0, second.x0);
                     first.y0 = Math.min(first.y0, second.y0);
@@ -400,12 +439,12 @@ export function extractSegments(
     const horizontals = new Array<Segment>();
     const verticals = new Array<Segment>();
 
-    for (const box of mergeCollinearBoxes(pieces, true, maxGap))
+    for (const box of mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2)))
     {
         horizontals.push({ id: `h${horizontals.length + 1}`, orientation: "horizontal", box });
     }
 
-    for (const box of mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap))
+    for (const box of mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2)))
     {
         verticals.push({ id: `v${verticals.length + 1}`, orientation: "vertical", box });
     }

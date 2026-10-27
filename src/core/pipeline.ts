@@ -346,13 +346,37 @@ function findStubExtensions(lineInk: Mask, boxes: Array<Box>, reach: number): Ar
 }
 
 /**
+ * Length of the horizontal segment that ends at a tip, or infinity when none is found (a tip
+ * added by hand has no segment).
+ *
+ * @param document - Extraction document.
+ * @param tip - Tip to measure.
+ * @returns Segment length in pixels.
+ */
+function measureTipPiece(document: ExtractionDocument, tip: Tip): number
+{
+    for (const segment of document.horizontals)
+    {
+        const { box } = segment;
+
+        if (Math.abs(box.x1 - tip.x) <= 1 && tip.y >= box.y0 - 1 && tip.y <= box.y1 + 1)
+        {
+            return box.x1 - box.x0;
+        }
+    }
+
+    return Infinity;
+}
+
+/**
  * Removes tips with no label text whose branch is shorter than a couple of glyphs: the crossbar
  * of a digit touching a vertical, the end of a clipped stub. Nodes left with one child collapse.
  *
  * @param document - Document updated in place.
  * @param maxLength - Longest branch a debris tip can have.
+ * @param minPiece - Shortest line piece a real tip can end; shorter pieces are debris whatever their reach.
  */
-function removeDebrisTips(document: ExtractionDocument, maxLength: number): void
+function removeDebrisTips(document: ExtractionDocument, maxLength: number, minPiece: number): void
 {
     const nodeById = new Map<string, TreeNode>();
     const tipById = new Map<string, Tip>();
@@ -367,8 +391,11 @@ function removeDebrisTips(document: ExtractionDocument, maxLength: number): void
     for (const tip of document.tips)
     {
         const parent = tip.parent === null ? undefined : nodeById.get(tip.parent);
+        // The piece of line that ends at the tip may be far shorter than its reach from the
+        // parent when it attached loosely: the tip of a clade bracket, or a fleck.
+        const piece = measureTipPiece(document, tip);
 
-        if (tip.textLine === null && parent !== undefined && tip.x - parent.x < maxLength)
+        if (tip.textLine === null && parent !== undefined && (tip.x - parent.x < maxLength || piece < minPiece))
         {
             debris.add(tip.id);
         }
@@ -502,7 +529,7 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
         }
     }
 
-    removeDebrisTips(document, maxLength);
+    removeDebrisTips(document, maxLength, 0);
 }
 
 /**
@@ -815,7 +842,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     };
 
     assignLabels(document);
-    removeDebrisTips(document, 3 * glyphHeight);
+    removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
     recordLap("assign");
 
     if (options.ocr)

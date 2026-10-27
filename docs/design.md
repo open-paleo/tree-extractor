@@ -50,7 +50,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    thick figure does not turn its verticals into stacks of short horizontals. Columns where the
    dark ink is glyph-high split a horizontal, label rows clip it, verticals inside label rows are
    dropped, and collinear pieces are rejoined across the gap a label's white background box cuts
-   (up to six glyph heights for horizontals, far less for verticals, which stack).
+   (up to six glyph heights for horizontals, far less for verticals, which stack), but only when
+   there is ink in the gap: an empty gap between a node's parent branch and a grandchild's
+   branch in a staircase layout is a real gap.
 4. **Trace.** Every vertical is a candidate node; every horizontal whose left end touches it is a
    child and the one whose right end touches it is its parent. A horizontal running straight
    through a vertical is split there (the middle child of an odd polytomy). Ends that fall short
@@ -91,9 +93,12 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
   locally), and Hattori 2026, Ke 2023, Raven 2018 and Yang 2025 under CC BY (images committed
   with attribution). Their gold trees were produced by the tool and checked against the image
   node by node at 3x zoom; Dieudonné's additionally by a vision model.
-- Debris tips remain the commonest flaw on real figures: a short unlabelled piece, or one that
-  claimed a support value as its label, hanging from a real node. They are flagged by the quality
-  checks and are one click to delete in the viewer, but they stop a case from being identical.
+- Debris tips were the commonest flaw on real figures: a short unlabelled piece, or one that
+  claimed a support value as its label, hanging from a real node. Unlabelled tips with a short
+  reach or a tiny line piece, and tips whose only label is a number or a scrap, are dropped;
+  anything left is flagged by the quality checks and is one click to delete in the viewer. Every
+  real benchmark figure is now identical, so the remaining risk is a real tip whose label was
+  not found being dropped as debris; such a tip is short and unlabelled, which the viewer shows.
 - On the synthetic benchmark, clean, serif, dense and most touching-label figures come out
   identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
   most of a short branch, or where a range bar extends left past the branch's start; both are
