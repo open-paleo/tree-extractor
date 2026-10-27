@@ -236,36 +236,53 @@ function compareTopEdges(left: Box, right: Box): number
 }
 
 /**
- * Whether any dark pixel lies in the gap between two collinear boxes, within a window across
- * the line. A label box that cut a branch leaves its glyphs there; an empty gap means the two
- * pieces were never one line.
+ * Whether dark pixels fill most of the gap between two collinear boxes, within a window across
+ * the line. A label box that cut a branch leaves its glyphs along the whole gap; a line
+ * crossing the gap, or nothing at all, means the two pieces were never one line.
  *
  * @param ink - All dark pixels of the image.
  * @param first - The earlier box along the axis.
  * @param second - The later box.
  * @param alongX - Whether the boxes run along x.
  * @param window - Extra rows (or columns) to include on each side of the boxes.
- * @returns True when ink is found.
+ * @param share - Share of the gap's columns (or rows) that must hold ink.
+ * @returns True when enough of the gap holds ink.
  */
-function hasInkBetween(ink: Mask, first: Box, second: Box, alongX: boolean, window: number): boolean
+function hasInkBetween(ink: Mask, first: Box, second: Box, alongX: boolean, window: number, share: number): boolean
 {
     const x0 = alongX ? first.x1 : Math.max(0, Math.min(first.x0, second.x0) - window);
     const x1 = alongX ? second.x0 : Math.min(ink.width, Math.max(first.x1, second.x1) + window);
     const y0 = alongX ? Math.max(0, Math.min(first.y0, second.y0) - window) : first.y1;
     const y1 = alongX ? Math.min(ink.height, Math.max(first.y1, second.y1) + window) : second.y0;
+    const steps = alongX ? x1 - x0 : y1 - y0;
+    let inked = 0;
 
-    for (let y = y0; y < y1; y++)
+    for (let step = 0; step < steps; step++)
     {
-        for (let x = x0; x < x1; x++)
+        let found = false;
+
+        if (alongX)
         {
-            if (ink.data[y * ink.width + x] === 1)
+            for (let y = y0; y < y1 && !found; y++)
             {
-                return true;
+                found = ink.data[y * ink.width + x0 + step] === 1;
             }
+        }
+        else
+        {
+            for (let x = x0; x < x1 && !found; x++)
+            {
+                found = ink.data[(y0 + step) * ink.width + x] === 1;
+            }
+        }
+
+        if (found)
+        {
+            inked++;
         }
     }
 
-    return false;
+    return steps > 0 && inked >= share * steps;
 }
 
 /**
@@ -282,9 +299,10 @@ function hasInkBetween(ink: Mask, first: Box, second: Box, alongX: boolean, wind
  * @param maxGap - Largest gap to bridge, in pixels.
  * @param ink - All dark pixels of the image, or null to bridge any gap.
  * @param window - How far across the line to look for the ink that cut it.
+ * @param gapInkShare - Share of a gap that must hold ink for the pieces to join.
  * @returns Merged boxes and the number of gaps bridged.
  */
-function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number, ink: Mask | null, window: number): MergeResult
+function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number, ink: Mask | null, window: number, gapInkShare: number): MergeResult
 {
     const merged = new Array<Box>();
     let bridged = 0;
@@ -322,7 +340,7 @@ function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number,
                     ? Math.min(first.y1 - first.y0, second.y1 - second.y0)
                     : Math.min(first.x1 - first.x0, second.x1 - second.x0);
 
-                if (overlap >= 0.5 * thinner && (ink === null || gap <= 0 || hasInkBetween(ink, first, second, alongX, window)))
+                if (overlap >= 0.5 * thinner && (ink === null || gap <= 0 || hasInkBetween(ink, first, second, alongX, window, gapInkShare)))
                 {
                     if (gap > 0)
                     {
@@ -392,6 +410,7 @@ export function extractSegments(
     ink: Mask | null = null,
     window = 0,
     textRows: Array<Box> = [],
+    gapInkShare = 0.4,
 ): SegmentSet
 {
     const horizontalMask = createDirectionalRunMask(lineArt, minHorizontalRun, true);
@@ -465,8 +484,8 @@ export function extractSegments(
     const horizontals = new Array<Segment>();
     const verticals = new Array<Segment>();
 
-    const mergedHorizontals = mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2));
-    const mergedVerticals = mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2));
+    const mergedHorizontals = mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2), gapInkShare);
+    const mergedVerticals = mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2), gapInkShare);
 
     for (const box of mergedHorizontals.boxes)
     {
@@ -491,4 +510,95 @@ export function extractSegments(
 function compareNumbers(left: number, right: number): number
 {
     return left - right;
+}
+
+/**
+ * Finds the short horizontal pieces that join one vertical to the next in a pectinate tree,
+ * where the steps between successive nodes are shorter than the shortest run that counts as a
+ * line. For each pair of verticals a few pixels apart whose spans overlap, the rows between them
+ * are checked for ink running from one to the other; such a row is a branch from the left
+ * vertical to the right one.
+ *
+ * @param lineInk - Line ink mask.
+ * @param verticals - Vertical segments.
+ * @param horizontals - Horizontal segments already found.
+ * @param maxGap - Largest gap between the verticals' edges to look across.
+ * @param thickness - Line thickness in pixels.
+ * @param nextId - First identifier number to use.
+ * @returns The connectors as horizontal segments.
+ */
+export function findShortConnectors(lineInk: Mask, verticals: Array<Segment>, horizontals: Array<Segment>, maxGap: number, thickness: number, nextId: number): Array<Segment>
+{
+    const { width, data } = lineInk;
+    const found = new Array<Segment>();
+    let id = nextId;
+
+    // A row already covered by a horizontal segment between the two verticals is that
+    // segment's own business: a branch passing through, not a missing connector.
+    function isCovered(x0: number, x1: number, y: number): boolean
+    {
+        for (const segment of horizontals)
+        {
+            const { box } = segment;
+
+            if (box.x0 <= x0 + 1 && box.x1 >= x1 - 1 && y >= box.y0 - 1 && y < box.y1 + 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    for (const left of verticals)
+    {
+        for (const right of verticals)
+        {
+            const gap = right.box.x0 - left.box.x1;
+
+            if (left === right || gap < 1 || gap > maxGap)
+            {
+                continue;
+            }
+
+            const top = Math.max(left.box.y0, right.box.y0);
+            const bottom = Math.min(left.box.y1, right.box.y1);
+
+            if (bottom - top < thickness)
+            {
+                continue;
+            }
+
+            let runStart = -1;
+
+            for (let y = top; y <= bottom; y++)
+            {
+                let inked = y < bottom;
+
+                for (let x = left.box.x1; x < right.box.x0 && inked; x++)
+                {
+                    inked = data[y * width + x] === 1;
+                }
+
+                if (inked && runStart < 0)
+                {
+                    runStart = y;
+                }
+                else if (!inked && runStart >= 0)
+                {
+                    const half = Math.max(1, Math.round(thickness / 2));
+                    const center = Math.round((runStart + y - 1) / 2);
+
+                    if (!isCovered(left.box.x1, right.box.x0, center))
+                    {
+                        found.push({ id: `h${id++}`, orientation: "horizontal", box: { x0: left.box.x0, y0: center - half, x1: right.box.x1, y1: center + half + 1 } });
+                    }
+
+                    runStart = -1;
+                }
+            }
+        }
+    }
+
+    return found;
 }

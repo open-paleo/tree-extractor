@@ -857,6 +857,7 @@ export function traceRectangularTree(
     labelReach = 0,
     labelRows: Array<Box> = [],
     gluedReach = 0,
+    connectors: Set<string> = new Set<string>(),
 ): TraceResult
 {
     const issues = new Array<QcIssue>();
@@ -935,6 +936,23 @@ export function traceRectangularTree(
         }
 
         candidate.parents = primary === null ? [] : [primary];
+    }
+
+    // A connector that found no vertical at its right end joins nothing; it is taken off its
+    // left vertical rather than left to become a tip.
+    for (const branch of branches)
+    {
+        if (branch.right === null && branch.left !== null && connectors.has(branch.segment))
+        {
+            const index = branch.left.children.indexOf(branch);
+
+            if (index >= 0)
+            {
+                branch.left.children.splice(index, 1);
+            }
+
+            branch.left = null;
+        }
     }
 
     const tipBranches = new Array<Branch>();

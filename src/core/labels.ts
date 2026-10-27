@@ -68,12 +68,17 @@ export function assignLabels(document: ExtractionDocument): void
 
     for (const tip of document.tips)
     {
+        // A tip moved to the far side of a shape may now stand inside its label row's box, when
+        // the shape touches the label and the two became one glyph; the row may then start as
+        // far back as the branch end did.
+        const reachBack = 1.5 * glyph + (tip.extendedFrom === undefined ? 0 : tip.x - tip.extendedFrom);
+
         for (const line of document.textLines)
         {
             const center = (line.box.y0 + line.box.y1) / 2;
             const offset = line.box.x0 - tip.x;
 
-            if (isLabelSized(line, glyph) && Math.abs(center - tip.y) <= 0.8 * glyph && offset >= -1.5 * glyph && offset <= 5 * glyph)
+            if (isLabelSized(line, glyph) && Math.abs(center - tip.y) <= 0.8 * glyph && offset >= -reachBack && offset <= 5 * glyph)
             {
                 tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(center - tip.y) });
             }
@@ -196,6 +201,15 @@ function chooseMatch(label: string | null, names: Array<string>, knownNames: Arr
         return null;
     }
 
+    // A tip printed in capitals is a collapsed clade (COELURIDAE), not a taxon with a typo;
+    // it keeps its printed name unless a list has it exactly.
+    if (isCladeName(label))
+    {
+        const exact = names.length === 0 ? null : matchName(label, names);
+
+        return exact !== null && exact.similarity >= 0.98 ? exact : null;
+    }
+
     const own = names.length === 0 ? null : matchName(label, names);
 
     if (own !== null && own.accepted)
@@ -211,6 +225,20 @@ function chooseMatch(label: string | null, names: Array<string>, knownNames: Arr
     }
 
     return own ?? known;
+}
+
+/**
+ * Whether a label is set in capitals, as collapsed clades are: five or more letters, none of
+ * them lower case.
+ *
+ * @param label - Cleaned label.
+ * @returns True for a name in capitals.
+ */
+export function isCladeName(label: string): boolean
+{
+    const letters = label.replace(/[^A-Za-z]/g, "");
+
+    return letters.length >= 5 && letters === letters.toUpperCase();
 }
 
 /**

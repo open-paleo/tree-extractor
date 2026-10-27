@@ -273,6 +273,17 @@ const knownNames = fs.existsSync(knownNamesPath) ? fs.readFileSync(knownNamesPat
 const caseDirs = new Array<string>();
 
 const holdout = process.argv.includes("--holdout");
+const overrides: Record<string, unknown> = {};
+
+for (const argument of process.argv)
+{
+    if (argument.startsWith("--set="))
+    {
+        const [key, value] = argument.slice("--set=".length).split("=");
+        overrides[key] = JSON.parse(value);
+    }
+}
+
 const roots = holdout ? [path.join(benchDir, "holdout", "cases")] : [path.join(benchDir, "cases"), path.join(benchDir, "generated", "cases")];
 
 for (const root of roots)
@@ -351,7 +362,7 @@ for (const caseDir of caseDirs)
 
     try
     {
-        document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null });
+        document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null, parameters: overrides });
     }
     catch (error)
     {
@@ -384,7 +395,20 @@ for (const caseDir of caseDirs)
         continue;
     }
 
-    const comparison = compareTrees(parseNewick(goldText), parseNewick(newick));
+    let goldTree;
+
+    try
+    {
+        goldTree = parseNewick(goldText);
+    }
+    catch (error)
+    {
+        console.log(`gold tree does not parse: ${error instanceof Error ? error.message : String(error)}`);
+        coldRows.push({ name: caseName, tips: document.tips.length, inTree: 0, matched: 0, names: names.length, warnings: 0, errors: 1 });
+        continue;
+    }
+
+    const comparison = compareTrees(goldTree, parseNewick(newick));
     const profileCheck = benchCase.profile === undefined ? null : checkProfile(benchCase.profile, document.profile);
     summary.push({
         name: caseName,

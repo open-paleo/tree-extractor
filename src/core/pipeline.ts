@@ -7,7 +7,9 @@ import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverri
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
+import { chooseRoot } from "./tree.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
+import { extendTipsThroughMarkers, findFatShapes, keepSmallShapes, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -26,9 +28,9 @@ import {
     unionMask,
 } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
-import { extractSegments } from "./segments.ts";
+import { extractSegments, findShortConnectors } from "./segments.ts";
 import { traceRectangularTree } from "./tracer.ts";
-import { assignLabels, readLabels } from "./labels.ts";
+import { assignLabels, readLabels, isCladeName } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
 import { normalizeName, scoreName } from "./matching.ts";
 import { clampBox, cropImage, translateDocument } from "./geometry.ts";
@@ -139,6 +141,37 @@ export type Parameters = {
     textMinY: number;
 
     /**
+     * Luminance below which a colored pixel counts as dark enough to be a line or a marker.
+     */
+    coloredThreshold: number;
+
+    /**
+     * Chroma a dark pixel must exceed to count as colored ink; JPEG fringes along black lines
+     * on tinted backgrounds stay below it.
+     */
+    coloredMinChroma: number;
+
+    /**
+     * Half-width of the erosion that tells a fat colored shape from a thin colored line.
+     */
+    markerRadius: number;
+
+    /**
+     * Whether to add the short connectors between close verticals of a pectinate tree.
+     */
+    shortConnectors: boolean;
+
+    /**
+     * Whether a tip's end moves through a solid shape or a colored marker it touches.
+     */
+    extendThroughShapes: boolean;
+
+    /**
+     * Share of a gap's columns that must hold ink before two collinear pieces are joined.
+     */
+    gapInkShare: number;
+
+    /**
      * Profile values fixed by the caller instead of measured.
      */
     profileOverrides: ProfileOverrides;
@@ -166,6 +199,12 @@ export const defaultParameters: Parameters = {
     ocrScale: 3,
     ocrGlyphTarget: 45,
     textMinY: 0,
+    coloredThreshold: 150,
+    coloredMinChroma: 100,
+    markerRadius: 4,
+    shortConnectors: false,
+    extendThroughShapes: true,
+    gapInkShare: 0.4,
     profileOverrides: {},
 };
 
@@ -236,6 +275,11 @@ export type PreparedMasks = {
     glyphMask: Mask;
 
     /**
+     * Fat colored shapes: range ovals, markers and fills, kept out of the line ink.
+     */
+    markers: Mask;
+
+    /**
      * Whether the strict text threshold broke letters into fragments.
      */
     fragmented: boolean;
@@ -267,7 +311,10 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
 {
     const gray = convertToGray(image);
     let textInk = createDarkMask(image, parameters.inkThreshold, false, parameters.maxChroma);
-    const strongInk = createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma);
+    // Lines drawn in color join the line ink; colored markers and fills stay out of it and are
+    // kept aside, since a tip's branch may end at one and its label lie beyond it.
+    const colored = splitColoredInk(image, parameters.coloredThreshold, parameters.coloredMinChroma, parameters.markerRadius);
+    const strongInk = unionMask(createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma), colored.thin);
 
     // A rough text pass learns the glyph size and finds glyph pixels to keep out of the line art.
     // The runs stripped as line art must be longer than a letter stroke, so when the first pass
@@ -319,7 +366,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
-    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, fragmented, widened, glyphHeight, roughLines: rough.lines };
+    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, fragmented, widened, glyphHeight, roughLines: rough.lines };
 }
 
 /**
@@ -598,7 +645,7 @@ function assignLeftoverNames(document: ExtractionDocument, names: Array<string>)
         {
             taken.add(tip.match.name);
         }
-        else if (tip.label !== null)
+        else if (tip.label !== null && !isCladeName(tip.label))
         {
             open.push(tip);
         }
@@ -786,7 +833,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     }
 
     announce("Preparing masks");
-    const { gray, textInk, lineInk, glyphMask, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
+    const { gray, textInk, lineInk, glyphMask, markers, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
     announce("Finding segments");
 
@@ -838,7 +885,22 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         textInk,
         glyphHeight,
         textRows,
+        parameters.gapInkShare,
     );
+    const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height)];
+    // Steps between successive nodes of a pectinate tree can be shorter than the shortest run
+    // that counts as a line; the ink between two close verticals supplies the missing branch.
+    const connectors = new Set<string>();
+
+    if (parameters.shortConnectors)
+    {
+        for (const connector of findShortConnectors(lineInk, verticals, horizontals, minHorizontalRun, thickness, horizontals.length + 1))
+        {
+            horizontals.push(connector);
+            connectors.add(connector.id);
+        }
+    }
+
     recordLap("segments");
     announce("Tracing the tree");
 
@@ -852,7 +914,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         labelBoxes.push(line.box);
     }
 
-    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight);
+    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight, connectors);
     recordLap("trace");
     announce("Finding labels");
 
@@ -890,7 +952,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         nodes: trace.nodes,
         tips: trace.tips,
         root: trace.root,
-        qc: [...trace.issues],
+        qc: [...frameIssues, ...trace.issues],
         rejectedVerticals: trace.rejected,
         branches: trace.branches,
         glyphHeight: text.glyphHeight,
@@ -898,11 +960,27 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         timings,
     };
 
+    // A tip whose branch runs into a solid shape (a collapsed-clade wedge) or a colored marker
+    // (a range oval) ends on the far side of it, where its label is.
+    if (parameters.extendThroughShapes)
+    {
+        const maxWidth = 10 * glyphHeight;
+        const maxHeight = 2.5 * glyphHeight;
+        extendTipsThroughMarkers(document, keepSmallShapes(findFatShapes(lineInk, Math.max(parameters.markerRadius, Math.round(thickness) + 1)), maxWidth, maxHeight), thickness, 2);
+        extendTipsThroughMarkers(document, keepSmallShapes(markers, maxWidth, maxHeight), thickness, glyphHeight);
+    }
+
     assignLabels(document);
     removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
     // Clade brackets, axes and legends trace into small pieces beside the tree; they go now,
     // before any label of theirs is read.
     document.qc.push(...pruneDecorations(document));
+
+    if (chooseRoot(document))
+    {
+        document.qc.push({ severity: "info", code: "root-changed", message: `the main tree is now ${document.root ?? ""}, the piece with the most tips once debris and decorations were removed`, subject: document.root });
+    }
+
     recordLap("assign");
 
     // The profile is measured before labels are read, since reading them uses it (how far to
@@ -922,6 +1000,13 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         const ocrScale = Math.min(parameters.ocrScale, Math.max(1, parameters.ocrGlyphTarget / glyphHeight));
         await readLabels(document, erased, options.ocr, ocrScale, names, knownNames, progress);
         removeNumericDebrisTips(document, 3 * glyphHeight);
+
+        // Reading the labels can turn a piece's tips into debris; the main tree is chosen again.
+        if (chooseRoot(document))
+        {
+            document.qc.push({ severity: "info", code: "root-changed", message: `the main tree is now ${document.root ?? ""}, the piece with the most tips once labels were read`, subject: document.root });
+        }
+
         assignLeftoverNames(document, names);
         measureTextMarks(document.profile, document, textInk, glyphHeight);
 

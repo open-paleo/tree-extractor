@@ -33,7 +33,11 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 1. **Masks.** Text ink is luminance below 140. Line ink is luminance below 180 with low chroma
    (so colored clade boxes and the red border drop out), extended by hysteresis into faint
    pixels (below 230) that touch it, except near glyphs, then closed by one pixel. This mends thin
-   lines that JPEG compression breaks.
+   lines that JPEG compression breaks. Strongly colored dark pixels (chroma over 100, so JPEG
+   fringes along black lines stay out) are split by shape: thin strokes, which are branches
+   drawn in color, join the line ink; fat shapes, which are range ovals and markers, are kept
+   aside; the outline of a colored box, joined back together where branches cross it, is
+   neither and is dropped.
 2. **Rough text pass.** Long straight runs are stripped from the text ink; the remaining connected
    components are glyphs; glyphs cluster into rows by a robust center line. This yields the glyph
    height, which scales every later threshold, and the glyph pixels, which are removed from the
@@ -53,7 +57,8 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    (up to six glyph heights for horizontals, far less for verticals, which stack), but only when
    there is ink in the gap: an empty gap between a node's parent branch and a grandchild's
    branch in a staircase layout is a real gap.
-4. **Trace.** Every vertical is a candidate node; every horizontal whose left end touches it is a
+4. **Trace.** A horizontal or vertical along the image edge spanning the figure is a frame and
+   is dropped first, or its left edge would root everything. Every vertical is a candidate node; every horizontal whose left end touches it is a
    child and the one whose right end touches it is its parent. A horizontal running straight
    through a vertical is split there (the middle child of an odd polytomy). Ends that fall short
    attach loosely, but only in the direction the branch points. Verticals with no children are
@@ -63,16 +68,24 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    reported.
 5. **Labels.** Text is detected again with the traced line art (and any range-bar stub beyond it)
    painted out, then tip rows are assigned to the nearest branch end on their left and remaining
-   rows to the nearest junction on their right. Short unlabelled tips are dropped as debris, and
-   so are disconnected pieces that lie where decorations go: entirely right of the tips (clade
-   brackets), or above or below the tree without labels (a time axis, a legend).
+   rows to the nearest junction on their right. Before that, a tip whose branch runs into a
+   solid shape (a collapsed-clade wedge) or a colored marker (a range oval) of marker size moves
+   to the shape's far side, where its label is, and its label row may start as far back as the
+   branch did. A text row's box leaves out solid blocks (a range bar touching a label), so the
+   row neither clips the branch stub next to the bar nor sits over it. Short unlabelled tips are
+   dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
+   right of the tips (clade brackets), or above or below the tree without labels (a time axis,
+   a legend). The main tree is then chosen again as the piece with the most tips, and once
+   more after labels are read, since a chart or a frame can outnumber the tree before its
+   pieces are recognized as debris.
 6. **OCR and matching.** Each label is cropped from the image with the line art painted out and
    upscaled so that its letters are about 45 pixels high (at most three times, never less than
    one, since Tesseract's time grows with the crop's area and large letters need no help); letter-spaced text, recognized by the figure's letter gap in the
    profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing
    the genus alone, the genus abbreviated to its initial, and a binomial read against a
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
-   their stems. A read the paper's list does not explain is offered to the known taxa of the
+   their stems. A tip printed in capitals is a collapsed clade and keeps its printed name unless
+   a list has it exactly. A read the paper's list does not explain is offered to the known taxa of the
    data set (`names/known-taxa.txt`), which accepts only an exact name or a close one clear of
    its runner-up, and flags the tip as matched from outside the paper's taxa. Tips whose read
    matched nothing are then paired with the paper's names nobody claimed, by elimination, when
@@ -113,6 +126,12 @@ crop's area, so crops are scaled towards 45-pixel letters rather than always thr
 Large-font figures read two to three times faster for it; small fonts are unchanged.
 
 ## Known gaps
+
+- Pectinate trees whose steps between successive nodes are shorter than the shortest line run
+  (about ten pixels) lose those steps; the ink between two close verticals is then no segment.
+  `findShortConnectors` recovers such pieces, but switched on it costs the tuned figures more
+  than it gives, so it is off (`shortConnectors`) until the attachment rules around it are
+  reworked. De Souza 2021 is the case that needs it.
 
 - Support values at nodes are read for only about a third of nodes on the benchmark figure; the
   labels that sit on a branch or a vertical are partly eaten by line-art removal. Topology and tip

@@ -18,6 +18,8 @@ Images come in two kinds:
   has to be supplied by hand, and the runner skips the case when it is missing.
 
 Run `npm run bench`; outputs (document, Newick and an overlay PNG) go to `bench/out/<case>/`.
+`--set=key=value` overrides a pipeline parameter for the run (`--set=shortConnectors=true`),
+which is how a change is bisected against the cases.
 `npm run bench:strict` (what CI runs) fails when a case listed in `expectations.json` is no
 longer `identical`. When a change makes a new case identical, add it to that list; removing one
 needs a reason in the pull request.

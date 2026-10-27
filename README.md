@@ -13,15 +13,16 @@ the batch command line give identical results.
 
 ## Status
 
-Early. On eight published figures (a 52-taxon time-scaled consensus with colored clade boxes and
-range bars; a 20-taxon strict consensus from a 665-pixel-wide embedded image; a 300 dpi page scan
-of a 1990s-style cladogram in italic serif; a 75-taxon majority-rule tree in a staircase layout
-with clade arrows; a 68-taxon consensus with Bremer values and lettered clades; a 17-taxon
-time-scaled turtle tree; a 60-tip tree at 2265 by 4500 pixels with 35-pixel letters; and a
-74-taxon tree in a letter-spaced italic font with a red new taxon) all eight come out identical.
-On synthetic figures in five styles, twelve of fifteen are identical. Four of the real figures are CC BY and
-ship with the benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach
-and its known gaps.
+Early. Fourteen published figures are in the benchmark: eight the pipeline was tuned on, which
+all come out identical, and six drawn at random from the Open Paleo corpus and run cold first,
+of which two (a three-panel ceratopsian figure and a tyrannosauroid tree with range bars and
+collapsed clades) are identical and four have most of their tree right. A census of 178 tree
+figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-left trees at
+72 percent, slanted at 13 and vertical at 13; the pipeline handles only the first kind, and
+nine slanted and vertical figures wait in `bench/holdout/`. On synthetic figures in five styles,
+thirteen of fifteen are identical. Ten of the real figures are openly licensed and ship with the
+benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach and its
+known gaps.
 
 ## Use
 

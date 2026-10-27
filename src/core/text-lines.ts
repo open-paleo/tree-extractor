@@ -3,7 +3,7 @@
  * remains as glyphs, and clusters glyphs into lines.
  */
 
-import type { Mask, TextLine } from "./types.ts";
+import type { Box, Mask, TextLine } from "./types.ts";
 import { compareNumbers, computeMedian, createMaskFromComponents, findConnectedComponents, subtractMask } from "./raster.ts";
 import type { Component } from "./raster.ts";
 
@@ -110,6 +110,40 @@ function compareComponentLeftEdges(left: Component, right: Component): number
 function compareLineLeftEdges(left: OpenLine, right: OpenLine): number
 {
     return left.x0 - right.x0;
+}
+
+/**
+ * The box of a row's text: its glyphs without any solid block among them. A range bar or a
+ * wedge touching a label joins the row as a glyph, which keeps the row whole and its pixels
+ * out of the line ink, but the box that places the label and clips branches must not reach
+ * over the bar. A letter never fills its box; a bar does.
+ *
+ * @param line - Open row.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns The box of the non-solid glyphs, or of all glyphs when every one is solid.
+ */
+function measureTextBox(line: OpenLine, glyphHeight: number): Box
+{
+    // The row keeps its own height: a fused tall glyph widens a row without stretching it, and
+    // the box here only loses the columns of solid blocks.
+    let x0 = Infinity;
+    let x1 = -Infinity;
+
+    for (const glyph of line.glyphs)
+    {
+        const width = glyph.box.x1 - glyph.box.x0;
+        const height = glyph.box.y1 - glyph.box.y0;
+        // A block that fills its box: a bar of any height, as long as it is wider than a letter.
+        const solid = width >= 1.2 * glyphHeight && glyph.area >= 0.85 * width * height && (height >= 0.8 * glyphHeight || width >= 1.5 * glyphHeight);
+
+        if (!solid)
+        {
+            x0 = Math.min(x0, glyph.box.x0);
+            x1 = Math.max(x1, glyph.box.x1);
+        }
+    }
+
+    return Number.isFinite(x0) ? { x0, y0: line.y0, x1, y1: line.y1 } : { x0: line.x0, y0: line.y0, x1: line.x1, y1: line.y1 };
 }
 
 /**
@@ -459,7 +493,7 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
         {
             textLines.push({
                 id: `l${textLines.length + 1}`,
-                box: { x0: line.x0, y0: line.y0, x1: line.x1, y1: line.y1 },
+                box: measureTextBox(line, glyphHeight),
                 glyphCount: line.glyphs.length,
                 role: "unassigned",
                 ocr: null,

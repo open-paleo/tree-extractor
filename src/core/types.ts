@@ -238,6 +238,12 @@ export type Tip = {
      * Age at the tip's branch end in the units of the time axis, or null without a calibration.
      */
     age: number | null;
+
+    /**
+     * Where the branch itself ended, when the tip was moved to the far side of a marker or a
+     * solid shape the branch ran into; absent otherwise.
+     */
+    extendedFrom?: number;
 };
 
 /**
