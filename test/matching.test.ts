@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { computeLevenshtein, matchName, normalizeName } from "../src/core/matching.ts";
+import { compareNames, computeLevenshtein, matchName, normalizeName } from "../src/core/matching.ts";
 import { cleanSupportText, cleanTaxonText } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
@@ -48,4 +48,20 @@ test("genus-only and abbreviated-genus forms match the full name", () =>
     assert.ok(matchName("S. homheni", names)?.accepted);
     assert.equal(matchName("S. mjosi", names)?.name, "Stegosaurus mjosi");
     assert.equal(matchName("Scelidosaurus", names)?.name, "Scelidosaurus");
+});
+
+test("a binomial read matches a genus-only list entry", () =>
+{
+    const names = ["Stegosaurus", "Haya", "Thescelosaurus", "Othnielosaurus"];
+    assert.equal(matchName("Stegosaurus stenops", names)?.name, "Stegosaurus");
+    assert.ok(matchName("Stegosaurus stenops", names)?.accepted);
+    assert.equal(matchName("Haya griva", names)?.name, "Haya");
+    assert.equal(matchName("Thescelosaurus", names)?.name, "Thescelosaurus");
+});
+
+test("names sharing a generic ending are compared by their stems", () =>
+{
+    assert.ok(compareNames("thescelosaurus", "herrerasaurus") < 0.5);
+    assert.ok(compareNames("quranosaurus", "ouranosaurus") > 0.8);
+    assert.ok(!matchName("Thescelosaurus", ["Herrerasaurus", "Sanjuansaurus", "Haya"])?.accepted);
 });

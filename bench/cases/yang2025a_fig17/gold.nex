@@ -1,0 +1,87 @@
+#NEXUS
+
+[ Yang et al. 2025, PeerJ 13: e19664, Figure 17: strict consensus with 74 taxa in a letter-spaced italic font, the new taxon in red and numbered clade dots. Topology transcribed by the tool and checked node by node against the image (2026-10-27); names follow the paper's matrix list as supplied in names.txt. CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=74;
+    TAXLABELS
+        Marasuchus_lilloensis
+        Silesaurus_opolensis
+        Herrerasaurus_ischiugualastensis
+        Eoraptor_lunensis
+        Pulaosaurus-qinglong
+        Laquintasaura_venezuelae
+        Hexinlusaurus_multidens
+        Agilisaurus_louderbacki
+        Lesothosaurus_diagnosticus
+        Eocursor_parvus
+        Pisanosaurus_merti
+        Abrictosaurus_consors
+        Fruitadens_haagarorum
+        Tianyulong_confuciusi
+        Manidens_condorensis
+        Echinodon_becklesii
+        Pegomastax_africanus
+        Heterodontosaurus_tucki
+        Scutellosaurus_lawleri
+        Emausaurus_ernsti
+        Scelidosaurus_harrisonii
+        Isaberrysaura_mollensis
+        Huayangosaurus_taibaii
+        Stegosaurus_stenops
+        Hesperosaurus_mjosi
+        Minmi_paravertebra
+        Gargoyleosaurus_parkpinorum
+        Euoplocephalus_tutus
+        Pinacosaurus_grangeri
+        Sanxiasaurus-modaoxiensis
+        Micropachycephalosaurus_hongtuyanensis
+        Albalophosaurus_yamaguchiorum
+        Chaoyangsaurus_youngi
+        Yinlong_downsi
+        Stenopelix_valdensis
+        Gasparinisaura_cincosaltensis
+        Zephylosaurus_schaffi
+        Koreanosaurus_boseongensis
+        Yueosaurus_tiantaiensis
+        Orodromeus_makelai
+        Jeholosaurus_shangyuanensis
+        Hypsilophodon_foxii
+        Changchunsaurus_parvus
+        Haya_gravis
+        Yandusaurus_hongheensis
+        Psittacosaurus_lujiatunensis
+        Psittacosaurus_mongoliensis
+        Xuanhuaceratops_niei
+        Hualianceratops_wucaiwanensis
+        Thescelosaurus_neglectus
+        Parksosaurus_warreni
+        Wannanosaurus_yansiensis
+        Goyocephale_lattimorei
+        Homalocephale_calathocercos
+        Prenocephale_prenes
+        Stegoceras_validum
+        Gideonmantellia_amosanjuanae
+        Zalmoxes_robustus
+        Tenontosaurus_tilletti
+        Dryosaurus_altus
+        Camptosaurus_dispar
+        Ouranosaurus_nigeriensis
+        Probactrosaurus_gobiensis
+        Iguanodon_atherfieldensis
+        Liaoceratops_yanzigouensis
+        Koreaceratops_hwaseongensis
+        Auroraceratops_rugosus
+        Archaeoceratops_oshimai
+        Yamaceratops_dorngobiensis
+        Aquilops_americanus
+        Mosaiceratops_azumai
+        Leptoceratops_gracilis
+        Bagaceratops_rozhdestvenskyi
+        Protoceratops_andrewsi
+    ;
+END;
+
+BEGIN TREES;
+    TREE yang2025a_fig17 = [&R] (Marasuchus_lilloensis,(Silesaurus_opolensis,(Herrerasaurus_ischiugualastensis,(Eoraptor_lunensis,(Pulaosaurus-qinglong,Laquintasaura_venezuelae,Hexinlusaurus_multidens,Agilisaurus_louderbacki,Lesothosaurus_diagnosticus,Eocursor_parvus,Pisanosaurus_merti,(Abrictosaurus_consors,(Fruitadens_haagarorum,(Tianyulong_confuciusi,(Manidens_condorensis,(Echinodon_becklesii,Pegomastax_africanus,Heterodontosaurus_tucki))))),(Scutellosaurus_lawleri,((Emausaurus_ernsti,Scelidosaurus_harrisonii),(((Isaberrysaura_mollensis,Huayangosaurus_taibaii),(Stegosaurus_stenops,Hesperosaurus_mjosi)),(Minmi_paravertebra,(Gargoyleosaurus_parkpinorum,(Euoplocephalus_tutus,Pinacosaurus_grangeri)))))),(Sanxiasaurus-modaoxiensis,Micropachycephalosaurus_hongtuyanensis,Albalophosaurus_yamaguchiorum,Chaoyangsaurus_youngi,Yinlong_downsi,Stenopelix_valdensis,Gasparinisaura_cincosaltensis,Zephylosaurus_schaffi,Koreanosaurus_boseongensis,Yueosaurus_tiantaiensis,Orodromeus_makelai,Jeholosaurus_shangyuanensis,Hypsilophodon_foxii,Changchunsaurus_parvus,Haya_gravis,Yandusaurus_hongheensis,(Psittacosaurus_lujiatunensis,Psittacosaurus_mongoliensis),(Xuanhuaceratops_niei,Hualianceratops_wucaiwanensis),(Thescelosaurus_neglectus,Parksosaurus_warreni),(Wannanosaurus_yansiensis,(Goyocephale_lattimorei,(Homalocephale_calathocercos,(Prenocephale_prenes,Stegoceras_validum)))),(Gideonmantellia_amosanjuanae,(Zalmoxes_robustus,(Tenontosaurus_tilletti,(Dryosaurus_altus,(Camptosaurus_dispar,(Ouranosaurus_nigeriensis,Probactrosaurus_gobiensis,Iguanodon_atherfieldensis)))))),(Liaoceratops_yanzigouensis,(Koreaceratops_hwaseongensis,Auroraceratops_rugosus,Archaeoceratops_oshimai,Yamaceratops_dorngobiensis,Aquilops_americanus,(Mosaiceratops_azumai,(Leptoceratops_gracilis,(Bagaceratops_rozhdestvenskyi,Protoceratops_andrewsi)))))))))));
+END;

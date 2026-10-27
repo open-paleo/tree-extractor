@@ -61,6 +61,35 @@ export function computeSimilarity(left: string, right: string): number
 }
 
 /**
+ * Generic name endings shared by many taxa. Two names with the same ending are no closer than
+ * their stems: "Thescelosaurus" and "Herrerasaurus" share half their letters and nothing else.
+ */
+const sharedEndings = ["saurus", "saura", "ceratops", "raptor", "suchus", "venator", "mimus", "titan", "pteryx", "odon"];
+
+/**
+ * Similarity of two normalized names, discounting a generic ending both of them carry.
+ *
+ * @param left - First name.
+ * @param right - Second name.
+ * @returns Similarity from 0 to 1.
+ */
+export function compareNames(left: string, right: string): number
+{
+    let score = computeSimilarity(left, right);
+
+    for (const ending of sharedEndings)
+    {
+        if (left.length > ending.length + 2 && right.length > ending.length + 2 && left.endsWith(ending) && right.endsWith(ending))
+        {
+            score = Math.min(score, computeSimilarity(left.slice(0, -ending.length), right.slice(0, -ending.length)));
+            break;
+        }
+    }
+
+    return score;
+}
+
+/**
  * Scores OCR text against one name, allowing the forms figures print: the full name, the genus
  * alone, or the genus abbreviated to its initial ("S. homheni" for "Stegosaurus homheni").
  *
@@ -68,21 +97,27 @@ export function computeSimilarity(left: string, right: string): number
  * @param name - Normalized candidate name.
  * @returns Similarity from 0 to 1.
  */
-function scoreName(target: string, name: string): number
+export function scoreName(target: string, name: string): number
 {
-    let score = computeSimilarity(target, name);
+    let score = compareNames(target, name);
     const space = name.indexOf(" ");
+    const targetSpace = target.indexOf(" ");
+
+    // A list of genera against a figure of binomials: the read's first word is the name.
+    if (space < 0 && targetSpace > 0)
+    {
+        score = Math.max(score, compareNames(target.slice(0, targetSpace), name) - 0.05);
+    }
 
     if (space > 0)
     {
         const genus = name.slice(0, space);
         const rest = name.slice(space + 1);
-        score = Math.max(score, computeSimilarity(target, genus) - 0.05);
-        const targetSpace = target.indexOf(" ");
+        score = Math.max(score, compareNames(target, genus) - 0.05);
 
         if (targetSpace > 0 && target[0] === genus[0] && targetSpace <= 2)
         {
-            score = Math.max(score, computeSimilarity(target.slice(targetSpace + 1), rest) - 0.05);
+            score = Math.max(score, compareNames(target.slice(targetSpace + 1), rest) - 0.05);
         }
     }
 

@@ -1,0 +1,12 @@
+Authors: Hattori, S.; Chokchaloemwong, D.; Kawabe, S.; Cuesta, E.; Shibata, M.; Miyata, K.; Azuma, Y.
+Year: 2026
+Title: Braincase of Siamraptor suwati and insights into the cranial anatomy of Carcharodontosauria
+Journal: PLOS ONE 21(4): e0345155
+DOI: https://doi.org/10.1371/journal.pone.0345155
+Figure: Fig 8 (PDF page 16); image = the figure as embedded in the published PDF, native resolution 1353x2276 px, unmodified
+Caption (first sentence): Strict consensus tree of theropods including Siamraptor with Bremer support values on each node.
+Licence: CC BY 4.0 (version from the article XML licence link)
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "Copyright: © 2026 Hattori et al. This is an open access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited."
+Source: https://doi.org/10.1371/journal.pone.0345155 (published PDF); licence also confirmed by Europe PMC (license: cc by)
+Taxon list (names.txt): S1 File (pone.0345155.s001.tnt), TNT matrix, 367 characters x 68 taxa; underscores turned into spaces, otherwise matrix spellings

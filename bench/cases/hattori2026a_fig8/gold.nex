@@ -1,0 +1,81 @@
+#NEXUS
+
+[ Hattori et al. 2026, PLOS ONE 21(4): e0345155, Fig 8: strict consensus with Bremer support, 68 taxa; node letters A-O are clade labels. Topology transcribed by the tool and checked node by node against the image (2026-10-27). CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=68;
+    TAXLABELS
+        Eoraptor
+        Herrerasaurus
+        Acrocanthosaurus
+        Aerosteon
+        Afrovenator
+        Allosaurus
+        Angaturama
+        Australovenator
+        Baryonyx
+        Carcharodontosaurus
+        Ceratosaurus
+        Chilantaisaurus
+        Chuandongocoelurus
+        Coelophysis_bauri
+        Coelophysis_rhodesiensis
+        Compsognathus
+        Concavenator
+        Condorraptor
+        Cryolophosaurus
+        CV00214
+        Sinosaurus
+        Deltadromeus
+        Dilophosaurus
+        Dubreuillosaurus
+        Duriavenator
+        Elaphrosaurus
+        Eocarcharia
+        Eustreptospondylus
+        Fukuiraptor
+        Giganotosaurus
+        Gualicho
+        Irritator
+        Lajasvenator
+        Leshansaurus
+        Lourinhanosaurus
+        Magnosaurus
+        Majungasaurus
+        Mapusaurus
+        Marshosaurus
+        Masiakasaurus
+        Megalosaurus
+        Megaraptor
+        Metriacanthosaurus
+        Monolophosaurus
+        Murusraptor
+        Neovenator
+        Orkoraptor
+        Ornitholestes
+        Piatnitzkysaurus
+        Piveteausaurus
+        Poekilopleuron
+        Proceratosaurus
+        Saurophaganax
+        Shaochilong
+        Shidaisaurus
+        Siamotyrannus
+        Siamraptor_Combined
+        Siats
+        Sinraptor_dongi
+        Spinosaurus
+        Streptospondylus
+        Suchomimus
+        S_zigongensis
+        Torvosaurus
+        Tyrannotitan
+        Xuanhanosaurus
+        Yangchuano_hepingensis
+        Yangchuano_shangyouensis_magnus
+    ;
+END;
+
+BEGIN TREES;
+    TREE hattori2026a_fig8 = [&R] (Eoraptor,(Herrerasaurus,((Dilophosaurus,(Coelophysis_rhodesiensis,Coelophysis_bauri)),((Elaphrosaurus,(Ceratosaurus,(Masiakasaurus,Majungasaurus))),(Sinosaurus,Cryolophosaurus,(Monolophosaurus,Chuandongocoelurus,(((Marshosaurus,(Piatnitzkysaurus,Condorraptor)),(Streptospondylus,Eustreptospondylus,((Suchomimus,Baryonyx),(Spinosaurus,Irritator,Angaturama)),((Duriavenator,(Torvosaurus,Megalosaurus)),(Poekilopleuron,Piveteausaurus,Magnosaurus,Leshansaurus,Dubreuillosaurus,Afrovenator)))),((Lourinhanosaurus,(Compsognathus,(Proceratosaurus,Ornitholestes))),((Xuanhanosaurus,Shidaisaurus,(S_zigongensis,(Yangchuano_shangyouensis_magnus,CV00214)),(Yangchuano_hepingensis,Sinraptor_dongi,Siamotyrannus,Metriacanthosaurus)),((Saurophaganax,Allosaurus),(Siamraptor_Combined,(((Lajasvenator,Eocarcharia,Concavenator),(Acrocanthosaurus,(Shaochilong,(Tyrannotitan,Mapusaurus,Giganotosaurus,Carcharodontosaurus)))),(Siats,Neovenator,Fukuiraptor,Chilantaisaurus,Australovenator,(Gualicho,Deltadromeus),(Orkoraptor,Murusraptor,Megaraptor,Aerosteon))))))))))))));
+END;

@@ -3,8 +3,8 @@
  * against a name list.
  */
 
-import type { ExtractionDocument, GrayImage, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
-import { cropAndScale } from "./raster.ts";
+import type { Box, ExtractionDocument, GrayImage, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
+import { compareNumbers, computeMedian, cropAndScale } from "./raster.ts";
 import { matchName } from "./matching.ts";
 
 /**
@@ -180,6 +180,59 @@ export function cleanSupportText(text: string): string
 }
 
 /**
+ * Chooses how much to squeeze a label horizontally before OCR. Letter-spaced text, where the
+ * blank columns between letters are a good part of a glyph height wide, reads far better once
+ * the letters are brought back together. The gaps are measured on the pixels, since touching
+ * letters make the glyph count useless for this.
+ *
+ * @param image - Luminance image with line art erased.
+ * @param box - Label box.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns Factor from 0.55 to 1.
+ */
+function chooseCondensing(image: GrayImage, box: Box, glyphHeight: number): number
+{
+    const gaps = new Array<number>();
+    let gap = 0;
+    let seenInk = false;
+
+    for (let x = box.x0; x < box.x1; x++)
+    {
+        let inked = false;
+
+        for (let y = box.y0; y < box.y1 && !inked; y++)
+        {
+            inked = image.data[y * image.width + x] < 128;
+        }
+
+        if (inked)
+        {
+            if (seenInk && gap > 0)
+            {
+                gaps.push(gap);
+            }
+
+            seenInk = true;
+            gap = 0;
+        }
+        else
+        {
+            gap++;
+        }
+    }
+
+    gaps.sort(compareNumbers);
+    const typicalGap = computeMedian(gaps, 0);
+
+    if (typicalGap < 0.25 * glyphHeight)
+    {
+        return 1;
+    }
+
+    return Math.max(0.55, (0.12 * glyphHeight) / typicalGap);
+}
+
+/**
  * Finds a text line by identifier.
  *
  * @param document - Document to search.
@@ -239,7 +292,7 @@ export async function readLabels(
 
         if (line !== undefined)
         {
-            line.ocr = await ocr.recognize(cropAndScale(erased, line.box, 3, scale), "text");
+            line.ocr = await ocr.recognize(cropAndScale(erased, line.box, 3, scale, scale * chooseCondensing(erased, line.box, document.glyphHeight)), "text");
             const cleaned = cleanTaxonText(line.ocr.text);
             tip.label = cleaned.length > 0 ? cleaned : null;
             tip.match = tip.label === null || names.length === 0 ? null : matchName(tip.label, names);

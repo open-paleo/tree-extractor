@@ -9,20 +9,24 @@ import {
     closeMask,
     invertMask,
     compareNumbers,
-    computeMedian,
     convertToGray,
     createDarkMask,
+    createDirectionalRunMask,
     createLongRunMask,
     createMaskFromBoxes,
     dilate,
+    estimateLineThickness,
+    keepComponentsTouching,
     paintMask,
     subtractMask,
+    unionMask,
 } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
 import { extractSegments } from "./segments.ts";
 import { traceRectangularTree } from "./tracer.ts";
 import { assignLabels, readLabels } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
+import { normalizeName, scoreName } from "./matching.ts";
 import { clampBox, cropImage, translateDocument } from "./geometry.ts";
 
 /**
@@ -228,8 +232,20 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const strongInk = createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma);
 
     // A rough text pass learns the glyph size and finds glyph pixels to keep out of the line art.
-    let roughStrip = dilate(createLongRunMask(textInk, parameters.glyphStripHorizontalRun, parameters.glyphStripVerticalRun), 1);
+    // The runs stripped as line art must be longer than a letter stroke, so when the first pass
+    // finds large glyphs the strip is scaled up and the pass repeated.
+    let stripHorizontal = parameters.glyphStripHorizontalRun;
+    let stripVertical = parameters.glyphStripVerticalRun;
+    let roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
     let rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+
+    for (let pass = 0; pass < 3 && (2.3 * rough.glyphHeight > stripHorizontal || 1.7 * rough.glyphHeight > stripVertical); pass++)
+    {
+        stripHorizontal = Math.max(stripHorizontal, Math.round(2.3 * rough.glyphHeight));
+        stripVertical = Math.max(stripVertical, Math.round(1.7 * rough.glyphHeight));
+        roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
+        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+    }
 
     // A thin font breaks into fragments at the strict threshold, and very small text always
     // loses strokes to it. Fainter pixels that touch certain text ink then rejoin the strokes.
@@ -237,7 +253,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     if (rough.fragmented || rough.glyphHeight <= parameters.smallGlyphHeight)
     {
         textInk = applyHysteresis(textInk, createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma));
-        roughStrip = dilate(createLongRunMask(textInk, parameters.glyphStripHorizontalRun, parameters.glyphStripVerticalRun), 1);
+        roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
         rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
     }
 
@@ -247,8 +263,13 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     // branch or connector touching a label and stays. Faint (weak) ink then extends the strong
     // lines by hysteresis, but never near glyphs, whose compression halos would otherwise join
     // every label to its branch as one wide blob.
+    // A short branch stub that joins a long vertical is protected too: it is shorter than any
+    // glyph-safe run, but no letter reaches that far along one row while touching a line.
     const protectedLength = Math.round(1.5 * glyphHeight);
-    const protectedInk = createLongRunMask(strongInk, protectedLength, protectedLength);
+    const longInk = createLongRunMask(strongInk, protectedLength, protectedLength);
+    const stubLength = Math.max(parameters.minHorizontalRun, Math.round(0.75 * glyphHeight));
+    const stubInk = keepComponentsTouching(createDirectionalRunMask(strongInk, stubLength, true), longInk);
+    const protectedInk = unionMask(longInk, stubInk);
     const glyphZone = subtractMask(dilate(rough.glyphMask, 2), protectedInk);
     const strongLines = subtractMask(strongInk, glyphZone);
     const nearStrong = dilate(strongLines, parameters.weakReach);
@@ -431,8 +452,9 @@ function removeDebrisTips(document: ExtractionDocument, maxLength: number): void
 }
 
 /**
- * Drops short tips whose label read as a bare number: a fragment of a branch cut by a support
- * value, which then claimed the value as its label. The line goes back to the pool.
+ * Drops short tips whose label is not a name: a bare number (a fragment of a branch cut by a
+ * support value, which then claimed the value as its label) or a scrap of two or three
+ * characters that matched nothing. The line goes back to the pool.
  *
  * @param document - Document updated in place.
  * @param maxLength - Longest branch such a tip can have.
@@ -441,7 +463,15 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
 {
     for (const tip of document.tips)
     {
-        if (tip.label === null || !/^[0-9./]+$/.test(tip.label))
+        if (tip.label === null)
+        {
+            continue;
+        }
+
+        const numeric = /^[0-9./]+$/.test(tip.label);
+        const scrap = tip.label.length <= 3 && (tip.match === null || !tip.match.accepted);
+
+        if (!numeric && !scrap)
         {
             continue;
         }
@@ -473,6 +503,97 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
     }
 
     removeDebrisTips(document, maxLength);
+}
+
+/**
+ * Pairs tips whose label matched nothing confidently with the names no other tip took. Every
+ * name is used once, so once the confident matches are made the leftovers can be paired by
+ * best similarity, weakest last, as long as the pairing is not a toss-up.
+ *
+ * @param document - Document updated in place.
+ * @param names - The closed list of names.
+ */
+function assignLeftoverNames(document: ExtractionDocument, names: Array<string>): void
+{
+    if (names.length === 0)
+    {
+        return;
+    }
+
+    const taken = new Set<string>();
+    const open = new Array<Tip>();
+
+    for (const tip of document.tips)
+    {
+        if (tip.match !== null && tip.match.accepted)
+        {
+            taken.add(tip.match.name);
+        }
+        else if (tip.label !== null)
+        {
+            open.push(tip);
+        }
+    }
+
+    const free = new Array<string>();
+
+    for (const name of names)
+    {
+        if (!taken.has(name))
+        {
+            free.push(name);
+        }
+    }
+
+    let paired = 0;
+    let changed = true;
+
+    // Each round pairs every tip whose best free name is clear of its second-best, then the
+    // taken names drop out and the remaining tips are tried again with fewer choices.
+    while (changed)
+    {
+        changed = false;
+
+        for (const tip of [...open])
+        {
+            const label = normalizeName(tip.label ?? "");
+            let bestName: string | null = null;
+            let bestScore = 0.4;
+            let runnerUp = 0;
+
+            for (const name of free)
+            {
+                const score = scoreName(label, normalizeName(name));
+
+                if (score > bestScore)
+                {
+                    runnerUp = bestScore;
+                    bestScore = score;
+                    bestName = name;
+                }
+                else if (score > runnerUp)
+                {
+                    runnerUp = score;
+                }
+            }
+
+            if (bestName === null || bestScore - runnerUp < 0.05)
+            {
+                continue;
+            }
+
+            tip.match = { name: bestName, similarity: bestScore, margin: bestScore - runnerUp, accepted: true };
+            open.splice(open.indexOf(tip), 1);
+            free.splice(free.indexOf(bestName), 1);
+            paired++;
+            changed = true;
+        }
+    }
+
+    if (paired > 0)
+    {
+        document.qc.push({ severity: "info", code: "leftover-names", message: `${paired} tip(s) paired with the remaining names by elimination; check them`, subject: null });
+    }
 }
 
 /**
@@ -586,7 +707,11 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     recordLap("masks");
     announce("Finding segments");
 
-    const probe = extractSegments(lineInk, parameters.minHorizontalRun, Number.MAX_SAFE_INTEGER);
+    // The shortest run that counts as a line must exceed the line thickness, or a thick vertical
+    // reads as a stack of short horizontal runs and glues every branch it touches into one blob.
+    const thickness = estimateLineThickness(lineInk);
+    const minHorizontalRun = Math.max(parameters.minHorizontalRun, 2 * thickness);
+    const probe = extractSegments(lineInk, minHorizontalRun, Number.MAX_SAFE_INTEGER);
     const thicknesses = new Array<number>();
 
     for (const segment of probe.horizontals)
@@ -595,9 +720,8 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     }
 
     thicknesses.sort(compareNumbers);
-    const thickness = computeMedian(thicknesses, 2);
     const thickest = thicknesses.length === 0 ? thickness : thicknesses[Math.floor(thicknesses.length * 0.9)];
-    const minVerticalRun = Math.max(parameters.minVerticalRun, Math.round(1.5 * thickest) + 1);
+    const minVerticalRun = Math.max(parameters.minVerticalRun, 2 * thickness, Math.round(1.5 * thickest) + 1);
 
     // A support label drawn over a branch with a white background box can hide up to its own
     // width of line; horizontal pieces are rejoined across that much, verticals across far less.
@@ -611,8 +735,9 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     for (const line of roughLines)
     {
+        // Touching letters, or an underscore joining words, can make a whole label one component.
         const width = line.box.x1 - line.box.x0;
-        const wordsMerged = line.glyphCount >= 2 && width >= 6 * glyphHeight;
+        const wordsMerged = width >= 6 * glyphHeight;
 
         if ((line.glyphCount >= 5 || wordsMerged) && width >= 3 * glyphHeight)
         {
@@ -623,7 +748,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     const { horizontals, verticals } = extractSegments(
         lineInk,
-        parameters.minHorizontalRun,
+        minHorizontalRun,
         minVerticalRun,
         reach,
         Math.round(1.2 * glyphHeight),
@@ -690,14 +815,15 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     };
 
     assignLabels(document);
-    removeDebrisTips(document, 2.5 * glyphHeight);
+    removeDebrisTips(document, 3 * glyphHeight);
     recordLap("assign");
 
     if (options.ocr)
     {
         const erased = paintMask(gray, lineArtMask, 255);
         await readLabels(document, erased, options.ocr, parameters.ocrScale, names, progress);
-        removeNumericDebrisTips(document, 2.5 * glyphHeight);
+        removeNumericDebrisTips(document, 3 * glyphHeight);
+        assignLeftoverNames(document, names);
         recordLap("ocr");
     }
 

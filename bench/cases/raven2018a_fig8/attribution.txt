@@ -1,0 +1,12 @@
+Authors: Raven, T. J.; Maidment, S. C. R.
+Year: 2018
+Title: The systematic position of the enigmatic thyreophoran dinosaur Paranthodon africanus, and the use of basal exemplifiers in phylogenetic analysis
+Journal: PeerJ 6: e4529
+DOI: https://doi.org/10.7717/peerj.4529
+Figure: Figure 8 (PDF page 27); image = the figure as embedded in the published PDF, native resolution 2265x4500 px, unmodified
+Caption (first sentence): Strict consensus tree from Analysis D6; inclusion of Paranthodon, Huayangosaurus, Stegosaurus and Isaberrysaura as OTUs into the Boyd (2015) dataset.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "Copyright 2018 Raven and Maidment Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.4529 (published PDF); licence also confirmed by Europe PMC (license: cc by)
+Taxon list (names.txt): Supplemental File 3 (peerj-06-4529-s004.txt), TNT matrix, 255 characters x 69 taxa (Boyd 2015 + 4 OTUs); underscores turned into spaces, otherwise matrix spellings

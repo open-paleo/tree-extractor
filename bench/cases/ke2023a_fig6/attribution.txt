@@ -1,0 +1,12 @@
+Authors: Ke, Y.; Rahman, I. A.; Song, H.; Hu, J.; Niu, K.; Lou, F.; Li, H.; Han, F.
+Year: 2023
+Title: A new species of Nanhsiungchelys (Testudines: Cryptodira: Nanhsiungchelyidae) from the Upper Cretaceous of Nanxiong Basin, China
+Journal: PeerJ 11: e15439
+DOI: https://doi.org/10.7717/peerj.15439
+Figure: Figure 6 (PDF page 18); image = the figure as embedded in the published PDF, native resolution 3200x1687 px, unmodified
+Caption (first sentence): Time-scaled strict consensus tree of Nanhsiungchelyidae.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "Copyright 2023 Ke et al. Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.15439 (published PDF); licence also confirmed by Europe PMC (license: cc by)
+Taxon list (names.txt): Supplemental File 1 (Appendix 1, NEXUS matrix, 17 taxa); underscores turned into spaces, otherwise matrix spellings

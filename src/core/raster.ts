@@ -506,9 +506,10 @@ export function paintMask(image: GrayImage, mask: Mask, value: number): GrayImag
  * @param box - Region of interest.
  * @param pad - Pixels of context to add on every side.
  * @param scale - Upscaling factor.
+ * @param horizontalScale - Horizontal factor, when it should differ (condensing spaced text).
  * @returns The upscaled crop.
  */
-export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: number): GrayImage
+export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: number, horizontalScale = scale): GrayImage
 {
     const left = Math.max(0, box.x0 - pad);
     const top = Math.max(0, box.y0 - pad);
@@ -516,7 +517,7 @@ export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: num
     const bottom = Math.min(image.height, box.y1 + pad);
     const sourceWidth = Math.max(1, right - left);
     const sourceHeight = Math.max(1, bottom - top);
-    const width = Math.round(sourceWidth * scale);
+    const width = Math.round(sourceWidth * horizontalScale);
     const height = Math.round(sourceHeight * scale);
     const data = new Uint8ClampedArray(width * height);
 
@@ -529,7 +530,7 @@ export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: num
 
         for (let x = 0; x < width; x++)
         {
-            const sourceX = Math.min(sourceWidth - 1, (x + 0.5) / scale - 0.5);
+            const sourceX = Math.min(sourceWidth - 1, (x + 0.5) / horizontalScale - 0.5);
             const columnA = Math.max(0, Math.floor(sourceX));
             const columnB = Math.min(sourceWidth - 1, columnA + 1);
             const weightX = sourceX - columnA;
@@ -544,6 +545,99 @@ export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: num
     }
 
     return { width, height, data };
+}
+
+/**
+ * Pixels set in either mask.
+ *
+ * @param left - First mask.
+ * @param right - Second mask of the same size.
+ * @returns The union.
+ */
+export function unionMask(left: Mask, right: Mask): Mask
+{
+    const data = new Uint8Array(left.data.length);
+
+    for (let index = 0; index < data.length; index++)
+    {
+        data[index] = left.data[index] | right.data[index];
+    }
+
+    return { width: left.width, height: left.height, data };
+}
+
+/**
+ * Keeps the connected components of a mask that share at least one pixel with a reference mask.
+ *
+ * @param mask - Mask whose components are tested.
+ * @param reference - Mask the kept components must touch.
+ * @returns Mask of the kept components.
+ */
+export function keepComponentsTouching(mask: Mask, reference: Mask): Mask
+{
+    const { labels } = findConnectedComponents(mask);
+    const selected = new Set<number>();
+
+    for (let index = 0; index < labels.length; index++)
+    {
+        if (labels[index] > 0 && reference.data[index] === 1)
+        {
+            selected.add(labels[index]);
+        }
+    }
+
+    return createMaskFromComponents(labels, selected, mask.width, mask.height);
+}
+
+/**
+ * Estimates the thickness of the lines in a mask: the median length of the vertical runs of
+ * ink, counting runs. Every column of a horizontal contributes one run of the line's
+ * thickness, so horizontals dominate the count; a vertical contributes only as many runs as it
+ * is wide, however long it is.
+ *
+ * @param mask - Line mask.
+ * @returns Thickness in pixels, at least 1.
+ */
+export function estimateLineThickness(mask: Mask): number
+{
+    const { width, height, data } = mask;
+    const histogram = new Array<number>(height + 1).fill(0);
+    let total = 0;
+
+    for (let x = 0; x < width; x++)
+    {
+        let start = -1;
+
+        for (let y = 0; y <= height; y++)
+        {
+            const on = y < height && data[y * width + x] === 1;
+
+            if (on && start < 0)
+            {
+                start = y;
+            }
+            else if (!on && start >= 0)
+            {
+                histogram[y - start]++;
+                total++;
+                start = -1;
+            }
+        }
+    }
+
+    let seen = 0;
+
+    for (let length = 1; length <= height; length++)
+    {
+        seen += histogram[length];
+
+        if (seen * 2 >= total)
+        {
+            return length;
+        }
+    }
+
+    return 1;
 }
 
 /**

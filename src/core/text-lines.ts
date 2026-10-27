@@ -157,9 +157,10 @@ function addGlyph(line: OpenLine, glyph: Component): void
  * so the median gap is the spacing even when rows are broken into pieces.
  *
  * @param lines - Rows from a first clustering pass.
+ * @param glyphHeight - Provisional glyph height, for telling fragments of one row apart.
  * @returns The spacing in pixels, or null when there are too few rows.
  */
-function estimateRowPitch(lines: Array<OpenLine>): number | null
+function estimateRowPitch(lines: Array<OpenLine>, glyphHeight: number): number | null
 {
     const centers = new Array<number>();
 
@@ -172,16 +173,24 @@ function estimateRowPitch(lines: Array<OpenLine>): number | null
     }
 
     centers.sort(compareNumbers);
+
+    // Fragments of one row (ascender pieces, x-height pieces) have centers a few pixels apart;
+    // they are one row for this purpose, so centers closer than a fraction of a glyph merge.
+    const rows = new Array<number>();
+
+    for (const center of centers)
+    {
+        if (rows.length === 0 || center - rows[rows.length - 1] >= 0.6 * glyphHeight)
+        {
+            rows.push(center);
+        }
+    }
+
     const gaps = new Array<number>();
 
-    for (let index = 1; index < centers.length; index++)
+    for (let index = 1; index < rows.length; index++)
     {
-        const gap = centers[index] - centers[index - 1];
-
-        if (gap >= 4)
-        {
-            gaps.push(gap);
-        }
+        gaps.push(rows[index] - rows[index - 1]);
     }
 
     return gaps.length < 4 ? null : computeMedian(gaps, 0);
@@ -200,6 +209,12 @@ type GlyphSelection = {
      * Their 1-based component labels.
      */
     labels: Set<number>;
+
+    /**
+     * Thin uprights of about a letter's height: an ascender or a short connector. They join a
+     * row that reaches them but never start one, and they are not glyphs for the mask.
+     */
+    uprights: Array<Component>;
 };
 
 /**
@@ -215,6 +230,7 @@ function selectGlyphs(components: Array<Component>, plausible: Array<boolean>, g
 {
     const labels = new Set<number>();
     const glyphs = new Array<Component>();
+    const uprights = new Array<Component>();
 
     for (let index = 0; index < components.length; index++)
     {
@@ -226,8 +242,17 @@ function selectGlyphs(components: Array<Component>, plausible: Array<boolean>, g
         const box = components[index].box;
         const glyphWidth = box.x1 - box.x0;
         const componentHeight = box.y1 - box.y0;
+        const upright = componentHeight >= 1.5 * glyphHeight && glyphWidth <= 0.4 * glyphHeight;
+
+        if (upright && componentHeight <= 2.5 * glyphHeight)
+        {
+            uprights.push(components[index]);
+        }
+
+        // A dash much longer than a hyphen and no thicker than a line is a branch stub, not a glyph.
         const lineLike = (glyphWidth >= 1.5 * glyphHeight && componentHeight <= 0.4 * glyphHeight)
-            || (componentHeight >= 1.5 * glyphHeight && glyphWidth <= 0.4 * glyphHeight);
+            || upright
+            || (glyphWidth >= 0.75 * glyphHeight && componentHeight <= 0.3 * glyphHeight && glyphWidth >= 3 * componentHeight);
 
         // Touching letters make one component per word, so a glyph may be a word wide.
         if (!lineLike && componentHeight <= 2.5 * glyphHeight && glyphWidth <= 20 * glyphHeight)
@@ -239,17 +264,18 @@ function selectGlyphs(components: Array<Component>, plausible: Array<boolean>, g
 
     glyphs.sort(compareComponentLeftEdges);
 
-    return { glyphs, labels };
+    return { glyphs, labels, uprights };
 }
 
 /**
  * Clusters glyphs into rows of text.
  *
  * @param glyphs - Glyphs sorted left to right.
+ * @param uprights - Thin uprights that may extend a row but never start one.
  * @param glyphHeight - Glyph height in pixels, which scales every tolerance.
  * @returns Open lines, merged where a tall fused component bridges two pieces of a row.
  */
-function clusterIntoLines(glyphs: Array<Component>, glyphHeight: number): Array<OpenLine>
+function clusterIntoLines(glyphs: Array<Component>, uprights: Array<Component>, glyphHeight: number): Array<OpenLine>
 {
     const lines = new Array<OpenLine>();
     const tallGlyphs = new Array<Component>();
@@ -306,28 +332,72 @@ function clusterIntoLines(glyphs: Array<Component>, glyphHeight: number): Array<
         }
     }
 
-    // Rows that a tall component now bridges are joined.
-    lines.sort(compareLineLeftEdges);
-
-    for (let index = 0; index < lines.length; index++)
+    // An ascender in a tall-lettered font looks like a short connector and is kept out of the
+    // glyphs. One with text on both sides is a letter in a word, so the row takes it in rather
+    // than being cut there; a connector has text on its right at most.
+    for (const upright of uprights)
     {
-        for (let other = index + 1; other < lines.length; other++)
-        {
-            const first = lines[index];
-            const second = lines[other];
-            const gap = Math.max(second.x0 - first.x1, first.x0 - second.x1);
+        let left: OpenLine | null = null;
+        let right: OpenLine | null = null;
 
-            if (Math.abs(first.center - second.center) < 0.5 * glyphHeight && gap < 1.6 * glyphHeight)
+        for (const line of lines)
+        {
+            const overlap = Math.min(upright.box.y1, line.y1) - Math.max(upright.box.y0, line.y0);
+
+            if (overlap < 0.5 * (line.y1 - line.y0))
             {
-                first.glyphs.push(...second.glyphs);
-                first.centers.push(...second.centers);
-                first.center = computeMedian(first.centers, first.center);
-                first.x0 = Math.min(first.x0, second.x0);
-                first.x1 = Math.max(first.x1, second.x1);
-                first.y0 = Math.min(first.y0, second.y0);
-                first.y1 = Math.max(first.y1, second.y1);
-                lines.splice(other, 1);
-                other = index;
+                continue;
+            }
+
+            if (line.x1 <= upright.box.x1 && upright.box.x0 - line.x1 < 1.6 * glyphHeight)
+            {
+                left = line;
+            }
+            else if (line.x0 >= upright.box.x0 && line.x0 - upright.box.x1 < 1.6 * glyphHeight)
+            {
+                right = line;
+            }
+        }
+
+        if (left !== null && right !== null)
+        {
+            left.glyphs.push(upright);
+            left.x0 = Math.min(left.x0, upright.box.x0);
+            left.x1 = Math.max(left.x1, upright.box.x1);
+        }
+    }
+
+    // Rows that a tall component now bridges are joined, and so are pieces of one row whose
+    // centers only agree once a piece seeded by a dot or a serif has taken in real letters.
+    // Joining shifts centers, so the pass repeats until nothing joins.
+    lines.sort(compareLineLeftEdges);
+    let joined = true;
+
+    while (joined)
+    {
+        joined = false;
+
+        for (let index = 0; index < lines.length; index++)
+        {
+            for (let other = index + 1; other < lines.length; other++)
+            {
+                const first = lines[index];
+                const second = lines[other];
+                const gap = Math.max(second.x0 - first.x1, first.x0 - second.x1);
+
+                if (Math.abs(first.center - second.center) < 0.5 * glyphHeight && gap < 1.6 * glyphHeight)
+                {
+                    first.glyphs.push(...second.glyphs);
+                    first.centers.push(...second.centers);
+                    first.center = computeMedian(first.centers, first.center);
+                    first.x0 = Math.min(first.x0, second.x0);
+                    first.x1 = Math.max(first.x1, second.x1);
+                    first.y0 = Math.min(first.y0, second.y0);
+                    first.y1 = Math.max(first.y1, second.y1);
+                    lines.splice(other, 1);
+                    other = index;
+                    joined = true;
+                }
             }
         }
     }
@@ -369,8 +439,8 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
     heights.sort(compareNumbers);
     let glyphHeight = heights.length === 0 ? 12 : heights[Math.floor(heights.length * 0.7)];
     let selected = selectGlyphs(components, plausible, glyphHeight);
-    let lines = clusterIntoLines(selected.glyphs, glyphHeight);
-    const pitch = estimateRowPitch(lines);
+    let lines = clusterIntoLines(selected.glyphs, selected.uprights, glyphHeight);
+    const pitch = estimateRowPitch(lines, glyphHeight);
     const floor = pitch === null ? 0 : Math.round(0.45 * pitch);
     const fragmented = floor > glyphHeight + 1;
 
@@ -378,7 +448,7 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
     {
         glyphHeight = floor;
         selected = selectGlyphs(components, plausible, glyphHeight);
-        lines = clusterIntoLines(selected.glyphs, glyphHeight);
+        lines = clusterIntoLines(selected.glyphs, selected.uprights, glyphHeight);
     }
 
     const textLines = new Array<TextLine>();

@@ -1,0 +1,30 @@
+#NEXUS
+
+[ Ke et al. 2023, PeerJ 11: e15439, Figure 6: time-scaled strict consensus of Nanhsiungchelyidae, 17 taxa. Topology transcribed by the tool and checked node by node against the image (2026-10-27). CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=17;
+    TAXLABELS
+        Adocus
+        Zangerlia_testudinimorpha
+        Jiangxichelys_neimongolensis
+        Zangerlia_ukhaachelys
+        Basilemys_variolosa
+        Basilemys_nobilis
+        Basilemys_sinuosa
+        Basilemys_praeclara
+        Hanbogdemys_orientalis
+        Anomalochelys_angulata
+        Nanhsiungchelys_wuchingensis
+        Kharakhutulia_kalandadzei
+        Jiangxichelys_ganzhouensis
+        Zangerlia_dzamynchondi
+        Nanhsiungchelys_yangi
+        Basilemys_morrinensis
+        Yuchelys_nanyangensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE ke2023a_fig6 = [&R] (((((((Basilemys_praeclara,Basilemys_sinuosa),Basilemys_morrinensis,Basilemys_nobilis,Basilemys_variolosa),((Jiangxichelys_ganzhouensis,Jiangxichelys_neimongolensis),Zangerlia_dzamynchondi)),((Nanhsiungchelys_yangi,Nanhsiungchelys_wuchingensis),Anomalochelys_angulata),Hanbogdemys_orientalis,Zangerlia_ukhaachelys),Kharakhutulia_kalandadzei),(Yuchelys_nanyangensis,Zangerlia_testudinimorpha)),Adocus);
+END;

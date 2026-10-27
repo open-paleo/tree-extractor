@@ -13,12 +13,16 @@ the batch command line give identical results.
 
 ## Status
 
-Early. On four published figures (a 52-taxon time-scaled consensus with colored clade boxes and
+Early. On eight published figures (a 52-taxon time-scaled consensus with colored clade boxes and
 range bars; a 20-taxon strict consensus from a 665-pixel-wide embedded image; a 300 dpi page scan
-of a 1990s-style cladogram in italic serif; and a 75-taxon majority-rule tree in a staircase
-layout with clade arrows) three come out identical and the fourth has every taxon and every split
-right plus three debris tips to delete. On synthetic figures in five styles, eleven of fifteen are
-identical. See `docs/design.md` for the approach and its known gaps.
+of a 1990s-style cladogram in italic serif; a 75-taxon majority-rule tree in a staircase layout
+with clade arrows; a 68-taxon consensus with Bremer values and lettered clades; a 17-taxon
+time-scaled turtle tree; a 60-tip tree at 2265 by 4500 pixels with 35-pixel letters; and a
+74-taxon tree in a letter-spaced italic font with a red new taxon) seven come out identical and
+the eighth has every taxon and every split right plus two debris tips to delete. On synthetic
+figures in five styles, twelve of fifteen are identical. Four of the real figures are CC BY and
+ship with the benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach
+and its known gaps.
 
 ## Use
 
