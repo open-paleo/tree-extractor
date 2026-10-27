@@ -613,14 +613,50 @@ export type TimeScaleProfile = {
     bands: boolean;
 
     /**
-     * A long horizontal at the top or bottom with short text rows along it, or null.
+     * The axis line between its outermost tick marks, or null when no axis was found.
      */
     axis: Box | null;
+
+    /**
+     * Tick marks found along the axis.
+     */
+    ticks: number;
+
+    /**
+     * The line from a column to a value along the axis, once the labels have been read and
+     * fit, or null.
+     */
+    calibration: AxisCalibration | null;
 
     /**
      * Horizontals much thicker than the lines that end at a tip.
      */
     rangeBars: number;
+};
+
+/**
+ * The line that turns a pixel column into a value along a time axis.
+ */
+export type AxisCalibration = {
+    /**
+     * Column at value zero.
+     */
+    originX: number;
+
+    /**
+     * Columns per unit of value; negative when values grow to the left.
+     */
+    pixelsPerUnit: number;
+
+    /**
+     * Labels the fit used.
+     */
+    points: number;
+
+    /**
+     * Root-mean-square distance of the labels from the line, in pixels.
+     */
+    residual: number;
 };
 
 /**

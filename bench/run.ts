@@ -41,6 +41,7 @@ type ExpectedProfile = {
     letterSpaced?: boolean;
     bands?: boolean;
     rangeBars?: boolean;
+    calibrated?: boolean;
     panels?: number;
 };
 
@@ -100,6 +101,7 @@ function checkProfile(expected: ExpectedProfile, profile: FigureProfile): Profil
     compare("letterSpaced", expected.letterSpaced, profile.font.letterSpaced);
     compare("bands", expected.bands, profile.timeScaled.bands);
     compare("rangeBars", expected.rangeBars, profile.timeScaled.rangeBars > 0);
+    compare("calibrated", expected.calibrated, profile.timeScaled.calibration !== null);
     compare("panels", expected.panels, profile.panels.length);
 
     return check;

@@ -143,6 +143,17 @@ from a firm one.
    traced to. Recognizing brackets, arrows and discs by shape before tracing was not needed by
    any benchmark figure and waits for one.
 6. Time-scale detection, which is also the entry point for the v2 branch-length calibration.
+   First slice done: the axis is found from its tick marks (a row that many short verticals
+   start or end on, or a long horizontal near an edge, with ink ticks in the band beside it),
+   the numbers along it are read after the labels, standing up or turned a quarter either way,
+   each goes with its nearest tick, and a least-squares line gives columns per unit and the
+   column of value zero. The result is recorded as `timeScaled.calibration`; nothing uses it
+   yet. Ke 2023 calibrates from four labels at 27 px per million years with half a pixel of
+   residual. Dieudonné 2026 does not: its axis numbers are eight pixels high, straddle the
+   axis line, and touch their ticks and one another, and the reads come out in pieces. The
+   axis line's own rows and the tick marks are blanked before the labels are stacked and read,
+   which was enough for Ke and not for that. Branch lengths in time from the calibration are
+   the next slice.
 
 Each step is one commit and one or two new benchmark figures chosen for the feature.
 

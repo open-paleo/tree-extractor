@@ -23,6 +23,7 @@ import type {
 } from "./types.ts";
 import { compareNumbers, computeMedian, createMaskFromBoxes, dilate, erode, findConnectedComponents, unionMask } from "./raster.ts";
 import { collectConnected } from "./tree.ts";
+import { findAxis } from "./timescale.ts";
 
 /**
  * Share of tips that must end at one x for the tips to count as aligned.
@@ -103,7 +104,7 @@ export function createEmptyProfile(): FigureProfile
         supportLabels: "unknown",
         cladeMarks: [],
         font: { strokeWidth: 0, letterGap: 0, slant: null, italic: null, letterSpaced: false, fragmented: false, widened: false, condensing: 1 },
-        timeScaled: { tintedShare: 0, bandColumnShare: 0, bands: false, axis: null, rangeBars: 0 },
+        timeScaled: { tintedShare: 0, bandColumnShare: 0, bands: false, axis: null, ticks: 0, calibration: null, rangeBars: 0 },
         panels: [],
         bridgedGaps: 0,
         confidence: { layout: 0, tipAlignment: 0, supportLabels: 0 },
@@ -795,12 +796,15 @@ export function measureSlant(glyphMask: Mask, lines: Array<TextLine>, glyphHeigh
 function measureTimeScale(input: ProfileInput, connected: Set<string>): TimeScaleProfile
 {
     const tint = measureTint(input.image);
+    const axis = findAxis(input.document, input.textInk, input.glyphHeight, input.thickness);
 
     return {
         tintedShare: tint.share,
         bandColumnShare: tint.bandColumnShare,
         bands: tint.bandColumnShare >= 0.15,
-        axis: findAxis(input.document, input.glyphHeight),
+        axis: axis === null ? null : axis.box,
+        ticks: axis === null ? 0 : axis.ticks.length,
+        calibration: null,
         rangeBars: countRangeBars(input.document, input.textInk, connected, input.glyphHeight),
     };
 }
@@ -868,56 +872,6 @@ function measureTint(image: RgbaImage): TintMeasure
     const pixels = width * height;
 
     return { share: pixels === 0 ? 0 : tinted / pixels, bandColumnShare: width === 0 ? 0 : bandColumns / width };
-}
-
-/**
- * A long horizontal near the top or bottom edge with several short text rows along it.
- *
- * @param document - Document.
- * @param glyphHeight - Glyph height in pixels.
- * @returns The axis box, or null.
- */
-function findAxis(document: ExtractionDocument, glyphHeight: number): Box | null
-{
-    // Coordinates are still those of the analyzed region at this point.
-    const { width, height } = document.image;
-    const region = document.image.region;
-    const extentWidth = region === null ? width : region.x1 - region.x0;
-    const extentHeight = region === null ? height : region.y1 - region.y0;
-
-    for (const segment of document.horizontals)
-    {
-        const { box } = segment;
-        const nearEdge = box.y0 < 0.12 * extentHeight || box.y1 > 0.88 * extentHeight;
-
-        if (box.x1 - box.x0 < 0.4 * extentWidth || !nearEdge)
-        {
-            continue;
-        }
-
-        let ticks = 0;
-        let leftmost = Infinity;
-        let rightmost = -Infinity;
-
-        for (const line of document.textLines)
-        {
-            const near = line.box.y0 >= box.y1 - 2.5 * glyphHeight && line.box.y1 <= box.y0 + 2.5 * glyphHeight;
-
-            if (line.glyphCount <= 4 && near && line.box.x0 >= box.x0 - glyphHeight && line.box.x1 <= box.x1 + glyphHeight)
-            {
-                ticks++;
-                leftmost = Math.min(leftmost, line.box.x0);
-                rightmost = Math.max(rightmost, line.box.x1);
-            }
-        }
-
-        if (ticks >= 3 && rightmost - leftmost >= 0.3 * (box.x1 - box.x0))
-        {
-            return { x0: box.x0, y0: box.y0, x1: box.x1, y1: box.y1 };
-        }
-    }
-
-    return null;
 }
 
 /**
@@ -1145,7 +1099,10 @@ export function formatProfile(profile: FigureProfile): Array<string>
         : `not aligned (${Math.round(profile.tipAlignment.share * 100)}% share one x)`;
     const lean = profile.font.slant === null ? "slant not measured (text too small or too little of it)" : `${profile.font.italic === true ? "italic" : "upright"} (slant ${profile.font.slant.toFixed(2)})`;
     const font = `stroke ${profile.font.strokeWidth} px, letter gap ${profile.font.letterGap.toFixed(2)} glyph heights${profile.font.letterSpaced ? " (letter-spaced)" : ""}, ${lean}`;
-    const time = `tinted ${Math.round(profile.timeScaled.tintedShare * 100)}%, band columns ${Math.round(profile.timeScaled.bandColumnShare * 100)}%${profile.timeScaled.bands ? " (bands)" : ""}, axis ${profile.timeScaled.axis === null ? "none" : "found"}, range bars ${profile.timeScaled.rangeBars}`;
+    const calibration = profile.timeScaled.calibration;
+    const axis = profile.timeScaled.axis === null ? "none" : `${profile.timeScaled.ticks} ticks`;
+    const scale = calibration === null ? "" : `, ${calibration.points} labels fit at ${Math.abs(calibration.pixelsPerUnit).toFixed(2)} px per unit (${calibration.pixelsPerUnit < 0 ? "older on the left" : "older on the right"}, residual ${calibration.residual.toFixed(1)} px)`;
+    const time = `tinted ${Math.round(profile.timeScaled.tintedShare * 100)}%, band columns ${Math.round(profile.timeScaled.bandColumnShare * 100)}%${profile.timeScaled.bands ? " (bands)" : ""}, axis ${axis}${scale}, range bars ${profile.timeScaled.rangeBars}`;
     lines.push(`lines: ${profile.lineThickness} px thick`);
     lines.push(`layout: ${profile.layout} (${profile.confidence.layout.toFixed(2)})`);
     lines.push(`tips: ${tips}`);

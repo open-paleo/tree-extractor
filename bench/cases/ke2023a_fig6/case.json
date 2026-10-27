@@ -12,6 +12,7 @@
         "italic": true,
         "letterSpaced": false,
         "bands": true,
-        "rangeBars": true
+        "rangeBars": true,
+        "calibrated": true
     }
 }

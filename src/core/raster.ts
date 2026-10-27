@@ -548,6 +548,38 @@ export function cropAndScale(image: GrayImage, box: Box, pad: number, scale: num
 }
 
 /**
+ * Turns a luminance image a quarter turn.
+ *
+ * @param image - Source image.
+ * @param clockwise - Direction of the turn.
+ * @returns The turned image, with width and height swapped.
+ */
+export function rotateGrayQuarter(image: GrayImage, clockwise: boolean): GrayImage
+{
+    const { width, height } = image;
+    const data = new Uint8ClampedArray(width * height);
+
+    for (let y = 0; y < height; y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+            const value = image.data[y * width + x];
+
+            if (clockwise)
+            {
+                data[x * height + (height - 1 - y)] = value;
+            }
+            else
+            {
+                data[(width - 1 - x) * height + y] = value;
+            }
+        }
+    }
+
+    return { width: height, height: width, data };
+}
+
+/**
  * Pixels set in either mask.
  *
  * @param left - First mask.

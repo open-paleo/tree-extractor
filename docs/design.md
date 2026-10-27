@@ -76,7 +76,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 7. **Profile.** Figure-level properties are measured once and recorded in the document: layout
    family, tip alignment, support label style, clade marks, font (stroke, letter gap, slant,
    whether the text ink was widened, how far label crops are condensed), time-scale signs (tint,
-   axis, range bars), separate blocks of line art and the number of bridged gaps. Label reading
+   the axis found from its ticks, range bars, and after label reading the calibration fit
+   through the numbers along the axis), separate blocks of line art and the number of bridged
+   gaps. Label reading
    takes its condensing from the profile; any value can be fixed through `profileOverrides`
    (CLI `--profile`). `docs/profiles.md` has the plan for what else will read it. The benchmark
    checks the profile against each case's expected values and reports a profile column.

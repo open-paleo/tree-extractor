@@ -16,6 +16,7 @@
         "letterSpaced": false,
         "bands": false,
         "rangeBars": false,
-        "panels": 1
+        "panels": 1,
+        "calibrated": false
     }
 }
