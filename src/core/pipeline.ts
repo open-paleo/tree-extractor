@@ -6,6 +6,7 @@
 import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
+import { pruneDecorations } from "./decorations.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -871,6 +872,9 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     assignLabels(document);
     removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
+    // Clade brackets, axes and legends trace into small pieces beside the tree; they go now,
+    // before any label of theirs is read.
+    document.qc.push(...pruneDecorations(document));
     recordLap("assign");
 
     // The profile is measured before labels are read, since reading them uses it (how far to

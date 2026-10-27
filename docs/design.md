@@ -63,7 +63,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    reported.
 5. **Labels.** Text is detected again with the traced line art (and any range-bar stub beyond it)
    painted out, then tip rows are assigned to the nearest branch end on their left and remaining
-   rows to the nearest junction on their right. Short unlabelled tips are dropped as debris.
+   rows to the nearest junction on their right. Short unlabelled tips are dropped as debris, and
+   so are disconnected pieces that lie where decorations go: entirely right of the tips (clade
+   brackets), or above or below the tree without labels (a time axis, a legend).
 6. **OCR and matching.** Each label is cropped from the image with the line art painted out and
    upscaled three times; letter-spaced text, recognized by the figure's letter gap in the
    profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing

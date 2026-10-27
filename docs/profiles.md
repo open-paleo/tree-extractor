@@ -136,7 +136,12 @@ from a firm one.
    and before labels are read such a row is searched for in the line ink; a branch piece ending
    at the line gets a tip (`tip-recovered`), hung from the nearest node on its left. No
    benchmark figure exercised the recovery, which is tested on a built document.
-5. Decoration removal (brackets, arrows, discs) before tracing.
+5. Decoration removal (brackets, arrows, discs) before tracing. Done in the form the evidence
+   supported: after the trace, a disconnected piece that lies entirely right of the tips, or
+   above or below the tree with no labels, is dropped (`decoration-dropped`) before any label of
+   its is read. That is where Raven's and Yang's clade brackets and Dieudonné's time axis
+   traced to. Recognizing brackets, arrows and discs by shape before tracing was not needed by
+   any benchmark figure and waits for one.
 6. Time-scale detection, which is also the entry point for the v2 branch-length calibration.
 
 Each step is one commit and one or two new benchmark figures chosen for the feature.
