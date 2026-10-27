@@ -1,0 +1,12 @@
+Authors: Sampson, S. D.; Loewen, M. A.; Farke, A. A.; Roberts, E. M.; Forster, C. A.; Smith, J. A.; Titus, A. L.
+Year: 2010
+Title: New Horned Dinosaurs from Utah Provide Evidence for Intracontinental Dinosaur Endemism
+Journal: PloS one 5(9): e12292
+DOI: https://doi.org/10.1371/journal.pone.0012292
+Figure: Fig. 7 (PDF page 9); image = embedded image extracted from the PDF at native resolution, unmodified (1500x1554 px)
+Caption (first sentence): Phylogenetic relationships of Utahceratops gettyi n. gen et n. sp., and Kosmoceratops richardsoni n. gen. et n. sp. within Ceratopsidae.
+Licence: CC BY 4.0 (from the article XML; the PDF statement gives no version)
+Licence URL: http://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "(PDF) Copyright:  2010 Sampson et al. This is an open-access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited."
+Source: https://doi.org/10.1371/journal.pone.0012292 (published PDF); Europe PMC PMC2929175 license: cc by
+Taxon list (names.txt): S1 File (pone.0012292.s001.doc), character-taxon matrix, 25 taxa

@@ -1,0 +1,15 @@
+{
+  "image": "../../../images/pacheco2019a_fig8.png",
+  "names": "names.txt",
+  "source": "Pacheco et al. 2019, PeerJ 7: e7963, Fig. 8: multi-panel figure: (A) strict consensus of early dinosaurs and relatives, a vertical tree with the root at the bottom, rotated tip labels, coloured clade blocks with silhouettes and Bremer values; (B) a bivariate morphospace plot and (C) a time-scaled panel with silhouettes. Image: embedded image extracted from the PDF at native resolution, unmodified (1600x1217 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1600,
+    "y1": 796
+  },
+  "license": "CC BY 4.0",
+  "attribution": "Pacheco, C.; Müller, R. T.; Langer, M.; Pretto, F. A.; Kerber, L.; Dias-da-Silva, S. (2019). Gnathovorax cabreirai: a new early dinosaur and the origin and initial radiation of predatory dinosaurs. PeerJ 7: e7963. https://doi.org/10.7717/peerj.7963. Fig. 8. CC BY 4.0.",
+  "license_note": "The article is CC BY 4.0, but the caption says \"silhouettes are composites from different sources\", so the silhouettes may carry other licences. The image is kept uncommitted under bench/images until their sources are known.",
+  "region_note": "panel A (top). No clean rectangle exists: the top of panel B (a silhouette and the PCoA plot) intrudes into the lower right of this box from about y 556, x > 950; the tree itself ends above y 510 on that side"
+}

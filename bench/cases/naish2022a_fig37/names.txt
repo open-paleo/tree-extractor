@@ -1,0 +1,86 @@
+Eoraptor
+Acrocanthosaurus
+Aerosteon
+Alioramus
+Allosaurus fragilis
+Aniksosaurus
+Aorun
+Appalachiosaurus
+Arcovenator
+Australovenator
+Baryonyx
+Berberosaurus
+Bicentenaria
+Bistahieversor
+Carcharodontosaurus
+Carnotaurus
+Ceratosaurus
+Chilantaisaurus
+Chilesaurus
+Coelophysis rhodesiensis
+Coelurus
+Compsognathus corallestris
+Concavenator
+Condorraptor
+Cryolophosaurus
+Dilong
+Dilophosaurus
+Dryptosaurus
+Dubreuillosaurus
+Elaphrosaurus
+Eoabelisaurus
+Eotyrannus
+Eustreptospondylus
+Falcarius
+Fukuiraptor
+Gallimimus
+Garudimimus
+Giganotosaurus
+Gorgosaurus
+Guanlong
+Haplocheirus
+Harpymimus
+Herrerasaurus
+Huaxiagnathus
+Ichthyovenator
+Irritator
+Juratyrant
+Limusaurus
+Lythronax
+Majungasaurus
+Mapusaurus
+Masiakasaurus
+Megalosaurus
+Megaraptor
+Monolophosaurus
+MSNM V4047
+Neovenator
+Noasaurus
+Nqwebasaurus
+Orkoraptor
+Ornitholestes
+Pelecanimimus
+Piatnitzkysaurus
+Proceratosaurus
+Shaochilong
+Siats
+Sinocalliopteryx
+Sinosauropteryx
+Sinotyrannus
+Sinraptor dongi
+Spinosaurus type
+Stokesosaurus
+Suchomimus
+Syntarsus kayentakatae
+Tanycolagreus
+Tawa
+Teratophoneus
+Torvosaurus tanneri
+Tugulusaurus
+Tyrannosaurus
+Tyrannotitan
+Xiongguanlong
+Xuanhanosaurus
+Yutyrannus
+Zuolong
+Zupaysaurus

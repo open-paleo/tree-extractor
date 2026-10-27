@@ -1,0 +1,32 @@
+#NEXUS
+
+[ de Souza et al. 2021, Scientific Reports 11: 22281, Fig. 6: time-calibrated tree of Ceratosauria/Noasauridae, rectangular, root left, with thick range bars on terminal branches, a coloured Triassic-Cretaceous timescale strip and a collapsed Abelisauridae wedge; about 20 tips. 19 tips. Abelisauridae is a collapsed wedge and keeps its printed text; "Vespersaurus (holotype)" is Vespersaurus_hol in the matrix. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=19;
+    TAXLABELS
+        Herrerasaurus
+        Megapnosaurus
+        Dilophosaurus
+        Allosaurus
+        Berberosaurus
+        Genyodectes
+        Ceratosaurus
+        Berthasaura
+        Deltadromeus
+        Afromimus
+        Velocisaurus
+        Vespersaurus_hol
+        Noasaurus
+        Masiakasaurus
+        MNNtig6
+        Limusaurus
+        Elaphrosaurus
+        CCG20011
+        Abelisauridae
+    ;
+END;
+
+BEGIN TREES;
+    TREE desouza2021a_fig6 = [&R] (Herrerasaurus,(Megapnosaurus,(Dilophosaurus,(Allosaurus,(Berberosaurus,((Genyodectes,Ceratosaurus),((Berthasaura,(Deltadromeus,(Afromimus,Velocisaurus,Vespersaurus_hol,Noasaurus,Masiakasaurus,(MNNtig6,(Limusaurus,(Elaphrosaurus,CCG20011)))))),Abelisauridae)))))));
+END;

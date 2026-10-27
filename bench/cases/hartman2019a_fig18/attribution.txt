@@ -1,0 +1,12 @@
+Authors: Hartman S, Mortimer M, Wahl WR, Lomax DR, Lippincott J, Lovelace DM.
+Year: 2019
+Title: A new paravian dinosaur from the Late Jurassic of North America supports a late acquisition of avian flight
+Journal: PeerJ 7: e7247
+DOI: https://doi.org/10.7717/peerj.7247
+Figure: Fig. 18 (PDF page 39); image = embedded image extracted from the PDF at native resolution, unmodified (2254x2400 px)
+Caption (first sentence): Partially expanded, time calibrated phylogenetic results.
+Licence: CC BY 4.0
+Licence URL: http://creativecommons.org/licenses/by/4.0/
+Licence statement on the article (PDF): "Copyright 2019 Hartman et al. Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.7247 (published PDF); Europe PMC PMC6626525 license: cc by
+Taxon list (names.txt): Supplemental File 3 (peerj-07-7247-s003.nex), NEXUS TAXLABELS, 501 taxa; the figure is partially collapsed, so many tips are clade names

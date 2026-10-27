@@ -1,0 +1,43 @@
+#NEXUS
+
+[ Loewen et al. 2024, PeerJ 12: e17224, Fig. 24: 50% majority-rule tree of Centrosaurinae, rectangular, root left, with skull silhouettes at the tips, coloured stratigraphic range ovals, a timescale strip and a palaeogeographic inset map; about 30 tips, numbered node circles. 30 tips. Chasmosaurinae is a collapsed clade and keeps its printed text. CPC_279 is printed on a dashed branch with a "?" from the Xenoceratops node; it is not in the matrix and is kept here as a member of that polytomy with its printed name, so drop it if the benchmark should score only solid branches. "MOR 692 Avaceratops" and "CMN 8804 Avaceratops" are Avaceratops_sp._MOR_692 and Avaceratops_sp._CMN_8804 in the matrix. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=30;
+    TAXLABELS
+        Zuniceratops_christopheri
+        Chasmosaurinae
+        Diabloceratops_eatoni
+        Machairoceratops_cronusi
+        Yehuecauhceratops_mudei
+        Menefeeceratops_sealeyi
+        Xenoceratops_foremostensis
+        CPC_279
+        Crittendenceratops_krzyzanowskii
+        Nasutoceratops_titusi
+        Avaceratops_lammersi_type
+        Avaceratops_sp._MOR_692
+        Avaceratops_sp._CMN_8804
+        Lokiceratops_rangiformis
+        Albertaceratops_nesmoi
+        Medusaceratops_lokii
+        Wendiceratops_pinhornensis
+        Sinoceratops_zhuchengensis
+        Coronosaurus_brinkmani
+        Spinops_sternbergorum
+        Centrosaurus_apertus
+        Styracosaurus_ovatus
+        Styracosaurus_albertensis
+        Stellasaurus_ancellae
+        Einiosaurus_procurvicornis
+        Iddesleigh_pachyrhinosaur
+        Achelousaurus_horneri
+        Pachyrhinosaurus_canadensis
+        Pachyrhinosaurus_lakustai
+        Pachyrhinosaurus_perotorum
+    ;
+END;
+
+BEGIN TREES;
+    TREE loewen2024a_fig24 = [&R] (Zuniceratops_christopheri,(Chasmosaurinae,(Diabloceratops_eatoni,Machairoceratops_cronusi,(Yehuecauhceratops_mudei,Menefeeceratops_sealeyi),(Xenoceratops_foremostensis,CPC_279,(Crittendenceratops_krzyzanowskii,(Nasutoceratops_titusi,(Avaceratops_lammersi_type,Avaceratops_sp._MOR_692,Avaceratops_sp._CMN_8804))),((Lokiceratops_rangiformis,(Albertaceratops_nesmoi,Medusaceratops_lokii)),((Wendiceratops_pinhornensis,Sinoceratops_zhuchengensis),(Coronosaurus_brinkmani,Spinops_sternbergorum,Centrosaurus_apertus,((Styracosaurus_ovatus,Styracosaurus_albertensis),(Stellasaurus_ancellae,(Einiosaurus_procurvicornis,(Iddesleigh_pachyrhinosaur,Achelousaurus_horneri,(Pachyrhinosaurus_canadensis,(Pachyrhinosaurus_lakustai,Pachyrhinosaurus_perotorum)))))))))))));
+END;

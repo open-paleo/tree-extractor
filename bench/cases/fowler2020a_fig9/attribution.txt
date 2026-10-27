@@ -1,0 +1,12 @@
+Authors: Fowler, D. W.; Freedman Fowler, E. A.
+Year: 2020
+Title: Transitional evolutionary forms in chasmosaurine ceratopsid dinosaurs: evidence from the Campanian of New Mexico
+Journal: PeerJ 8: e9251
+DOI: https://doi.org/10.7717/peerj.9251
+Figure: Fig. 9 (PDF page 26); image = embedded image extracted from the PDF at native resolution, unmodified (4499x1774 px)
+Caption (first sentence): Phylogenetic analysis.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "(PDF) Copyright 2020 Fowler and Freedman Fowler Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.9251 (published PDF); Europe PMC PMC7278894 license: cc by
+Taxon list (names.txt): Supplemental File 22 (peerj-08-9251-s022.nex), NEXUS TAXLABELS, 28 taxa (panel A, all taxa; panels B and C are reanalyses with taxa removed)

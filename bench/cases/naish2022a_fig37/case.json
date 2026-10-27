@@ -1,0 +1,9 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Naish & Cau 2022, PeerJ 10: e12727, Fig. 37: stratigraphically calibrated phylogeny of Tyrannosauroidea, rectangular, root left, thick black/grey range bars on terminal branches, timescale strip at the bottom; about 20 tips, several of them clade names (COELURIDAE, PROCERATOSAURIDAE, MEGARAPTORIDAE, TYRANNOSAURIDAE). Image: embedded image extracted from the PDF at native resolution, unmodified (1606x1265 px).",
+  "license": "CC BY 4.0",
+  "attribution": "Naish D, Cau A. (2022). The osteology and affinities of Eotyrannus lengi, a tyrannosauroid theropod from the Wealden Supergroup of southern England. PeerJ 10: e12727. https://doi.org/10.7717/peerj.12727. Fig. 37. CC BY 4.0.",
+  "gold": "gold.nex",
+  "gold_note": "17 tips. Four tips are collapsed clades printed in capitals and keep their printed text (COELURIDAE, PROCERATOSAURIDAE, MEGARAPTORIDAE, TYRANNOSAURIDAE); the matrix holds several members of each."
+}

@@ -1,0 +1,14 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Gallina et al. 2014, PLOS ONE 9(5): e97128, Fig. 4: two slanted cladograms side by side, (A) strict consensus of the Diplodocoidea matrix with Leinkupal, 28 tips, and (B) a second analysis, 14 tips; open-circle nodes with clade names and support values in brackets. names.txt is for panel A (left). Image: embedded image extracted from the PDF at native resolution, unmodified (1836x1232 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1034,
+    "y1": 1232
+  },
+  "license": "CC BY",
+  "attribution": "Gallina PA, Apesteguía S, Haluza A, Canale JI. (2014). A Diplodocid Sauropod Survivor from the Early Cretaceous of South America. PloS one 9(5): e97128. https://doi.org/10.1371/journal.pone.0097128. Fig. 4. CC BY.",
+  "region_note": "panel A (left); B starts after the blank gutter at x 960-1108"
+}

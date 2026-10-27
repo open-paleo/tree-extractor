@@ -1,0 +1,9 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "de Souza et al. 2021, Scientific Reports 11: 22281, Fig. 6: time-calibrated tree of Ceratosauria/Noasauridae, rectangular, root left, with thick range bars on terminal branches, a coloured Triassic-Cretaceous timescale strip and a collapsed Abelisauridae wedge; about 20 tips. Image: embedded image extracted from the PDF at native resolution, unmodified (1187x676 px).",
+  "license": "CC BY 4.0",
+  "attribution": "de Souza, G. A.; Soares, M. B.; Weinschütz, L. C.; Wilner, E.; Lopes, R. T.; de Araújo, O. M. O.; Kellner, A. W. A. (2021). The first edentulous ceratosaur from South America. Scientific reports 11(1): 22281. https://doi.org/10.1038/s41598-021-01312-4. Fig. 6. CC BY 4.0.",
+  "gold": "gold.nex",
+  "gold_note": "19 tips. Abelisauridae is a collapsed wedge and keeps its printed text; \"Vespersaurus (holotype)\" is Vespersaurus_hol in the matrix."
+}

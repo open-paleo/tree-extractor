@@ -1,0 +1,24 @@
+#NEXUS
+
+[ Averianov & Sues 2021, PLOS ONE 16(2): e0246620, Fig. 4: part of the strict consensus, Rebbachisauridae, a slanted cladogram with GC support values at the nodes; 11 tips. 11 tips, drawn with oblique joining lines. The figure prints "Rayososaurus agrionensis" and "Dzharatitanis kingi"; the matrix has Rayososaurus_agrioensis and Dzharatitanis. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC0 1.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=11;
+    TAXLABELS
+        Amazonsaurus_maranhensis
+        Zapalasaurus_bonapartei
+        Histriasaurus_bocardeli
+        Comahuesaurus_windhanseni
+        Rayososaurus_agrioensis
+        Rebbachisaurus_garasbae
+        Demandasaurus_darwini
+        Nigersaurus_taqueti
+        Dzharatitanis
+        Cathartesaura_anaerobica
+        Limaysaurus_tessonei
+    ;
+END;
+
+BEGIN TREES;
+    TREE averianov2021b_fig4 = [&R] (Amazonsaurus_maranhensis,(Zapalasaurus_bonapartei,Histriasaurus_bocardeli,(Comahuesaurus_windhanseni,(Rayososaurus_agrioensis,Rebbachisaurus_garasbae,Demandasaurus_darwini,Nigersaurus_taqueti,Dzharatitanis,(Cathartesaura_anaerobica,Limaysaurus_tessonei)))));
+END;

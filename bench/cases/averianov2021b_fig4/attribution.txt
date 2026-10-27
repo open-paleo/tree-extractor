@@ -1,0 +1,12 @@
+Authors: Averianov A, Sues HD.
+Year: 2021
+Title: First rebbachisaurid sauropod dinosaur from Asia
+Journal: PloS one 16(2): e0246620
+DOI: https://doi.org/10.1371/journal.pone.0246620
+Figure: Fig. 4 (PDF page 9); image = embedded image extracted from the PDF at native resolution, unmodified (1038x560 px)
+Caption (first sentence): Part of the strict consensus of 1020 trees produced by TNT analysis showing the phylogenetic relationships within Rebbachisauridae and the position of Dzharatitanis kingi with GC values at the nodes.
+Licence: CC0 1.0 public-domain dedication (stated in the PDF: "The work is made available under the Creative Commons CC0 public domain dedication."); not CC BY, but no restrictions
+Licence URL: https://creativecommons.org/publicdomain/zero/1.0/
+Licence statement on the article (PDF): "Copyright: This is an open access article, free of all copyright, and may be freely reproduced, distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose. The work is made available under the Creative Commons CC0 public domain dedication."
+Source: https://doi.org/10.1371/journal.pone.0246620 (published PDF); Europe PMC PMC7904184 license: cc0
+Taxon list (names.txt): S2 File (pone.0246620.s002.tnt), TNT matrix, 74 taxa; the figure shows only the Rebbachisauridae part (11 tips)

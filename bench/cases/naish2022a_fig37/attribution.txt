@@ -1,0 +1,12 @@
+Authors: Naish D, Cau A.
+Year: 2022
+Title: The osteology and affinities of Eotyrannus lengi, a tyrannosauroid theropod from the Wealden Supergroup of southern England
+Journal: PeerJ 10: e12727
+DOI: https://doi.org/10.7717/peerj.12727
+Figure: Fig. 37 (PDF page 87); image = embedded image extracted from the PDF at native resolution, unmodified (1606x1265 px)
+Caption (first sentence): Stratigraphically calibrated phylogeny of Tyrannosauroidea.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article (PDF): "Copyright 2022 Naish and Cau Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.12727 (published PDF); Europe PMC PMC9271276 license: cc by
+Taxon list (names.txt): Supplemental File 3 (peerj-10-12727-s003.txt), matrix, 86 taxa; the figure shows only Tyrannosauroidea, partly as clade-name tips

@@ -1,0 +1,12 @@
+Authors: Upchurch P, Mannion PD, Taylor MP.
+Year: 2015
+Title: The Anatomy and Phylogenetic Relationships of "Pelorosaurus" becklesii (Neosauropoda, Macronaria) from the Early Cretaceous of England
+Journal: PloS one 10(6): e0125819
+DOI: https://doi.org/10.1371/journal.pone.0125819
+Figure: Fig. 15 (PDF page 32); image = embedded image extracted from the PDF at native resolution, unmodified (1714x2400 px)
+Caption (first sentence): Strict consensus tree (CSM).
+Licence: CC BY (the article does not state a version; PLOS ONE has used CC BY 4.0 since 2014)
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "(PDF) Copyright: © 2015 Upchurch et al. This is an open access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited."
+Source: https://doi.org/10.1371/journal.pone.0125819 (published PDF); Europe PMC PMC4454574 license: cc by
+Taxon list (names.txt): S2 File (pone.0125819.s002.txt), TNT matrix of Carballido & Sander with Haestasaurus added, 72 taxa; names are run together in the matrix (e.g. "Plateosaurusengelhardti")

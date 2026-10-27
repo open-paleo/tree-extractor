@@ -1,0 +1,9 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Hartman et al. 2019, PeerJ 7: e7247, Fig. 18: partially expanded, time-calibrated tree of Paraves, rectangular, root left, with a period/epoch timescale at the top, grey bands, red and blue coloured lineages and collapsed clades as single tips; about 60 tips. Image: embedded image extracted from the PDF at native resolution, unmodified (2254x2400 px).",
+  "license": "CC BY 4.0",
+  "attribution": "Hartman S, Mortimer M, Wahl WR, Lomax DR, Lippincott J, Lovelace DM. (2019). A new paravian dinosaur from the Late Jurassic of North America supports a late acquisition of avian flight. PeerJ 7: e7247. https://doi.org/10.7717/peerj.7247. Fig. 18. CC BY 4.0.",
+  "gold": "gold.nex",
+  "gold_note": "52 tips. Ten tips are collapsed clades or informal groups and keep their printed text (Compsognathidae, Ornithomimosauria, Alvarezsauroidea, Therizinosauria, Oviraptorosauria, Eudromaeosauria, Derived_troodontids, Jeholornithidae, Confuciusornithidae, Ornithothoraces). Matrix spellings: Unenlagia_sensu_lato (printed Unenlagia), NGMC91 (printed NGMC 91), jianchangensis (printed C. jianchangensis). Junctions on the long left spine checked against the vertical line segments in the image."
+}

@@ -1,0 +1,12 @@
+Authors: Li, N.; Maidment, S. C. R.; Li, D.; You, H.; Peng, G.
+Year: 2024
+Title: A new stegosaur (Dinosauria: Ornithischia) from the Middle Jurassic of Gansu Province, China
+Journal: Scientific reports 14(1): 15241
+DOI: https://doi.org/10.1038/s41598-024-66280-x
+Figure: Fig. 8 (PDF page 10); image = embedded image extracted from the PDF at native resolution, unmodified (1595x2124 px)
+Caption (first sentence): A single most parsimonious tree recovered by the phylogenetic analysis.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article (PDF): "Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article's Creative Commons licence, unless indicated otherwise in a credit line to the material." (Fig. 8 carries no third-party credit line; its caption says "Modified from Dai", i.e. from an earlier analysis.)
+Source: https://doi.org/10.1038/s41598-024-66280-x (published PDF); Europe PMC PMC11219857 license: cc by
+Taxon list (names.txt): Supplementary File 2 (41598_2024_66280_MOESM2_ESM.txt), TNT matrix, 44 taxa

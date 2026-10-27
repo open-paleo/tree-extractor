@@ -1,0 +1,9 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Loewen et al. 2024, PeerJ 12: e17224, Fig. 24: 50% majority-rule tree of Centrosaurinae, rectangular, root left, with skull silhouettes at the tips, coloured stratigraphic range ovals, a timescale strip and a palaeogeographic inset map; about 30 tips, numbered node circles. Image: embedded image extracted from the PDF at native resolution, unmodified (1606x2165 px).",
+  "license": "CC BY 4.0",
+  "attribution": "Loewen MA, Sertich JJW, Sampson S, O'Connor JK, Carpenter S, Sisson B, Øhlenschlæger A, Farke AA, Makovicky PJ, Longrich N, Evans DC. (2024). Lokiceratops rangiformis gen. et sp. nov. (Ceratopsidae: Centrosaurinae) from the Campanian Judith River Formation of Montana reveals rapid regional radiations and extreme endemism within centrosaurine dinosaurs. PeerJ 12: e17224. https://doi.org/10.7717/peerj.17224. Fig. 24. CC BY 4.0.",
+  "gold": "gold.nex",
+  "gold_note": "30 tips. Chasmosaurinae is a collapsed clade and keeps its printed text. CPC_279 is printed on a dashed branch with a \"?\" from the Xenoceratops node; it is not in the matrix and is kept here as a member of that polytomy with its printed name, so drop it if the benchmark should score only solid branches. \"MOR 692 Avaceratops\" and \"CMN 8804 Avaceratops\" are Avaceratops_sp._MOR_692 and Avaceratops_sp._CMN_8804 in the matrix."
+}

@@ -1,0 +1,9 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Averianov & Sues 2021, PLOS ONE 16(2): e0246620, Fig. 4: part of the strict consensus, Rebbachisauridae, a slanted cladogram with GC support values at the nodes; 11 tips. Image: embedded image extracted from the PDF at native resolution, unmodified (1038x560 px).",
+  "license": "CC0 1.0",
+  "attribution": "Averianov A, Sues HD. (2021). First rebbachisaurid sauropod dinosaur from Asia. PloS one 16(2): e0246620. https://doi.org/10.1371/journal.pone.0246620. Fig. 4. CC0 1.0 (public domain).",
+  "gold": "gold.nex",
+  "gold_note": "11 tips, drawn with oblique joining lines. The figure prints \"Rayososaurus agrionensis\" and \"Dzharatitanis kingi\"; the matrix has Rayososaurus_agrioensis and Dzharatitanis."
+}

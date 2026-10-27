@@ -1,0 +1,13 @@
+Authors: Pacheco, C.; Müller, R. T.; Langer, M.; Pretto, F. A.; Kerber, L.; Dias-da-Silva, S.
+Year: 2019
+Title: Gnathovorax cabreirai: a new early dinosaur and the origin and initial radiation of predatory dinosaurs
+Journal: PeerJ 7: e7963
+DOI: https://doi.org/10.7717/peerj.7963
+Figure: Fig. 8 (PDF page 16); image = embedded image extracted from the PDF at native resolution, unmodified (1600x1217 px)
+Caption (first sentence): Results of the analyses.
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "(PDF) Copyright 2019 Pacheco et al. Distributed under Creative Commons CC-BY 4.0"
+Source: https://doi.org/10.7717/peerj.7963 (published PDF); Europe PMC PMC6844243 license: cc by
+Taxon list (names.txt): Supplemental File 2 (peerj-07-7963-s002.tnt), TNT matrix, 52 taxa. Supplemental File 1 (docx) holds a second, 33-taxon matrix; I could not confirm from the caption which of the two panel A shows, so check the tip count against 52 first
+Note: the caption says "Note: silhouettes are composites from different sources." Their sources and licences are not given, so the image is kept uncommitted (bench/images/pacheco2019a_fig8.png).

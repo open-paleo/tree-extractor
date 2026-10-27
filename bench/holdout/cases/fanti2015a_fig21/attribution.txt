@@ -1,0 +1,12 @@
+Authors: Fanti F, Cau A, Cantelli L, Hassine M, Auditore M.
+Year: 2015
+Title: New information on Tataouinea hannibalis from the Early Cretaceous of Tunisia and implications for the tempo and mode of rebbachisaurid sauropod evolution
+Journal: PloS one 10(4): e0123475
+DOI: https://doi.org/10.1371/journal.pone.0123475
+Figure: Fig. 21 (image on PDF page 35, caption on page 36); image = embedded image at native resolution, unmodified (1745x2552 px)
+Caption (first sentence): Phylogenetic relationships among rebbachisaurids.
+Licence: CC BY 4.0
+Licence URL: http://creativecommons.org/licenses/by/4.0/
+Licence statement on the article: "(PDF) Copyright: © 2015 Fanti et al. This is an open access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited."
+Source: https://doi.org/10.1371/journal.pone.0123475 (published PDF); Europe PMC PMC4414570 license: cc by
+Taxon list (names.txt): S1 Text (pone.0123475.s001.doc), data matrix rows, 29 taxa (same taxa as the OTU age table in that file)

@@ -1,0 +1,65 @@
+#NEXUS
+
+[ Hartman et al. 2019, PeerJ 7: e7247, Fig. 18: partially expanded, time-calibrated tree of Paraves, rectangular, root left, with a period/epoch timescale at the top, grey bands, red and blue coloured lineages and collapsed clades as single tips; about 60 tips. 52 tips. Ten tips are collapsed clades or informal groups and keep their printed text (Compsognathidae, Ornithomimosauria, Alvarezsauroidea, Therizinosauria, Oviraptorosauria, Eudromaeosauria, Derived_troodontids, Jeholornithidae, Confuciusornithidae, Ornithothoraces). Matrix spellings: Unenlagia_sensu_lato (printed Unenlagia), NGMC91 (printed NGMC 91), jianchangensis (printed C. jianchangensis). Junctions on the long left spine checked against the vertical line segments in the image. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=52;
+    TAXLABELS
+        Compsognathidae
+        Ornithomimosauria
+        Alvarezsauroidea
+        Therizinosauria
+        Protarchaeopteryx
+        Oviraptorosauria
+        Serikornis
+        Caihong
+        Anchiornis
+        Archaeopteryx
+        Eosinopteryx
+        Aurornis
+        Halszkaraptor
+        Mahakala
+        Ningyuansaurus
+        Unenlagia_sensu_lato
+        Dakotaraptor
+        Rahonavis
+        Buitreraptor
+        Austroraptor
+        Tianyuraptor
+        Zhenyuanlong
+        Microraptor
+        Zhongjianosaurus
+        Sinornithosaurus
+        Graciliraptor
+        Changyuraptor
+        NGMC91
+        Bambiraptor
+        Variraptor
+        Eudromaeosauria
+        Mei
+        Xiaotingia
+        Sinovenator
+        Jianianhualong
+        Almas
+        Liaoningvenator
+        Daliansaurus
+        Hesperornithoides
+        Sinusonasus
+        Derived_troodontids
+        Scansoriopteryx
+        Yi
+        Epidexipteryx
+        Zhongornis
+        Balaur
+        Sapeornis
+        jianchangensis
+        Zhongjianornis
+        Jeholornithidae
+        Confuciusornithidae
+        Ornithothoraces
+    ;
+END;
+
+BEGIN TREES;
+    TREE hartman2019a_fig18 = [&R] (Compsognathidae,(Ornithomimosauria,((Alvarezsauroidea,Therizinosauria),(Protarchaeopteryx,(Oviraptorosauria,(((Serikornis,(Caihong,(Anchiornis,(Archaeopteryx,(Eosinopteryx,Aurornis))))),(((Halszkaraptor,(Mahakala,Ningyuansaurus)),((((Unenlagia_sensu_lato,Dakotaraptor),Rahonavis),Buitreraptor),Austroraptor)),((Tianyuraptor,(((Zhenyuanlong,(((Microraptor,Zhongjianosaurus),Sinornithosaurus),((Graciliraptor,Changyuraptor),NGMC91))),(Bambiraptor,Variraptor)),Eudromaeosauria)),((Mei,(Xiaotingia,(Sinovenator,Jianianhualong))),(Almas,Liaoningvenator,((Daliansaurus,(Hesperornithoides,Sinusonasus)),Derived_troodontids)))))),((Scansoriopteryx,(Yi,Epidexipteryx)),(Zhongornis,(Balaur,(Sapeornis,((jianchangensis,Zhongjianornis),(Jeholornithidae,(Confuciusornithidae,Ornithothoraces)))))))))))));
+END;

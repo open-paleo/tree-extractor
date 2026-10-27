@@ -1,0 +1,12 @@
+Authors: de Souza, G. A.; Soares, M. B.; Weinschütz, L. C.; Wilner, E.; Lopes, R. T.; de Araújo, O. M. O.; Kellner, A. W. A.
+Year: 2021
+Title: The first edentulous ceratosaur from South America
+Journal: Scientific reports 11(1): 22281
+DOI: https://doi.org/10.1038/s41598-021-01312-4
+Figure: Fig. 6 (PDF page 12); image = embedded image extracted from the PDF at native resolution, unmodified (1187x676 px)
+Caption (first sentence): Phylogenetic relationship of Berthasaura leopoldinae gen. et sp. nov., holotype (MN 7821-V).
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement on the article (PDF): "Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line to the material." (Fig. 6 has no third-party credit line.)
+Source: https://doi.org/10.1038/s41598-021-01312-4 (published PDF); Europe PMC PMC8602317 license: cc by
+Taxon list (names.txt): Supplementary Information (41598_2021_1312_MOESM1_ESM.doc), NEXUS TAXLABELS, 38 taxa; the figure shows only part of the tree

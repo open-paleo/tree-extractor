@@ -1,0 +1,30 @@
+#NEXUS
+
+[ Naish & Cau 2022, PeerJ 10: e12727, Fig. 37: stratigraphically calibrated phylogeny of Tyrannosauroidea, rectangular, root left, thick black/grey range bars on terminal branches, timescale strip at the bottom; about 20 tips, several of them clade names (COELURIDAE, PROCERATOSAURIDAE, MEGARAPTORIDAE, TYRANNOSAURIDAE). 17 tips. Four tips are collapsed clades printed in capitals and keep their printed text (COELURIDAE, PROCERATOSAURIDAE, MEGARAPTORIDAE, TYRANNOSAURIDAE); the matrix holds several members of each. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=17;
+    TAXLABELS
+        Juratyrant
+        Stokesosaurus
+        COELURIDAE
+        PROCERATOSAURIDAE
+        Yutyrannus
+        Eotyrannus
+        Xiongguanlong
+        Siats
+        Aniksosaurus
+        Chilantaisaurus
+        Fukuiraptor
+        MEGARAPTORIDAE
+        Dryptosaurus
+        Appalachiosaurus
+        Bistahieversor
+        Teratophoneus
+        TYRANNOSAURIDAE
+    ;
+END;
+
+BEGIN TREES;
+    TREE naish2022a_fig37 = [&R] ((Juratyrant,Stokesosaurus),(COELURIDAE,(PROCERATOSAURIDAE,(Yutyrannus,(Eotyrannus,(Xiongguanlong,((Siats,(Aniksosaurus,(Chilantaisaurus,(Fukuiraptor,MEGARAPTORIDAE)))),(Dryptosaurus,(Appalachiosaurus,((Bistahieversor,Teratophoneus),TYRANNOSAURIDAE))))))))));
+END;

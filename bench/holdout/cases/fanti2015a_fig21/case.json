@@ -1,0 +1,14 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Fanti et al. 2015, PLOS ONE 10: e0123475, Fig. 21: two rectangular trees, (A) equal-weights and (B) implied-weights strict consensus of rebbachisaurid relationships, Bremer support below branches in A; tip labels are the matrix names with underscores; 29 tips each. Image: embedded image from PDF page 35 at native resolution, unmodified (1745x2552 px). (Replaced 2026-10-27: the first version was Fig. 22, the BBM pie-chart tree, which shares page 36 with the Fig. 21 caption.)",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1745,
+    "y1": 1263
+  },
+  "license": "CC BY 4.0",
+  "attribution": "Fanti F, Cau A, Cantelli L, Hassine M, Auditore M. (2015). New information on Tataouinea hannibalis from the Early Cretaceous of Tunisia and implications for the tempo and mode of rebbachisaurid sauropod evolution. PloS one 10(4): e0123475. https://doi.org/10.1371/journal.pone.0123475. Fig. 21. CC BY 4.0.",
+  "region_note": "panel A (top tree); B is the implied-weights tree below, separated by a blank band at rows 1253-1274"
+}

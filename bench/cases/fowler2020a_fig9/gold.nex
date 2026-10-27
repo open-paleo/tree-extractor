@@ -1,0 +1,40 @@
+#NEXUS
+
+[ Fowler & Freedman Fowler 2020, PeerJ 8: e9251, Fig. 9: three rectangular trees side by side, (A) strict consensus with all taxa and (B, C) reanalyses with taxa removed, chasmosaurine ceratopsids, small text, clade names at nodes; about 28 tips in A. panel A (region box): strict consensus with all taxa, 27 tips. Mojoceratops perifania is in the matrix but not in panel A. All tips are matrix taxa. Topology transcribed from the figure and checked node by node against the image (2026-10-27); topology only, no support values. Licence: CC BY 4.0; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=27;
+    TAXLABELS
+        Leptoceratops_gracilis
+        Protoceratops_andrewsi
+        Zuniceratops_christopheri
+        Turanoceratops_tardabilis
+        Albertaceratops_nesmoi
+        Centrosaurus_apertus
+        Pachyrhinosaurus_lakustai
+        Chasmosaurus_belli
+        Chasmosaurus_russelli
+        Agujaceratops_mariscalensis
+        Vagaceratops_irvinensis
+        Kosmoceratops_richardsoni
+        Bravoceratops_polyphemus
+        Coahuilaceratops_magnacuerna
+        Utahceratops_gettyi
+        Pentaceratops_sternbergii
+        Navajoceratops_sullivani
+        Terminocavus_sealyi
+        Anchiceratops_ornatus
+        Arrhinoceratops_brachyops
+        Ojoceratops_fowleri
+        Torosaurus_latus
+        Torosaurus_utahensis
+        Eotriceratops_xerinsularis
+        Nedoceratops_hatcheri
+        Triceratops_horridus
+        Triceratops_prorsus
+    ;
+END;
+
+BEGIN TREES;
+    TREE fowler2020a_fig9 = [&R] (Leptoceratops_gracilis,(Protoceratops_andrewsi,(Zuniceratops_christopheri,(Turanoceratops_tardabilis,((Albertaceratops_nesmoi,(Centrosaurus_apertus,Pachyrhinosaurus_lakustai)),((Chasmosaurus_belli,Chasmosaurus_russelli),(Agujaceratops_mariscalensis,((Vagaceratops_irvinensis,Kosmoceratops_richardsoni),(((Bravoceratops_polyphemus,Coahuilaceratops_magnacuerna),(Utahceratops_gettyi,Pentaceratops_sternbergii)),(Navajoceratops_sullivani,(Terminocavus_sealyi,(Anchiceratops_ornatus,(Arrhinoceratops_brachyops,(Ojoceratops_fowleri,(Torosaurus_latus,Torosaurus_utahensis),Eotriceratops_xerinsularis,Nedoceratops_hatcheri,(Triceratops_horridus,Triceratops_prorsus)))))))))))))));
+END;
