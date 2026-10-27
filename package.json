@@ -24,7 +24,7 @@
     "web": "npm run build:web && node --experimental-strip-types scripts/serve.ts"
   },
   "dependencies": {
-    "sharp": "^0.34.3",
+    "sharp": "^0.35.5",
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^22.19.15",
     "cspell": "8.17.5",
-    "eslint": "9.18.0",
+    "eslint": "^9.39.5",
     "typescript": "5.7.3",
     "typescript-eslint": "8.22.0"
   }
