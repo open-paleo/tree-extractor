@@ -51,6 +51,7 @@ const zoomInButton = getElement<HTMLButtonElement>("#zoom-in");
 const zoomOutButton = getElement<HTMLButtonElement>("#zoom-out");
 const zoomLevel = getElement<HTMLSpanElement>("#zoom-level");
 const regionModeButton = getElement<HTMLButtonElement>("#region-mode");
+const modeHint = getElement<HTMLParagraphElement>("#mode-hint");
 const clearRegionButton = getElement<HTMLButtonElement>("#clear-region");
 const addTipButton = getElement<HTMLButtonElement>("#add-tip");
 const addNodeButton = getElement<HTMLButtonElement>("#add-node");
@@ -85,6 +86,21 @@ function setStatus(message: string): void
 }
 
 /**
+ * Shows, under the toolbar, what the active drawing mode expects, or nothing when panning.
+ */
+function updateModeHint(): void
+{
+    const hints: Record<string, string> = {
+        region: "Drag a rectangle around the tree, then press Extract tree to analyze only that area. Escape cancels.",
+        "add-tip": "Click where the new tip's branch ends. Escape cancels.",
+        "add-node": "Drag along the missing vertical connector, from its top to its bottom. Escape cancels.",
+    };
+    const hint = hints[state.mode];
+    modeHint.hidden = hint === undefined;
+    modeHint.textContent = hint ?? "";
+}
+
+/**
  * Updates the zoom readout and tool button states.
  */
 function updateToolbar(): void
@@ -106,6 +122,7 @@ function updateToolbar(): void
     addNodeButton.classList.toggle("active", state.mode === "add-node");
     canvas.classList.toggle("region", state.mode === "region");
     canvas.classList.toggle("add", state.mode === "add-tip" || state.mode === "add-node");
+    updateModeHint();
 }
 
 /**
@@ -411,7 +428,6 @@ function handleZoomOutClick(): void
 function handleRegionModeClick(): void
 {
     state.mode = state.mode === "region" ? "pan" : "region";
-    setStatus(state.mode === "region" ? "Drag a rectangle around the tree." : "Ready.");
     updateToolbar();
 }
 
@@ -586,7 +602,6 @@ function handleAddNode(x: number, y0: number, y1: number): void
 function handleAddTipClick(): void
 {
     state.mode = state.mode === "add-tip" ? "pan" : "add-tip";
-    setStatus(state.mode === "add-tip" ? "Click where the new tip's branch ends." : "Ready.");
     updateToolbar();
 }
 
@@ -596,7 +611,6 @@ function handleAddTipClick(): void
 function handleAddNodeClick(): void
 {
     state.mode = state.mode === "add-node" ? "pan" : "add-node";
-    setStatus(state.mode === "add-node" ? "Drag along the missing vertical connector, from its top to its bottom." : "Ready.");
     updateToolbar();
 }
 
