@@ -167,5 +167,63 @@ export function matchName(text: string, names: Array<string>): NameMatch | null
         similarity: bestScore,
         margin,
         accepted: bestScore >= 0.75 || (bestScore >= 0.6 && margin >= 0.12),
+        source: "list",
     };
+}
+
+/**
+ * Matches OCR output against the known taxa of the whole data set, as a second tier after the
+ * paper's own list. The list is large and full of near neighbors, so the bar is higher: the
+ * read must be an exact name, or close to one and clear of the runner-up.
+ *
+ * @param text - Raw OCR text.
+ * @param knownNames - Known taxon names.
+ * @returns The best match with acceptance decided, or null when the list is empty.
+ */
+export function matchKnownName(text: string, knownNames: Array<string>): NameMatch | null
+{
+    // A binomial read is matched among binomials and a one-word read among genera, so that a
+    // species never has its own genus as runner-up (every binomial scores well against its
+    // genus, which would leave no margin). A binomial read that no species explains is still
+    // offered to the genera, for figures that print "Genus sp." or an unlisted species.
+    const genera = new Array<string>();
+    const binomials = new Array<string>();
+
+    for (const name of knownNames)
+    {
+        if (name.includes(" "))
+        {
+            binomials.push(name);
+        }
+        else
+        {
+            genera.push(name);
+        }
+    }
+
+    const pools = normalizeName(text).includes(" ") ? [binomials, genera] : [genera];
+    let fallback: NameMatch | null = null;
+
+    for (const pool of pools)
+    {
+        const match = pool.length === 0 ? null : matchName(text, pool);
+
+        if (match === null)
+        {
+            continue;
+        }
+
+        const exact = match.similarity >= 0.98;
+        const close = match.similarity >= 0.85 && match.margin >= 0.1;
+        const known: NameMatch = { name: match.name, similarity: match.similarity, margin: match.margin, accepted: exact || close, source: "known" };
+
+        if (known.accepted)
+        {
+            return known;
+        }
+
+        fallback ??= known;
+    }
+
+    return fallback;
 }

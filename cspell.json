@@ -7,6 +7,7 @@
     "aphanoecetes",
     "aphanooecetes",
     "armatus",
+    "assiniboiensis",
     "binarise",
     "binarised",
     "bipartition",
@@ -44,10 +45,12 @@
     "Maidment",
     "mimus",
     "mjosi",
+    "neglectus",
     "neighbour",
     "neighbourhood",
     "neighbouring",
     "nekul",
+    "neqlectus",
     "Newick",
     "Nexml",
     "nexus",
@@ -76,11 +79,14 @@
     "Pulaosaurus",
     "Quranosaurus",
     "Raven",
-    "recognised",
     "Recognised",
+    "recognised",
     "Recognises",
     "rhabdodon",
     "Rhabdodon",
+    "robustu",
+    "robustum",
+    "robustus",
     "Sanjuansaurus",
     "saura",
     "saurus",
@@ -94,6 +100,8 @@
     "taxa",
     "TAXLABELS",
     "taxon",
+    "Tenontosaurs",
+    "Tenontosaurus",
     "tessedit",
     "Tesseract",
     "tesseract",
@@ -105,7 +113,8 @@
     "unary",
     "upscales",
     "Uteodon",
-    "venator"
+    "venator",
+    "Zalmoxes"
   ],
   "ignorePaths": [
     "node_modules/**",
@@ -114,6 +123,7 @@
     "bench/**/*.txt",
     "package-lock.json",
     "bench/out/**",
-    "dist/**"
+    "dist/**",
+    "names/known-taxa.txt"
   ]
 }

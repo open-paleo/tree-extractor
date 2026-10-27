@@ -35,6 +35,11 @@ export type ExtractionRequest = {
     names: Array<string>;
 
     /**
+     * Known taxa to fall back on, possibly empty.
+     */
+    knownNames: Array<string>;
+
+    /**
      * Region to analyze, or null.
      */
     region: Box | null;
@@ -120,6 +125,7 @@ export class ExtractionClient
             type: "extract",
             image: { width: request.image.width, height: request.image.height, buffer },
             names: request.names,
+            knownNames: request.knownNames,
             region: request.region,
             readLabels: request.ocr !== null,
             source: request.source,

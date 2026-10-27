@@ -177,6 +177,12 @@ export type ExtractOptions = {
     names: Array<string>;
 
     /**
+     * Known taxa of the whole data set, matched as a second tier after the names; empty to
+     * skip.
+     */
+    knownNames?: Array<string>;
+
+    /**
      * Threshold overrides.
      */
     parameters: Partial<Parameters>;
@@ -638,7 +644,7 @@ function assignLeftoverNames(document: ExtractionDocument, names: Array<string>)
                 continue;
             }
 
-            tip.match = { name: bestName, similarity: bestScore, margin: bestScore - runnerUp, accepted: true };
+            tip.match = { name: bestName, similarity: bestScore, margin: bestScore - runnerUp, accepted: true, source: "list" };
             open.splice(open.indexOf(tip), 1);
             free.splice(free.indexOf(bestName), 1);
             paired++;
@@ -659,6 +665,19 @@ function assignLeftoverNames(document: ExtractionDocument, names: Array<string>)
  */
 function runQualityChecks(document: ExtractionDocument): void
 {
+    for (const tip of document.tips)
+    {
+        if (tip.match !== null && tip.match.accepted && tip.match.source === "known")
+        {
+            document.qc.push({
+                severity: "warning",
+                code: "known-name-used",
+                message: `tip ${tip.id} read as "${tip.label ?? ""}" matched "${tip.match.name}" from the known taxa, not from the supplied name list`,
+                subject: tip.id,
+            });
+        }
+    }
+
     const issues = new Array<QcIssue>();
     const seen = new Map<string, string>();
 
@@ -738,6 +757,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     const image = region === null ? fullImage : cropImage(fullImage, region);
     const parameters = { ...defaultParameters, ...options.parameters };
     const names = options.names ?? [];
+    const knownNames = options.knownNames ?? [];
     const timings: Record<string, number> = {};
     let clock = performance.now();
 
@@ -890,7 +910,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     if (options.ocr)
     {
         const erased = paintMask(gray, lineArtMask, 255);
-        await readLabels(document, erased, options.ocr, parameters.ocrScale, names, progress);
+        await readLabels(document, erased, options.ocr, parameters.ocrScale, names, knownNames, progress);
         removeNumericDebrisTips(document, 3 * glyphHeight);
         assignLeftoverNames(document, names);
         measureTextMarks(document.profile, document, textInk, glyphHeight);

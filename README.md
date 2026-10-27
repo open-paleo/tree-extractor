@@ -42,8 +42,11 @@ time scale or a second panel); results are still reported in full-image coordina
 
 `--names` is a text file with one taxon name per line (for example the taxa of the paper's
 character matrix). OCR output is fuzzy-matched against it, which turns imperfect reads of small
-italic text into exact names. Without a list the raw OCR text is kept and uncertain tips are
-flagged.
+italic text into exact names. A label the list does not explain is then offered to the known
+taxa of the Open Paleo data set (`names/known-taxa.txt`, every genus, species and synonym) at a
+stricter threshold, and a match from there is flagged in the quality checks as coming from
+outside the paper's own taxa; `--known-names` substitutes another list and `--no-known-names`
+skips the tier. Without any list the raw OCR text is kept and uncertain tips are flagged.
 
 The viewer runs the same pipeline on a dropped image, in a Web Worker so the page stays
 responsive, and draws what it found over the figure.

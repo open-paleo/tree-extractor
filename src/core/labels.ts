@@ -3,9 +3,9 @@
  * against a name list.
  */
 
-import type { ExtractionDocument, GrayImage, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
+import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
 import { cropAndScale } from "./raster.ts";
-import { matchName } from "./matching.ts";
+import { matchKnownName, matchName } from "./matching.ts";
 
 /**
  * A candidate assignment of a text line to a tip or node.
@@ -180,6 +180,40 @@ export function cleanSupportText(text: string): string
 }
 
 /**
+ * Matches a label: against the paper's list first, and when that gives nothing accepted,
+ * against the known taxa at the stricter bar. The paper's unaccepted match is kept when the
+ * known taxa do no better, so the reader still sees the nearest name.
+ *
+ * @param label - Cleaned label text, or null.
+ * @param names - The paper's names, possibly empty.
+ * @param knownNames - Known taxa, possibly empty.
+ * @returns The match, or null without a label or any list.
+ */
+function chooseMatch(label: string | null, names: Array<string>, knownNames: Array<string>): NameMatch | null
+{
+    if (label === null)
+    {
+        return null;
+    }
+
+    const own = names.length === 0 ? null : matchName(label, names);
+
+    if (own !== null && own.accepted)
+    {
+        return own;
+    }
+
+    const known = knownNames.length === 0 ? null : matchKnownName(label, knownNames);
+
+    if (known !== null && known.accepted)
+    {
+        return known;
+    }
+
+    return own ?? known;
+}
+
+/**
  * Finds a text line by identifier.
  *
  * @param document - Document to search.
@@ -221,6 +255,7 @@ export async function readLabels(
     ocr: OcrEngine,
     scale: number,
     names: Array<string>,
+    knownNames: Array<string>,
     progress: ProgressReporter | null = null,
 ): Promise<void>
 {
@@ -242,7 +277,7 @@ export async function readLabels(
             line.ocr = await ocr.recognize(cropAndScale(erased, line.box, 3, scale, scale * document.profile.font.condensing), "text");
             const cleaned = cleanTaxonText(line.ocr.text);
             tip.label = cleaned.length > 0 ? cleaned : null;
-            tip.match = tip.label === null || names.length === 0 ? null : matchName(tip.label, names);
+            tip.match = chooseMatch(tip.label, names, knownNames);
         }
     }
 

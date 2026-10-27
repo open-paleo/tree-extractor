@@ -2,11 +2,12 @@
 /**
  * Command-line entry point.
  *
- *   tree-extractor extract <image> [--names <file>] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--profile key=value,...]
+ *   tree-extractor extract <image> [--names <file>] [--known-names <file>|--no-known-names] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--profile key=value,...]
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import * as url from "node:url";
 import * as tesseract from "tesseract.js";
 
 import type { Box, LayoutKind, ProfileOverrides, SupportLabelStyle } from "../core/types.ts";
@@ -43,7 +44,7 @@ function parseArguments(argv: Array<string>): Arguments
             const name = argument.slice(2);
             const next = argv[index + 1];
 
-            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help" && name !== "no-lengths")
+            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help" && name !== "no-lengths" && name !== "no-known-names")
             {
                 flags.set(name, next);
                 index++;
@@ -74,6 +75,8 @@ function printUsage(): void
         "  --names <file>   Text file with one taxon name per line to match labels against",
         "  --out <dir>      Output directory (default: current directory)",
         "  --crop x,y,w,h   Analyze only this region of the image (pixels)",
+        "  --known-names <file>  Known taxa to fall back on when a label is not in --names",
+        "                   (default: names/known-taxa.txt shipped with the tool; --no-known-names skips it)",
         "  --no-ocr         Trace the tree but do not read labels",
         "  --no-lengths     Leave branch lengths out of the Newick even when a time axis was read",
         "  --profile k=v    Fix profile values instead of measuring them, comma separated:",
@@ -101,6 +104,32 @@ function readNameList(filePath: string): Array<string>
     }
 
     return names;
+}
+
+/**
+ * Reads the known taxa: the --known-names file, or the list shipped with the tool unless
+ * --no-known-names was given.
+ *
+ * @param parsed - Parsed arguments.
+ * @returns Known names, possibly empty.
+ */
+function readKnownNames(parsed: Arguments): Array<string>
+{
+    if (parsed.flags.has("no-known-names"))
+    {
+        return [];
+    }
+
+    const flag = parsed.flags.get("known-names");
+
+    if (typeof flag === "string")
+    {
+        return readNameList(flag);
+    }
+
+    const bundled = url.fileURLToPath(new URL("../../names/known-taxa.txt", import.meta.url));
+
+    return fs.existsSync(bundled) ? readNameList(bundled) : [];
 }
 
 /**
@@ -192,6 +221,7 @@ async function runExtract(parsed: Arguments): Promise<number>
 
     const namesFlag = parsed.flags.get("names");
     const names = typeof namesFlag === "string" ? readNameList(namesFlag) : new Array<string>();
+    const knownNames = readKnownNames(parsed);
 
     const outFlag = parsed.flags.get("out");
     const outDir = typeof outFlag === "string" ? outFlag : process.cwd();
@@ -203,7 +233,7 @@ async function runExtract(parsed: Arguments): Promise<number>
     const ocr = parsed.flags.has("no-ocr") ? null : await createTesseractOcr(tesseract);
     const profileFlag = parsed.flags.get("profile");
     const profileOverrides = typeof profileFlag === "string" ? parseProfileOverrides(profileFlag) : {};
-    const document = await extractTree(image, { ocr, names, source: path.basename(imagePath), region, parameters: { profileOverrides } });
+    const document = await extractTree(image, { ocr, names, knownNames, source: path.basename(imagePath), region, parameters: { profileOverrides } });
 
     if (ocr !== null)
     {

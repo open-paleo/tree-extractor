@@ -44,6 +44,11 @@ export type ExtractRequest = {
     names: Array<string>;
 
     /**
+     * Known taxa to fall back on, possibly empty.
+     */
+    knownNames: Array<string>;
+
+    /**
      * Region to analyze, or null.
      */
     region: Box | null;

@@ -71,8 +71,13 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing
    the genus alone, the genus abbreviated to its initial, and a binomial read against a
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
-   their stems. Tips whose read matched nothing are then paired with the names nobody claimed,
-   by elimination, when one name stands clearly apart; such tips are flagged for checking.
+   their stems. A read the paper's list does not explain is offered to the known taxa of the
+   data set (`names/known-taxa.txt`), which accepts only an exact name or a close one clear of
+   its runner-up, and flags the tip as matched from outside the paper's taxa. Tips whose read
+   matched nothing are then paired with the paper's names nobody claimed, by elimination, when
+   one name stands clearly apart; such tips are flagged for checking. Tesseract's own English
+   dictionaries were switched off as an experiment and changed no read on the benchmark, so
+   they are left as they are.
 7. **Profile.** Figure-level properties are measured once and recorded in the document: layout
    family, tip alignment, support label style, clade marks, font (stroke, letter gap, slant,
    whether the text ink was widened, how far label crops are condensed), time-scale signs (tint,

@@ -164,6 +164,8 @@ const strict = process.argv.includes("--strict");
 const expectedIdentical = new Set(JSON.parse(fs.readFileSync(path.join(benchDir, "expectations.json"), "utf8")).identical as Array<string>);
 const filter = process.argv.find((argument) => argument.startsWith("--only=")) ?? null;
 const ocr = skipOcr ? null : await createTesseractOcr(tesseract);
+const knownNamesPath = path.join(benchDir, "..", "names", "known-taxa.txt");
+const knownNames = fs.existsSync(knownNamesPath) ? fs.readFileSync(knownNamesPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0) : new Array<string>();
 const caseDirs = new Array<string>();
 
 for (const root of [path.join(benchDir, "cases"), path.join(benchDir, "generated", "cases")])
@@ -229,7 +231,7 @@ for (const caseDir of caseDirs)
         continue;
     }
 
-    const document = await extractTree(await loadImage(imagePath), { ocr, names, source: benchCase.image, region: benchCase.region ?? null });
+    const document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null });
     const newick = formatDocumentAsNewick(document);
     const caseOut = path.join(outDir, caseName);
     fs.mkdirSync(caseOut, { recursive: true });

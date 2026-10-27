@@ -113,6 +113,7 @@ async function runExtraction(request: Extract<PageMessage, { type: "extract" }>)
         const document = await extractTree(image, {
             ocr: request.readLabels ? new BridgedOcrEngine() : null,
             names: request.names,
+            knownNames: request.knownNames,
             region: request.region,
             source: request.source,
             progress: new MessageProgressReporter(),

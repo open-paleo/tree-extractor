@@ -40,6 +40,7 @@ function getElement<T extends Element>(selector: string): T
 const fileInput = getElement<HTMLInputElement>("#file");
 const ocrCheckbox = getElement<HTMLInputElement>("#ocr");
 const namesInput = getElement<HTMLTextAreaElement>("#names");
+let knownNames = new Array<string>();
 const runButton = getElement<HTMLButtonElement>("#run");
 const statusLine = getElement<HTMLParagraphElement>("#status");
 const progressBar = getElement<HTMLDivElement>("#progress");
@@ -300,6 +301,7 @@ async function runExtraction(): Promise<void>
         state.extraction = await extractionClient.extract({
             image: state.image,
             names: readNames(),
+            knownNames,
             region: state.region,
             ocr: ocrCheckbox.checked ? ocrEngine : null,
             source: state.fileStem,
@@ -696,3 +698,38 @@ for (const checkbox of document.querySelectorAll<HTMLInputElement>("input[data-l
 canvasView.resize(state);
 updateToolbar();
 void loadFromQuery();
+
+/**
+ * Loads the known taxa shipped with the tool, for the second tier of name matching. A missing
+ * file only means the tier is off.
+ */
+async function loadKnownNames(): Promise<void>
+{
+    try
+    {
+        const response = await fetch(new URL("../../names/known-taxa.txt", import.meta.url));
+
+        if (!response.ok)
+        {
+            return;
+        }
+
+        const loaded = new Array<string>();
+
+        for (const line of (await response.text()).split(/\r?\n/))
+        {
+            if (line.trim().length > 0)
+            {
+                loaded.push(line.trim());
+            }
+        }
+
+        knownNames = loaded;
+    }
+    catch
+    {
+        knownNames = [];
+    }
+}
+
+void loadKnownNames();

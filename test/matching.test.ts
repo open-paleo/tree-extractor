@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { compareNames, computeLevenshtein, matchName, normalizeName } from "../src/core/matching.ts";
+import { compareNames, computeLevenshtein, matchKnownName, matchName, normalizeName } from "../src/core/matching.ts";
 import { cleanSupportText, cleanTaxonText } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
@@ -64,4 +64,27 @@ test("names sharing a generic ending are compared by their stems", () =>
     assert.ok(compareNames("thescelosaurus", "herrerasaurus") < 0.5);
     assert.ok(compareNames("quranosaurus", "ouranosaurus") > 0.8);
     assert.ok(!matchName("Thescelosaurus", ["Herrerasaurus", "Sanjuansaurus", "Haya"])?.accepted);
+});
+
+test("known taxa accept exact names despite their species, and only clear near misses", () =>
+{
+    const known = ["Thescelosaurus", "Thescelosaurus neglectus", "Thescelosaurus assiniboiensis", "Tenontosaurus", "Zalmoxes", "Zalmoxes robustus", "Zalmoxes robustum"];
+    const exact = matchKnownName("Thescelosaurus", known);
+    assert.ok(exact !== null && exact.accepted);
+    assert.equal(exact.name, "Thescelosaurus");
+    assert.equal(exact.source, "known");
+    const species = matchKnownName("Thescelosaurus neqlectus", known);
+    assert.ok(species !== null && species.accepted);
+    assert.equal(species.name, "Thescelosaurus neglectus");
+    const nearMiss = matchKnownName("Tenontosaurs", known);
+    assert.ok(nearMiss !== null && nearMiss.accepted);
+    assert.equal(nearMiss.name, "Tenontosaurus");
+    // Two species one letter apart leave no margin; the read falls back to the genus.
+    const ambiguous = matchKnownName("Zalmoxes robustu", known);
+    assert.ok(ambiguous !== null && ambiguous.accepted);
+    assert.equal(ambiguous.name, "Zalmoxes");
+    const unlistedSpecies = matchKnownName("Zalmoxes sp.", known);
+    assert.ok(unlistedSpecies !== null && unlistedSpecies.accepted);
+    assert.equal(unlistedSpecies.name, "Zalmoxes");
+    assert.equal(matchKnownName("Zalmoxes", []), null);
 });

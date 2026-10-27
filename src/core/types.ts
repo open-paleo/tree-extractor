@@ -183,6 +183,11 @@ export type NameMatch = {
      * Whether the match is good enough to use without review.
      */
     accepted: boolean;
+
+    /**
+     * Which list the name came from: the paper's own list, or the known taxa of the data set.
+     */
+    source: "list" | "known";
 };
 
 /**
