@@ -40,6 +40,12 @@ export type TextDetection = {
      * Pixels belonging to accepted glyphs.
      */
     glyphMask: Mask;
+
+    /**
+     * Whether glyph components came out much shorter than the row spacing implies, the sign of a
+     * thin font breaking into fragments at the ink threshold.
+     */
+    fragmented: boolean;
 };
 
 /**
@@ -223,7 +229,8 @@ function selectGlyphs(components: Array<Component>, plausible: Array<boolean>, g
         const lineLike = (glyphWidth >= 1.5 * glyphHeight && componentHeight <= 0.4 * glyphHeight)
             || (componentHeight >= 1.5 * glyphHeight && glyphWidth <= 0.4 * glyphHeight);
 
-        if (!lineLike && componentHeight <= 2.5 * glyphHeight && glyphWidth <= 6 * glyphHeight)
+        // Touching letters make one component per word, so a glyph may be a word wide.
+        if (!lineLike && componentHeight <= 2.5 * glyphHeight && glyphWidth <= 20 * glyphHeight)
         {
             labels.add(index + 1);
             glyphs.push(components[index]);
@@ -348,7 +355,7 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
         const box = components[index].box;
         const glyphWidth = box.x1 - box.x0;
         const componentHeight = box.y1 - box.y0;
-        plausible[index] = components[index].area >= 6 && componentHeight >= 3 && componentHeight <= 60 && glyphWidth <= 80 && box.y0 >= options.minY;
+        plausible[index] = components[index].area >= 6 && componentHeight >= 3 && componentHeight <= 60 && glyphWidth <= 400 && box.y0 >= options.minY;
 
         if (plausible[index])
         {
@@ -365,8 +372,9 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
     let lines = clusterIntoLines(selected.glyphs, glyphHeight);
     const pitch = estimateRowPitch(lines);
     const floor = pitch === null ? 0 : Math.round(0.45 * pitch);
+    const fragmented = floor > glyphHeight + 1;
 
-    if (floor > glyphHeight + 1)
+    if (fragmented)
     {
         glyphHeight = floor;
         selected = selectGlyphs(components, plausible, glyphHeight);
@@ -393,5 +401,6 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
         lines: textLines,
         glyphHeight,
         glyphMask: createMaskFromComponents(labels, selected.labels, width, height),
+        fragmented,
     };
 }

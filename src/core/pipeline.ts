@@ -29,9 +29,21 @@ import { clampBox, cropImage, translateDocument } from "./geometry.ts";
  */
 export type Parameters = {
     /**
-     * Luminance below which a pixel is text ink.
+     * Luminance below which a pixel is certainly text ink.
      */
     inkThreshold: number;
+
+    /**
+     * Luminance below which a pixel is text ink if it touches certain text ink. Reconnects the
+     * hairlines of thin fonts, which break into fragments at the strict threshold.
+     */
+    inkThresholdWeak: number;
+
+    /**
+     * Glyph height, in pixels, at or below which text counts as small and gets the weak text
+     * threshold regardless of fragmentation.
+     */
+    smallGlyphHeight: number;
 
     /**
      * Luminance below which a pixel is line ink. Higher than the text threshold so that faint,
@@ -103,6 +115,8 @@ export type Parameters = {
  */
 export const defaultParameters: Parameters = {
     inkThreshold: 140,
+    inkThresholdWeak: 200,
+    smallGlyphHeight: 7,
     lineThreshold: 180,
     lineThresholdWeak: 230,
     closeRadius: 1,
@@ -193,12 +207,23 @@ export type PreparedMasks = {
 export function prepareMasks(image: RgbaImage, parameters: Parameters): PreparedMasks
 {
     const gray = convertToGray(image);
-    const textInk = createDarkMask(image, parameters.inkThreshold, false, parameters.maxChroma);
+    let textInk = createDarkMask(image, parameters.inkThreshold, false, parameters.maxChroma);
     const strongInk = createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma);
 
     // A rough text pass learns the glyph size and finds glyph pixels to keep out of the line art.
-    const roughStrip = dilate(createLongRunMask(textInk, parameters.glyphStripHorizontalRun, parameters.glyphStripVerticalRun), 1);
-    const rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+    let roughStrip = dilate(createLongRunMask(textInk, parameters.glyphStripHorizontalRun, parameters.glyphStripVerticalRun), 1);
+    let rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+
+    // A thin font breaks into fragments at the strict threshold, and very small text always
+    // loses strokes to it. Fainter pixels that touch certain text ink then rejoin the strokes.
+    // Bold text at normal sizes is left alone, since its halo would merge letters and rows.
+    if (rough.fragmented || rough.glyphHeight <= parameters.smallGlyphHeight)
+    {
+        textInk = applyHysteresis(textInk, createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma));
+        roughStrip = dilate(createLongRunMask(textInk, parameters.glyphStripHorizontalRun, parameters.glyphStripVerticalRun), 1);
+        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+    }
+
     const glyphHeight = rough.glyphHeight;
 
     // Strong ink minus glyphs, except that a glyph pixel on a long straight run of strong ink is a
@@ -521,7 +546,10 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     for (const line of roughLines)
     {
-        if (line.glyphCount >= 5 && line.box.x1 - line.box.x0 >= 3 * glyphHeight)
+        const width = line.box.x1 - line.box.x0;
+        const wordsMerged = line.glyphCount >= 2 && width >= 6 * glyphHeight;
+
+        if ((line.glyphCount >= 5 || wordsMerged) && width >= 3 * glyphHeight)
         {
             labelRows.push(line.box);
             textRows.push({ x0: line.box.x0 - glyphHeight, y0: line.box.y0 - 2, x1: line.box.x1 + glyphHeight, y1: line.box.y1 + 2 });

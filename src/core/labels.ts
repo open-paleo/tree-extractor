@@ -28,6 +28,21 @@ type Pairing = {
 };
 
 /**
+ * Tells whether a text line is big enough to be a tip label: several glyphs, or a couple of
+ * word-sized components.
+ *
+ * @param line - Text line.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns True for label-sized lines.
+ */
+export function isLabelSized(line: TextLine, glyphHeight: number): boolean
+{
+    const width = line.box.x1 - line.box.x0;
+
+    return line.glyphCount >= 3 || (line.glyphCount >= 1 && width >= 2 * glyphHeight);
+}
+
+/**
  * Orders pairings by distance.
  *
  * @param left - First pairing.
@@ -58,7 +73,7 @@ export function assignLabels(document: ExtractionDocument): void
             const center = (line.box.y0 + line.box.y1) / 2;
             const offset = line.box.x0 - tip.x;
 
-            if (line.glyphCount >= 3 && Math.abs(center - tip.y) <= 0.8 * glyph && offset >= -1.5 * glyph && offset <= 5 * glyph)
+            if (isLabelSized(line, glyph) && Math.abs(center - tip.y) <= 0.8 * glyph && offset >= -1.5 * glyph && offset <= 5 * glyph)
             {
                 tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(center - tip.y) });
             }

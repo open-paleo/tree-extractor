@@ -129,7 +129,8 @@ export type TextLine = {
     box: Box;
 
     /**
-     * How many glyph components were clustered into this line.
+     * How many glyph components were clustered into this line. Touching letters make one
+     * component per word, so a wide line with few components is still a label.
      */
     glyphCount: number;
 

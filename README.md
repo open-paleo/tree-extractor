@@ -13,10 +13,11 @@ the batch command line give identical results.
 
 ## Status
 
-Early. On the first benchmark figure (a 52-taxon time-scaled consensus tree with several
+Early. On the first real benchmark figure (a 52-taxon time-scaled consensus tree with several
 polytomies, colored clade boxes, range bars and small italic labels) the tree is recovered exactly,
-with every tip named, fully automatically. Expect other figure styles to need work; see
-`docs/design.md` for the approach and its known gaps.
+with every tip named, fully automatically. On synthetic figures in five styles, eleven of fifteen
+cases come out identical and the rest lose a few tips to boxed support labels on short branches.
+See `docs/design.md` for the approach and its known gaps.
 
 ## Use
 

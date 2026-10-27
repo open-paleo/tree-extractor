@@ -5,7 +5,7 @@
  */
 
 import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
-import { cleanTaxonText } from "./labels.ts";
+import { cleanTaxonText, isLabelSized } from "./labels.ts";
 
 /**
  * Outcome of an edit.
@@ -419,7 +419,7 @@ function assignNearestTextLine(document: ExtractionDocument, tip: Tip): void
         const center = (line.box.y0 + line.box.y1) / 2;
         const offset = line.box.x0 - tip.x;
 
-        if (line.role !== "unassigned" || line.glyphCount < 3 || Math.abs(center - tip.y) > 0.8 * glyph || offset < -1.5 * glyph || offset > 5 * glyph)
+        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || Math.abs(center - tip.y) > 0.8 * glyph || offset < -1.5 * glyph || offset > 5 * glyph)
         {
             continue;
         }

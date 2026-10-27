@@ -63,9 +63,13 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 - Support values at nodes are read for only about a third of nodes on the benchmark figure; the
   labels that sit on a branch or a vertical are partly eaten by line-art removal. Topology and tip
   names are unaffected.
-- Thresholds assume figures roughly 1000 to 2500 pixels wide with glyphs 8 to 20 pixels tall.
-  Smaller text needs upscaling first.
+- Thresholds assume figures roughly 1000 to 2500 pixels wide. Text ink is taken at a strict
+  threshold, and widened by hysteresis into fainter connected pixels only when the strict mask is
+  fragmented (thin serif fonts) or the glyph height is 7 px or under, because the same widening
+  merges bold letters and rows.
 - A label whose first letter touches its branch with no gap can lose that letter to the OCR crop;
   name matching usually recovers it.
-- Only one benchmark figure so far. More cases, especially cladograms with aligned tips, black
-  clade boxes and slanted trees, will change the thresholds.
+- On the synthetic benchmark, clean, serif, dense and most touching-label figures come out
+  identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
+  most of a short branch, or where a range bar extends left past the branch's start; both are
+  commoner in the generator than in published figures, but real.
