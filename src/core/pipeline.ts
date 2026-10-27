@@ -128,6 +128,12 @@ export type Parameters = {
     ocrScale: number;
 
     /**
+     * Glyph height in pixels that label crops are scaled towards before OCR; the scale never
+     * exceeds ocrScale or drops under one.
+     */
+    ocrGlyphTarget: number;
+
+    /**
      * Rows above this are ignored by text detection.
      */
     textMinY: number;
@@ -158,6 +164,7 @@ export const defaultParameters: Parameters = {
     attachTolerance: null,
     labelReach: 6,
     ocrScale: 3,
+    ocrGlyphTarget: 45,
     textMinY: 0,
     profileOverrides: {},
 };
@@ -910,7 +917,10 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     if (options.ocr)
     {
         const erased = paintMask(gray, lineArtMask, 255);
-        await readLabels(document, erased, options.ocr, parameters.ocrScale, names, knownNames, progress);
+        // Large letters need no upscaling for Tesseract and cost it time in proportion to their
+        // area, so the scale brings letters to about the target height and no further.
+        const ocrScale = Math.min(parameters.ocrScale, Math.max(1, parameters.ocrGlyphTarget / glyphHeight));
+        await readLabels(document, erased, options.ocr, ocrScale, names, knownNames, progress);
         removeNumericDebrisTips(document, 3 * glyphHeight);
         assignLeftoverNames(document, names);
         measureTextMarks(document.profile, document, textInk, glyphHeight);

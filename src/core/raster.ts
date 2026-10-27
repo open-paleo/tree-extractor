@@ -200,7 +200,146 @@ export function createLongRunMask(mask: Mask, minHorizontalRun: number, minVerti
 }
 
 /**
- * Grows every set pixel into a square of the given radius.
+ * Spreads or shrinks set pixels along rows: a pixel is set in the result when any (dilate) or
+ * every (erode) pixel within the radius on its row is set. A running count over the window
+ * makes the pass linear in the number of pixels whatever the radius. For erode, a window
+ * that leaves the image counts as unset, so pixels within the radius of the edge are erased.
+ *
+ * @param mask - Source mask.
+ * @param radius - Half-width of the window.
+ * @param requireAll - True to erode, false to dilate.
+ * @returns The transformed mask.
+ */
+function spreadAlongRows(mask: Mask, radius: number, requireAll: boolean): Mask
+{
+    const { width, height, data } = mask;
+    const result = new Uint8Array(width * height);
+    const window = 2 * radius + 1;
+
+    for (let y = 0; y < height; y++)
+    {
+        const row = y * width;
+        let count = 0;
+
+        // The window for x covers columns x - radius to x + radius.
+        for (let x = 0; x < Math.min(width, radius); x++)
+        {
+            count += data[row + x];
+        }
+
+        for (let x = 0; x < width; x++)
+        {
+            const entering = x + radius;
+            const leaving = x - radius - 1;
+
+            if (entering < width)
+            {
+                count += data[row + entering];
+            }
+
+            if (leaving >= 0)
+            {
+                count -= data[row + leaving];
+            }
+
+            result[row + x] = requireAll ? (count === window ? 1 : 0) : (count > 0 ? 1 : 0);
+        }
+    }
+
+    return { width, height, data: result };
+}
+
+/**
+ * The same as spreadAlongRows, along columns. Rows are swept in order with one running count
+ * per column, so the memory access stays row by row.
+ *
+ * @param mask - Source mask.
+ * @param radius - Half-height of the window.
+ * @param requireAll - True to erode, false to dilate.
+ * @returns The transformed mask.
+ */
+function spreadAlongColumns(mask: Mask, radius: number, requireAll: boolean): Mask
+{
+    const { width, height, data } = mask;
+    const result = new Uint8Array(width * height);
+    const window = 2 * radius + 1;
+    const counts = new Int32Array(width);
+
+    for (let y = 0; y < Math.min(height, radius); y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+            counts[x] += data[y * width + x];
+        }
+    }
+
+    for (let y = 0; y < height; y++)
+    {
+        const entering = y + radius;
+        const leaving = y - radius - 1;
+
+        if (entering < height)
+        {
+            const row = entering * width;
+
+            for (let x = 0; x < width; x++)
+            {
+                counts[x] += data[row + x];
+            }
+        }
+
+        if (leaving >= 0)
+        {
+            const row = leaving * width;
+
+            for (let x = 0; x < width; x++)
+            {
+                counts[x] -= data[row + x];
+            }
+        }
+
+        const row = y * width;
+
+        for (let x = 0; x < width; x++)
+        {
+            result[row + x] = requireAll ? (counts[x] === window ? 1 : 0) : (counts[x] > 0 ? 1 : 0);
+        }
+    }
+
+    return { width, height, data: result };
+}
+
+/**
+ * Whether a square-neighborhood pass over a mask is cheaper done pixel by set pixel than by
+ * the two separable sweeps: true for a sparse mask and a small radius, where visiting each set
+ * pixel's square costs less than touching every pixel twice.
+ *
+ * @param mask - Source mask.
+ * @param radius - Half-width of the square.
+ * @returns True to work set pixel by set pixel.
+ */
+function prefersSparsePass(mask: Mask, radius: number): boolean
+{
+    // The density is estimated from every seventh pixel; the decision only needs to be
+    // roughly right, and a full count would cost a good part of what it saves.
+    const { data } = mask;
+    const stride = 7;
+    const square = (2 * radius + 1) * (2 * radius + 1);
+    let set = 0;
+
+    for (let index = 0; index < data.length; index += stride)
+    {
+        set += data[index];
+    }
+
+    return set * stride * square < 3 * data.length;
+}
+
+/**
+ * Grows every set region by the given radius: a pixel is set if any pixel of its square
+ * neighborhood was. A sparse mask with a small radius is done by painting each set pixel's
+ * square; otherwise the square is separated into a pass along rows and a pass along columns,
+ * each linear in the number of pixels whatever the radius.
  *
  * @param mask - Source mask.
  * @param radius - Half-width of the square, in pixels.
@@ -208,6 +347,11 @@ export function createLongRunMask(mask: Mask, minHorizontalRun: number, minVerti
  */
 export function dilate(mask: Mask, radius: number): Mask
 {
+    if (!prefersSparsePass(mask, radius))
+    {
+        return spreadAlongColumns(spreadAlongRows(mask, radius, false), radius, false);
+    }
+
     const { width, height, data } = mask;
     const result = new Uint8Array(width * height);
 
@@ -235,7 +379,8 @@ export function dilate(mask: Mask, radius: number): Mask
 
 /**
  * Shrinks every set region by the given radius: a pixel survives only if its whole square
- * neighborhood is set.
+ * neighborhood is set and lies inside the image. A sparse mask with a small radius is checked
+ * set pixel by set pixel; otherwise the two separable sweeps are used.
  *
  * @param mask - Source mask.
  * @param radius - Half-width of the square, in pixels.
@@ -243,6 +388,11 @@ export function dilate(mask: Mask, radius: number): Mask
  */
 export function erode(mask: Mask, radius: number): Mask
 {
+    if (!prefersSparsePass(mask, radius))
+    {
+        return spreadAlongColumns(spreadAlongRows(mask, radius, true), radius, true);
+    }
+
     const { width, height, data } = mask;
     const result = new Uint8Array(width * height);
 

@@ -67,7 +67,8 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    so are disconnected pieces that lie where decorations go: entirely right of the tips (clade
    brackets), or above or below the tree without labels (a time axis, a legend).
 6. **OCR and matching.** Each label is cropped from the image with the line art painted out and
-   upscaled three times; letter-spaced text, recognized by the figure's letter gap in the
+   upscaled so that its letters are about 45 pixels high (at most three times, never less than
+   one, since Tesseract's time grows with the crop's area and large letters need no help); letter-spaced text, recognized by the figure's letter gap in the
    profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing
    the genus alone, the genus abbreviated to its initial, and a binomial read against a
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
@@ -93,6 +94,23 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    the tips are aligned), and every rejected vertical with its reason are recorded in the
    document. On an aligned figure a label row without a tip is first searched for in the line
    ink, and a branch piece ending at the line gets its tip back before labels are read.
+
+## Performance
+
+Measured on an Apple laptop, single thread, 2026-10-27. The pipeline without OCR takes 0.2 to
+3 seconds on the benchmark figures (0.4 to 10 megapixels) and 12 seconds on a 40-megapixel
+upscale of the largest, at about 30 bytes of memory per pixel (1.2 GB at 40 megapixels), which
+is where a browser worker would start to run out somewhere past 70 megapixels. Time grows a
+little faster than the pixel count: the long-run strip is rebuilt up to three times when the
+glyphs are large, and connected components are labeled about six times per image across text
+detection and the profile. Tree size barely matters: a 400-tip synthetic figure with 1100
+segments traces in 15 milliseconds, and the quadratic loops over segments and rows are a few
+percent of the whole. Dilation and erosion are separable sweeps for large radii and painted
+pixel by pixel for sparse masks with small radii, whichever is cheaper.
+
+OCR dominates every run with labels: 30 to 75 milliseconds per label, in proportion to the
+crop's area, so crops are scaled towards 45-pixel letters rather than always three times.
+Large-font figures read two to three times faster for it; small fonts are unchanged.
 
 ## Known gaps
 
