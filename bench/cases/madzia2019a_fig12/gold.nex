@@ -1,0 +1,88 @@
+#NEXUS
+
+[ Madzia, Jagt & Mulder 2019 (Cretaceous Research 2020), Fig. 12: majority-rule consensus, first run (character 120.3), 75 taxa, staircase layout with clade arrows and stem markers. Topology transcribed by the tool, three debris tips removed, and checked against the image at 3x zoom section by section (2026-10-26). Taxon names use the mmc2 first-run matrix spellings. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=75;
+    TAXLABELS
+        Lesothosaurus_diagnosticus
+        Hypsilophodon_foxii
+        Rhabdodon_sp.
+        Zalmoxes_robustus
+        Mochlodon_vorosi
+        Zalmoxes_shqiperorum
+        Tenontosaurus_tilletti
+        Tenontosaurus_dossi
+        Eousdryosaurus_nanohallucis
+        Camptosaurus_valdensis
+        Callovosaurus_leedsi
+        Dysalotosaurus_lettowvorbecki
+        Dryosaurus_altus
+        Valdosaurus_canaliculatus
+        Elrhazosaurus_nigeriensis
+        Camptosaurus_dispar
+        Cumnoria_prestwichii
+        Uteodon_aphanoecetes
+        Draconyx_loureiroi
+        Planicoxa_venenica
+        Theiophytalia_kerri
+        Hippodraco_scutodens
+        Owenodon_hoggii
+        Muttaburrasaurus_langdoni
+        Dakotadon_lakotaensis
+        Osmakasaurus_depressus
+        Cedrorestes_crichtoni
+        Iguanacolossus_fortis
+        Lanzhousaurus_magnidens
+        Yunganglong_datongensis
+        Fukuisaurus_tetoriensis
+        Siamodon_nimngami
+        Hypselospinus_fittoni
+        Barilium_dawsoni
+        Lurdusaurus_arenatus
+        Iguanodon_galvensis
+        Iguanodon_bernissartensis
+        Morelladon_beltrani
+        Mantellisaurus_atherfieldensis
+        Equijubus_normani
+        Bolong_yixianensis
+        Ouranosaurus_nigeriensis
+        Jinzhousaurus_yangi
+        Xuwulong_yueluni
+        Altirhinus_kurzanovi
+        Koshisaurus_katsuyama
+        Gongpoquansaurus_mazongshanensi
+        Batyrosaurus_rozhdestvenskyi
+        Proa_valdearinnoensis
+        Ratchasimasaurus_suranareae
+        Penelopognathus_weishampeli
+        Sirindhorna_khoratensis
+        Zuoyunlong_huangi
+        Probactrosaurus_gobiensis
+        Eolambia_caroljonesa
+        Jintasaurus_meniscus
+        Jeyawati_rugoculus
+        Protohadros_byrdi
+        Datonglong_tianzhenensis
+        Tethyshadros_insularis
+        Levnesovia_transoxiana
+        Nanyangosaurus_zhugeii
+        Orthomerus_dolloi
+        Gilmoreosaurus_mongoliensis
+        Bactrosaurus_johnsoni
+        Zhanghenglong_yangchengensis
+        Tanius_sinensis
+        Plesiohadros_djadokhtaensis
+        Shuangmiaosaurus_gilmorei
+        Hadrosaurus_foulkii
+        Lophorhothon_atopus
+        Claosaurus_agilis
+        Telmatosaurus_transsylvanicus
+        Corythosaurus_casuarius
+        Edmontosaurus_annectens
+    ;
+END;
+
+BEGIN TREES;
+    TREE madzia2019a_fig12 = [&R] (Lesothosaurus_diagnosticus,(Hypsilophodon_foxii,((Rhabdodon_sp.,(Zalmoxes_robustus,(Mochlodon_vorosi,Zalmoxes_shqiperorum))),((Tenontosaurus_tilletti,Tenontosaurus_dossi),(Eousdryosaurus_nanohallucis,Camptosaurus_valdensis,Callovosaurus_leedsi,Dysalotosaurus_lettowvorbecki,Dryosaurus_altus,(Valdosaurus_canaliculatus,Elrhazosaurus_nigeriensis)),(Camptosaurus_dispar,(Cumnoria_prestwichii,Uteodon_aphanoecetes,Draconyx_loureiroi,(Planicoxa_venenica,Theiophytalia_kerri,Hippodraco_scutodens,Owenodon_hoggii,Muttaburrasaurus_langdoni,(Dakotadon_lakotaensis,Osmakasaurus_depressus,(Cedrorestes_crichtoni,Iguanacolossus_fortis),(Lanzhousaurus_magnidens,(Yunganglong_datongensis,Fukuisaurus_tetoriensis,(Siamodon_nimngami,Hypselospinus_fittoni,Barilium_dawsoni,Lurdusaurus_arenatus,(Iguanodon_galvensis,Iguanodon_bernissartensis),((Morelladon_beltrani,Mantellisaurus_atherfieldensis),(Equijubus_normani,((Bolong_yixianensis,Ouranosaurus_nigeriensis),(Jinzhousaurus_yangi,((Xuwulong_yueluni,(Altirhinus_kurzanovi,(Koshisaurus_katsuyama,(Gongpoquansaurus_mazongshanensi,(Batyrosaurus_rozhdestvenskyi,(Proa_valdearinnoensis,Ratchasimasaurus_suranareae)))))),(Penelopognathus_weishampeli,(Sirindhorna_khoratensis,Zuoyunlong_huangi,Probactrosaurus_gobiensis,((Eolambia_caroljonesa,Jintasaurus_meniscus),(Jeyawati_rugoculus,(Protohadros_byrdi,(Datonglong_tianzhenensis,Tethyshadros_insularis,Levnesovia_transoxiana,Nanyangosaurus_zhugeii,(Orthomerus_dolloi,Gilmoreosaurus_mongoliensis,Bactrosaurus_johnsoni,((Zhanghenglong_yangchengensis,Tanius_sinensis),((Plesiohadros_djadokhtaensis,Shuangmiaosaurus_gilmorei),(Hadrosaurus_foulkii,Lophorhothon_atopus,Claosaurus_agilis,Telmatosaurus_transsylvanicus,(Corythosaurus_casuarius,Edmontosaurus_annectens)))))))))))))))))))))))))));
+END;

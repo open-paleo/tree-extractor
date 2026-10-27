@@ -69,6 +69,12 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
   merges bold letters and rows.
 - A label whose first letter touches its branch with no gap can lose that letter to the OCR crop;
   name matching usually recovers it.
+- Four real figures are in the benchmark (Dieudonné 2026, Longrich 2010, Maidment 2008 panel A
+  as a region of a page scan, Madzia 2019). Their gold trees were produced by the tool and checked
+  against the image node by node at 3x zoom; Dieudonné's additionally by a vision model.
+- Debris tips remain the commonest flaw on real figures: a short unlabelled piece, or one that
+  claimed a support value as its label, hanging from a real node. They are flagged by the quality
+  checks and are one click to delete in the viewer, but they stop a case from being identical.
 - On the synthetic benchmark, clean, serif, dense and most touching-label figures come out
   identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
   most of a short branch, or where a range bar extends left past the branch's start; both are

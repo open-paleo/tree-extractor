@@ -13,11 +13,12 @@ the batch command line give identical results.
 
 ## Status
 
-Early. On the first real benchmark figure (a 52-taxon time-scaled consensus tree with several
-polytomies, colored clade boxes, range bars and small italic labels) the tree is recovered exactly,
-with every tip named, fully automatically. On synthetic figures in five styles, eleven of fifteen
-cases come out identical and the rest lose a few tips to boxed support labels on short branches.
-See `docs/design.md` for the approach and its known gaps.
+Early. On four published figures (a 52-taxon time-scaled consensus with colored clade boxes and
+range bars; a 20-taxon strict consensus from a 665-pixel-wide embedded image; a 300 dpi page scan
+of a 1990s-style cladogram in italic serif; and a 75-taxon majority-rule tree in a staircase
+layout with clade arrows) three come out identical and the fourth has every taxon and every split
+right plus three debris tips to delete. On synthetic figures in five styles, eleven of fifteen are
+identical. See `docs/design.md` for the approach and its known gaps.
 
 ## Use
 

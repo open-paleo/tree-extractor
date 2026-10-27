@@ -1,0 +1,12 @@
+{
+    "image": "../../images/maidment2008a_fig11.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Maidment, Norman, Barrett & Upchurch 2008, J. Syst. Palaeontol., Fig. 11A: strict consensus of 5 MPTs, 18 taxa (panel A only, region 180,180-1200,1030 of the 300 dpi page scan). Numbers 1-8 and letters A-C in the figure are clade labels, not support. Topology transcribed by the tool and checked node by node against the image (2026-10-26). Taxon names as in Appendix 3.",
+    "region": {
+        "x0": 180,
+        "y0": 180,
+        "x1": 1200,
+        "y1": 1030
+    }
+}

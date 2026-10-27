@@ -38,3 +38,14 @@ test("label cleaners strip decoration", () =>
     assert.equal(cleanSupportText("—1/77"), "1/77");
     assert.equal(cleanSupportText("l8/1OO"), "18/100");
 });
+
+test("genus-only and abbreviated-genus forms match the full name", () =>
+{
+    const names = ["Dacentrurus armatus", "Stegosaurus homheni", "Stegosaurus mjosi", "Scelidosaurus"];
+    assert.equal(matchName("Dacentrurus", names)?.name, "Dacentrurus armatus");
+    assert.ok(matchName("Dacentrurus", names)?.accepted);
+    assert.equal(matchName("S. homheni", names)?.name, "Stegosaurus homheni");
+    assert.ok(matchName("S. homheni", names)?.accepted);
+    assert.equal(matchName("S. mjosi", names)?.name, "Stegosaurus mjosi");
+    assert.equal(matchName("Scelidosaurus", names)?.name, "Scelidosaurus");
+});

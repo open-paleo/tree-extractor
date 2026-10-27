@@ -10,6 +10,7 @@ import * as path from "node:path";
 import * as url from "node:url";
 import * as tesseract from "tesseract.js";
 
+import type { Box } from "../src/core/types.ts";
 import { extractTree, formatTimings } from "../src/core/pipeline.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 import { extractFirstTreeFromNexus, parseNewick } from "../src/core/newick.ts";
@@ -21,6 +22,7 @@ type BenchCase = {
     image: string;
     gold: string;
     names: string;
+    region?: Box;
 };
 
 /**
@@ -130,7 +132,7 @@ for (const caseDir of caseDirs)
         continue;
     }
 
-    const document = await extractTree(await loadImage(imagePath), { ocr, names, source: benchCase.image });
+    const document = await extractTree(await loadImage(imagePath), { ocr, names, source: benchCase.image, region: benchCase.region ?? null });
     const newick = formatDocumentAsNewick(document);
     const caseOut = path.join(outDir, caseName);
     fs.mkdirSync(caseOut, { recursive: true });

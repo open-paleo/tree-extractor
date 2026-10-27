@@ -61,6 +61,35 @@ export function computeSimilarity(left: string, right: string): number
 }
 
 /**
+ * Scores OCR text against one name, allowing the forms figures print: the full name, the genus
+ * alone, or the genus abbreviated to its initial ("S. homheni" for "Stegosaurus homheni").
+ *
+ * @param target - Normalized OCR text.
+ * @param name - Normalized candidate name.
+ * @returns Similarity from 0 to 1.
+ */
+function scoreName(target: string, name: string): number
+{
+    let score = computeSimilarity(target, name);
+    const space = name.indexOf(" ");
+
+    if (space > 0)
+    {
+        const genus = name.slice(0, space);
+        const rest = name.slice(space + 1);
+        score = Math.max(score, computeSimilarity(target, genus) - 0.05);
+        const targetSpace = target.indexOf(" ");
+
+        if (targetSpace > 0 && target[0] === genus[0] && targetSpace <= 2)
+        {
+            score = Math.max(score, computeSimilarity(target.slice(targetSpace + 1), rest) - 0.05);
+        }
+    }
+
+    return score;
+}
+
+/**
  * Matches OCR output against a list of names.
  *
  * @param text - OCR output.
@@ -82,7 +111,7 @@ export function matchName(text: string, names: Array<string>): NameMatch | null
 
     for (const name of names)
     {
-        const score = computeSimilarity(target, normalizeName(name));
+        const score = scoreName(target, normalizeName(name));
 
         if (score > bestScore)
         {

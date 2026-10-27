@@ -7,6 +7,7 @@ import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProgressRepor
 import {
     applyHysteresis,
     closeMask,
+    invertMask,
     compareNumbers,
     computeMedian,
     convertToGray,
@@ -68,6 +69,20 @@ export type Parameters = {
     maxChroma: number;
 
     /**
+     * Largest channel spread for weak line ink. Tighter than maxChroma because a faint stretch
+     * of a black line is gray, while a pastel clade box can be nearly as light and nearly as
+     * neutral.
+     */
+    weakMaxChroma: number;
+
+    /**
+     * How far, in pixels, weak ink may lie from certain line ink. A faint gap in a line is a
+     * few pixels from certain ink on both sides; a pastel fill stretches far from any line and
+     * must not be flooded.
+     */
+    weakReach: number;
+
+    /**
      * Shortest horizontal run stripped before glyph detection.
      */
     glyphStripHorizontalRun: number;
@@ -121,6 +136,8 @@ export const defaultParameters: Parameters = {
     lineThresholdWeak: 230,
     closeRadius: 1,
     maxChroma: 40,
+    weakMaxChroma: 40,
+    weakReach: 3,
     glyphStripHorizontalRun: 28,
     glyphStripVerticalRun: 20,
     minHorizontalRun: 10,
@@ -233,8 +250,11 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const protectedLength = Math.round(1.5 * glyphHeight);
     const protectedInk = createLongRunMask(strongInk, protectedLength, protectedLength);
     const glyphZone = subtractMask(dilate(rough.glyphMask, 2), protectedInk);
-    const weakInk = subtractMask(createDarkMask(image, parameters.lineThresholdWeak, true, parameters.maxChroma), dilate(rough.glyphMask, 4));
-    const lineInk = closeMask(applyHysteresis(subtractMask(strongInk, glyphZone), weakInk), parameters.closeRadius);
+    const strongLines = subtractMask(strongInk, glyphZone);
+    const nearStrong = dilate(strongLines, parameters.weakReach);
+    const weakCandidates = createDarkMask(image, parameters.lineThresholdWeak, true, parameters.weakMaxChroma);
+    const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
+    const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
     return { gray, textInk, lineInk, glyphHeight, roughLines: rough.lines };
 }
@@ -408,6 +428,51 @@ function removeDebrisTips(document: ExtractionDocument, maxLength: number): void
     }
 
     document.nodes = [...nodeById.values()];
+}
+
+/**
+ * Drops short tips whose label read as a bare number: a fragment of a branch cut by a support
+ * value, which then claimed the value as its label. The line goes back to the pool.
+ *
+ * @param document - Document updated in place.
+ * @param maxLength - Longest branch such a tip can have.
+ */
+function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number): void
+{
+    for (const tip of document.tips)
+    {
+        if (tip.label === null || !/^[0-9./]+$/.test(tip.label))
+        {
+            continue;
+        }
+
+        let parentX: number | null = null;
+
+        for (const node of document.nodes)
+        {
+            if (node.id === tip.parent)
+            {
+                parentX = node.x;
+            }
+        }
+
+        if (parentX !== null && tip.x - parentX < maxLength)
+        {
+            for (const line of document.textLines)
+            {
+                if (line.id === tip.textLine)
+                {
+                    line.role = "unassigned";
+                }
+            }
+
+            tip.textLine = null;
+            tip.label = null;
+            tip.match = null;
+        }
+    }
+
+    removeDebrisTips(document, maxLength);
 }
 
 /**
@@ -632,6 +697,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     {
         const erased = paintMask(gray, lineArtMask, 255);
         await readLabels(document, erased, options.ocr, parameters.ocrScale, names, progress);
+        removeNumericDebrisTips(document, 2.5 * glyphHeight);
         recordLap("ocr");
     }
 

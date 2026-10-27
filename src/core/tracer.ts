@@ -82,9 +82,20 @@ type Branch = {
     right: Candidate | null;
 
     /**
+     * Whether the left end touches its vertical rather than merely coming close.
+     */
+    leftStrict: boolean;
+
+    /**
      * Whether the right end touches its vertical rather than merely coming close.
      */
     rightStrict: boolean;
+
+    /**
+     * Whether this is a zero-length branch made for a label glued to a vertical; its right end
+     * never attaches, since it ends where it starts.
+     */
+    glued: boolean;
 };
 
 /**
@@ -183,11 +194,12 @@ function compareNodesRightToLeft(left: TreeNode, right: TreeNode): number
  * @param x0 - Left end.
  * @param x1 - Right end.
  * @param y - Height.
+ * @param glued - Whether this is a zero-length branch for a glued label.
  * @returns The piece, unattached.
  */
-function createBranch(id: string, segment: string, x0: number, x1: number, y: number): Branch
+function createBranch(id: string, segment: string, x0: number, x1: number, y: number, glued = false): Branch
 {
-    return { id, segment, x0, x1, y, left: null, right: null, rightStrict: false };
+    return { id, segment, x0, x1, y, left: null, right: null, leftStrict: false, rightStrict: false, glued };
 }
 
 /**
@@ -308,11 +320,42 @@ function addGluedBranches(branches: Array<Branch>, candidates: Array<Candidate>,
             continue;
         }
 
+        // A support label sits between two verticals; a tip label has nothing standing right
+        // after it. A vertical just past the row's end means this is not a tip label.
+        let followed = false;
+
+        for (const candidate of candidates)
+        {
+            const gap = candidate.x - row.x1;
+
+            if (gap >= -tolerance && gap <= reach && center >= candidate.y0 - tolerance && center <= candidate.y1 + tolerance)
+            {
+                followed = true;
+                break;
+            }
+        }
+
+        if (followed)
+        {
+            continue;
+        }
+
+        // The label already belongs to a branch when one starts at the vertical on that row, or
+        // ends just left of it: then the "vertical" is a letter stem standing where the branch
+        // ends, not a node.
         let hasBranch = false;
 
         for (const branch of branches)
         {
-            if (Math.abs(branch.y - center) <= tolerance && branch.x0 >= vertical.x - tolerance && branch.x0 <= vertical.x + reach)
+            if (Math.abs(branch.y - center) > tolerance)
+            {
+                continue;
+            }
+
+            const startsHere = branch.x0 >= vertical.x - tolerance && branch.x0 <= vertical.x + reach;
+            const endsHere = branch.x1 >= vertical.x - 2 * reach && branch.x1 <= vertical.x + tolerance;
+
+            if (startsHere || endsHere)
             {
                 hasBranch = true;
                 break;
@@ -321,7 +364,7 @@ function addGluedBranches(branches: Array<Branch>, candidates: Array<Candidate>,
 
         if (!hasBranch)
         {
-            branches.push(createBranch(`glued.${branches.length}`, `glued.${branches.length}`, vertical.x, vertical.x + 2, center));
+            branches.push(createBranch(`glued.${branches.length}`, `glued.${branches.length}`, vertical.x, vertical.x + 2, center, true));
         }
     }
 }
@@ -409,11 +452,16 @@ function attachAndPrune(
         {
             // A label's white background box can leave a gap between a branch end and its
             // vertical, so a second, looser search follows the strict one.
-            branch.left = findNearestVertical(active, branch.x0, branch.y, tolerance, tolerance, "left")
-                ?? findNearestVertical(active, branch.x0, branch.y, looseTolerance, tolerance, "left");
-            branch.right = findNearestVertical(active, branch.x1, branch.y, tolerance, tolerance, "right");
+            branch.left = findNearestVertical(active, branch.x0, branch.y, tolerance, tolerance, "left");
+            branch.leftStrict = branch.left !== null;
+            branch.left ??= findNearestVertical(active, branch.x0, branch.y, looseTolerance, tolerance, "left");
+            branch.right = branch.glued ? null : findNearestVertical(active, branch.x1, branch.y, tolerance, tolerance, "right");
             branch.rightStrict = branch.right !== null;
-            branch.right ??= findNearestVertical(active, branch.x1, branch.y, looseTolerance, tolerance, "right");
+
+            if (!branch.glued)
+            {
+                branch.right ??= findNearestVertical(active, branch.x1, branch.y, looseTolerance, tolerance, "right");
+            }
 
             // A piece whose both ends touch the same vertical is a crossing remnant, not a branch.
             if (branch.left !== null && branch.left === branch.right)
@@ -475,22 +523,61 @@ function attachAndPrune(
 }
 
 /**
- * Chooses the incoming branch that is the vertical's parent. Several pieces may reach a
- * vertical; the one that touches it outranks one that only comes close, and among equals the
- * longest is the branch rather than label debris.
+ * Ranks an incoming branch as a candidate parent. One that comes from a vertical outranks a
+ * loose fragment; touching ends outrank loose ones, the left end first; one arriving at a height
+ * where the vertical has no child outranks one at a child's height, which is usually that
+ * child's branch running on past the vertical; and among equals the longest is the branch rather
+ * than label debris.
+ *
+ * @param branch - Incoming branch.
+ * @param candidate - Vertical it arrives at.
+ * @param tolerance - Height difference below which two heights are the same.
+ * @returns A score; higher is better.
+ */
+function scoreParent(branch: Branch, candidate: Candidate, tolerance: number): number
+{
+    return (branch.left === null ? 0 : 1000000)
+        + (branch.leftStrict ? 100000 : 0)
+        + (branch.rightStrict ? 10000 : 0)
+        + (isAtChildHeight(branch, candidate, tolerance) ? 0 : 1000)
+        + Math.min(999, branch.x1 - branch.x0);
+}
+
+/**
+ * Tells whether a branch arrives at a vertical at the height of one of the vertical's children.
+ *
+ * @param branch - Incoming branch.
+ * @param candidate - Vertical it arrives at.
+ * @param tolerance - Height difference below which two heights are the same.
+ * @returns True when a child hangs at that height.
+ */
+function isAtChildHeight(branch: Branch, candidate: Candidate, tolerance: number): boolean
+{
+    for (const child of candidate.children)
+    {
+        if (Math.abs(child.y - branch.y) <= tolerance)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Chooses the incoming branch that is the vertical's parent.
  *
  * @param candidate - Vertical to inspect.
+ * @param tolerance - Attachment tolerance in pixels.
  * @returns The parent branch, or null at a root.
  */
-function choosePrimaryParent(candidate: Candidate): Branch | null
+function choosePrimaryParent(candidate: Candidate, tolerance: number): Branch | null
 {
     let best: Branch | null = null;
 
     for (const branch of candidate.parents)
     {
-        if (best === null
-            || (branch.rightStrict && !best.rightStrict)
-            || (branch.rightStrict === best.rightStrict && branch.x1 - branch.x0 > best.x1 - best.x0))
+        if (best === null || scoreParent(branch, candidate, tolerance) > scoreParent(best, candidate, tolerance))
         {
             best = branch;
         }
@@ -814,6 +901,42 @@ export function traceRectangularTree(
         nodeIds.set(ordered[index], `n${index + 1}`);
     }
 
+    // Only one incoming branch is a vertical's parent. Another piece arriving at the parent's
+    // height is a fragment of the same branch; one arriving at the height of one of the
+    // vertical's children is that child's branch running on past the vertical; both are dropped.
+    // One arriving at any other height is usually a tip whose branch ends within loose reach of
+    // the next vertical, as in a staircase layout; it becomes a tip, since otherwise its subtree
+    // would hang from two parents.
+    for (const candidate of ordered)
+    {
+        const primary = choosePrimaryParent(candidate, tolerance);
+
+        for (const branch of candidate.parents)
+        {
+            if (branch === primary)
+            {
+                continue;
+            }
+
+            branch.right = null;
+            const fragment = (primary !== null && Math.abs(branch.y - primary.y) <= tolerance) || isAtChildHeight(branch, candidate, tolerance);
+
+            if (fragment && branch.left !== null)
+            {
+                const index = branch.left.children.indexOf(branch);
+
+                if (index >= 0)
+                {
+                    branch.left.children.splice(index, 1);
+                }
+
+                branch.left = null;
+            }
+        }
+
+        candidate.parents = primary === null ? [] : [primary];
+    }
+
     const tipBranches = new Array<Branch>();
 
     for (const branch of branches)
@@ -870,7 +993,7 @@ export function traceRectangularTree(
     for (const candidate of ordered)
     {
         const id = nodeIds.get(candidate) as string;
-        const parentBranch = choosePrimaryParent(candidate);
+        const parentBranch = choosePrimaryParent(candidate, tolerance);
         candidate.children.sort(compareBranchHeights);
         const children = new Array<string>();
 

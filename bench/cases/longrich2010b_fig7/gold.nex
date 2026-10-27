@@ -1,0 +1,33 @@
+#NEXUS
+
+[ Longrich, Sankey & Tanke 2010, Cretaceous Research, Fig. 7: strict consensus of 46 MPTs, 20 taxa. Topology transcribed from the figure by the tool and checked node by node against the image (2026-10-26). Taxon names use the matrix (mmc2) spellings. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Thescelosaurus_neglectus
+        Psittacosaurus_spp.
+        Stegoceras_validum
+        Gravitholus_albertae
+        Colepiocephale_lambei
+        Texacephale_langstoni
+        Hanssuesia_sternbergi
+        'Sphaerotholus? brevis'
+        Sphaerotholus_goodwini
+        Sphaerotholus_edmontonense
+        Sphaerotholus_buchholtzae
+        Alaskacephale_gangloffi
+        Pachycephalosaurus_wyomingensis
+        Stygimoloch_spinifer
+        Dracorex_hogwartsi
+        Tylocephale_gilmorei
+        Prenocephale_prenes
+        Homalocephale_calathocercos
+        Goyocephale_lattimorei
+        Wannanosaurus_yansiensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE longrich2010b_fig7 = [&R] (Thescelosaurus_neglectus,Psittacosaurus_spp.,((Stegoceras_validum,(Gravitholus_albertae,Colepiocephale_lambei)),Texacephale_langstoni,Hanssuesia_sternbergi,('Sphaerotholus? brevis',(Sphaerotholus_goodwini,(Sphaerotholus_edmontonense,Sphaerotholus_buchholtzae)),((Alaskacephale_gangloffi,Pachycephalosaurus_wyomingensis,(Stygimoloch_spinifer,Dracorex_hogwartsi)),(Tylocephale_gilmorei,Prenocephale_prenes,(Homalocephale_calathocercos,Goyocephale_lattimorei,Wannanosaurus_yansiensis))))));
+END;

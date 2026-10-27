@@ -306,6 +306,24 @@ export function createDirectionalRunMask(mask: Mask, minRun: number, alongX: boo
 }
 
 /**
+ * Flips every pixel of a mask.
+ *
+ * @param mask - Source mask.
+ * @returns New mask set where the source was clear.
+ */
+export function invertMask(mask: Mask): Mask
+{
+    const result = new Uint8Array(mask.data.length);
+
+    for (let index = 0; index < result.length; index++)
+    {
+        result[index] = mask.data[index] === 1 ? 0 : 1;
+    }
+
+    return { width: mask.width, height: mask.height, data: result };
+}
+
+/**
  * Clears from the first mask every pixel set in the second.
  *
  * @param mask - Mask to subtract from.
