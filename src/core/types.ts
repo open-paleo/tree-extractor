@@ -575,6 +575,21 @@ export type FontProfile = {
      * True when letters sit far apart, as in a letter-spaced font.
      */
     letterSpaced: boolean;
+
+    /**
+     * True when the strict text threshold broke letters into fragments.
+     */
+    fragmented: boolean;
+
+    /**
+     * True when the text ink was widened by hysteresis into fainter pixels.
+     */
+    widened: boolean;
+
+    /**
+     * Horizontal factor applied to label crops before OCR, from 0.55 to 1.
+     */
+    condensing: number;
 };
 
 /**
@@ -674,6 +689,11 @@ export type FigureProfile = {
     panels: Array<Box>;
 
     /**
+     * Collinear segment pairs that were joined across a gap with ink in it.
+     */
+    bridgedGaps: number;
+
+    /**
      * Vote margins.
      */
     confidence: ProfileConfidence;
@@ -707,4 +727,15 @@ export type ProfileOverrides = {
      * Whether the font is italic.
      */
     italic?: boolean;
+
+    /**
+     * Whether to widen the text ink by hysteresis, instead of deciding from fragmentation and
+     * glyph size.
+     */
+    widenText?: boolean;
+
+    /**
+     * Horizontal factor for label crops before OCR, instead of deciding from the letter gap.
+     */
+    condensing?: number;
 };

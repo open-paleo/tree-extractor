@@ -4,7 +4,7 @@
  */
 
 import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
-import { applyProfileOverrides, createEmptyProfile, measureProfile } from "./profile.ts";
+import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -220,6 +220,16 @@ export type PreparedMasks = {
     glyphMask: Mask;
 
     /**
+     * Whether the strict text threshold broke letters into fragments.
+     */
+    fragmented: boolean;
+
+    /**
+     * Whether the text ink was widened by hysteresis.
+     */
+    widened: boolean;
+
+    /**
      * Glyph height from the rough text pass.
      */
     glyphHeight: number;
@@ -262,7 +272,11 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     // A thin font breaks into fragments at the strict threshold, and very small text always
     // loses strokes to it. Fainter pixels that touch certain text ink then rejoin the strokes.
     // Bold text at normal sizes is left alone, since its halo would merge letters and rows.
-    if (rough.fragmented || rough.glyphHeight <= parameters.smallGlyphHeight)
+    // A profile override settles the question either way.
+    const fragmented = rough.fragmented;
+    const widened = parameters.profileOverrides.widenText ?? (fragmented || rough.glyphHeight <= parameters.smallGlyphHeight);
+
+    if (widened)
     {
         textInk = applyHysteresis(textInk, createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma));
         roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
@@ -289,7 +303,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
-    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, glyphHeight, roughLines: rough.lines };
+    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, fragmented, widened, glyphHeight, roughLines: rough.lines };
 }
 
 /**
@@ -742,7 +756,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     }
 
     announce("Preparing masks");
-    const { gray, textInk, lineInk, glyphMask, glyphHeight, roughLines } = prepareMasks(image, parameters);
+    const { gray, textInk, lineInk, glyphMask, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
     announce("Finding segments");
 
@@ -785,7 +799,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         }
     }
 
-    const { horizontals, verticals } = extractSegments(
+    const { horizontals, verticals, bridgedGaps } = extractSegments(
         lineInk,
         minHorizontalRun,
         minVerticalRun,
@@ -858,18 +872,22 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
     recordLap("assign");
 
+    // The profile is measured before labels are read, since reading them uses it (how far to
+    // condense the crops); the parts that the read text can change are measured again after.
+    document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, fragmented, widened, bridgedGaps, document });
+    applyProfileOverrides(document.profile, parameters.profileOverrides);
+    recordLap("profile");
+
     if (options.ocr)
     {
         const erased = paintMask(gray, lineArtMask, 255);
         await readLabels(document, erased, options.ocr, parameters.ocrScale, names, progress);
         removeNumericDebrisTips(document, 3 * glyphHeight);
         assignLeftoverNames(document, names);
+        measureTextMarks(document.profile, document, textInk, glyphHeight);
         recordLap("ocr");
     }
 
-    document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, document });
-    applyProfileOverrides(document.profile, parameters.profileOverrides);
-    recordLap("profile");
     runQualityChecks(document);
 
     if (region !== null)

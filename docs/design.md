@@ -65,17 +65,19 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    painted out, then tip rows are assigned to the nearest branch end on their left and remaining
    rows to the nearest junction on their right. Short unlabelled tips are dropped as debris.
 6. **OCR and matching.** Each label is cropped from the image with the line art painted out and
-   upscaled three times; letter-spaced text, recognized by the blank columns between letters, is
-   condensed horizontally first. Reads are matched to the name list by edit distance, allowing
+   upscaled three times; letter-spaced text, recognized by the figure's letter gap in the
+   profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing
    the genus alone, the genus abbreviated to its initial, and a binomial read against a
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
    their stems. Tips whose read matched nothing are then paired with the names nobody claimed,
    by elimination, when one name stands clearly apart; such tips are flagged for checking.
 7. **Profile.** Figure-level properties are measured once and recorded in the document: layout
-   family, tip alignment, support label style, clade marks, font (stroke, letter gap, slant),
-   time-scale signs (tint, axis, range bars) and separate blocks of line art. Nothing reads them
-   yet; `docs/profiles.md` has the plan for what will. The benchmark checks them against each
-   case's expected values and reports a profile column.
+   family, tip alignment, support label style, clade marks, font (stroke, letter gap, slant,
+   whether the text ink was widened, how far label crops are condensed), time-scale signs (tint,
+   axis, range bars), separate blocks of line art and the number of bridged gaps. Label reading
+   takes its condensing from the profile; any value can be fixed through `profileOverrides`
+   (CLI `--profile`). `docs/profiles.md` has the plan for what else will read it. The benchmark
+   checks the profile against each case's expected values and reports a profile column.
 8. **QC**: unlabelled tips, unmatched names, duplicates, disconnected pieces, tips named by
    elimination, and every rejected vertical with its reason are recorded in the document.
 

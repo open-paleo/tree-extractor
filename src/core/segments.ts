@@ -19,6 +19,26 @@ export type SegmentSet = {
      * Vertical segments (node connectors).
      */
     verticals: Array<Segment>;
+
+    /**
+     * Collinear pairs joined across a gap with ink in it.
+     */
+    bridgedGaps: number;
+};
+
+/**
+ * Collinear merge output.
+ */
+type MergeResult = {
+    /**
+     * Merged boxes.
+     */
+    boxes: Array<Box>;
+
+    /**
+     * Pairs joined across a positive gap.
+     */
+    bridged: number;
 };
 
 /**
@@ -262,11 +282,12 @@ function hasInkBetween(ink: Mask, first: Box, second: Box, alongX: boolean, wind
  * @param maxGap - Largest gap to bridge, in pixels.
  * @param ink - All dark pixels of the image, or null to bridge any gap.
  * @param window - How far across the line to look for the ink that cut it.
- * @returns Merged boxes.
+ * @returns Merged boxes and the number of gaps bridged.
  */
-function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number, ink: Mask | null, window: number): Array<Box>
+function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number, ink: Mask | null, window: number): MergeResult
 {
     const merged = new Array<Box>();
+    let bridged = 0;
 
     for (const box of boxes)
     {
@@ -303,6 +324,11 @@ function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number,
 
                 if (overlap >= 0.5 * thinner && (ink === null || gap <= 0 || hasInkBetween(ink, first, second, alongX, window)))
                 {
+                    if (gap > 0)
+                    {
+                        bridged++;
+                    }
+
                     first.x0 = Math.min(first.x0, second.x0);
                     first.y0 = Math.min(first.y0, second.y0);
                     first.x1 = Math.max(first.x1, second.x1);
@@ -315,7 +341,7 @@ function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number,
         }
     }
 
-    return merged;
+    return { boxes: merged, bridged };
 }
 
 /**
@@ -439,17 +465,20 @@ export function extractSegments(
     const horizontals = new Array<Segment>();
     const verticals = new Array<Segment>();
 
-    for (const box of mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2)))
+    const mergedHorizontals = mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2));
+    const mergedVerticals = mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2));
+
+    for (const box of mergedHorizontals.boxes)
     {
         horizontals.push({ id: `h${horizontals.length + 1}`, orientation: "horizontal", box });
     }
 
-    for (const box of mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2)))
+    for (const box of mergedVerticals.boxes)
     {
         verticals.push({ id: `v${verticals.length + 1}`, orientation: "vertical", box });
     }
 
-    return { horizontals, verticals };
+    return { horizontals, verticals, bridgedGaps: mergedHorizontals.bridged + mergedVerticals.bridged };
 }
 
 /**

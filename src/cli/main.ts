@@ -2,14 +2,14 @@
 /**
  * Command-line entry point.
  *
- *   tree-extractor extract <image> [--names <file>] [--out <dir>] [--no-ocr] [--overlay]
+ *   tree-extractor extract <image> [--names <file>] [--out <dir>] [--no-ocr] [--overlay] [--profile key=value,...]
  */
 
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as tesseract from "tesseract.js";
 
-import type { Box } from "../core/types.ts";
+import type { Box, LayoutKind, ProfileOverrides, SupportLabelStyle } from "../core/types.ts";
 import { extractTree, formatTimings } from "../core/pipeline.ts";
 import { formatProfile } from "../core/profile.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
@@ -75,6 +75,8 @@ function printUsage(): void
         "  --out <dir>      Output directory (default: current directory)",
         "  --crop x,y,w,h   Analyze only this region of the image (pixels)",
         "  --no-ocr         Trace the tree but do not read labels",
+        "  --profile k=v    Fix profile values instead of measuring them, comma separated:",
+        "                   layout, supportLabels, tipsAligned, italic, widenText, condensing",
         "  --overlay        Also write <name>.overlay.png showing what was detected",
     ].join("\n"));
 }
@@ -98,6 +100,53 @@ function readNameList(filePath: string): Array<string>
     }
 
     return names;
+}
+
+/**
+ * Parses the --profile flag: comma-separated key=value pairs.
+ *
+ * @param text - Flag value.
+ * @returns Profile overrides.
+ */
+function parseProfileOverrides(text: string): ProfileOverrides
+{
+    const overrides: ProfileOverrides = {};
+
+    for (const pair of text.split(","))
+    {
+        const [key, value] = pair.split("=");
+
+        if (value === undefined)
+        {
+            throw new Error(`--profile expects key=value pairs, got "${pair}"`);
+        }
+
+        switch (key)
+        {
+            case "layout":
+                overrides.layout = value as LayoutKind;
+                break;
+            case "supportLabels":
+                overrides.supportLabels = value as SupportLabelStyle;
+                break;
+            case "tipsAligned":
+                overrides.tipsAligned = value === "true";
+                break;
+            case "italic":
+                overrides.italic = value === "true";
+                break;
+            case "widenText":
+                overrides.widenText = value === "true";
+                break;
+            case "condensing":
+                overrides.condensing = Number(value);
+                break;
+            default:
+                throw new Error(`--profile does not know "${key}"`);
+        }
+    }
+
+    return overrides;
 }
 
 /**
@@ -151,7 +200,9 @@ async function runExtract(parsed: Arguments): Promise<number>
     const cropFlag = parsed.flags.get("crop");
     const region = typeof cropFlag === "string" ? parseCrop(cropFlag) : null;
     const ocr = parsed.flags.has("no-ocr") ? null : await createTesseractOcr(tesseract);
-    const document = await extractTree(image, { ocr, names, source: path.basename(imagePath), region });
+    const profileFlag = parsed.flags.get("profile");
+    const profileOverrides = typeof profileFlag === "string" ? parseProfileOverrides(profileFlag) : {};
+    const document = await extractTree(image, { ocr, names, source: path.basename(imagePath), region, parameters: { profileOverrides } });
 
     if (ocr !== null)
     {

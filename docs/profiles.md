@@ -1,8 +1,12 @@
 # Figure profiles: a sketch
 
 Status: approach agreed 2026-10-27 (overrides live in `Parameters`; the core stays pure and a
-rerun is a plain extraction). Step 1 (measure and record) is built in `src/core/profile.ts`;
-nothing reads the profile yet.
+rerun is a plain extraction). Step 1 (measure and record) is built in `src/core/profile.ts`.
+Step 2 moved the first decisions onto the profile: the text-ink widening is recorded in the
+profile and can be forced either way (`widenText`), label crops are condensed by the figure's
+letter gap rather than per label (`condensing`), and the number of gaps the collinear merge
+bridged is recorded. The profile is now measured before labels are read, and the parts that
+read text can change are measured again after. The CLI takes `--profile key=value,...`.
 
 A correction from the first measurements: Madzia 2019, which this document called a staircase
 layout, is centered. Its parent branches meet their verticals mid-span like everyone else's;
@@ -121,7 +125,9 @@ from a firm one.
    features are measurable reliably.
 2. Move the three decisions that already exist in disguise onto the profile: text hysteresis
    (font), label condensing (font), gap bridging (supportLabels). The strict benchmark must not
-   change.
+   change. Done for the first two; gap bridging stays on its ink-in-the-gap rule, because the
+   support label style is only known after the trace that the bridging feeds, and the count of
+   bridged gaps is recorded instead until a figure needs an earlier decision.
 3. Layout-aware tracing for staircase figures, with a second staircase figure in the benchmark
    before the rule is written.
 4. Tip alignment as a consistency check and a second chance for missed tips.

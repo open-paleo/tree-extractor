@@ -69,6 +69,21 @@ export type ProfileInput = {
     thickness: number;
 
     /**
+     * Whether the strict text threshold broke letters into fragments.
+     */
+    fragmented: boolean;
+
+    /**
+     * Whether the text ink was widened by hysteresis.
+     */
+    widened: boolean;
+
+    /**
+     * Collinear segment pairs joined across a gap.
+     */
+    bridgedGaps: number;
+
+    /**
      * The document after tracing and label assignment.
      */
     document: ExtractionDocument;
@@ -87,16 +102,18 @@ export function createEmptyProfile(): FigureProfile
         tipAlignment: { aligned: false, x: null, share: 0 },
         supportLabels: "unknown",
         cladeMarks: [],
-        font: { strokeWidth: 0, letterGap: 0, slant: null, italic: null, letterSpaced: false },
+        font: { strokeWidth: 0, letterGap: 0, slant: null, italic: null, letterSpaced: false, fragmented: false, widened: false, condensing: 1 },
         timeScaled: { tintedShare: 0, bandColumnShare: 0, bands: false, axis: null, rangeBars: 0 },
         panels: [],
+        bridgedGaps: 0,
         confidence: { layout: 0, tipAlignment: 0, supportLabels: 0 },
         overridden: [],
     };
 }
 
 /**
- * Measures the profile of a figure.
+ * Measures the profile of a figure. Runs before labels are read; the parts that depend on the
+ * read text are filled by measureTextMarks afterwards.
  *
  * @param input - Image, masks and document.
  * @returns The measured profile.
@@ -107,24 +124,68 @@ export function measureProfile(input: ProfileInput): FigureProfile
     const connected = collectConnected(document);
     const layout = measureLayout(document.nodes, connected, thickness);
     const tipAlignment = measureTipAlignment(document, connected, glyphHeight);
-    const supportLabels = measureSupportLabels(document, glyphHeight);
-
-    return {
+    const font = measureFont(input.glyphMask, input.textInk, document.textLines, glyphHeight);
+    font.fragmented = input.fragmented;
+    font.widened = input.widened;
+    const profile: FigureProfile = {
         lineThickness: thickness,
         layout: layout.value,
         tipAlignment,
-        supportLabels: supportLabels.value,
-        cladeMarks: measureCladeMarks(document, input.textInk, glyphHeight),
-        font: measureFont(input.glyphMask, input.textInk, document.textLines, glyphHeight),
+        supportLabels: "unknown",
+        cladeMarks: [],
+        font,
         timeScaled: measureTimeScale(input, connected),
         panels: findPanels(input.lineInk, document, glyphHeight, thickness),
+        bridgedGaps: input.bridgedGaps,
         confidence: {
             layout: layout.confidence,
             tipAlignment: Math.min(1, Math.abs(tipAlignment.share - alignedShare) / 0.2),
-            supportLabels: supportLabels.confidence,
+            supportLabels: 0,
         },
         overridden: [],
     };
+    measureTextMarks(profile, document, input.textInk, glyphHeight);
+
+    return profile;
+}
+
+/**
+ * Fills the parts of a profile that read text can change: the support label style, whose vote
+ * leaves out rows that read as one capital letter, and the clade marks. Called once before
+ * labels are read and again after.
+ *
+ * @param profile - Profile updated in place.
+ * @param document - Document.
+ * @param textInk - Dark pixels at the text threshold.
+ * @param glyphHeight - Glyph height in pixels.
+ */
+export function measureTextMarks(profile: FigureProfile, document: ExtractionDocument, textInk: Mask, glyphHeight: number): void
+{
+    if (!profile.overridden.includes("supportLabels"))
+    {
+        const supportLabels = measureSupportLabels(document, glyphHeight);
+        profile.supportLabels = supportLabels.value;
+        profile.confidence.supportLabels = supportLabels.confidence;
+    }
+
+    profile.cladeMarks = measureCladeMarks(document, textInk, glyphHeight);
+}
+
+/**
+ * Horizontal factor for label crops before OCR: letters a quarter of a glyph height or more
+ * apart are brought back to about an eighth, down to a floor of 0.55.
+ *
+ * @param letterGap - Typical blank gap between letters, as a fraction of the glyph height.
+ * @returns Factor from 0.55 to 1.
+ */
+export function chooseCondensing(letterGap: number): number
+{
+    if (letterGap < 0.25)
+    {
+        return 1;
+    }
+
+    return Math.max(0.55, 0.12 / letterGap);
 }
 
 /**
@@ -135,31 +196,51 @@ export function measureProfile(input: ProfileInput): FigureProfile
  */
 export function applyProfileOverrides(profile: FigureProfile, overrides: ProfileOverrides): void
 {
+    function record(name: string): void
+    {
+        if (!profile.overridden.includes(name))
+        {
+            profile.overridden.push(name);
+        }
+    }
+
     if (overrides.layout !== undefined)
     {
         profile.layout = overrides.layout;
         profile.confidence.layout = 1;
-        profile.overridden.push("layout");
+        record("layout");
     }
 
     if (overrides.supportLabels !== undefined)
     {
         profile.supportLabels = overrides.supportLabels;
         profile.confidence.supportLabels = 1;
-        profile.overridden.push("supportLabels");
+        record("supportLabels");
     }
 
     if (overrides.tipsAligned !== undefined)
     {
         profile.tipAlignment.aligned = overrides.tipsAligned;
         profile.confidence.tipAlignment = 1;
-        profile.overridden.push("tipAlignment");
+        record("tipAlignment");
     }
 
     if (overrides.italic !== undefined)
     {
         profile.font.italic = overrides.italic;
-        profile.overridden.push("font.italic");
+        record("font.italic");
+    }
+
+    if (overrides.widenText !== undefined)
+    {
+        // The widening itself happened while the masks were made; this records the choice.
+        record("font.widened");
+    }
+
+    if (overrides.condensing !== undefined)
+    {
+        profile.font.condensing = Math.min(1, Math.max(0.55, overrides.condensing));
+        record("font.condensing");
     }
 }
 
@@ -470,7 +551,16 @@ export function measureFont(glyphMask: Mask, textInk: Mask, lines: Array<TextLin
     // measurement says nothing, so it is not made.
     const slant = glyphHeight < smallestSlantGlyph ? null : measureSlant(glyphMask, lines, glyphHeight);
 
-    return { strokeWidth, letterGap, slant, italic: slant === null ? null : slant >= 0.12, letterSpaced: letterGap >= 0.4 };
+    return {
+        strokeWidth,
+        letterGap,
+        slant,
+        italic: slant === null ? null : slant >= 0.12,
+        letterSpaced: letterGap >= 0.4,
+        fragmented: false,
+        widened: false,
+        condensing: chooseCondensing(letterGap),
+    };
 }
 
 /**
@@ -1062,6 +1152,8 @@ export function formatProfile(profile: FigureProfile): Array<string>
     lines.push(`support labels: ${profile.supportLabels} (${profile.confidence.supportLabels.toFixed(2)})`);
     lines.push(`clade marks: ${profile.cladeMarks.length === 0 ? "none" : profile.cladeMarks.join(", ")}`);
     lines.push(`font: ${font}`);
+    lines.push(`text ink: ${profile.font.fragmented ? "fragmented" : "whole"}, ${profile.font.widened ? "widened by hysteresis" : "strict threshold"}; label crops condensed to ${profile.font.condensing.toFixed(2)}`);
+    lines.push(`bridged gaps: ${profile.bridgedGaps}`);
     lines.push(`time scale: ${time}`);
     lines.push(`panels: ${profile.panels.length}`);
 

@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import type { ExtractionDocument, TextLine, TreeNode } from "../src/core/types.ts";
 import type { Mask } from "../src/core/types.ts";
-import { classifySupportLabel, createEmptyProfile, measureLayout, measureSlant, measureTipAlignment } from "../src/core/profile.ts";
+import { applyProfileOverrides, chooseCondensing, classifySupportLabel, createEmptyProfile, measureLayout, measureSlant, measureTipAlignment } from "../src/core/profile.ts";
 
 /**
  * Builds a node with the given span and attachment.
@@ -145,4 +145,24 @@ test("the slant of leaning stems is recovered, upright stems give zero", () =>
 
     const single = createStems(0.24, 12);
     assert.equal(measureSlant(single.mask, [single.line], 12), null);
+});
+
+test("label crops are condensed only for letter-spaced text", () =>
+{
+    assert.equal(chooseCondensing(0.1), 1);
+    assert.equal(chooseCondensing(0.24), 1);
+    assert.equal(chooseCondensing(0.67), 0.55);
+    assert.ok(Math.abs(chooseCondensing(0.3) - 0.55) < 1e-9);
+    assert.ok(Math.abs(chooseCondensing(0.2) - 1) < 1e-9);
+});
+
+test("overrides replace measured values and are recorded once", () =>
+{
+    const profile = createEmptyProfile();
+    applyProfileOverrides(profile, { layout: "staircase", condensing: 0.3, widenText: true });
+    applyProfileOverrides(profile, { layout: "staircase" });
+    assert.equal(profile.layout, "staircase");
+    assert.equal(profile.confidence.layout, 1);
+    assert.equal(profile.font.condensing, 0.55);
+    assert.deepEqual(profile.overridden, ["layout", "font.widened", "font.condensing"]);
 });
