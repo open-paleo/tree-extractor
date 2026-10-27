@@ -2,5 +2,14 @@
     "image": "../../images/synthetic-timescaled-03.jpg",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "synthetic timescaled seed 1202"
+    "source": "synthetic timescaled seed 1202",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "supportLabels": "boxed-on-branch",
+        "italic": true,
+        "bands": true,
+        "rangeBars": true,
+        "panels": 1
+    }
 }

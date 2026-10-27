@@ -4,5 +4,16 @@
     "names": "names.txt",
     "source": "Raven & Maidment 2018, PeerJ 6: e4529, Figure 8: strict consensus of Analysis D6, 60 tips at 2265x4500 px with 35-px glyphs. Four tips are printed as collapsed or informal names that the matrix list does not carry (Outgroup Taxa, Thescelosaurus, Tenontosaurus, Zalmoxes) and keep their printed text; the rest use the matrix spellings. Topology transcribed by the tool and checked node by node against the image (2026-10-27). CC BY 4.0; see attribution.txt.",
     "license": "CC BY 4.0",
-    "attribution": "Raven, T. J.; Maidment, S. C. R. (2018). The systematic position of the enigmatic thyreophoran dinosaur Paranthodon africanus, and the use of basal exemplifiers in phylogenetic analysis. PeerJ 6: e4529. https://doi.org/10.7717/peerj.4529. Figure 8, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)."
+    "attribution": "Raven, T. J.; Maidment, S. C. R. (2018). The systematic position of the enigmatic thyreophoran dinosaur Paranthodon africanus, and the use of basal exemplifiers in phylogenetic analysis. PeerJ 6: e4529. https://doi.org/10.7717/peerj.4529. Figure 8, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "supportLabels": "none",
+        "cladeMarks": [],
+        "italic": true,
+        "letterSpaced": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 2
+    }
 }

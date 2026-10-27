@@ -4,46 +4,10 @@
  */
 
 import type { ExtractionDocument, TreeNode } from "../core/types.ts";
+import { collectConnected } from "../core/tree.ts";
 import type { Layers, Selection } from "./state.ts";
 
-/**
- * Collects the identifiers reachable from the root.
- *
- * @param document - Document to walk.
- * @returns Identifiers of connected nodes and tips.
- */
-export function collectConnected(document: ExtractionDocument): Set<string>
-{
-    const nodeById = new Map<string, TreeNode>();
-
-    for (const node of document.nodes)
-    {
-        nodeById.set(node.id, node);
-    }
-
-    const connected = new Set<string>();
-
-    function visit(id: string): void
-    {
-        connected.add(id);
-        const node = nodeById.get(id);
-
-        if (node !== undefined)
-        {
-            for (const child of node.children)
-            {
-                visit(child);
-            }
-        }
-    }
-
-    if (document.root !== null)
-    {
-        visit(document.root);
-    }
-
-    return connected;
-}
+export { collectConnected };
 
 /**
  * Where a node is drawn: at the junction with its parent, or mid-span at the root.

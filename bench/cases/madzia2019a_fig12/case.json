@@ -2,5 +2,16 @@
     "image": "../../images/madzia2019a_fig12.png",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "Madzia, Jagt & Mulder 2019 (Cretaceous Research 2020), Fig. 12: majority-rule consensus, first run (character 120.3), 75 taxa, staircase layout with clade arrows and stem markers. Topology transcribed by the tool, three debris tips removed, and checked against the image at 3x zoom section by section (2026-10-26). Taxon names use the mmc2 first-run matrix spellings."
+    "source": "Madzia, Jagt & Mulder 2019 (Cretaceous Research 2020), Fig. 12: majority-rule consensus, first run (character 120.3), 75 taxa, staircase layout with clade arrows and stem markers. Topology transcribed by the tool, three debris tips removed, and checked against the image at 3x zoom section by section (2026-10-26). Taxon names use the mmc2 first-run matrix spellings.",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "supportLabels": "above-branch",
+        "cladeMarks": [],
+        "italic": true,
+        "letterSpaced": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

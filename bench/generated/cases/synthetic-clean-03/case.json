@@ -2,5 +2,14 @@
     "image": "../../images/synthetic-clean-03.png",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "synthetic clean seed 1002"
+    "source": "synthetic clean seed 1002",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "supportLabels": "none",
+        "italic": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

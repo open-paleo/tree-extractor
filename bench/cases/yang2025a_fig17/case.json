@@ -4,5 +4,18 @@
     "names": "names.txt",
     "source": "Yang et al. 2025, PeerJ 13: e19664, Figure 17: strict consensus with 74 taxa in a letter-spaced italic font, the new taxon in red and numbered clade dots. Topology transcribed by the tool and checked node by node against the image (2026-10-27); names follow the paper's matrix list as supplied in names.txt. CC BY 4.0; see attribution.txt.",
     "license": "CC BY 4.0",
-    "attribution": "Yang, Y.; King, J. L.; Xu, X. (2025). A new neornithischian dinosaur from the Upper Jurassic Tiaojishan Formation of northern China. PeerJ 13: e19664. https://doi.org/10.7717/peerj.19664. Figure 17, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)."
+    "attribution": "Yang, Y.; King, J. L.; Xu, X. (2025). A new neornithischian dinosaur from the Upper Jurassic Tiaojishan Formation of northern China. PeerJ 13: e19664. https://doi.org/10.7717/peerj.19664. Figure 17, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "supportLabels": "none",
+        "cladeMarks": [
+            "discs"
+        ],
+        "italic": true,
+        "letterSpaced": true,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

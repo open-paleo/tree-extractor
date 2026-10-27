@@ -2,5 +2,16 @@
     "image": "../../images/longrich2010b_fig7.png",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "Longrich, Sankey & Tanke 2010, Cretaceous Research, Fig. 7: strict consensus of 46 MPTs, 20 taxa. Topology transcribed from the figure by the tool and checked node by node against the image (2026-10-26). Taxon names use the matrix (mmc2) spellings."
+    "source": "Longrich, Sankey & Tanke 2010, Cretaceous Research, Fig. 7: strict consensus of 46 MPTs, 20 taxa. Topology transcribed from the figure by the tool and checked node by node against the image (2026-10-26). Taxon names use the matrix (mmc2) spellings.",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "supportLabels": "none",
+        "cladeMarks": [],
+        "italic": true,
+        "letterSpaced": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

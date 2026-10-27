@@ -2,5 +2,14 @@
     "image": "../../images/synthetic-paper-03.jpg",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "synthetic paper seed 1102"
+    "source": "synthetic paper seed 1102",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "supportLabels": "above-branch",
+        "italic": true,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

@@ -11,6 +11,7 @@ import * as tesseract from "tesseract.js";
 
 import type { Box } from "../core/types.ts";
 import { extractTree, formatTimings } from "../core/pipeline.ts";
+import { formatProfile } from "../core/profile.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
 import { formatNexus } from "../core/nexus.ts";
 import { createTesseractOcr } from "../ocr/tesseract.ts";
@@ -185,6 +186,11 @@ async function runExtract(parsed: Arguments): Promise<number>
     for (const issue of document.qc)
     {
         console.log(`${issue.severity.padEnd(7)} ${issue.code}: ${issue.message}`);
+    }
+
+    for (const line of formatProfile(document.profile))
+    {
+        console.log(`profile ${line}`);
     }
 
     console.log(`timings: ${formatTimings(document.timings)}`);

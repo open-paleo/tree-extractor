@@ -4,5 +4,14 @@
     "names": "names.txt",
     "source": "Ke et al. 2023, PeerJ 11: e15439, Figure 6: time-scaled strict consensus of Nanhsiungchelyidae, 17 taxa. Topology transcribed by the tool and checked node by node against the image (2026-10-27). CC BY 4.0; see attribution.txt.",
     "license": "CC BY 4.0",
-    "attribution": "Ke, Y.; Rahman, I. A.; Song, H.; Hu, J.; Niu, K.; Lou, F.; Li, H.; Han, F. (2023). A new species of Nanhsiungchelys (Testudines: Cryptodira: Nanhsiungchelyidae) from the Upper Cretaceous of Nanxiong Basin, China. PeerJ 11: e15439. https://doi.org/10.7717/peerj.15439. Figure 6, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)."
+    "attribution": "Ke, Y.; Rahman, I. A.; Song, H.; Hu, J.; Niu, K.; Lou, F.; Li, H.; Han, F. (2023). A new species of Nanhsiungchelys (Testudines: Cryptodira: Nanhsiungchelyidae) from the Upper Cretaceous of Nanxiong Basin, China. PeerJ 11: e15439. https://doi.org/10.7717/peerj.15439. Figure 6, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "cladeMarks": [],
+        "italic": true,
+        "letterSpaced": false,
+        "bands": true,
+        "rangeBars": true
+    }
 }

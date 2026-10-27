@@ -164,3 +164,10 @@ ul#qc li.error { color: #cf222e; }
 ul#qc li.warning { color: #9a6700; }
 ul#qc li.info { color: var(--muted); }
 .buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+.profile {
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 0.9em;
+    color: var(--muted, #555);
+}

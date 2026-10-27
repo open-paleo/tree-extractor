@@ -466,6 +466,11 @@ export type ExtractionDocument = {
     glyphHeight: number;
 
     /**
+     * Figure-level properties measured once per extraction.
+     */
+    profile: FigureProfile;
+
+    /**
      * Milliseconds spent in each stage.
      */
     timings: Record<string, number>;
@@ -504,4 +509,202 @@ export type ProgressReporter = {
      * @param total - Items in the stage, or 0 when the stage is not itemized.
      */
     report(stage: string, done: number, total: number): void;
+};
+
+/**
+ * How a figure connects a node's vertical to its parent branch.
+ */
+export type LayoutKind = "centered" | "staircase" | "unknown";
+
+/**
+ * Where a figure prints support values.
+ */
+export type SupportLabelStyle = "none" | "above-branch" | "boxed-on-branch" | "at-node" | "unknown";
+
+/**
+ * Marks that name clades rather than taxa.
+ */
+export type CladeMark = "letters" | "discs";
+
+/**
+ * Whether the tips end on one vertical line.
+ */
+export type TipAlignment = {
+    /**
+     * True when most tips end at the same x.
+     */
+    aligned: boolean;
+
+    /**
+     * That x, when aligned.
+     */
+    x: number | null;
+
+    /**
+     * Share of tips ending within half a glyph height of the commonest x.
+     */
+    share: number;
+};
+
+/**
+ * Properties of the label font.
+ */
+export type FontProfile = {
+    /**
+     * Typical stroke width in pixels.
+     */
+    strokeWidth: number;
+
+    /**
+     * Typical blank gap between letters, as a fraction of the glyph height.
+     */
+    letterGap: number;
+
+    /**
+     * Slant of the text as horizontal shift per unit height, positive for a rightward lean, or
+     * null when the text is too small or too sparse to measure it.
+     */
+    slant: number | null;
+
+    /**
+     * True when the slant says italic, false when it says upright, null when unmeasured.
+     */
+    italic: boolean | null;
+
+    /**
+     * True when letters sit far apart, as in a letter-spaced font.
+     */
+    letterSpaced: boolean;
+};
+
+/**
+ * Signs of a time-scaled figure.
+ */
+export type TimeScaleProfile = {
+    /**
+     * Share of the image that is neither white nor ink: bands, boxes, shading.
+     */
+    tintedShare: number;
+
+    /**
+     * Share of columns that are tinted over most of their height, which bands are and a clade
+     * box behind one subtree is not.
+     */
+    bandColumnShare: number;
+
+    /**
+     * True when enough columns are tinted top to bottom for background bands.
+     */
+    bands: boolean;
+
+    /**
+     * A long horizontal at the top or bottom with short text rows along it, or null.
+     */
+    axis: Box | null;
+
+    /**
+     * Horizontals much thicker than the lines that end at a tip.
+     */
+    rangeBars: number;
+};
+
+/**
+ * How sure each voted feature is, from 0 (a toss-up) to 1.
+ */
+export type ProfileConfidence = {
+    /**
+     * Layout vote margin.
+     */
+    layout: number;
+
+    /**
+     * Tip alignment margin.
+     */
+    tipAlignment: number;
+
+    /**
+     * Support label style margin.
+     */
+    supportLabels: number;
+};
+
+/**
+ * Figure-level properties, measured once and recorded so later steps and the viewer can see
+ * what kind of figure this is. Values marked unknown leave every step at its default behavior.
+ */
+export type FigureProfile = {
+    /**
+     * Line thickness in pixels, as measured on the line ink.
+     */
+    lineThickness: number;
+
+    /**
+     * Layout family.
+     */
+    layout: LayoutKind;
+
+    /**
+     * Tip alignment.
+     */
+    tipAlignment: TipAlignment;
+
+    /**
+     * Support label style.
+     */
+    supportLabels: SupportLabelStyle;
+
+    /**
+     * Clade marks present.
+     */
+    cladeMarks: Array<CladeMark>;
+
+    /**
+     * Label font.
+     */
+    font: FontProfile;
+
+    /**
+     * Time-scale signs.
+     */
+    timeScaled: TimeScaleProfile;
+
+    /**
+     * Boxes of separate blocks of line art, largest first; a figure with two trees has two.
+     */
+    panels: Array<Box>;
+
+    /**
+     * Vote margins.
+     */
+    confidence: ProfileConfidence;
+
+    /**
+     * Features whose values were set by the caller rather than measured.
+     */
+    overridden: Array<string>;
+};
+
+/**
+ * Profile values a caller fixes in advance; each replaces the measured value.
+ */
+export type ProfileOverrides = {
+    /**
+     * Layout family.
+     */
+    layout?: LayoutKind;
+
+    /**
+     * Support label style.
+     */
+    supportLabels?: SupportLabelStyle;
+
+    /**
+     * Whether tips are aligned.
+     */
+    tipsAligned?: boolean;
+
+    /**
+     * Whether the font is italic.
+     */
+    italic?: boolean;
 };

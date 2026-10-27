@@ -71,7 +71,12 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
    their stems. Tips whose read matched nothing are then paired with the names nobody claimed,
    by elimination, when one name stands clearly apart; such tips are flagged for checking.
-7. **QC**: unlabelled tips, unmatched names, duplicates, disconnected pieces, tips named by
+7. **Profile.** Figure-level properties are measured once and recorded in the document: layout
+   family, tip alignment, support label style, clade marks, font (stroke, letter gap, slant),
+   time-scale signs (tint, axis, range bars) and separate blocks of line art. Nothing reads them
+   yet; `docs/profiles.md` has the plan for what will. The benchmark checks them against each
+   case's expected values and reports a profile column.
+8. **QC**: unlabelled tips, unmatched names, duplicates, disconnected pieces, tips named by
    elimination, and every rejected vertical with its reason are recorded in the document.
 
 ## Known gaps

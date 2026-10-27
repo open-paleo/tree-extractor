@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import type { ExtractionDocument } from "../src/core/types.ts";
+import { createEmptyProfile } from "../src/core/profile.ts";
 import { addNode, addTip, deleteNode, deleteTip } from "../src/core/edit.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 
@@ -12,6 +13,7 @@ function createFlatTree(): ExtractionDocument
 {
     return {
         version: 1,
+        profile: createEmptyProfile(),
         image: { width: 200, height: 150, source: null, region: null },
         horizontals: [],
         verticals: [],

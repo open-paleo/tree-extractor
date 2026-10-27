@@ -64,6 +64,7 @@ const results: ResultElements = {
     tipsCount: getElement<HTMLSpanElement>("#tips-count"),
     nodesCount: getElement<HTMLSpanElement>("#nodes-count"),
     qcList: getElement<HTMLUListElement>("#qc"),
+    profileList: getElement<HTMLUListElement>("#profile"),
     newickOutput: getElement<HTMLTextAreaElement>("#newick"),
     downloadButtons: [downloadNewick, downloadNexus, downloadJson],
 };

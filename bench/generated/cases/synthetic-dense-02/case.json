@@ -2,5 +2,14 @@
     "image": "../../images/synthetic-dense-02.jpg",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "synthetic dense seed 1301"
+    "source": "synthetic dense seed 1301",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "supportLabels": "above-branch",
+        "italic": true,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }

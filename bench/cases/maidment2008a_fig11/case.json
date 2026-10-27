@@ -8,5 +8,17 @@
         "y0": 180,
         "x1": 1200,
         "y1": 1030
+    },
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": true,
+        "cladeMarks": [
+            "letters"
+        ],
+        "italic": true,
+        "letterSpaced": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
     }
 }

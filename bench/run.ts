@@ -10,7 +10,8 @@ import * as path from "node:path";
 import * as url from "node:url";
 import * as tesseract from "tesseract.js";
 
-import type { Box } from "../src/core/types.ts";
+import type { Box, CladeMark, FigureProfile, LayoutKind, SupportLabelStyle } from "../src/core/types.ts";
+import { formatProfile } from "../src/core/profile.ts";
 import { extractTree, formatTimings } from "../src/core/pipeline.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 import { extractFirstTreeFromNexus, parseNewick } from "../src/core/newick.ts";
@@ -25,7 +26,84 @@ type BenchCase = {
     region?: Box;
     license?: string;
     attribution?: string;
+    profile?: ExpectedProfile;
 };
+
+/**
+ * Profile values a case expects; only the keys given are checked.
+ */
+type ExpectedProfile = {
+    layout?: LayoutKind;
+    tipsAligned?: boolean;
+    supportLabels?: SupportLabelStyle;
+    cladeMarks?: Array<CladeMark>;
+    italic?: boolean;
+    letterSpaced?: boolean;
+    bands?: boolean;
+    rangeBars?: boolean;
+    panels?: number;
+};
+
+/**
+ * How the measured profile compared with the expected one.
+ */
+type ProfileCheck = {
+    checked: number;
+    matched: number;
+    mismatches: Array<string>;
+    unmeasured: Array<string>;
+};
+
+/**
+ * Compares a measured profile with a case's expectations.
+ *
+ * @param expected - Expected values.
+ * @param profile - Measured profile.
+ * @returns Counts and a description of each mismatch.
+ */
+function checkProfile(expected: ExpectedProfile, profile: FigureProfile): ProfileCheck
+{
+    const check: ProfileCheck = { checked: 0, matched: 0, mismatches: [], unmeasured: [] };
+
+    function compare(name: string, want: unknown, got: unknown): void
+    {
+        if (want === undefined)
+        {
+            return;
+        }
+
+        check.checked++;
+
+        if (JSON.stringify(want) === JSON.stringify(got))
+        {
+            check.matched++;
+        }
+        else
+        {
+            check.mismatches.push(`${name}: expected ${JSON.stringify(want)}, measured ${JSON.stringify(got)}`);
+        }
+    }
+
+    compare("layout", expected.layout, profile.layout);
+    compare("tipsAligned", expected.tipsAligned, profile.tipAlignment.aligned);
+    compare("supportLabels", expected.supportLabels, profile.supportLabels);
+    compare("cladeMarks", expected.cladeMarks === undefined ? undefined : [...expected.cladeMarks].sort(), [...profile.cladeMarks].sort());
+    if (profile.font.italic === null && expected.italic !== undefined)
+    {
+        check.unmeasured.push("italic");
+    }
+    else
+    {
+        compare("italic", expected.italic, profile.font.italic);
+    }
+
+    compare("letterSpaced", expected.letterSpaced, profile.font.letterSpaced);
+    compare("bands", expected.bands, profile.timeScaled.bands);
+    compare("rangeBars", expected.rangeBars, profile.timeScaled.rangeBars > 0);
+    compare("panels", expected.panels, profile.panels.length);
+
+    return check;
+}
 
 /**
  * One line of the closing summary table.
@@ -70,6 +148,11 @@ type SummaryRow = {
      * Whether the tree is identical.
      */
     identical: boolean;
+
+    /**
+     * Profile features checked and matched, or null when the case expects none.
+     */
+    profile: ProfileCheck | null;
 };
 
 const benchDir = path.dirname(url.fileURLToPath(import.meta.url));
@@ -162,6 +245,7 @@ for (const caseDir of caseDirs)
     }
 
     const comparison = compareTrees(parseNewick(goldText), parseNewick(newick));
+    const profileCheck = benchCase.profile === undefined ? null : checkProfile(benchCase.profile, document.profile);
     summary.push({
         name: caseName,
         tips: document.tips.length,
@@ -171,7 +255,27 @@ for (const caseDir of caseDirs)
         goldSplits: comparison.referenceSplits,
         extraSplits: comparison.extraSplits.length,
         identical: comparison.identical,
+        profile: profileCheck,
     });
+
+    for (const line of formatProfile(document.profile))
+    {
+        console.log(`profile ${line}`);
+    }
+
+    if (profileCheck !== null)
+    {
+        for (const mismatch of profileCheck.mismatches)
+        {
+            console.log(`  profile mismatch, ${mismatch}`);
+        }
+
+        for (const name of profileCheck.unmeasured)
+        {
+            console.log(`  profile not measured: ${name}`);
+        }
+    }
+
     console.log(`tips: ${document.tips.length} found, ${comparison.sharedLeaves.length} named correctly, ${comparison.missingLeaves.length} gold names missing, ${comparison.extraLeaves.length} extra`);
     console.log(`splits: ${comparison.matchedSplits}/${comparison.referenceSplits} gold splits recovered, ${comparison.extraSplits.length} extra; identical=${comparison.identical}`);
 
@@ -210,7 +314,7 @@ if (ocr !== null)
 }
 
 console.log("");
-console.log("case".padEnd(32), "tips".padStart(9), "named".padStart(9), "splits".padStart(11), "extra".padStart(6), " identical");
+console.log("case".padEnd(32), "tips".padStart(9), "named".padStart(9), "splits".padStart(11), "extra".padStart(6), "profile".padStart(8), " identical");
 const regressions = new Array<string>();
 
 for (const row of summary)
@@ -234,6 +338,7 @@ for (const row of summary)
         `${row.named}/${row.goldTips}`.padStart(9),
         `${row.splits}/${row.goldSplits}`.padStart(11),
         `${row.extraSplits}`.padStart(6),
+        (row.profile === null ? "-" : `${row.profile.matched}/${row.profile.checked}`).padStart(8),
         verdict,
     );
 }

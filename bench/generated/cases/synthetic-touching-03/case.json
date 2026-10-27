@@ -2,5 +2,14 @@
     "image": "../../images/synthetic-touching-03.jpg",
     "gold": "gold.nex",
     "names": "names.txt",
-    "source": "synthetic touching seed 1402"
+    "source": "synthetic touching seed 1402",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "supportLabels": "boxed-on-branch",
+        "italic": true,
+        "bands": false,
+        "rangeBars": true,
+        "panels": 1
+    }
 }

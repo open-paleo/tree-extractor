@@ -130,7 +130,16 @@ for (const preset of presets)
         collectTipNames(tree, names);
         fs.writeFileSync(path.join(caseDir, "names.txt"), `${names.join("\n")}\n`);
         fs.writeFileSync(path.join(caseDir, "gold.nex"), formatNexus(`${formatSyntheticNewick(tree)};`, names, caseName, `synthetic case, seed ${caseSeed}, style ${preset.name}`));
-        fs.writeFileSync(path.join(caseDir, "case.json"), `${JSON.stringify({ image: `../../images/${imageName}`, gold: "gold.nex", names: "names.txt", source: `synthetic ${preset.name} seed ${caseSeed}` }, null, 4)}\n`);
+        const profile = {
+            layout: "centered",
+            tipsAligned: preset.style.layout === "cladogram",
+            supportLabels: preset.style.supportPlacement === "none" ? "none" : preset.style.supportPlacement === "above-junction" ? "above-branch" : "boxed-on-branch",
+            italic: preset.style.italic,
+            bands: preset.style.bands,
+            rangeBars: preset.style.rangeBarRate > 0,
+            panels: 1,
+        };
+        fs.writeFileSync(path.join(caseDir, "case.json"), `${JSON.stringify({ image: `../../images/${imageName}`, gold: "gold.nex", names: "names.txt", source: `synthetic ${preset.name} seed ${caseSeed}`, profile }, null, 4)}\n`);
         console.log(`${caseName}: ${tipCount} tips, ${figure.width} × ${figure.height} px`);
     }
 }

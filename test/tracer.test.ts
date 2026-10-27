@@ -6,6 +6,7 @@ import { extractSegments } from "../src/core/segments.ts";
 import { traceRectangularTree } from "../src/core/tracer.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 import type { ExtractionDocument } from "../src/core/types.ts";
+import { createEmptyProfile } from "../src/core/profile.ts";
 
 /**
  * Draws a filled rectangle into a mask.
@@ -46,6 +47,7 @@ function traceMaskToNewick(mask: Mask): string
     const trace = traceRectangularTree(horizontals, verticals, 3);
     const document: ExtractionDocument = {
         version: 1,
+        profile: createEmptyProfile(),
         image: { width: mask.width, height: mask.height, source: null, region: null },
         horizontals,
         verticals,

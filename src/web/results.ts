@@ -3,6 +3,7 @@
  */
 
 import type { ExtractionDocument } from "../core/types.ts";
+import { formatProfile } from "../core/profile.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
 import type { Selection } from "./state.ts";
 import { collectConnected } from "./lookup.ts";
@@ -35,6 +36,11 @@ export type ResultElements = {
      * Quality-check findings.
      */
     qcList: HTMLUListElement;
+
+    /**
+     * Figure profile lines.
+     */
+    profileList: HTMLUListElement;
 
     /**
      * Newick output.
@@ -106,6 +112,7 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
     elements.tipsList.replaceChildren();
     elements.nodesList.replaceChildren();
     elements.qcList.replaceChildren();
+    elements.profileList.replaceChildren();
     updateNewick(elements, extraction);
     elements.tipsCount.textContent = extraction === null ? "" : `(${extraction.tips.length})`;
     elements.nodesCount.textContent = extraction === null ? "" : `(${extraction.nodes.length})`;
@@ -156,6 +163,13 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
         item.className = issue.severity;
         item.textContent = `${issue.code}: ${issue.message}`;
         elements.qcList.append(item);
+    }
+
+    for (const line of formatProfile(extraction.profile))
+    {
+        const item = document.createElement("li");
+        item.textContent = line;
+        elements.profileList.append(item);
     }
 }
 

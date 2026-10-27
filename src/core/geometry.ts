@@ -102,6 +102,21 @@ export function translateDocument(document: ExtractionDocument, dx: number, dy: 
         tip.y += dy;
     }
 
+    if (document.profile.timeScaled.axis !== null)
+    {
+        translateBox(document.profile.timeScaled.axis, dx, dy);
+    }
+
+    for (const panel of document.profile.panels)
+    {
+        translateBox(panel, dx, dy);
+    }
+
+    if (document.profile.tipAlignment.x !== null)
+    {
+        document.profile.tipAlignment.x += dx;
+    }
+
     for (const branch of document.branches)
     {
         branch.x0 += dx;

@@ -3,7 +3,8 @@
  * engine, so it runs in Node and in the browser alike.
  */
 
-import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
+import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
+import { applyProfileOverrides, createEmptyProfile, measureProfile } from "./profile.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -127,6 +128,11 @@ export type Parameters = {
      * Rows above this are ignored by text detection.
      */
     textMinY: number;
+
+    /**
+     * Profile values fixed by the caller instead of measured.
+     */
+    profileOverrides: ProfileOverrides;
 };
 
 /**
@@ -150,6 +156,7 @@ export const defaultParameters: Parameters = {
     labelReach: 6,
     ocrScale: 3,
     textMinY: 0,
+    profileOverrides: {},
 };
 
 /**
@@ -206,6 +213,11 @@ export type PreparedMasks = {
      * Dark neutral pixels at the line threshold, mended, with glyphs removed.
      */
     lineInk: Mask;
+
+    /**
+     * Glyph pixels from the rough text pass.
+     */
+    glyphMask: Mask;
 
     /**
      * Glyph height from the rough text pass.
@@ -277,7 +289,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
-    return { gray, textInk, lineInk, glyphHeight, roughLines: rough.lines };
+    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, glyphHeight, roughLines: rough.lines };
 }
 
 /**
@@ -730,7 +742,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     }
 
     announce("Preparing masks");
-    const { gray, textInk, lineInk, glyphHeight, roughLines } = prepareMasks(image, parameters);
+    const { gray, textInk, lineInk, glyphMask, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
     announce("Finding segments");
 
@@ -838,6 +850,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         rejectedVerticals: trace.rejected,
         branches: trace.branches,
         glyphHeight: text.glyphHeight,
+        profile: createEmptyProfile(),
         timings,
     };
 
@@ -854,6 +867,9 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         recordLap("ocr");
     }
 
+    document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, document });
+    applyProfileOverrides(document.profile, parameters.profileOverrides);
+    recordLap("profile");
     runQualityChecks(document);
 
     if (region !== null)

@@ -4,5 +4,18 @@
     "names": "names.txt",
     "source": "Hattori et al. 2026, PLOS ONE 21(4): e0345155, Fig 8: strict consensus with Bremer support, 68 taxa; node letters A-O are clade labels. Topology transcribed by the tool and checked node by node against the image (2026-10-27). CC BY 4.0; see attribution.txt.",
     "license": "CC BY 4.0 (version from the article XML licence link)",
-    "attribution": "Hattori, S.; Chokchaloemwong, D.; Kawabe, S.; Cuesta, E.; Shibata, M.; Miyata, K.; Azuma, Y. (2026). Braincase of Siamraptor suwati and insights into the cranial anatomy of Carcharodontosauria. PLOS ONE 21(4): e0345155. https://doi.org/10.1371/journal.pone.0345155. Fig 8, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (version from the article XML licence link) (https://creativecommons.org/licenses/by/4.0/)."
+    "attribution": "Hattori, S.; Chokchaloemwong, D.; Kawabe, S.; Cuesta, E.; Shibata, M.; Miyata, K.; Azuma, Y. (2026). Braincase of Siamraptor suwati and insights into the cranial anatomy of Carcharodontosauria. PLOS ONE 21(4): e0345155. https://doi.org/10.1371/journal.pone.0345155. Fig 8, as embedded in the published PDF, unmodified. Licensed under CC BY 4.0 (version from the article XML licence link) (https://creativecommons.org/licenses/by/4.0/).",
+    "profile": {
+        "layout": "centered",
+        "tipsAligned": false,
+        "supportLabels": "above-branch",
+        "cladeMarks": [
+            "letters"
+        ],
+        "italic": false,
+        "letterSpaced": false,
+        "bands": false,
+        "rangeBars": false,
+        "panels": 1
+    }
 }
