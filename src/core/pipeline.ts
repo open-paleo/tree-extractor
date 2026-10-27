@@ -3,7 +3,7 @@
  * engine, so it runs in Node and in the browser alike.
  */
 
-import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
+import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -146,6 +146,11 @@ export type ExtractOptions = {
      * image's coordinates either way.
      */
     region: Box | null;
+
+    /**
+     * Receives stage progress, or null.
+     */
+    progress: ProgressReporter | null;
 };
 
 /**
@@ -469,6 +474,8 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     const timings: Record<string, number> = {};
     let clock = performance.now();
 
+    const progress = options.progress ?? null;
+
     function recordLap(stage: string): void
     {
         const now = performance.now();
@@ -476,8 +483,18 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         clock = now;
     }
 
+    function announce(stage: string): void
+    {
+        if (progress !== null)
+        {
+            progress.report(stage, 0, 0);
+        }
+    }
+
+    announce("Preparing masks");
     const { gray, textInk, lineInk, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
+    announce("Finding segments");
 
     const probe = extractSegments(lineInk, parameters.minHorizontalRun, Number.MAX_SAFE_INTEGER);
     const thicknesses = new Array<number>();
@@ -520,6 +537,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         textRows,
     );
     recordLap("segments");
+    announce("Tracing the tree");
 
     // A branch end sits within about one line width of its vertical; anything looser lets a
     // tip's branch reach the wrong node.
@@ -533,6 +551,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight);
     recordLap("trace");
+    announce("Finding labels");
 
     // Line art is what the trace used; everything else is text or noise. Range bars and branch
     // stubs that run on past a used segment into a label are erased with it.
@@ -582,7 +601,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     if (options.ocr)
     {
         const erased = paintMask(gray, lineArtMask, 255);
-        await readLabels(document, erased, options.ocr, parameters.ocrScale, names);
+        await readLabels(document, erased, options.ocr, parameters.ocrScale, names, progress);
         recordLap("ocr");
     }
 

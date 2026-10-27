@@ -108,10 +108,23 @@ fieldset.layers label { display: inline-block; margin: 0 10px 0 0; }
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--bg);
-    height: calc(100vh - 190px);
+    height: calc(100vh - 360px);
     min-height: 360px;
     overflow: hidden;
 }
+
+.progress { height: 4px; margin: 0 0 6px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.progress .bar { width: 30%; height: 100%; background: var(--accent); border-radius: 2px; animation: slide 1.2s ease-in-out infinite; }
+.progress[hidden] { display: block; visibility: hidden; }
+
+@keyframes slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+
+.box.newick { margin-top: 12px; padding: 0 10px 10px; }
+.box.newick h2 { margin: 0 -10px 8px; }
+.box.newick textarea { width: 100%; }
 
 canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 canvas.panning { cursor: grabbing; }

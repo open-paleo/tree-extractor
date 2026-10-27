@@ -76,3 +76,21 @@ test("extractTree on a region reports coordinates of the full image", async () =
     assert.equal(part.tips[0].y, whole.tips[0].y);
     assert.equal(part.nodes[0].x, whole.nodes[0].x);
 });
+
+test("extractTree reports each stage through the progress reporter", async () =>
+{
+    const image = createBlankImage(300, 160);
+    paintRect(image, 60, 79, 100, 82);
+    paintRect(image, 100, 40, 103, 123);
+    paintRect(image, 100, 40, 220, 43);
+    paintRect(image, 100, 120, 220, 123);
+    const stages = new Array<string>();
+    const reporter = {
+        report(stage: string): void
+        {
+            stages.push(stage);
+        },
+    };
+    await extractTree(image, { progress: reporter, parameters: { glyphStripHorizontalRun: 20, glyphStripVerticalRun: 20 } });
+    assert.deepEqual(stages, ["Preparing masks", "Finding segments", "Tracing the tree", "Finding labels"]);
+});

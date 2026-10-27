@@ -40,7 +40,8 @@ character matrix). OCR output is fuzzy-matched against it, which turns imperfect
 italic text into exact names. Without a list the raw OCR text is kept and uncertain tips are
 flagged.
 
-The viewer runs the same pipeline on a dropped image and draws what it found over the figure.
+The viewer runs the same pipeline on a dropped image, in a Web Worker so the page stays
+responsive, and draws what it found over the figure.
 Scroll to zoom, drag to pan, and use *Select region* to mark where the tree is when the figure
 holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
 other way round; labels are editable in place and the Newick updates. Missed or spurious

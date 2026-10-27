@@ -4,7 +4,7 @@
  */
 
 import type { OcrEngine } from "../core/types.ts";
-import { extractTree, formatTimings } from "../core/pipeline.ts";
+import { formatTimings } from "../core/pipeline.ts";
 import { createTesseractOcr } from "../ocr/tesseract.ts";
 import type { Box } from "../core/types.ts";
 import type { Layers, Selection } from "./state.ts";
@@ -17,6 +17,7 @@ import { downloadDocumentFile, downloadNewickFile, downloadNexusFile } from "./e
 import { PointerController } from "./interaction.ts";
 import type { EditResult } from "../core/edit.ts";
 import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById } from "../core/edit.ts";
+import { ExtractionClient } from "./extraction-client.ts";
 
 /**
  * Finds a required element in the page.
@@ -41,6 +42,7 @@ const ocrCheckbox = getElement<HTMLInputElement>("#ocr");
 const namesInput = getElement<HTMLTextAreaElement>("#names");
 const runButton = getElement<HTMLButtonElement>("#run");
 const statusLine = getElement<HTMLParagraphElement>("#status");
+const progressBar = getElement<HTMLDivElement>("#progress");
 const canvasWrap = getElement<HTMLDivElement>("#canvas-wrap");
 const canvas = getElement<HTMLCanvasElement>("#canvas");
 const fitButton = getElement<HTMLButtonElement>("#fit");
@@ -68,6 +70,7 @@ const results: ResultElements = {
 
 const state = createViewerState();
 const canvasView = new CanvasView(canvas);
+const extractionClient = new ExtractionClient(new URL("./worker.js", import.meta.url).href);
 let ocrEngine: OcrEngine | null = null;
 
 /**
@@ -258,6 +261,7 @@ async function runExtraction(): Promise<void>
     }
 
     runButton.disabled = true;
+    progressBar.hidden = false;
 
     try
     {
@@ -275,12 +279,13 @@ async function runExtraction(): Promise<void>
         }
 
         setStatus(state.region === null ? "Tracing…" : "Tracing the selected region…");
-        state.extraction = await extractTree(state.image, {
-            ocr: ocrCheckbox.checked ? ocrEngine : null,
+        state.extraction = await extractionClient.extract({
+            image: state.image,
             names: readNames(),
-            source: state.fileStem,
             region: state.region,
-        });
+            ocr: ocrCheckbox.checked ? ocrEngine : null,
+            source: state.fileStem,
+        }, { onProgress: handleProgress });
         state.selection = null;
         setStatus(`${state.extraction.tips.length} tips, ${state.extraction.nodes.length} nodes. ${formatTimings(state.extraction.timings)}.`);
     }
@@ -289,9 +294,22 @@ async function runExtraction(): Promise<void>
         setStatus(`Failed: ${error instanceof Error ? error.message : String(error)}`);
     }
 
+    progressBar.hidden = true;
     runButton.disabled = false;
     renderResults(results, state.extraction);
     select(null, false);
+}
+
+/**
+ * Shows pipeline progress in the status line.
+ *
+ * @param stage - Stage description.
+ * @param done - Items done, or 0.
+ * @param total - Items in total, or 0.
+ */
+function handleProgress(stage: string, done: number, total: number): void
+{
+    setStatus(total > 0 ? `${stage} (${done} of ${total})…` : `${stage}…`);
 }
 
 /**

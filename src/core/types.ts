@@ -490,3 +490,17 @@ export type OcrEngine = {
      */
     terminate(): Promise<void>;
 };
+
+/**
+ * Receives progress while the pipeline runs.
+ */
+export type ProgressReporter = {
+    /**
+     * Reports that a stage is under way.
+     *
+     * @param stage - Short description of the stage.
+     * @param done - Items finished so far, or 0 when the stage is not itemized.
+     * @param total - Items in the stage, or 0 when the stage is not itemized.
+     */
+    report(stage: string, done: number, total: number): void;
+};

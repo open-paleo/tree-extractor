@@ -49,7 +49,17 @@
                 <button id="add-node" class="tool" disabled title="Drag along a missing vertical connector to add a node">Add node</button>
                 <button id="delete" class="tool danger" disabled title="Delete the selected tip or node (Delete key)">Delete</button>
             </div>
+            <div id="progress" class="progress" hidden><div class="bar"></div></div>
             <div class="canvas-wrap" id="canvas-wrap"><canvas id="canvas"></canvas></div>
+            <div class="box newick">
+                <h2>Newick</h2>
+                <textarea id="newick" rows="5" readonly></textarea>
+                <div class="buttons">
+                    <button id="download-newick" disabled>Download .nwk</button>
+                    <button id="download-nexus" disabled>Download .nex</button>
+                    <button id="download-json" disabled>Download document .json</button>
+                </div>
+            </div>
         </section>
         <section class="results">
             <p class="hint">Edit a name to correct it; the tree below updates. Click an entry to find it on the figure.</p>
@@ -64,13 +74,6 @@
             <div class="box">
                 <h2>Quality checks</h2>
                 <ul id="qc"></ul>
-            </div>
-            <h2>Newick</h2>
-            <textarea id="newick" rows="6" readonly></textarea>
-            <div class="buttons">
-                <button id="download-newick" disabled>Download .nwk</button>
-                <button id="download-nexus" disabled>Download .nex</button>
-                <button id="download-json" disabled>Download document .json</button>
             </div>
         </section>
     </main>

@@ -3,7 +3,7 @@
  * against a name list.
  */
 
-import type { ExtractionDocument, GrayImage, OcrEngine, TextLine } from "./types.ts";
+import type { ExtractionDocument, GrayImage, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
 import { cropAndScale } from "./raster.ts";
 import { matchName } from "./matching.ts";
 
@@ -197,6 +197,7 @@ function findTextLine(document: ExtractionDocument, id: string | null): TextLine
  * @param ocr - Engine to read crops with.
  * @param scale - Upscaling factor for crops.
  * @param names - Optional closed list to match tip labels against.
+ * @param progress - Receives a count per label read, or null.
  * @returns Resolves when every label has been read.
  */
 export async function readLabels(
@@ -205,11 +206,21 @@ export async function readLabels(
     ocr: OcrEngine,
     scale: number,
     names: Array<string>,
+    progress: ProgressReporter | null = null,
 ): Promise<void>
 {
+    const total = document.tips.length + document.nodes.length;
+    let done = 0;
+
     for (const tip of document.tips)
     {
         const line = findTextLine(document, tip.textLine);
+        done++;
+
+        if (progress !== null)
+        {
+            progress.report("Reading labels", done, total);
+        }
 
         if (line !== undefined)
         {
@@ -223,6 +234,12 @@ export async function readLabels(
     for (const node of document.nodes)
     {
         const line = findTextLine(document, node.textLine);
+        done++;
+
+        if (progress !== null)
+        {
+            progress.report("Reading labels", done, total);
+        }
 
         if (line !== undefined)
         {
