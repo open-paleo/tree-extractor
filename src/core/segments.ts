@@ -51,45 +51,91 @@ function measureColumnHeights(ink: Mask, box: Box, window: number): Array<number
 }
 
 /**
- * Splits a horizontal component wherever the ink through it becomes much taller than a line
- * for three columns running, and keeps only the thin stretches. A label touching its branch, or
- * the run of touching letters inside a bold word, is glyph-high; a branch or a range bar is not.
+ * Splits a horizontal component into stretches of line and stretches of something taller, and
+ * keeps the line. A stretch counts as taller once three columns running exceed the limit. A
+ * label touching its branch, or the run of touching letters inside a bold word, is glyph-high
+ * and uneven; a range bar is taller than the line but even, and is kept as line.
  *
  * @param heights - Ink height per column of the component.
  * @param box - Component box.
- * @param limit - Ink height above which a column is text.
+ * @param limit - Ink height above which a column is not line.
  * @param minRun - Shortest piece worth keeping.
- * @returns Thin pieces of the component.
+ * @returns Pieces of the component that are line.
  */
-function findThinStretches(heights: Array<number>, box: Box, limit: number, minRun: number): Array<Box>
+function findLinePieces(heights: Array<number>, box: Box, limit: number, minRun: number): Array<Box>
 {
     const pieces = new Array<Box>();
-    let start = -1;
-    let thickStreak = 0;
+    let start = 0;
+    let thickState = heights.length > 0 && heights[0] > limit;
+    let streak = 0;
 
-    for (let index = 0; index <= heights.length; index++)
+    for (let index = 1; index <= heights.length; index++)
     {
         const thick = index < heights.length && heights[index] > limit;
-        thickStreak = thick ? thickStreak + 1 : 0;
 
-        if (index === heights.length || thickStreak === 3)
+        if (index < heights.length && thick === thickState)
         {
-            const end = index === heights.length ? index : index - 2;
-
-            if (start >= 0 && end - start >= minRun)
-            {
-                pieces.push({ x0: box.x0 + start, y0: box.y0, x1: box.x0 + end, y1: box.y1 });
-            }
-
-            start = -1;
+            streak = 0;
+            continue;
         }
-        else if (!thick && start < 0)
+
+        streak++;
+
+        if (index < heights.length && streak < 3)
         {
-            start = index;
+            continue;
         }
+
+        const end = index < heights.length ? index - streak + 1 : index;
+        keepIfLine(heights, box, start, end, thickState, minRun, pieces);
+        start = end;
+        thickState = thick;
+        streak = 0;
     }
 
     return pieces;
+}
+
+/**
+ * Appends a stretch to the pieces when it is line: thin and long enough, or thick but even.
+ *
+ * @param heights - Ink height per column of the component.
+ * @param box - Component box.
+ * @param start - First column of the stretch.
+ * @param end - Column after the stretch.
+ * @param thick - Whether the stretch is above the limit.
+ * @param minRun - Shortest thin piece worth keeping.
+ * @param pieces - Receives the piece.
+ */
+function keepIfLine(heights: Array<number>, box: Box, start: number, end: number, thick: boolean, minRun: number, pieces: Array<Box>): void
+{
+    if (end - start < 1)
+    {
+        return;
+    }
+
+    if (thick)
+    {
+        let lowest = Infinity;
+        let highest = 0;
+
+        for (let index = start; index < end; index++)
+        {
+            lowest = Math.min(lowest, heights[index]);
+            highest = Math.max(highest, heights[index]);
+        }
+
+        if (highest - lowest > 2)
+        {
+            return;
+        }
+    }
+    else if (end - start < minRun)
+    {
+        return;
+    }
+
+    pieces.push({ x0: box.x0 + start, y0: box.y0, x1: box.x0 + end, y1: box.y1 });
 }
 
 /**
@@ -258,7 +304,7 @@ function isInsideAny(box: Box, containers: Array<Box>): boolean
  * a mask of long runs in that direction only, so a thick horizontal cannot masquerade as a short
  * vertical and a vertical cannot be swallowed by the horizontal it crosses. Broken pieces of one
  * line on neighboring rows join through connectivity, and stretches where the ink is glyph-high
- * are cut away. Segments must be at least twice as long as they are thick.
+ * are cut away. Verticals must be at least twice as tall as they are wide.
  *
  * @param lineArt - Mask of line-art pixels (glyphs already removed).
  * @param minHorizontalRun - Shortest horizontal run that counts as a branch.
@@ -319,17 +365,19 @@ export function extractSegments(
 
         for (let index = 0; index < components.length; index++)
         {
-            pieces.push(...findThinStretches(heightsByComponent[index], components[index].box, limit, minHorizontalRun));
+            pieces.push(...findLinePieces(heightsByComponent[index], components[index].box, limit, minHorizontalRun));
         }
     }
 
     const clipped = new Array<Box>();
 
+    // A range bar clipped at its label can be short and thick, so a horizontal need only be at
+    // least as long as it is thick; text has already been cut away.
     for (const piece of pieces)
     {
         for (const part of clipToTextRows(piece, textRows, minHorizontalRun))
         {
-            if (part.x1 - part.x0 >= 2 * (part.y1 - part.y0))
+            if (part.x1 - part.x0 >= part.y1 - part.y0)
             {
                 clipped.push(part);
             }

@@ -12,6 +12,7 @@
   },
   "scripts": {
     "bench": "node --experimental-strip-types bench/run.ts",
+    "bench:generate": "node --experimental-strip-types bench/synthetic/generate.ts",
     "build:web": "tsc -p tsconfig.build.json",
     "extract": "node --experimental-strip-types src/cli/main.ts",
     "lint:fix": "eslint src/ test/ bench/ scripts/ --fix",

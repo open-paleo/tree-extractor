@@ -277,6 +277,56 @@ function splitAtCrossings(horizontals: Array<Segment>, candidates: Array<Candida
 }
 
 /**
+ * Adds a zero-length branch for every label row that sits right against a vertical within its
+ * span with no branch between them: a phylogram draws a taxon as old as its node that way.
+ *
+ * @param branches - Branch pieces, extended in place.
+ * @param candidates - All verticals.
+ * @param labelRows - Boxes of tip-label-sized text rows.
+ * @param tolerance - Attachment tolerance in pixels.
+ * @param reach - Largest gap between a vertical and a label that still counts as glued.
+ */
+function addGluedBranches(branches: Array<Branch>, candidates: Array<Candidate>, labelRows: Array<Box>, tolerance: number, reach: number): void
+{
+    for (const row of labelRows)
+    {
+        const center = (row.y0 + row.y1) / 2;
+        let vertical: Candidate | null = null;
+
+        for (const candidate of candidates)
+        {
+            const gap = row.x0 - candidate.x;
+
+            if (gap >= -tolerance && gap <= reach && center >= candidate.y0 - tolerance && center <= candidate.y1 + tolerance && (vertical === null || candidate.x > vertical.x))
+            {
+                vertical = candidate;
+            }
+        }
+
+        if (vertical === null)
+        {
+            continue;
+        }
+
+        let hasBranch = false;
+
+        for (const branch of branches)
+        {
+            if (Math.abs(branch.y - center) <= tolerance && branch.x0 >= vertical.x - tolerance && branch.x0 <= vertical.x + reach)
+            {
+                hasBranch = true;
+                break;
+            }
+        }
+
+        if (!hasBranch)
+        {
+            branches.push(createBranch(`glued.${branches.length}`, `glued.${branches.length}`, vertical.x, vertical.x + 2, center));
+        }
+    }
+}
+
+/**
  * Keeps only the nearest child at any one height. A second piece further right on the same row
  * is a remnant of the label beyond the branch end.
  *
@@ -707,6 +757,8 @@ function renumberTips(nodes: Map<string, TreeNode>, tips: Map<string, Tip>, root
  * @param looseTolerance - Fallback attachment distance for branch ends left short by label boxes.
  * @param labelBoxes - Boxes of text rows, used to place the junction of a bridged node.
  * @param labelReach - How far left of a vertical its support label may sit.
+ * @param labelRows - Boxes of tip-label-sized text rows, for zero-length branches.
+ * @param gluedReach - Largest gap between a vertical and a label that still counts as glued.
  * @returns Nodes, tips, root and findings.
  */
 export function traceRectangularTree(
@@ -716,6 +768,8 @@ export function traceRectangularTree(
     looseTolerance = tolerance,
     labelBoxes: Array<Box> = [],
     labelReach = 0,
+    labelRows: Array<Box> = [],
+    gluedReach = 0,
 ): TraceResult
 {
     const issues = new Array<QcIssue>();
@@ -734,6 +788,7 @@ export function traceRectangularTree(
     }
 
     const branches = splitAtCrossings(horizontals, candidates, tolerance);
+    addGluedBranches(branches, candidates, labelRows, tolerance, gluedReach);
     const rejected = new Array<RejectedVertical>();
     const active = attachAndPrune(branches, candidates, tolerance, looseTolerance, rejected);
     const usedSegments = new Set<string>();

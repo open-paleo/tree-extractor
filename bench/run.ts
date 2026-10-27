@@ -23,15 +23,79 @@ type BenchCase = {
     names: string;
 };
 
+/**
+ * One line of the closing summary table.
+ */
+type SummaryRow = {
+    /**
+     * Case name.
+     */
+    name: string;
+
+    /**
+     * Tips found.
+     */
+    tips: number;
+
+    /**
+     * Gold tips.
+     */
+    goldTips: number;
+
+    /**
+     * Tips named correctly.
+     */
+    named: number;
+
+    /**
+     * Gold splits recovered.
+     */
+    splits: number;
+
+    /**
+     * Gold splits in total.
+     */
+    goldSplits: number;
+
+    /**
+     * Extra splits.
+     */
+    extraSplits: number;
+
+    /**
+     * Whether the tree is identical.
+     */
+    identical: boolean;
+};
+
 const benchDir = path.dirname(url.fileURLToPath(import.meta.url));
-const casesDir = path.join(benchDir, "cases");
 const outDir = path.join(benchDir, "out");
 const skipOcr = process.argv.includes("--no-ocr");
+const filter = process.argv.find((argument) => argument.startsWith("--only=")) ?? null;
 const ocr = skipOcr ? null : await createTesseractOcr(tesseract);
+const caseDirs = new Array<string>();
 
-for (const caseName of fs.readdirSync(casesDir).sort())
+for (const root of [path.join(benchDir, "cases"), path.join(benchDir, "generated", "cases")])
 {
-    const caseDir = path.join(casesDir, caseName);
+    if (!fs.existsSync(root))
+    {
+        continue;
+    }
+
+    for (const name of fs.readdirSync(root).sort())
+    {
+        if (filter === null || name.includes(filter.slice("--only=".length)))
+        {
+            caseDirs.push(path.join(root, name));
+        }
+    }
+}
+
+const summary = new Array<SummaryRow>();
+
+for (const caseDir of caseDirs)
+{
+    const caseName = path.basename(caseDir);
     const casePath = path.join(caseDir, "case.json");
 
     if (!fs.existsSync(casePath))
@@ -84,6 +148,16 @@ for (const caseName of fs.readdirSync(casesDir).sort())
     }
 
     const comparison = compareTrees(parseNewick(goldText), parseNewick(newick));
+    summary.push({
+        name: caseName,
+        tips: document.tips.length,
+        goldTips: comparison.sharedLeaves.length + comparison.missingLeaves.length,
+        named: comparison.sharedLeaves.length,
+        splits: comparison.matchedSplits,
+        goldSplits: comparison.referenceSplits,
+        extraSplits: comparison.extraSplits.length,
+        identical: comparison.identical,
+    });
     console.log(`tips: ${document.tips.length} found, ${comparison.sharedLeaves.length} named correctly, ${comparison.missingLeaves.length} gold names missing, ${comparison.extraLeaves.length} extra`);
     console.log(`splits: ${comparison.matchedSplits}/${comparison.referenceSplits} gold splits recovered, ${comparison.extraSplits.length} extra; identical=${comparison.identical}`);
 
@@ -119,4 +193,19 @@ for (const caseName of fs.readdirSync(casesDir).sort())
 if (ocr !== null)
 {
     await ocr.terminate();
+}
+
+console.log("");
+console.log("case".padEnd(32), "tips".padStart(9), "named".padStart(9), "splits".padStart(11), "extra".padStart(6), " identical");
+
+for (const row of summary)
+{
+    console.log(
+        row.name.padEnd(32),
+        `${row.tips}/${row.goldTips}`.padStart(9),
+        `${row.named}/${row.goldTips}`.padStart(9),
+        `${row.splits}/${row.goldSplits}`.padStart(11),
+        `${row.extraSplits}`.padStart(6),
+        row.identical ? " yes" : " no",
+    );
 }

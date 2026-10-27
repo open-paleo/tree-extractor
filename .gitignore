@@ -9,6 +9,9 @@ dist/
 bench/images/
 bench/out/
 
+# Synthetic cases, regenerated deterministically by `npm run bench:generate`
+bench/generated/
+
 # Tesseract language data downloaded on first run
 eng.traineddata
 *.traineddata.gz

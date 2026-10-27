@@ -517,11 +517,13 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     // its branch is often missing from the rough pass. Line art is clipped out of them. Short rows
     // are support values, which sit on branches and must not clip them.
     const textRows = new Array<Box>();
+    const labelRows = new Array<Box>();
 
     for (const line of roughLines)
     {
         if (line.glyphCount >= 5 && line.box.x1 - line.box.x0 >= 3 * glyphHeight)
         {
+            labelRows.push(line.box);
             textRows.push({ x0: line.box.x0 - glyphHeight, y0: line.box.y0 - 2, x1: line.box.x1 + glyphHeight, y1: line.box.y1 + 2 });
         }
     }
@@ -549,7 +551,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         labelBoxes.push(line.box);
     }
 
-    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight);
+    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight);
     recordLap("trace");
     announce("Finding labels");
 

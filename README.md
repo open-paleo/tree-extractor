@@ -60,6 +60,7 @@ branch lengths, time-axis calibration.
 ```sh
 npm test            # unit tests (node:test)
 npm run bench       # benchmark against gold trees; see bench/README.md for supplying images
+npm run bench:generate   # render synthetic figures in several styles for the benchmark
 npm run lint        # eslint, same style as the other Open Paleo repositories
 npm run typecheck
 ```

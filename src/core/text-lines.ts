@@ -146,37 +146,68 @@ function addGlyph(line: OpenLine, glyph: Component): void
 }
 
 /**
- * Detects text lines in a dark-pixel mask.
+ * Estimates the vertical spacing of text rows from the gaps between row centers. Tip labels sit
+ * on evenly spaced rows in almost every tree figure, and fragments of one row share a center,
+ * so the median gap is the spacing even when rows are broken into pieces.
  *
- * @param ink - Mask of dark pixels, including colored text.
- * @param options - Thresholds.
- * @returns Text lines, glyph statistics and helper masks.
+ * @param lines - Rows from a first clustering pass.
+ * @returns The spacing in pixels, or null when there are too few rows.
  */
-export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetection
+function estimateRowPitch(lines: Array<OpenLine>): number | null
 {
-    const { width, height } = ink;
-    const residue = subtractMask(ink, options.lineArtMask);
-    const { components, labels } = findConnectedComponents(residue);
-    const plausible = new Array<boolean>(components.length);
-    const heights = new Array<number>();
+    const centers = new Array<number>();
 
-    for (let index = 0; index < components.length; index++)
+    for (const line of lines)
     {
-        const box = components[index].box;
-        const glyphWidth = box.x1 - box.x0;
-        const componentHeight = box.y1 - box.y0;
-        plausible[index] = components[index].area >= 6 && componentHeight >= 3 && componentHeight <= 60 && glyphWidth <= 80 && box.y0 >= options.minY;
-
-        if (plausible[index])
+        if (line.glyphs.length >= 3)
         {
-            heights.push(componentHeight);
+            centers.push(line.center);
         }
     }
 
-    // Upper-quartile height: digits, capitals and ascenders set the scale, not dots and dashes.
-    heights.sort(compareNumbers);
-    const glyphHeight = heights.length === 0 ? 12 : heights[Math.floor(heights.length * 0.7)];
-    const selected = new Set<number>();
+    centers.sort(compareNumbers);
+    const gaps = new Array<number>();
+
+    for (let index = 1; index < centers.length; index++)
+    {
+        const gap = centers[index] - centers[index - 1];
+
+        if (gap >= 4)
+        {
+            gaps.push(gap);
+        }
+    }
+
+    return gaps.length < 4 ? null : computeMedian(gaps, 0);
+}
+
+/**
+ * Glyph components chosen for a glyph height.
+ */
+type GlyphSelection = {
+    /**
+     * The glyphs, in left-to-right order.
+     */
+    glyphs: Array<Component>;
+
+    /**
+     * Their 1-based component labels.
+     */
+    labels: Set<number>;
+};
+
+/**
+ * Keeps the plausible components that are glyph-sized for the given glyph height and are not
+ * line-like.
+ *
+ * @param components - All components of the residue.
+ * @param plausible - Which components passed the coarse size filter.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns The glyphs and their labels.
+ */
+function selectGlyphs(components: Array<Component>, plausible: Array<boolean>, glyphHeight: number): GlyphSelection
+{
+    const labels = new Set<number>();
     const glyphs = new Array<Component>();
 
     for (let index = 0; index < components.length; index++)
@@ -194,12 +225,25 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
 
         if (!lineLike && componentHeight <= 2.5 * glyphHeight && glyphWidth <= 6 * glyphHeight)
         {
-            selected.add(index + 1);
+            labels.add(index + 1);
             glyphs.push(components[index]);
         }
     }
 
     glyphs.sort(compareComponentLeftEdges);
+
+    return { glyphs, labels };
+}
+
+/**
+ * Clusters glyphs into rows of text.
+ *
+ * @param glyphs - Glyphs sorted left to right.
+ * @param glyphHeight - Glyph height in pixels, which scales every tolerance.
+ * @returns Open lines, merged where a tall fused component bridges two pieces of a row.
+ */
+function clusterIntoLines(glyphs: Array<Component>, glyphHeight: number): Array<OpenLine>
+{
     const lines = new Array<OpenLine>();
     const tallGlyphs = new Array<Component>();
 
@@ -281,6 +325,54 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
         }
     }
 
+    return lines;
+}
+
+/**
+ * Detects text lines in a dark-pixel mask.
+ *
+ * @param ink - Mask of dark pixels, including colored text.
+ * @param options - Thresholds.
+ * @returns Text lines, glyph statistics and helper masks.
+ */
+export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetection
+{
+    const { width, height } = ink;
+    const residue = subtractMask(ink, options.lineArtMask);
+    const { components, labels } = findConnectedComponents(residue);
+    const plausible = new Array<boolean>(components.length);
+    const heights = new Array<number>();
+
+    for (let index = 0; index < components.length; index++)
+    {
+        const box = components[index].box;
+        const glyphWidth = box.x1 - box.x0;
+        const componentHeight = box.y1 - box.y0;
+        plausible[index] = components[index].area >= 6 && componentHeight >= 3 && componentHeight <= 60 && glyphWidth <= 80 && box.y0 >= options.minY;
+
+        if (plausible[index])
+        {
+            heights.push(componentHeight);
+        }
+    }
+
+    // Upper-quartile height: digits, capitals and ascenders set the scale, not dots and dashes.
+    // Thin fonts break into fragments shorter than a letter, which drags that down, so the
+    // spacing of the label rows, which fragmentation cannot change, sets a floor.
+    heights.sort(compareNumbers);
+    let glyphHeight = heights.length === 0 ? 12 : heights[Math.floor(heights.length * 0.7)];
+    let selected = selectGlyphs(components, plausible, glyphHeight);
+    let lines = clusterIntoLines(selected.glyphs, glyphHeight);
+    const pitch = estimateRowPitch(lines);
+    const floor = pitch === null ? 0 : Math.round(0.45 * pitch);
+
+    if (floor > glyphHeight + 1)
+    {
+        glyphHeight = floor;
+        selected = selectGlyphs(components, plausible, glyphHeight);
+        lines = clusterIntoLines(selected.glyphs, glyphHeight);
+    }
+
     const textLines = new Array<TextLine>();
 
     for (const line of lines)
@@ -300,6 +392,6 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
     return {
         lines: textLines,
         glyphHeight,
-        glyphMask: createMaskFromComponents(labels, selected, width, height),
+        glyphMask: createMaskFromComponents(labels, selected.labels, width, height),
     };
 }
