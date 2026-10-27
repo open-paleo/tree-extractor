@@ -130,7 +130,12 @@ from a firm one.
    bridged gaps is recorded instead until a figure needs an earlier decision.
 3. Layout-aware tracing for staircase figures, with a second staircase figure in the benchmark
    before the rule is written.
-4. Tip alignment as a consistency check and a second chance for missed tips.
+4. Tip alignment as a consistency check and a second chance for missed tips. Done: on an
+   aligned figure, a tip of the tree ending more than a glyph height from the line is reported
+   (`tip-off-line`), a label row at the line that no tip owns is reported (`row-without-tip`),
+   and before labels are read such a row is searched for in the line ink; a branch piece ending
+   at the line gets a tip (`tip-recovered`), hung from the nearest node on its left. No
+   benchmark figure exercised the recovery, which is tested on a built document.
 5. Decoration removal (brackets, arrows, discs) before tracing.
 6. Time-scale detection, which is also the entry point for the v2 branch-length calibration.
 

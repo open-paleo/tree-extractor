@@ -5,6 +5,7 @@
 
 import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
+import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -876,6 +877,9 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     // condense the crops); the parts that the read text can change are measured again after.
     document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, fragmented, widened, bridgedGaps, document });
     applyProfileOverrides(document.profile, parameters.profileOverrides);
+    // When the tips end on one line, a label row at that line with no tip is a missed branch;
+    // it is looked for in the line ink and added before labels are read.
+    document.qc.push(...recoverAlignedTips(document, lineInk, thickness, minHorizontalRun));
     recordLap("profile");
 
     if (options.ocr)
@@ -888,6 +892,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         recordLap("ocr");
     }
 
+    document.qc.push(...checkTipAlignment(document));
     runQualityChecks(document);
 
     if (region !== null)

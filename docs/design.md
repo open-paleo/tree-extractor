@@ -79,7 +79,10 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    (CLI `--profile`). `docs/profiles.md` has the plan for what else will read it. The benchmark
    checks the profile against each case's expected values and reports a profile column.
 8. **QC**: unlabelled tips, unmatched names, duplicates, disconnected pieces, tips named by
-   elimination, and every rejected vertical with its reason are recorded in the document.
+   elimination, tips off the tip line and label rows at it without a tip (when the profile says
+   the tips are aligned), and every rejected vertical with its reason are recorded in the
+   document. On an aligned figure a label row without a tip is first searched for in the line
+   ink, and a branch piece ending at the line gets its tip back before labels are read.
 
 ## Known gaps
 
