@@ -4,7 +4,8 @@
 
 import type { ExtractionDocument } from "../core/types.ts";
 import type { ViewTransform, ViewerState } from "./state.ts";
-import { collectConnected, findNode, findTip, getNodeMarkerY } from "./lookup.ts";
+import { collectConnected, getNodeMarkerY } from "./lookup.ts";
+import { findNodeById, findTipById } from "../core/edit.ts";
 
 const minScale = 0.05;
 const maxScale = 32;
@@ -198,6 +199,16 @@ export class CanvasView
         }
 
         this.drawRegion(context, state, unit);
+
+        if (state.draftSpan !== null)
+        {
+            context.strokeStyle = "rgba(255, 80, 0, 0.95)";
+            context.lineWidth = 3 * unit;
+            context.beginPath();
+            context.moveTo(state.draftSpan.x0, state.draftSpan.y0);
+            context.lineTo(state.draftSpan.x0, state.draftSpan.y1);
+            context.stroke();
+        }
     }
 
     /**
@@ -300,7 +311,7 @@ export class CanvasView
 
         if (state.selection.kind === "tip")
         {
-            const tip = findTip(document, state.selection.id);
+            const tip = findTipById(document, state.selection.id);
 
             if (tip === null)
             {
@@ -313,7 +324,7 @@ export class CanvasView
         }
         else
         {
-            const node = findNode(document, state.selection.id);
+            const node = findNodeById(document, state.selection.id);
 
             if (node === null)
             {

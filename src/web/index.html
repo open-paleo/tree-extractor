@@ -32,7 +32,7 @@
                 <label><input type="checkbox" data-layer="nodes" checked> nodes</label>
                 <label><input type="checkbox" data-layer="tips" checked> tips</label>
             </fieldset>
-            <p class="hint">Scroll to zoom, drag to pan, click a tip or node to select it. Use <em>Select region</em> to mark where the tree is when the figure holds more than the tree.</p>
+            <p class="hint">Scroll to zoom, drag to pan, click a tip, node or label to select it. Use <em>Select region</em> to mark where the tree is when the figure holds more than the tree. <em>Add tip</em> then click a branch end; <em>Add node</em> then drag along the missing connector; <em>Delete</em> removes the selection.</p>
         </section>
         <section class="view">
             <div class="toolbar">
@@ -44,17 +44,27 @@
                 <span class="spacer"></span>
                 <button id="region-mode" class="tool" disabled title="Drag a rectangle around the tree">Select region</button>
                 <button id="clear-region" class="tool" disabled title="Analyze the whole image again">Clear region</button>
+                <span class="divider"></span>
+                <button id="add-tip" class="tool" disabled title="Click where a branch ends to add a tip there">Add tip</button>
+                <button id="add-node" class="tool" disabled title="Drag along a missing vertical connector to add a node">Add node</button>
+                <button id="delete" class="tool danger" disabled title="Delete the selected tip or node (Delete key)">Delete</button>
             </div>
             <div class="canvas-wrap" id="canvas-wrap"><canvas id="canvas"></canvas></div>
         </section>
         <section class="results">
-            <h2>Tips</h2>
-            <p class="hint">Edit a name to correct it; the tree below updates.</p>
-            <ol id="tips" class="items"></ol>
-            <h2>Nodes</h2>
-            <ol id="nodes" class="items"></ol>
-            <h2>Quality checks</h2>
-            <ul id="qc"></ul>
+            <p class="hint">Edit a name to correct it; the tree below updates. Click an entry to find it on the figure.</p>
+            <div class="box">
+                <h2>Tips <span id="tips-count" class="count"></span></h2>
+                <ol id="tips" class="items"></ol>
+            </div>
+            <div class="box">
+                <h2>Nodes <span id="nodes-count" class="count"></span></h2>
+                <ol id="nodes" class="items"></ol>
+            </div>
+            <div class="box">
+                <h2>Quality checks</h2>
+                <ul id="qc"></ul>
+            </div>
             <h2>Newick</h2>
             <textarea id="newick" rows="6" readonly></textarea>
             <div class="buttons">

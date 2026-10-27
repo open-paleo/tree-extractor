@@ -43,8 +43,10 @@ flagged.
 The viewer runs the same pipeline on a dropped image and draws what it found over the figure.
 Scroll to zoom, drag to pan, and use *Select region* to mark where the tree is when the figure
 holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
-other way round; labels are editable in place and the Newick updates. Structural correction
-(adding, removing and re-parenting nodes) is the next milestone.
+other way round; labels are editable in place and the Newick updates. Missed or spurious
+elements can be fixed by hand: *Add tip* then click a branch end, *Add node* then drag along the
+missing vertical connector (it takes over the branches it crosses), and *Delete* removes the
+selected tip or node, dissolving a node into its parent. Re-parenting by drag is not there yet.
 
 ## Scope
 

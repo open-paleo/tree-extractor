@@ -10,11 +10,13 @@ import type { Box } from "../core/types.ts";
 import type { Layers, Selection } from "./state.ts";
 import { createViewerState } from "./state.ts";
 import { CanvasView } from "./canvas.ts";
-import { findNode, findTip, getNodeMarkerY } from "./lookup.ts";
+import { getNodeMarkerY } from "./lookup.ts";
 import type { ResultElements } from "./results.ts";
 import { getSelectionFromEvent, highlightSelection, renderResults, updateNewick } from "./results.ts";
 import { downloadDocumentFile, downloadNewickFile, downloadNexusFile } from "./exports.ts";
 import { PointerController } from "./interaction.ts";
+import type { EditResult } from "../core/edit.ts";
+import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById } from "../core/edit.ts";
 
 /**
  * Finds a required element in the page.
@@ -48,12 +50,17 @@ const zoomOutButton = getElement<HTMLButtonElement>("#zoom-out");
 const zoomLevel = getElement<HTMLSpanElement>("#zoom-level");
 const regionModeButton = getElement<HTMLButtonElement>("#region-mode");
 const clearRegionButton = getElement<HTMLButtonElement>("#clear-region");
+const addTipButton = getElement<HTMLButtonElement>("#add-tip");
+const addNodeButton = getElement<HTMLButtonElement>("#add-node");
+const deleteButton = getElement<HTMLButtonElement>("#delete");
 const downloadNewick = getElement<HTMLButtonElement>("#download-newick");
 const downloadNexus = getElement<HTMLButtonElement>("#download-nexus");
 const downloadJson = getElement<HTMLButtonElement>("#download-json");
 const results: ResultElements = {
     tipsList: getElement<HTMLOListElement>("#tips"),
     nodesList: getElement<HTMLOListElement>("#nodes"),
+    tipsCount: getElement<HTMLSpanElement>("#tips-count"),
+    nodesCount: getElement<HTMLSpanElement>("#nodes-count"),
     qcList: getElement<HTMLUListElement>("#qc"),
     newickOutput: getElement<HTMLTextAreaElement>("#newick"),
     downloadButtons: [downloadNewick, downloadNexus, downloadJson],
@@ -86,8 +93,53 @@ function updateToolbar(): void
     zoomOutButton.disabled = !loaded;
     regionModeButton.disabled = !loaded;
     clearRegionButton.disabled = state.region === null;
+    const extracted = state.extraction !== null;
+    addTipButton.disabled = !extracted;
+    addNodeButton.disabled = !extracted;
+    deleteButton.disabled = !extracted || state.selection === null;
     regionModeButton.classList.toggle("active", state.mode === "region");
+    addTipButton.classList.toggle("active", state.mode === "add-tip");
+    addNodeButton.classList.toggle("active", state.mode === "add-node");
     canvas.classList.toggle("region", state.mode === "region");
+    canvas.classList.toggle("add", state.mode === "add-tip" || state.mode === "add-node");
+}
+
+/**
+ * Applies the outcome of an edit: reports it, rebuilds the lists and selects what was made.
+ *
+ * @param result - Outcome of the edit.
+ * @param kind - What the edit would have created.
+ */
+function finishEdit(result: EditResult, kind: "tip" | "node"): void
+{
+    setStatus(result.message);
+
+    if (!result.ok)
+    {
+        redraw();
+
+        return;
+    }
+
+    renderResults(results, state.extraction);
+    updateNewick(results, state.extraction);
+    select(result.id === null ? null : { kind, id: result.id }, false);
+}
+
+/**
+ * Deletes the selected tip or node.
+ */
+function deleteSelection(): void
+{
+    if (state.extraction === null || state.selection === null)
+    {
+        return;
+    }
+
+    const result = state.selection.kind === "tip"
+        ? deleteTip(state.extraction, state.selection.id)
+        : deleteNode(state.extraction, state.selection.id);
+    finishEdit(result, state.selection.kind);
 }
 
 /**
@@ -114,7 +166,7 @@ function select(next: Selection | null, reveal: boolean): void
     {
         if (next.kind === "tip")
         {
-            const tip = findTip(state.extraction, next.id);
+            const tip = findTipById(state.extraction, next.id);
 
             if (tip !== null)
             {
@@ -123,7 +175,7 @@ function select(next: Selection | null, reveal: boolean): void
         }
         else
         {
-            const node = findNode(state.extraction, next.id);
+            const node = findNodeById(state.extraction, next.id);
 
             if (node !== null)
             {
@@ -161,6 +213,7 @@ async function loadFile(file: File): Promise<void>
     state.extraction = null;
     state.region = null;
     state.draftRegion = null;
+    state.draftSpan = null;
     state.selection = null;
     state.mode = "pan";
     state.fileStem = file.name.replace(/\.[^.]+$/, "");
@@ -386,7 +439,7 @@ function handleListInput(event: Event): void
 
     if (selection.kind === "tip")
     {
-        const tip = findTip(state.extraction, selection.id);
+        const tip = findTipById(state.extraction, selection.id);
 
         if (tip !== null)
         {
@@ -397,7 +450,7 @@ function handleListInput(event: Event): void
     }
     else
     {
-        const node = findNode(state.extraction, selection.id);
+        const node = findNodeById(state.extraction, selection.id);
 
         if (node !== null)
         {
@@ -480,6 +533,88 @@ function handleRegionSet(region: Box): void
 }
 
 /**
+ * Adds a tip where the user clicked.
+ *
+ * @param x - Branch end x.
+ * @param y - Branch height.
+ */
+function handleAddTip(x: number, y: number): void
+{
+    if (state.extraction !== null)
+    {
+        finishEdit(addTip(state.extraction, x, y), "tip");
+    }
+}
+
+/**
+ * Adds a node along the vertical the user dragged.
+ *
+ * @param x - Position of the vertical.
+ * @param y0 - Top.
+ * @param y1 - Bottom.
+ */
+function handleAddNode(x: number, y0: number, y1: number): void
+{
+    if (state.extraction !== null)
+    {
+        finishEdit(addNode(state.extraction, x, y0, y1), "node");
+    }
+}
+
+/**
+ * Enters or leaves add-tip mode.
+ */
+function handleAddTipClick(): void
+{
+    state.mode = state.mode === "add-tip" ? "pan" : "add-tip";
+    setStatus(state.mode === "add-tip" ? "Click where the new tip's branch ends." : "Ready.");
+    updateToolbar();
+}
+
+/**
+ * Enters or leaves add-node mode.
+ */
+function handleAddNodeClick(): void
+{
+    state.mode = state.mode === "add-node" ? "pan" : "add-node";
+    setStatus(state.mode === "add-node" ? "Drag along the missing vertical connector, from its top to its bottom." : "Ready.");
+    updateToolbar();
+}
+
+/**
+ * Deletes the selection from the toolbar button.
+ */
+function handleDeleteClick(): void
+{
+    deleteSelection();
+}
+
+/**
+ * Deletes the selection on the Delete or Backspace key, unless typing in a field.
+ *
+ * @param event - Keyboard event.
+ */
+function handleKeyDown(event: KeyboardEvent): void
+{
+    const target = event.target;
+    const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+
+    if (!typing && (event.key === "Delete" || event.key === "Backspace"))
+    {
+        event.preventDefault();
+        deleteSelection();
+    }
+    else if (!typing && event.key === "Escape" && state.mode !== "pan")
+    {
+        state.mode = "pan";
+        state.draftRegion = null;
+        state.draftSpan = null;
+        setStatus("Ready.");
+        redraw();
+    }
+}
+
+/**
  * Selects what was clicked on the canvas.
  *
  * @param selection - Tip, node or null.
@@ -492,6 +627,8 @@ function handleCanvasSelect(selection: Selection | null): void
 const pointer = new PointerController(canvas, canvasView, state, {
     onSelect: handleCanvasSelect,
     onRegionSet: handleRegionSet,
+    onAddTip: handleAddTip,
+    onAddNode: handleAddNode,
     onViewChanged: updateToolbar,
 });
 
@@ -505,6 +642,10 @@ zoomInButton.addEventListener("click", handleZoomInClick);
 zoomOutButton.addEventListener("click", handleZoomOutClick);
 regionModeButton.addEventListener("click", handleRegionModeClick);
 clearRegionButton.addEventListener("click", handleClearRegionClick);
+addTipButton.addEventListener("click", handleAddTipClick);
+addNodeButton.addEventListener("click", handleAddNodeClick);
+deleteButton.addEventListener("click", handleDeleteClick);
+document.addEventListener("keydown", handleKeyDown);
 results.tipsList.addEventListener("click", handleListClick);
 results.nodesList.addEventListener("click", handleListClick);
 results.tipsList.addEventListener("input", handleListInput);

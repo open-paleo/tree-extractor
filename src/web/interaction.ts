@@ -30,6 +30,23 @@ export type InteractionCallbacks = {
     onRegionSet(region: Box): void;
 
     /**
+     * Called when the user clicks where a tip should be added.
+     *
+     * @param x - Branch end x in image pixels.
+     * @param y - Branch height in image pixels.
+     */
+    onAddTip(x: number, y: number): void;
+
+    /**
+     * Called when the user has dragged out the vertical of a node to add.
+     *
+     * @param x - Position of the vertical in image pixels.
+     * @param y0 - Top.
+     * @param y1 - Bottom.
+     */
+    onAddNode(x: number, y0: number, y1: number): void;
+
+    /**
      * Called after the view transform or an overlay changed and the toolbar should refresh.
      */
     onViewChanged(): void;
@@ -125,11 +142,16 @@ export class PointerController
         };
         this.canvas.setPointerCapture(event.pointerId);
 
+        const imageX = this.canvasView.toImageX(screenX);
+        const imageY = this.canvasView.toImageY(screenY);
+
         if (this.state.mode === "region")
         {
-            const imageX = this.canvasView.toImageX(screenX);
-            const imageY = this.canvasView.toImageY(screenY);
             this.state.draftRegion = { x0: imageX, y0: imageY, x1: imageX, y1: imageY };
+        }
+        else if (this.state.mode === "add-node")
+        {
+            this.state.draftSpan = { x0: imageX, y0: imageY, x1: imageX, y1: imageY };
         }
         else
         {
@@ -171,6 +193,11 @@ export class PointerController
             this.state.draftRegion.y1 = this.canvasView.toImageY(screenY);
             this.canvasView.render(this.state);
         }
+        else if (this.state.draftSpan !== null)
+        {
+            this.state.draftSpan.y1 = this.canvasView.toImageY(screenY);
+            this.canvasView.render(this.state);
+        }
         else
         {
             this.canvasView.panTo(this.state, drag.startOffsetX + (screenX - drag.startX), drag.startOffsetY + (screenY - drag.startY));
@@ -202,13 +229,53 @@ export class PointerController
             return;
         }
 
-        if (!drag.moved && this.state.extraction !== null)
+        if (this.state.draftSpan !== null)
         {
-            const radius = 12 / this.canvasView.view.scale;
-            const imageX = this.canvasView.toImageX(drag.startX);
-            const imageY = this.canvasView.toImageY(drag.startY);
-            this.callbacks.onSelect(hitTest(this.state.extraction, this.state.layers, imageX, imageY, radius));
+            this.finishSpan(this.state.draftSpan, drag.moved);
+
+            return;
         }
+
+        if (drag.moved || this.state.extraction === null)
+        {
+            return;
+        }
+
+        const imageX = this.canvasView.toImageX(drag.startX);
+        const imageY = this.canvasView.toImageY(drag.startY);
+
+        if (this.state.mode === "add-tip")
+        {
+            this.state.mode = "pan";
+            this.callbacks.onAddTip(imageX, imageY);
+
+            return;
+        }
+
+        const radius = 12 / this.canvasView.view.scale;
+        this.callbacks.onSelect(hitTest(this.state.extraction, this.state.layers, imageX, imageY, radius));
+    }
+
+    /**
+     * Turns a dragged-out vertical into a new node, if it has any height.
+     *
+     * @param draft - Draft span; x0 is the position, y0 and y1 the ends in either order.
+     * @param moved - Whether the pointer actually moved.
+     */
+    private finishSpan(draft: Box, moved: boolean): void
+    {
+        this.state.draftSpan = null;
+        this.state.mode = "pan";
+        const top = Math.min(draft.y0, draft.y1);
+        const bottom = Math.max(draft.y0, draft.y1);
+
+        if (moved && bottom - top >= 2)
+        {
+            this.callbacks.onAddNode(draft.x0, top, bottom);
+        }
+
+        this.canvasView.render(this.state);
+        this.callbacks.onViewChanged();
     }
 
     /**

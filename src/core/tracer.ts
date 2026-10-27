@@ -4,7 +4,7 @@
  * horizontal leaving it to the right is a child, so polytomies need no special handling.
  */
 
-import type { BranchRecord, QcIssue, RejectedVertical, Segment, Tip, TreeNode } from "./types.ts";
+import type { Box, BranchRecord, QcIssue, RejectedVertical, Segment, Tip, TreeNode } from "./types.ts";
 import { compareNumbers } from "./raster.ts";
 
 /**
@@ -450,18 +450,58 @@ function choosePrimaryParent(candidate: Candidate): Branch | null
 }
 
 /**
+ * Finds the height of the junction under a label: the text row nearest to the left of a
+ * vertical whose center lies within the given span. The support label that hid the branch sits
+ * exactly on the junction, so its height is the best estimate of where the branch arrived.
+ *
+ * @param labelBoxes - Boxes of text rows.
+ * @param x - Position of the vertical.
+ * @param top - Top of the span to search.
+ * @param bottom - Bottom of the span to search.
+ * @param reach - How far left of the vertical a label may sit.
+ * @returns The label's center height, or null when no label is there.
+ */
+function findJunctionLabelHeight(labelBoxes: Array<Box>, x: number, top: number, bottom: number, reach: number): number | null
+{
+    let best: Box | null = null;
+
+    for (const box of labelBoxes)
+    {
+        const center = (box.y0 + box.y1) / 2;
+
+        if (box.x1 >= x - reach && box.x0 <= x && center >= top && center <= bottom && (best === null || box.x1 > best.x1))
+        {
+            best = box;
+        }
+    }
+
+    return best === null ? null : (best.y0 + best.y1) / 2;
+}
+
+/**
  * Attaches parentless nodes to the nearest node on their left whose vertical span overlaps
  * theirs. In a planar rectangular drawing the only vertical that can sit left of a node within
  * its span is its parent, so when the connecting branch has been obliterated by a label's
- * background box the parent can still be recovered.
+ * background box the parent can still be recovered. The junction height is taken from that
+ * label when one is found, else from the middle of the overlap.
  *
  * @param nodes - Node lookup, modified in place.
  * @param tips - Tip lookup, used to order children.
  * @param reach - Largest horizontal distance to bridge.
  * @param tolerance - Attachment tolerance in pixels.
+ * @param labelBoxes - Boxes of text rows, for locating the junction.
+ * @param labelReach - How far left of a vertical its support label may sit.
  * @param issues - Findings list to append to.
  */
-function bridgeOrphans(nodes: Map<string, TreeNode>, tips: Map<string, Tip>, reach: number, tolerance: number, issues: Array<QcIssue>): void
+function bridgeOrphans(
+    nodes: Map<string, TreeNode>,
+    tips: Map<string, Tip>,
+    reach: number,
+    tolerance: number,
+    labelBoxes: Array<Box>,
+    labelReach: number,
+    issues: Array<QcIssue>,
+): void
 {
     function getChildHeight(id: string): number
     {
@@ -507,8 +547,10 @@ function bridgeOrphans(nodes: Map<string, TreeNode>, tips: Map<string, Tip>, rea
             continue;
         }
 
+        const top = Math.max(parent.y0, node.y0) - tolerance;
+        const bottom = Math.min(parent.y1, node.y1) + tolerance;
         node.parent = parent.id;
-        node.attachY = (Math.max(parent.y0, node.y0) + Math.min(parent.y1, node.y1)) / 2;
+        node.attachY = findJunctionLabelHeight(labelBoxes, node.x, top, bottom, labelReach) ?? (top + bottom) / 2;
         parent.children.push(node.id);
         parent.children.sort(compareChildHeights);
         issues.push({
@@ -663,6 +705,8 @@ function renumberTips(nodes: Map<string, TreeNode>, tips: Map<string, Tip>, root
  * @param verticals - Vertical segments.
  * @param tolerance - Largest gap, in pixels, across which a branch end still attaches to a vertical.
  * @param looseTolerance - Fallback attachment distance for branch ends left short by label boxes.
+ * @param labelBoxes - Boxes of text rows, used to place the junction of a bridged node.
+ * @param labelReach - How far left of a vertical its support label may sit.
  * @returns Nodes, tips, root and findings.
  */
 export function traceRectangularTree(
@@ -670,6 +714,8 @@ export function traceRectangularTree(
     verticals: Array<Segment>,
     tolerance: number,
     looseTolerance = tolerance,
+    labelBoxes: Array<Box> = [],
+    labelReach = 0,
 ): TraceResult
 {
     const issues = new Array<QcIssue>();
@@ -797,7 +843,7 @@ export function traceRectangularTree(
         });
     }
 
-    bridgeOrphans(nodes, tips, looseTolerance, tolerance, issues);
+    bridgeOrphans(nodes, tips, looseTolerance, tolerance, labelBoxes, labelReach, issues);
     collapseUnaryNodes(nodes, tips);
 
     let root: string | null = null;

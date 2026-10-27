@@ -3,7 +3,7 @@
  * marker positions and hit testing.
  */
 
-import type { ExtractionDocument, Tip, TreeNode } from "../core/types.ts";
+import type { ExtractionDocument, TreeNode } from "../core/types.ts";
 import type { Layers, Selection } from "./state.ts";
 
 /**
@@ -46,46 +46,6 @@ export function collectConnected(document: ExtractionDocument): Set<string>
 }
 
 /**
- * Finds a tip by identifier.
- *
- * @param document - Document to search.
- * @param id - Tip identifier.
- * @returns The tip, or null.
- */
-export function findTip(document: ExtractionDocument, id: string): Tip | null
-{
-    for (const tip of document.tips)
-    {
-        if (tip.id === id)
-        {
-            return tip;
-        }
-    }
-
-    return null;
-}
-
-/**
- * Finds a node by identifier.
- *
- * @param document - Document to search.
- * @param id - Node identifier.
- * @returns The node, or null.
- */
-export function findNode(document: ExtractionDocument, id: string): TreeNode | null
-{
-    for (const node of document.nodes)
-    {
-        if (node.id === id)
-        {
-            return node;
-        }
-    }
-
-    return null;
-}
-
-/**
  * Where a node is drawn: at the junction with its parent, or mid-span at the root.
  *
  * @param node - The node.
@@ -97,7 +57,53 @@ export function getNodeMarkerY(node: TreeNode): number
 }
 
 /**
- * Finds the tip or node nearest to an image point, within a radius.
+ * Finds the tip or node whose label text box contains a point.
+ *
+ * @param document - Document to search.
+ * @param imageX - Image x.
+ * @param imageY - Image y.
+ * @returns The label's owner, or null.
+ */
+function findLabelOwner(document: ExtractionDocument, imageX: number, imageY: number): Selection | null
+{
+    let lineId: string | null = null;
+
+    for (const line of document.textLines)
+    {
+        if (imageX >= line.box.x0 && imageX < line.box.x1 && imageY >= line.box.y0 && imageY < line.box.y1)
+        {
+            lineId = line.id;
+            break;
+        }
+    }
+
+    if (lineId === null)
+    {
+        return null;
+    }
+
+    for (const tip of document.tips)
+    {
+        if (tip.textLine === lineId)
+        {
+            return { kind: "tip", id: tip.id };
+        }
+    }
+
+    for (const node of document.nodes)
+    {
+        if (node.textLine === lineId)
+        {
+            return { kind: "node", id: node.id };
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Finds what an image point selects: the tip or node whose label text it lies on, else the
+ * nearest marker within a radius.
  *
  * @param document - Document to search.
  * @param layers - Only visible layers are hit.
@@ -108,6 +114,13 @@ export function getNodeMarkerY(node: TreeNode): number
  */
 export function hitTest(document: ExtractionDocument, layers: Layers, imageX: number, imageY: number, radius: number): Selection | null
 {
+    const labelOwner = findLabelOwner(document, imageX, imageY);
+
+    if (labelOwner !== null)
+    {
+        return labelOwner;
+    }
+
     let best: Selection | null = null;
     let bestDistance = radius;
 

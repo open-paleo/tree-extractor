@@ -117,8 +117,28 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: 
 canvas.panning { cursor: grabbing; }
 canvas.region { cursor: crosshair; }
 
-section.results h2 { font-size: 15px; margin: 0 0 6px; }
-ol.items { margin: 0 0 16px; padding-left: 26px; max-height: 260px; overflow: auto; font-size: 13px; }
+.toolbar .divider { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+button.tool.danger { color: #cf222e; }
+button.tool.danger:disabled { color: var(--ink); }
+canvas.add { cursor: crosshair; }
+
+.box { border: 1px solid var(--line); border-radius: 6px; background: var(--bg); margin-bottom: 12px; overflow: hidden; }
+.box h2 { font-size: 13px; margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.box h2 .count { color: var(--muted); font-weight: normal; }
+.box ol, .box ul {
+    margin: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    background:
+        linear-gradient(var(--bg) 30%, transparent) top / 100% 28px,
+        linear-gradient(transparent, var(--bg) 70%) bottom / 100% 28px,
+        radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.25), transparent) top / 100% 12px,
+        radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.25), transparent) bottom / 100% 12px;
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+}
+
+ol.items { padding: 4px 6px 4px 30px; max-height: 240px; font-size: 13px; }
 ol.items li { margin: 2px 0; display: flex; gap: 6px; align-items: center; padding: 1px 4px; border-radius: 4px; cursor: pointer; }
 ol.items li.selected { background: var(--selected); }
 ol.items li span.id { min-width: 2.6em; color: var(--muted); }
@@ -126,7 +146,7 @@ ol.items input { flex: 1; font: inherit; padding: 2px 6px; border: 1px solid var
 ol.items li.unsure input { border-color: #d4a72c; }
 ol.items li.unlabelled input { border-color: #cf222e; }
 ol.items li.detached { opacity: 0.6; }
-ul#qc { margin: 0 0 16px; padding-left: 20px; font-size: 13px; max-height: 200px; overflow: auto; }
+ul#qc { padding: 4px 6px 4px 24px; font-size: 13px; max-height: 200px; }
 ul#qc li.error { color: #cf222e; }
 ul#qc li.warning { color: #9a6700; }
 ul#qc li.info { color: var(--muted); }

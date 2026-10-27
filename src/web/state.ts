@@ -100,9 +100,9 @@ export type DragState = {
 };
 
 /**
- * What a drag on the canvas does.
+ * What a click or drag on the canvas does.
  */
-export type Mode = "pan" | "region";
+export type Mode = "pan" | "region" | "add-tip" | "add-node";
 
 /**
  * Everything the viewer knows about the current figure.
@@ -132,6 +132,11 @@ export type ViewerState = {
      * Region being dragged out, or null.
      */
     draftRegion: Box | null;
+
+    /**
+     * Vertical span of a node being dragged out, or null. Only x0, y0 and y1 are used.
+     */
+    draftSpan: Box | null;
 
     /**
      * Selected tip or node.
@@ -167,6 +172,7 @@ export function createViewerState(): ViewerState
         extraction: null,
         region: null,
         draftRegion: null,
+        draftSpan: null,
         selection: null,
         layers: { segments: true, text: true, nodes: true, tips: true },
         mode: "pan",

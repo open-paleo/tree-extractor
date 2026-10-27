@@ -524,7 +524,14 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     // A branch end sits within about one line width of its vertical; anything looser lets a
     // tip's branch reach the wrong node.
     const tolerance = parameters.attachTolerance ?? Math.max(3, Math.round(thickness) + 2);
-    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach);
+    const labelBoxes = new Array<Box>();
+
+    for (const line of roughLines)
+    {
+        labelBoxes.push(line.box);
+    }
+
+    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight);
     recordLap("trace");
 
     // Line art is what the trace used; everything else is text or noise. Range bars and branch

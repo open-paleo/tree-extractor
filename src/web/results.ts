@@ -22,6 +22,16 @@ export type ResultElements = {
     nodesList: HTMLOListElement;
 
     /**
+     * Shows how many tips there are.
+     */
+    tipsCount: HTMLSpanElement;
+
+    /**
+     * Shows how many nodes there are.
+     */
+    nodesCount: HTMLSpanElement;
+
+    /**
      * Quality-check findings.
      */
     qcList: HTMLUListElement;
@@ -97,6 +107,8 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
     elements.nodesList.replaceChildren();
     elements.qcList.replaceChildren();
     updateNewick(elements, extraction);
+    elements.tipsCount.textContent = extraction === null ? "" : `(${extraction.tips.length})`;
+    elements.nodesCount.textContent = extraction === null ? "" : `(${extraction.nodes.length})`;
 
     if (extraction === null)
     {
