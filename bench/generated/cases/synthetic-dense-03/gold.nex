@@ -1,0 +1,58 @@
+#NEXUS
+
+[ synthetic case, seed 1302, style dense ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=45;
+    TAXLABELS
+        Rhakivenator_minora
+        Saukidon_novensis
+        Vallalestes_gracilus
+        Rhamolestes_latorum
+        Caldopelta_boreali
+        Calpesaurus_angustorum
+        Branoraptor_angusta
+        Kanneonyx_magnensis
+        Hypridon_brevii
+        Caltavenator_feroxus
+        Callilestes_latae
+        Deirolestes_angustoides
+        Iguriraptor_majororum
+        Nantapelta_occidentensis
+        Nanchoceratops_novae
+        Valtasaurus_orientorum
+        Nanmoceratops_parvensis
+        Oropevenator_latensis
+        Valliceratops_minoris
+        Saumoraptor_mirabilensis
+        Iguliceratops_australius
+        Eodotitan_feroxoides
+        Orolapelta_longa
+        Valrovenator_latae
+        Igusidon_latis
+        Agarisuchus_gracila
+        Valrosaurus_gracili
+        Deitavenator_longensis
+        Branoraptor_mirabilorum
+        Talgapelta_feroxensis
+        Oropepelta_lati
+        Utekiraptor_angustis
+        Valrionyx_antiqua
+        Nansisaurus_alterna
+        Kanpesuchus_occidentis
+        Calnevenator_majoris
+        Utesicursor_gracilorum
+        Mutsilestes_majora
+        Nangaraptor_robusti
+        Deichocursor_latus
+        Hypgaraptor_minoris
+        Saurolestes_majorus
+        Sausisuchus_robusti
+        Mutlicursor_breviorum
+        Galtaceratops_parvorum
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-dense-03 = [&R] (((Rhakivenator_minora,Saukidon_novensis)'7',(((Vallalestes_gracilus,Rhamolestes_latorum,((Caldopelta_boreali,Calpesaurus_angustorum)'7',Branoraptor_angusta)'9')'7',((Kanneonyx_magnensis,Hypridon_brevii)'2',(Caltavenator_feroxus,Callilestes_latae)'3')'4')'1',(Deirolestes_angustoides,(Iguriraptor_majororum,Nantapelta_occidentensis)'6')'2',(Nanchoceratops_novae,Valtasaurus_orientorum)'3')'9',(Nanmoceratops_parvensis,(Oropevenator_latensis,Valliceratops_minoris)'7')'4')'7',((Saumoraptor_mirabilensis,Iguliceratops_australius)'3',((Eodotitan_feroxoides,(Orolapelta_longa,Valrovenator_latae)'1')'9',((Igusidon_latis,Agarisuchus_gracila)'8',Valrosaurus_gracili)'7')'3',((((Deitavenator_longensis,(Branoraptor_mirabilorum,Talgapelta_feroxensis)'3')'9',Oropepelta_lati)'3',((Utekiraptor_angustis,Valrionyx_antiqua)'4',(Nansisaurus_alterna,Kanpesuchus_occidentis)'2',(Calnevenator_majoris,Utesicursor_gracilorum)'6')'8')'3',(Mutsilestes_majora,((Nangaraptor_robusti,Deichocursor_latus)'7',Hypgaraptor_minoris,Saurolestes_majorus)'1')'5')'3')'8',(Sausisuchus_robusti,(Mutlicursor_breviorum,Galtaceratops_parvorum)'3')'8');
+END;

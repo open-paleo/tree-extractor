@@ -1,0 +1,33 @@
+#NEXUS
+
+[ synthetic case, seed 1002, style clean ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Hypnemimus_occidentoides
+        Bradoonyx_feroxi
+        Oroneceratops_novae
+        Mutlionyx_longensis
+        Taldocursor_longus
+        Nankititan_gracilus
+        Orolidon_gracila
+        Igumosaurus_majororum
+        Parlamimus_orienti
+        Kantaceratops_alternorum
+        Agachovenator_novis
+        Deipedon_majorensis
+        Valmopelta_parvorum
+        Igulatitan_novorum
+        Ororilestes_antiquorum
+        Leagadon_parvus
+        Nanroonyx_mirabilis
+        Mutnecursor_occidenti
+        Kanroceratops_occidentis
+        Mutpeonyx_occidenta
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-clean-03 = [&R] (((Hypnemimus_occidentoides,Bradoonyx_feroxi),Oroneceratops_novae),(((Mutlionyx_longensis,(((Taldocursor_longus,Nankititan_gracilus),Orolidon_gracila,Igumosaurus_majororum),Parlamimus_orienti)),(Kantaceratops_alternorum,(Agachovenator_novis,Deipedon_majorensis),Valmopelta_parvorum)),((((Igulatitan_novorum,Ororilestes_antiquorum),(Leagadon_parvus,Nanroonyx_mirabilis)),Mutnecursor_occidenti),(Kanroceratops_occidentis,Mutpeonyx_occidenta))));
+END;

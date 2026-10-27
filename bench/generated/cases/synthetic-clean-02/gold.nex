@@ -1,0 +1,27 @@
+#NEXUS
+
+[ synthetic case, seed 1001, style clean ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=14;
+    TAXLABELS
+        Kanlipelta_gracilis
+        Galmolestes_eleganensis
+        Foschoraptor_eleganorum
+        Eopecursor_gracila
+        Learititan_novensis
+        Galneonyx_orientoides
+        Fosdoceratops_latoides
+        Zaltamimus_breviae
+        Zalnesuchus_angustae
+        Brakivenator_antiqui
+        Sauripelta_minorus
+        Iguchoraptor_australiae
+        Talsicursor_robustus
+        Deitacursor_occidentensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-clean-02 = [&R] ((((Kanlipelta_gracilis,Galmolestes_eleganensis),Foschoraptor_eleganorum),(Eopecursor_gracila,Learititan_novensis)),Galneonyx_orientoides,(((Fosdoceratops_latoides,Zaltamimus_breviae,Zalnesuchus_angustae),((Brakivenator_antiqui,Sauripelta_minorus),Iguchoraptor_australiae)),(Talsicursor_robustus,Deitacursor_occidentensis)));
+END;

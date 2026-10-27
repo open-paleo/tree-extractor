@@ -1,0 +1,40 @@
+#NEXUS
+
+[ synthetic case, seed 1000, style clean ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=27;
+    TAXLABELS
+        Calnoraptor_brevius
+        Zaltamimus_borealae
+        Zalmodon_longus
+        Parnepelta_borealoides
+        Callimimus_lati
+        Rhapetitan_occidenta
+        Kanlacursor_brevius
+        Talkisaurus_borealae
+        Mutrionyx_parva
+        Valnovenator_magnae
+        Zalnelestes_feroxa
+        Kanpecursor_occidentensis
+        Parrititan_parvoides
+        Deirovenator_majorae
+        Learovenator_elegani
+        Galnedon_gracilis
+        Leaneceratops_magnus
+        Talnocursor_majoris
+        Zalchocursor_latorum
+        Braromimus_mirabilorum
+        Callatitan_alterna
+        Aganotitan_magnae
+        Parlavenator_angustus
+        Leatasaurus_longis
+        Talsionyx_magnensis
+        Fospeonyx_novus
+        Kankidon_antiqui
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-clean-01 = [&R] (((((Calnoraptor_brevius,Zaltamimus_borealae),(Zalmodon_longus,(Parnepelta_borealoides,(Callimimus_lati,Rhapetitan_occidenta)))),((Kanlacursor_brevius,Talkisaurus_borealae),Mutrionyx_parva)),(Valnovenator_magnae,(Zalnelestes_feroxa,Kanpecursor_occidentensis))),((Parrititan_parvoides,((Deirovenator_majorae,Learovenator_elegani),Galnedon_gracilis)),((Leaneceratops_magnus,Talnocursor_majoris),((Zalchocursor_latorum,Braromimus_mirabilorum,Callatitan_alterna),((Aganotitan_magnae,Parlavenator_angustus),Leatasaurus_longis)))),((Talsionyx_magnensis,Fospeonyx_novus),Kankidon_antiqui));
+END;

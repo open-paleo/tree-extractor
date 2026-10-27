@@ -1,0 +1,59 @@
+#NEXUS
+
+[ synthetic case, seed 1300, style dense ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=46;
+    TAXLABELS
+        Iguropelta_angusta
+        Nannomimus_alternus
+        Pardocursor_longis
+        Galchopelta_orienta
+        Mutrosuchus_majororum
+        Eokiraptor_majorensis
+        Utedolestes_latus
+        Eodomimus_mirabilensis
+        Rhasimimus_brevia
+        Orodoonyx_gracilensis
+        Deinesaurus_feroxa
+        Braromimus_parvus
+        Ororosaurus_alternoides
+        Rhasionyx_mirabilorum
+        Saurotitan_borealis
+        Utelalestes_magnoides
+        Saulavenator_robustorum
+        Igusicursor_gracilis
+        Bradodon_borealae
+        Parpecursor_orientensis
+        Hypladon_mirabiloides
+        Mutnoonyx_robustoides
+        Hypchocursor_magnoides
+        Rhadoceratops_parvoides
+        Orokisuchus_robustensis
+        Eolisuchus_feroxensis
+        Talkilestes_antiquoides
+        Galtadon_orientus
+        Brasidon_antiqui
+        Utenesuchus_minorensis
+        Galladon_orienta
+        Talpelestes_orienta
+        Galgaonyx_gracilorum
+        Mutlidon_eleganis
+        Orolaonyx_antiquae
+        Mutgasaurus_orientae
+        Zalnevenator_alternis
+        Rhalapelta_parva
+        Galridon_antiquorum
+        Braroceratops_longi
+        Mutmotitan_feroxensis
+        Calgadon_majororum
+        Orotamimus_robustis
+        Eolasaurus_antiquus
+        Taltasuchus_elegani
+        Mutsimimus_boreala
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-dense-01 = [&R] (((Iguropelta_angusta,Nannomimus_alternus)'7',((Pardocursor_longis,(Galchopelta_orienta,Mutrosuchus_majororum)'1')'8',Eokiraptor_majorensis)'5')'2',((Utedolestes_latus,Eodomimus_mirabilensis)'5',(Rhasimimus_brevia,(Orodoonyx_gracilensis,Deinesaurus_feroxa,Braromimus_parvus)'8')'6')'5',(((Ororosaurus_alternoides,(Rhasionyx_mirabilorum,Saurotitan_borealis)'2')'4',(((Utelalestes_magnoides,((Saulavenator_robustorum,Igusicursor_gracilis)'2',(Bradodon_borealae,Parpecursor_orientensis)'3')'6')'7',Hypladon_mirabiloides)'3',Mutnoonyx_robustoides)'6')'8',((((Hypchocursor_magnoides,Rhadoceratops_parvoides)'5',Orokisuchus_robustensis)'5',(((Eolisuchus_feroxensis,Talkilestes_antiquoides)'2',(Galtadon_orientus,((Brasidon_antiqui,Utenesuchus_minorensis)'6',Galladon_orienta)'4')'9')'5',Talpelestes_orienta)'5')'9',(Galgaonyx_gracilorum,Mutlidon_eleganis)'6',((((Orolaonyx_antiquae,Mutgasaurus_orientae)'6',Zalnevenator_alternis)'7',((Rhalapelta_parva,(Galridon_antiquorum,(Braroceratops_longi,Mutmotitan_feroxensis)'4')'1',Calgadon_majororum)'3',(Orotamimus_robustis,Eolasaurus_antiquus)'3')'6')'5',(Taltasuchus_elegani,Mutsimimus_boreala)'3')'2')'8')'5');
+END;

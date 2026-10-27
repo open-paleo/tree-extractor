@@ -1,0 +1,65 @@
+#NEXUS
+
+[ synthetic case, seed 1202, style timescaled ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=52;
+    TAXLABELS
+        Parpemimus_minora
+        Deichopelta_feroxensis
+        Parpelestes_parvoides
+        Valromimus_feroxis
+        Fossisaurus_angustensis
+        Mutsisaurus_novi
+        Zalpesaurus_mirabilis
+        Eonedon_novensis
+        Vallacursor_alternae
+        Zalnocursor_angustorum
+        Parnopelta_latoides
+        Ororiraptor_robustae
+        Mutlaonyx_angustus
+        Caldomimus_feroxus
+        Saulisuchus_gracilae
+        Agaridon_orientus
+        Orokipelta_angustae
+        Leadosaurus_orienta
+        Fospevenator_minoris
+        Pargaceratops_latorum
+        Hypmosaurus_magnis
+        Leachoonyx_longensis
+        Leapecursor_mirabilorum
+        Galnopelta_eleganoides
+        Learopelta_orientensis
+        Rhadomimus_australius
+        Valchocursor_orienti
+        Parnetitan_novorum
+        Orocholestes_gracilus
+        Rharopelta_borealorum
+        Agagaraptor_mirabilorum
+        Valchoraptor_australii
+        Sautaraptor_nova
+        Deigamimus_eleganoides
+        Calrosaurus_gracila
+        Parperaptor_graciloides
+        Mutlidon_novorum
+        Mutlapelta_robustus
+        Talsititan_breviae
+        Zallaraptor_brevius
+        Nannemimus_borealoides
+        Agachopelta_alternensis
+        Agasisuchus_magnensis
+        Nankivenator_latis
+        Leadovenator_mirabilis
+        Leanovenator_mirabilorum
+        Eolivenator_occidentae
+        Agakidon_angustorum
+        Nannosaurus_alterna
+        Mutlisuchus_minorensis
+        Orolititan_gracili
+        Bragavenator_parvensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-timescaled-03 = [&R] ((Parpemimus_minora,(Deichopelta_feroxensis,((Parpelestes_parvoides,((Valromimus_feroxis,Fossisaurus_angustensis)'2',(Mutsisaurus_novi,(Zalpesaurus_mirabilis,Eonedon_novensis)'5')'1/57')'2')'9',Vallacursor_alternae)'2/74')'6/74')'1/73',(Zalnocursor_angustorum,(Parnopelta_latoides,Ororiraptor_robustae)'3',((Mutlaonyx_angustus,Caldomimus_feroxus)'9',Saulisuchus_gracilae,(Agaridon_orientus,Orokipelta_angustae)'7/55')'7')'7/59',((((((Leadosaurus_orienta,(Fospevenator_minoris,Pargaceratops_latorum)'2')'6',(Hypmosaurus_magnis,Leachoonyx_longensis)'9/52')'4/72',Leapecursor_mirabilorum)'4/93',((((((Galnopelta_eleganoides,Learopelta_orientensis)'3/56',Rhadomimus_australius)'8',Valchocursor_orienti)'9/73',Parnetitan_novorum)'4/92',(Orocholestes_gracilus,Rharopelta_borealorum)'8/93')'8',(Agagaraptor_mirabilorum,Valchoraptor_australii)'3')'4')'4',(Sautaraptor_nova,(Deigamimus_eleganoides,Calrosaurus_gracila)'8/78')'4/60')'3',((Parperaptor_graciloides,(Mutlidon_novorum,((Mutlapelta_robustus,Talsititan_breviae,Zallaraptor_brevius)'1/87',Nannemimus_borealoides)'5')'8',((Agachopelta_alternensis,Agasisuchus_magnensis)'1/78',Nankivenator_latis)'4/89')'7',((Leadovenator_mirabilis,Leanovenator_mirabilorum)'1/99',((Eolivenator_occidentae,Agakidon_angustorum)'9/74',(Nannosaurus_alterna,Mutlisuchus_minorensis)'8/81')'9/75')'6/68')'7/72',Orolititan_gracili,Bragavenator_parvensis)'7/70');
+END;

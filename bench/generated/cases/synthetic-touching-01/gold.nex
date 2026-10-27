@@ -1,0 +1,39 @@
+#NEXUS
+
+[ synthetic case, seed 1400, style touching ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=26;
+    TAXLABELS
+        Mutnesaurus_majorae
+        Fossivenator_robusta
+        Zaltasuchus_robustae
+        Galdoonyx_orientis
+        Kankiceratops_brevioides
+        Mutchovenator_elegana
+        Zalliraptor_longensis
+        Orogacursor_mirabilensis
+        Talridon_parva
+        Galsidon_breviorum
+        Fosnecursor_eleganis
+        Leachosuchus_australia
+        Saugapelta_gracilorum
+        Learoonyx_occidentoides
+        Orochovenator_latensis
+        Oronesuchus_australiensis
+        Muttadon_alterni
+        Utemoceratops_angustis
+        Learilestes_majorensis
+        Mutpesuchus_latoides
+        Agarionyx_mirabili
+        Kantavenator_majorensis
+        Saularaptor_gracilae
+        Igusivenator_eleganorum
+        Deiliceratops_majora
+        Igukidon_antiquis
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-touching-01 = [&R] (Mutnesaurus_majorae,Fossivenator_robusta,(((Zaltasuchus_robustae,Galdoonyx_orientis)'5',((Kankiceratops_brevioides,(Mutchovenator_elegana,Zalliraptor_longensis)'7/99')'1/65',(Orogacursor_mirabilensis,(Talridon_parva,((Galsidon_breviorum,Fosnecursor_eleganis)'1',Leachosuchus_australia)'6/85')'9')'9/57')'1/92')'2/59',(Saugapelta_gracilorum,((Learoonyx_occidentoides,Orochovenator_latensis,Oronesuchus_australiensis)'2',((Muttadon_alterni,Utemoceratops_angustis)'1',Learilestes_majorensis,(Mutpesuchus_latoides,Agarionyx_mirabili)'6/97')'1')'1')'1',((Kantavenator_majorensis,Saularaptor_gracilae)'9/78',(Igusivenator_eleganorum,(Deiliceratops_majora,Igukidon_antiquis)'9/62')'3')'4/74')'4');
+END;

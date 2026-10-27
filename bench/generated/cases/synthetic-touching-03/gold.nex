@@ -1,0 +1,32 @@
+#NEXUS
+
+[ synthetic case, seed 1402, style touching ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=19;
+    TAXLABELS
+        Saulasaurus_borealoides
+        Orogaraptor_robustoides
+        Valtasaurus_australii
+        Brapepelta_angustis
+        Brachopelta_latensis
+        Rhagalestes_alternae
+        Kanlamimus_longoides
+        Saumodon_mirabilorum
+        Kannelestes_breviis
+        Muttaonyx_longus
+        Zallavenator_minoroides
+        Leasisaurus_magnis
+        Zalsisaurus_novorum
+        Igukiraptor_feroxi
+        Agacholestes_orientorum
+        Talsivenator_australiorum
+        Leachotitan_majororum
+        Valpesuchus_borealoides
+        Oroliraptor_borealus
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-touching-03 = [&R] (((Saulasaurus_borealoides,Orogaraptor_robustoides)'3',Valtasaurus_australii,(Brapepelta_angustis,Brachopelta_latensis)'4')'3/63',(((Rhagalestes_alternae,Kanlamimus_longoides,Saumodon_mirabilorum)'4/95',(Kannelestes_breviis,Muttaonyx_longus)'5',((Zallavenator_minoroides,((Leasisaurus_magnis,Zalsisaurus_novorum)'1',Igukiraptor_feroxi)'4')'7/50',Agacholestes_orientorum)'9')'3/89',(Talsivenator_australiorum,(Leachotitan_majororum,(Valpesuchus_borealoides,Oroliraptor_borealus)'8')'7/57')'4')'1');
+END;

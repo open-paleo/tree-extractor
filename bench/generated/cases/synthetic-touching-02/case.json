@@ -1,0 +1,6 @@
+{
+    "image": "../../images/synthetic-touching-02.jpg",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "synthetic touching seed 1401"
+}

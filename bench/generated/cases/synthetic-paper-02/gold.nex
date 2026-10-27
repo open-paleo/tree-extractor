@@ -1,0 +1,40 @@
+#NEXUS
+
+[ synthetic case, seed 1101, style paper ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=27;
+    TAXLABELS
+        Oronodon_mirabilorum
+        Hypgasaurus_gracilensis
+        Talrodon_eleganensis
+        Galperaptor_robusti
+        Rhatamimus_robusti
+        Deimocursor_magna
+        Learidon_feroxensis
+        Parnolestes_parvae
+        Mutsilestes_antiquus
+        Parlaonyx_latoides
+        Eogadon_gracilae
+        Lealaonyx_mirabili
+        Valmomimus_minoroides
+        Nannecursor_longa
+        Brarionyx_eleganoides
+        Galrocursor_australius
+        Mutkisuchus_antiquis
+        Rhalipelta_robustis
+        Saulalestes_feroxorum
+        Kanlacursor_mirabilus
+        Fosmosuchus_brevioides
+        Parsimimus_robustis
+        Deichoraptor_elegana
+        Mutmoraptor_brevioides
+        Hypkititan_antiquae
+        Talcholestes_longoides
+        Igudosuchus_antiquae
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-paper-02 = [&R] ((Oronodon_mirabilorum,(Hypgasaurus_gracilensis,Talrodon_eleganensis)'50')'54',((Galperaptor_robusti,((Rhatamimus_robusti,Deimocursor_magna)'56',(Learidon_feroxensis,(Parnolestes_parvae,Mutsilestes_antiquus)'76')'53',(Parlaonyx_latoides,(((Eogadon_gracilae,Lealaonyx_mirabili)'92',(Valmomimus_minoroides,Nannecursor_longa)'95')'85',Brarionyx_eleganoides)'59')'66')'89')'100',(Galrocursor_australius,((Mutkisuchus_antiquis,(Rhalipelta_robustis,Saulalestes_feroxorum)'96')'81',Kanlacursor_mirabilus,(Fosmosuchus_brevioides,Parsimimus_robustis,Deichoraptor_elegana)'77')'64',(Mutmoraptor_brevioides,(Hypkititan_antiquae,(Talcholestes_longoides,Igudosuchus_antiquae)'56')'51')'73')'89')'91');
+END;

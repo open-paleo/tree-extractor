@@ -1,0 +1,41 @@
+#NEXUS
+
+[ synthetic case, seed 1102, style paper ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Agarotitan_occidentus
+        Nantadon_gracilorum
+        Leariceratops_mirabili
+        Fosroraptor_boreali
+        Fossiraptor_feroxae
+        Taldoonyx_breviae
+        Vallisuchus_longi
+        Parrolestes_brevii
+        Deichosaurus_minorus
+        Rharicursor_minorae
+        Leapelestes_parvae
+        Galrotitan_magnus
+        Calmoonyx_minorae
+        Talrosuchus_orienti
+        Calsititan_borealae
+        Rhakititan_breviae
+        Eosicursor_breviis
+        Utesititan_feroxae
+        Utepetitan_magnoides
+        Nannoraptor_borealae
+        Fosnesuchus_alternae
+        Igurovenator_orientae
+        Calrosuchus_gracilorum
+        Zalkiraptor_alternensis
+        Sautasuchus_nova
+        Talkicursor_gracilus
+        Agaridon_eleganae
+        Kanpevenator_antiquae
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-paper-03 = [&R] (((Agarotitan_occidentus,Nantadon_gracilorum)'82',((((Leariceratops_mirabili,Fosroraptor_boreali)'82',Fossiraptor_feroxae)'71',((Taldoonyx_breviae,Vallisuchus_longi)'72',Parrolestes_brevii)'79',(Deichosaurus_minorus,Rharicursor_minorae,(Leapelestes_parvae,(Galrotitan_magnus,Calmoonyx_minorae,Talrosuchus_orienti)'65')'78',Calsititan_borealae)'96')'54',(((Rhakititan_breviae,Eosicursor_breviis,Utesititan_feroxae)'61',Utepetitan_magnoides,Nannoraptor_borealae,Fosnesuchus_alternae)'86',Igurovenator_orientae)'94')'97')'77',((Calrosuchus_gracilorum,Zalkiraptor_alternensis)'67',((Sautasuchus_nova,Talkicursor_gracilus)'85',Agaridon_eleganae,Kanpevenator_antiquae)'70')'73');
+END;

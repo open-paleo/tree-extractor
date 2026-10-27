@@ -9,8 +9,9 @@ dist/
 bench/images/
 bench/out/
 
-# Synthetic cases, regenerated deterministically by `npm run bench:generate`
-bench/generated/
+# Synthetic cases live in bench/generated and are committed: SVG text rendering depends on the
+# machine's fonts, so regenerating them elsewhere would not reproduce the same pixels. Run
+# `npm run bench:generate` only to add styles or seeds deliberately, and commit the result.
 
 # Tesseract language data downloaded on first run
 eng.traineddata

@@ -1,0 +1,19 @@
+{
+    "_comment": "Cases the benchmark must still report as identical. Add a case here once it is identical; removing one needs a reason in the pull request.",
+    "identical": [
+        "dieudonne2026b_fig13",
+        "longrich2010b_fig7",
+        "maidment2008a_fig11",
+        "synthetic-clean-01",
+        "synthetic-clean-02",
+        "synthetic-clean-03",
+        "synthetic-dense-01",
+        "synthetic-dense-02",
+        "synthetic-dense-03",
+        "synthetic-paper-01",
+        "synthetic-paper-02",
+        "synthetic-paper-03",
+        "synthetic-timescaled-03",
+        "synthetic-touching-03"
+    ]
+}

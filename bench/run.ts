@@ -23,6 +23,8 @@ type BenchCase = {
     gold: string;
     names: string;
     region?: Box;
+    license?: string;
+    attribution?: string;
 };
 
 /**
@@ -73,6 +75,8 @@ type SummaryRow = {
 const benchDir = path.dirname(url.fileURLToPath(import.meta.url));
 const outDir = path.join(benchDir, "out");
 const skipOcr = process.argv.includes("--no-ocr");
+const strict = process.argv.includes("--strict");
+const expectedIdentical = new Set(JSON.parse(fs.readFileSync(path.join(benchDir, "expectations.json"), "utf8")).identical as Array<string>);
 const filter = process.argv.find((argument) => argument.startsWith("--only=")) ?? null;
 const ocr = skipOcr ? null : await createTesseractOcr(tesseract);
 const caseDirs = new Array<string>();
@@ -111,6 +115,14 @@ for (const caseDir of caseDirs)
     if (!fs.existsSync(imagePath))
     {
         console.log(`${caseName}: image missing at ${imagePath}, skipped`);
+        continue;
+    }
+
+    // An image kept inside the case directory is committed, so it must carry a license that
+    // allows redistribution and the attribution that license requires.
+    if (imagePath.startsWith(caseDir) && (benchCase.license === undefined || benchCase.attribution === undefined))
+    {
+        console.log(`${caseName}: image is inside the case directory but case.json has no license and attribution; skipped`);
         continue;
     }
 
@@ -199,15 +211,35 @@ if (ocr !== null)
 
 console.log("");
 console.log("case".padEnd(32), "tips".padStart(9), "named".padStart(9), "splits".padStart(11), "extra".padStart(6), " identical");
+const regressions = new Array<string>();
 
 for (const row of summary)
 {
+    const expected = expectedIdentical.has(row.name);
+    let verdict = row.identical ? " yes" : " no";
+
+    if (expected && !row.identical)
+    {
+        verdict = " no  <-- expected identical";
+        regressions.push(row.name);
+    }
+    else if (!expected && row.identical)
+    {
+        verdict = " yes (add to expectations.json)";
+    }
+
     console.log(
         row.name.padEnd(32),
         `${row.tips}/${row.goldTips}`.padStart(9),
         `${row.named}/${row.goldTips}`.padStart(9),
         `${row.splits}/${row.goldSplits}`.padStart(11),
         `${row.extraSplits}`.padStart(6),
-        row.identical ? " yes" : " no",
+        verdict,
     );
+}
+
+if (strict && regressions.length > 0)
+{
+    console.log(`\n${regressions.length} case(s) expected identical are not: ${regressions.join(", ")}`);
+    process.exitCode = 1;
 }

@@ -1,0 +1,46 @@
+#NEXUS
+
+[ synthetic case, seed 1201, style timescaled ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=33;
+    TAXLABELS
+        Utechoceratops_minoroides
+        Valrodon_feroxus
+        Bracholestes_eleganus
+        Mutsivenator_longa
+        Caltacursor_australia
+        Lealiraptor_minoroides
+        Igulalestes_occidentorum
+        Nandoonyx_alterna
+        Calkidon_feroxa
+        Parnoceratops_antiquus
+        Valchovenator_parvis
+        Igurotitan_boreala
+        Eomopelta_gracilus
+        Igupetitan_gracili
+        Utegamimus_borealus
+        Agachomimus_feroxa
+        Bradocursor_angustensis
+        Mutrivenator_orientus
+        Agachoonyx_minori
+        Zalchotitan_longa
+        Rhapeonyx_latae
+        Callionyx_angustis
+        Kanlalestes_australia
+        Saurodon_magni
+        Orolaraptor_parva
+        Saumosuchus_borealae
+        Nantaceratops_nova
+        Rhalapelta_eleganoides
+        Fospevenator_antiqua
+        Nanlasaurus_occidenti
+        Nanlatitan_parvensis
+        Saulavenator_novensis
+        Mutgasuchus_eleganus
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-timescaled-02 = [&R] (Utechoceratops_minoroides,((Valrodon_feroxus,(Bracholestes_eleganus,(Mutsivenator_longa,Caltacursor_australia)'1/97',Lealiraptor_minoroides)'9/88')'4',Igulalestes_occidentorum)'8',((Nandoonyx_alterna,(Calkidon_feroxa,Parnoceratops_antiquus)'8/61',(Valchovenator_parvis,(Igurotitan_boreala,(((Eomopelta_gracilus,Igupetitan_gracili)'1/57',((Utegamimus_borealus,Agachomimus_feroxa)'4/70',Bradocursor_angustensis)'3')'7',((Mutrivenator_orientus,Agachoonyx_minori)'5',Zalchotitan_longa,Rhapeonyx_latae)'3/55')'4')'9/55')'4/57')'6/98',((Callionyx_angustis,(Kanlalestes_australia,Saurodon_magni)'9')'8',(Orolaraptor_parva,Saumosuchus_borealae)'8/55',(Nantaceratops_nova,Rhalapelta_eleganoides)'8')'4',(Fospevenator_antiqua,Nanlasaurus_occidenti,Nanlatitan_parvensis)'3/74',(Saulavenator_novensis,Mutgasuchus_eleganus)'5')'8');
+END;

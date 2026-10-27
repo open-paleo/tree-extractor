@@ -1,0 +1,47 @@
+#NEXUS
+
+[ synthetic case, seed 1200, style timescaled ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=34;
+    TAXLABELS
+        Rhamosaurus_occidentensis
+        Deidosuchus_antiquae
+        Deinecursor_minoroides
+        Nanpevenator_gracila
+        Calpecursor_novus
+        Igusivenator_parvis
+        Rhakiraptor_nova
+        Calpesuchus_magnoides
+        Talgasuchus_lati
+        Fosmomimus_antiquorum
+        Gallamimus_magnae
+        Deikidon_breviensis
+        Deiroraptor_breviae
+        Deigalestes_robusta
+        Rharolestes_feroxorum
+        Parnesuchus_parvensis
+        Kanlidon_occidentorum
+        Calnoraptor_majorae
+        Fosmolestes_gracilis
+        Deinolestes_eleganus
+        Agapelestes_alterna
+        Calkisaurus_parvorum
+        Mutgasuchus_parva
+        Parcholestes_eleganus
+        Nantacursor_parvorum
+        Rhasititan_eleganis
+        Kannopelta_mirabili
+        Zalmopelta_breviis
+        Galdosuchus_mirabila
+        Sausivenator_mirabili
+        Talkiceratops_antiquae
+        Zalpepelta_minoris
+        Orosiraptor_angustorum
+        Utedoraptor_nova
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-timescaled-01 = [&R] ((((Rhamosaurus_occidentensis,Deidosuchus_antiquae)'6',Deinecursor_minoroides)'2',(((Nanpevenator_gracila,(Calpecursor_novus,Igusivenator_parvis)'7',Rhakiraptor_nova)'3/92',Calpesuchus_magnoides)'5/99',(Talgasuchus_lati,(Fosmomimus_antiquorum,Gallamimus_magnae)'8/97')'5/72')'7')'4/65',(((Deikidon_breviensis,(Deiroraptor_breviae,Deigalestes_robusta)'7/76')'4',Rharolestes_feroxorum,Parnesuchus_parvensis)'4',Kanlidon_occidentorum,((Calnoraptor_majorae,Fosmolestes_gracilis)'1',(Deinolestes_eleganus,Agapelestes_alterna)'8/65')'6')'4',(Calkisaurus_parvorum,(Mutgasuchus_parva,Parcholestes_eleganus)'3/97',(Nantacursor_parvorum,Rhasititan_eleganis)'7')'2',(Kannopelta_mirabili,(((Zalmopelta_breviis,Galdosuchus_mirabila)'1/59',(Sausivenator_mirabili,Talkiceratops_antiquae,Zalpepelta_minoris)'6/99')'9/55',Orosiraptor_angustorum,Utedoraptor_nova)'7/62')'5/89');
+END;

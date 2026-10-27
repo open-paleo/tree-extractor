@@ -1,0 +1,75 @@
+#NEXUS
+
+[ synthetic case, seed 1301, style dense ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=62;
+    TAXLABELS
+        Utegaceratops_orienta
+        Nancholestes_alterna
+        Saunelestes_alternus
+        Zalromimus_orientae
+        Valrocursor_eleganensis
+        Hypgapelta_magna
+        Valtasuchus_eleganorum
+        Talroceratops_majorae
+        Orolatitan_robustoides
+        Kanlisaurus_feroxus
+        Deirionyx_nova
+        Zalneceratops_minoroides
+        Hypgaraptor_minorae
+        Eorivenator_antiquae
+        Zalchosuchus_angustus
+        Saulasaurus_robustis
+        Rhanepelta_parvis
+        Valroonyx_orientensis
+        Fosromimus_antiquus
+        Deirovenator_latoides
+        Leadotitan_majora
+        Talrititan_majororum
+        Vallilestes_antiquae
+        Hyppecursor_eleganorum
+        Deirolestes_australii
+        Zalsiceratops_mirabili
+        Zalpesaurus_australiis
+        Galnelestes_feroxensis
+        Zaldoonyx_angusti
+        Utegatitan_australiorum
+        Fosrosuchus_mirabili
+        Fosmosuchus_magnensis
+        Leatalestes_mirabilorum
+        Fospeonyx_alterni
+        Sauromimus_novi
+        Agadomimus_orienti
+        Leamoceratops_mirabilensis
+        Agagaceratops_angusta
+        Orosimimus_alternoides
+        Hypdoceratops_parvensis
+        Kanchomimus_parvi
+        Kanmodon_alterni
+        Saulamimus_minoroides
+        Aganotitan_robustis
+        Hyplidon_parvorum
+        Taltalestes_eleganoides
+        Rhagapelta_orientorum
+        Kantacursor_majorae
+        Agadotitan_angustensis
+        Saumomimus_alterna
+        Orolititan_occidentorum
+        Saumopelta_eleganoides
+        Zallacursor_borealis
+        Hypliceratops_orienti
+        Eorolestes_novi
+        Kanchosuchus_gracili
+        Kankisaurus_gracila
+        Leamotitan_boreala
+        Deilasuchus_brevius
+        Saulicursor_parvi
+        Agamopelta_borealus
+        Igurocursor_alternorum
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-dense-02 = [&R] (((((Utegaceratops_orienta,(Nancholestes_alterna,Saunelestes_alternus)'5')'8',(((Zalromimus_orientae,(Valrocursor_eleganensis,Hypgapelta_magna)'9')'9',Valtasuchus_eleganorum)'7',Talroceratops_majorae)'1')'3',(Orolatitan_robustoides,Kanlisaurus_feroxus)'7')'3',(((Deirionyx_nova,Zalneceratops_minoroides)'9',(Hypgaraptor_minorae,(Eorivenator_antiquae,Zalchosuchus_angustus)'4')'5')'4',((((Saulasaurus_robustis,(Rhanepelta_parvis,Valroonyx_orientensis)'6')'2',Fosromimus_antiquus)'7',(Deirovenator_latoides,Leadotitan_majora)'9')'8',Talrititan_majororum,Vallilestes_antiquae)'6')'9')'4',(((Hyppecursor_eleganorum,Deirolestes_australii)'4',(Zalsiceratops_mirabili,(Zalpesaurus_australiis,Galnelestes_feroxensis)'5')'4')'9',((((Zaldoonyx_angusti,Utegatitan_australiorum,((Fosrosuchus_mirabili,Fosmosuchus_magnensis)'8',Leatalestes_mirabilorum)'9')'8',((Fospeonyx_alterni,Sauromimus_novi)'9',(Agadomimus_orienti,Leamoceratops_mirabilensis)'9')'2',((Agagaceratops_angusta,((Orosimimus_alternoides,Hypdoceratops_parvensis)'2',Kanchomimus_parvi)'7')'8',((Kanmodon_alterni,(Saulamimus_minoroides,Aganotitan_robustis)'8')'2',((Hyplidon_parvorum,(((Taltalestes_eleganoides,(Rhagapelta_orientorum,Kantacursor_majorae)'6')'3',Agadotitan_angustensis)'2',(Saumomimus_alterna,Orolititan_occidentorum)'1')'9')'3',(Saumopelta_eleganoides,Zallacursor_borealis)'5')'5')'1')'5')'4',(Hypliceratops_orienti,Eorolestes_novi)'8')'3',(((Kanchosuchus_gracili,(Kankisaurus_gracila,Leamotitan_boreala)'3')'3',Deilasuchus_brevius)'6',(Saulicursor_parvi,(Agamopelta_borealus,Igurocursor_alternorum)'9')'5')'3')'4')'9');
+END;

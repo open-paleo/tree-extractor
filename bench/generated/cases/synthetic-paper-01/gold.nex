@@ -1,0 +1,52 @@
+#NEXUS
+
+[ synthetic case, seed 1100, style paper ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=39;
+    TAXLABELS
+        Deipeceratops_magna
+        Parnesuchus_gracilus
+        Kanpecursor_borealorum
+        Zalgaonyx_parvoides
+        Fosmoraptor_magnae
+        Fosrisuchus_borealensis
+        Parlaraptor_parvi
+        Nanlasaurus_minororum
+        Mutsimimus_longorum
+        Mutchovenator_mirabili
+        Mutchomimus_occidenta
+        Igukivenator_orientensis
+        Parrolestes_majoroides
+        Deisivenator_borealis
+        Kanmoraptor_majorus
+        Mutlacursor_magni
+        Igukiraptor_orienta
+        Sauriraptor_alterni
+        Talrilestes_minora
+        Valdodon_borealis
+        Fostaceratops_elegana
+        Leadolestes_borealensis
+        Tallasaurus_orientorum
+        Deichomimus_orientis
+        Agamoceratops_robusti
+        Deinoceratops_orientoides
+        Sauridon_latorum
+        Mutpesaurus_occidenti
+        Galtatitan_brevia
+        Gallasuchus_angustorum
+        Mutneceratops_mirabilensis
+        Rhamotitan_borealis
+        Igurisaurus_novae
+        Leasisaurus_longorum
+        Kanpeonyx_robusta
+        Saugaceratops_parvis
+        Saurotitan_eleganensis
+        Parperaptor_breviorum
+        Deigaonyx_majora
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-paper-01 = [&R] (((Deipeceratops_magna,(Parnesuchus_gracilus,((Kanpecursor_borealorum,Zalgaonyx_parvoides,(Fosmoraptor_magnae,Fosrisuchus_borealensis)'63')'93',Parlaraptor_parvi,Nanlasaurus_minororum)'82')'81',(Mutsimimus_longorum,(Mutchovenator_mirabili,(Mutchomimus_occidenta,Igukivenator_orientensis)'88')'83',(Parrolestes_majoroides,(((Deisivenator_borealis,Kanmoraptor_majorus)'54',Mutlacursor_magni)'76',Igukiraptor_orienta)'80')'93')'77')'82',(Sauriraptor_alterni,(((Talrilestes_minora,Valdodon_borealis)'84',(Fostaceratops_elegana,Leadolestes_borealensis)'62')'62',(Tallasaurus_orientorum,(Deichomimus_orientis,Agamoceratops_robusti,Deinoceratops_orientoides,Sauridon_latorum)'76')'56')'82')'77')'62',(((Mutpesaurus_occidenti,Galtatitan_brevia)'56',Gallasuchus_angustorum)'94',(Mutneceratops_mirabilensis,(Rhamotitan_borealis,Igurisaurus_novae,Leasisaurus_longorum)'53')'89')'65',(Kanpeonyx_robusta,(Saugaceratops_parvis,Saurotitan_eleganensis,(Parperaptor_breviorum,Deigaonyx_majora)'89')'86')'80');
+END;

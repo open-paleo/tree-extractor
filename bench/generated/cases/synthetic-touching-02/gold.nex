@@ -1,0 +1,45 @@
+#NEXUS
+
+[ synthetic case, seed 1401, style touching ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=32;
+    TAXLABELS
+        Rhalacursor_majoris
+        Nanlivenator_angustorum
+        Agachotitan_robustorum
+        Nanchopelta_alternus
+        Ororititan_australiae
+        Mutchoceratops_antiquoides
+        Valromimus_breviis
+        Valpeceratops_boreala
+        Eodotitan_elegana
+        Valmolestes_latae
+        Galtasaurus_robusta
+        Uteroraptor_majoroides
+        Mutlasaurus_australiensis
+        Oroliraptor_elegani
+        Nandopelta_boreala
+        Deilititan_magnorum
+        Partamimus_angustensis
+        Hyplilestes_lati
+        Saulisaurus_alternae
+        Galdoonyx_parvoides
+        Calperaptor_robustus
+        Leamoonyx_brevia
+        Valtasaurus_robustorum
+        Galmoraptor_mirabiloides
+        Fosgaceratops_elegana
+        Partavenator_antiquoides
+        Utepevenator_australii
+        Sautaceratops_australioides
+        Callimimus_parva
+        Kandolestes_mirabilensis
+        Nanpelestes_angusta
+        Agarititan_latensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE synthetic-touching-02 = [&R] ((((Rhalacursor_majoris,Nanlivenator_angustorum)'8',(Agachotitan_robustorum,Nanchopelta_alternus)'2/85',((Ororititan_australiae,Mutchoceratops_antiquoides)'5/79',((Valromimus_breviis,(Valpeceratops_boreala,(Eodotitan_elegana,Valmolestes_latae)'3',(Galtasaurus_robusta,Uteroraptor_majoroides,Mutlasaurus_australiensis)'9')'4/50',Oroliraptor_elegani)'2',(Nandopelta_boreala,Deilititan_magnorum)'9/58')'2')'6/79')'3',Partamimus_angustensis,Hyplilestes_lati)'6',((Saulisaurus_alternae,(Galdoonyx_parvoides,Calperaptor_robustus)'1')'7',(((Leamoonyx_brevia,Valtasaurus_robustorum)'9/67',Galmoraptor_mirabiloides)'3',Fosgaceratops_elegana)'1/93')'7/61',((Partavenator_antiquoides,Utepevenator_australii)'2/80',((Sautaceratops_australioides,Callimimus_parva)'7/53',(Kandolestes_mirabilensis,(Nanpelestes_angusta,Agarititan_latensis)'4/96')'7')'7/77')'1/59');
+END;

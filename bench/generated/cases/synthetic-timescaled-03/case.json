@@ -1,0 +1,6 @@
+{
+    "image": "../../images/synthetic-timescaled-03.jpg",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "synthetic timescaled seed 1202"
+}

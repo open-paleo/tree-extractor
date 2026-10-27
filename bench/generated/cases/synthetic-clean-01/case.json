@@ -1,0 +1,6 @@
+{
+    "image": "../../images/synthetic-clean-01.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "synthetic clean seed 1000"
+}
