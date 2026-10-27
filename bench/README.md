@@ -30,3 +30,10 @@ lists. Generation is deterministic from `--seed` (default 1) for a given machine
 rendering depends on the fonts installed, so the generated images are committed and regenerated
 only deliberately. `npm run bench -- --only=paper` restricts a run to matching case names. The
 styles are in `bench/synthetic/generate.ts`; a new style is one more preset there.
+
+## Held-out cases
+
+`bench/holdout/cases/` holds figures the pipeline was never tuned on, with a name list but no
+gold tree. `npm run bench:holdout` runs them cold and prints, per case, how many tips the tree
+has, how many matched a listed name, and the quality-check findings, without scoring. Once a
+case has been checked and a gold tree written, it moves to `bench/cases/`.

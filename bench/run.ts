@@ -10,7 +10,8 @@ import * as path from "node:path";
 import * as url from "node:url";
 import * as tesseract from "tesseract.js";
 
-import type { Box, CladeMark, FigureProfile, LayoutKind, SupportLabelStyle } from "../src/core/types.ts";
+import type { Box, CladeMark, ExtractionDocument, FigureProfile, LayoutKind, SupportLabelStyle } from "../src/core/types.ts";
+import { collectConnected } from "../src/core/tree.ts";
 import { formatProfile } from "../src/core/profile.ts";
 import { extractTree, formatTimings } from "../src/core/pipeline.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
@@ -21,7 +22,7 @@ import { loadImage, writeOverlay } from "../src/cli/image.ts";
 
 type BenchCase = {
     image: string;
-    gold: string;
+    gold?: string;
     names: string;
     region?: Box;
     license?: string;
@@ -108,6 +109,109 @@ function checkProfile(expected: ExpectedProfile, profile: FigureProfile): Profil
 }
 
 /**
+ * Whether a value is a box with four finite numbers.
+ *
+ * @param value - Value from case.json.
+ * @returns True for a box.
+ */
+function isBox(value: unknown): value is Box
+{
+    if (typeof value !== "object" || value === null)
+    {
+        return false;
+    }
+
+    const box = value as Record<string, unknown>;
+
+    return ["x0", "y0", "x1", "y1"].every((key) => typeof box[key] === "number" && Number.isFinite(box[key]));
+}
+
+/**
+ * One line of the cold-run table: a case with no gold tree.
+ */
+type ColdRow = {
+    name: string;
+    tips: number;
+    inTree: number;
+    matched: number;
+    names: number;
+    warnings: number;
+    errors: number;
+};
+
+const coldRows = new Array<ColdRow>();
+
+/**
+ * Reports a case run without a gold tree: what was found, how many names were matched, and
+ * what the quality checks said, so that a reader can judge it before a gold tree exists.
+ *
+ * @param caseName - Case name.
+ * @param document - Extraction document.
+ * @param names - The paper's name list.
+ */
+function reportColdRun(caseName: string, document: ExtractionDocument, names: Array<string>): void
+{
+    const connected = collectConnected(document);
+    let inTree = 0;
+    let matched = 0;
+    const matchedNames = new Set<string>();
+
+    for (const tip of document.tips)
+    {
+        if (!connected.has(tip.id))
+        {
+            continue;
+        }
+
+        inTree++;
+
+        if (tip.match !== null && tip.match.accepted)
+        {
+            matched++;
+            matchedNames.add(tip.match.name);
+        }
+    }
+
+    let warnings = 0;
+    let errors = 0;
+
+    for (const issue of document.qc)
+    {
+        if (issue.severity === "warning")
+        {
+            warnings++;
+        }
+        else if (issue.severity === "error")
+        {
+            errors++;
+        }
+    }
+
+    coldRows.push({ name: caseName, tips: document.tips.length, inTree, matched, names: names.length, warnings, errors });
+
+    for (const line of formatProfile(document.profile))
+    {
+        console.log(`profile ${line}`);
+    }
+
+    console.log(`cold: ${inTree} tips in the tree (${document.tips.length} found), ${matched} matched names of ${names.length} listed, ${warnings} warning(s), ${errors} error(s)`);
+    const unmatchedListed = names.filter((name) => !matchedNames.has(name));
+
+    if (unmatchedListed.length > 0)
+    {
+        console.log(`  listed names not matched: ${unmatchedListed.join(", ")}`);
+    }
+
+    for (const issue of document.qc)
+    {
+        if (issue.severity !== "info")
+        {
+            console.log(`  ${issue.severity} ${issue.code}: ${issue.message}`);
+        }
+    }
+}
+
+/**
  * One line of the closing summary table.
  */
 type SummaryRow = {
@@ -168,7 +272,10 @@ const knownNamesPath = path.join(benchDir, "..", "names", "known-taxa.txt");
 const knownNames = fs.existsSync(knownNamesPath) ? fs.readFileSync(knownNamesPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0) : new Array<string>();
 const caseDirs = new Array<string>();
 
-for (const root of [path.join(benchDir, "cases"), path.join(benchDir, "generated", "cases")])
+const holdout = process.argv.includes("--holdout");
+const roots = holdout ? [path.join(benchDir, "holdout", "cases")] : [path.join(benchDir, "cases"), path.join(benchDir, "generated", "cases")];
+
+for (const root of roots)
 {
     if (!fs.existsSync(root))
     {
@@ -199,6 +306,13 @@ for (const caseDir of caseDirs)
     const benchCase = JSON.parse(fs.readFileSync(casePath, "utf8")) as BenchCase;
     const imagePath = path.resolve(caseDir, benchCase.image);
 
+    // A region must be a box; a case that describes the region in words is run whole.
+    if (benchCase.region !== undefined && !isBox(benchCase.region))
+    {
+        console.log(`${caseName}: region is not a box (${JSON.stringify(benchCase.region)}); the whole image is analyzed`);
+        benchCase.region = undefined;
+    }
+
     if (!fs.existsSync(imagePath))
     {
         console.log(`${caseName}: image missing at ${imagePath}, skipped`);
@@ -223,15 +337,31 @@ for (const caseDir of caseDirs)
         }
     }
 
-    const goldText = extractFirstTreeFromNexus(fs.readFileSync(path.resolve(caseDir, benchCase.gold), "utf8"));
+    // A case without a gold tree is run cold: its extraction is reported, not scored.
+    const goldPath = benchCase.gold === undefined ? null : path.resolve(caseDir, benchCase.gold);
+    const goldText = goldPath === null || !fs.existsSync(goldPath) ? null : extractFirstTreeFromNexus(fs.readFileSync(goldPath, "utf8"));
 
-    if (goldText === null)
+    if (goldPath !== null && goldText === null)
     {
         console.log(`${caseName}: no tree in gold file, skipped`);
         continue;
     }
 
-    const document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null });
+    let document: ExtractionDocument;
+
+    try
+    {
+        document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null });
+    }
+    catch (error)
+    {
+        // One case must not stop the run; a crash is a finding like any other.
+        console.log(`== ${caseName}`);
+        console.log(`failed: ${error instanceof Error ? error.message : String(error)}`);
+        coldRows.push({ name: caseName, tips: 0, inTree: 0, matched: 0, names: names.length, warnings: 0, errors: 1 });
+        continue;
+    }
+
     const newick = formatDocumentAsNewick(document);
     const caseOut = path.join(outDir, caseName);
     fs.mkdirSync(caseOut, { recursive: true });
@@ -245,6 +375,12 @@ for (const caseDir of caseDirs)
     if (newick === null)
     {
         console.log("no tree extracted");
+        continue;
+    }
+
+    if (goldText === null)
+    {
+        reportColdRun(caseName, document, names);
         continue;
     }
 
@@ -315,6 +451,17 @@ for (const caseDir of caseDirs)
 if (ocr !== null)
 {
     await ocr.terminate();
+}
+
+if (coldRows.length > 0)
+{
+    console.log("");
+    console.log("cold run (no gold tree)".padEnd(32), "in tree".padStart(9), "found".padStart(7), "matched".padStart(9), "warn".padStart(6), "error".padStart(6));
+
+    for (const row of coldRows)
+    {
+        console.log(row.name.padEnd(32), `${row.inTree}`.padStart(9), `${row.tips}`.padStart(7), `${row.matched}/${row.names}`.padStart(9), `${row.warnings}`.padStart(6), `${row.errors}`.padStart(6));
+    }
 }
 
 console.log("");

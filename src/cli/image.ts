@@ -15,7 +15,9 @@ import { getTipDisplayName } from "../core/newick.ts";
  */
 export async function loadImage(filePath: string): Promise<RgbaImage>
 {
-    const { data, info } = await sharp(filePath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    // Grayscale and 1-bit images come back with one or two channels unless converted first;
+    // everything downstream expects four.
+    const { data, info } = await sharp(filePath).toColourspace("srgb").ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 
     return { width: info.width, height: info.height, data: new Uint8ClampedArray(data.buffer, data.byteOffset, data.byteLength) };
 }

@@ -22,7 +22,8 @@
     "test": "node --experimental-strip-types --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
     "web": "npm run build:web && node --experimental-strip-types scripts/serve.ts",
-    "names:import": "node --experimental-strip-types scripts/import-known-names.ts"
+    "names:import": "node --experimental-strip-types scripts/import-known-names.ts",
+    "bench:holdout": "node --experimental-strip-types bench/run.ts --holdout"
   },
   "dependencies": {
     "sharp": "^0.35.5",
