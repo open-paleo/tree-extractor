@@ -1,0 +1,37 @@
+{
+  "name": "@open-paleo/tree-extractor",
+  "version": "0.1.0",
+  "description": "Extract phylogenetic trees from figure images into Newick and Nexus",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "tree-extractor": "./src/cli/main.ts"
+  },
+  "scripts": {
+    "bench": "node --experimental-strip-types bench/run.ts",
+    "build:web": "tsc -p tsconfig.build.json",
+    "extract": "node --experimental-strip-types src/cli/main.ts",
+    "lint:fix": "eslint src/ test/ bench/ scripts/ --fix",
+    "lint": "eslint src/ test/ bench/ scripts/",
+    "spellcheck": "cspell \"src/**/*.ts\" \"test/**/*.ts\" \"bench/**/*.ts\" \"*.md\" \"docs/*.md\" --no-progress",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "web": "npm run build:web && node --experimental-strip-types scripts/serve.ts"
+  },
+  "dependencies": {
+    "sharp": "^0.34.3",
+    "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/node": "^22.19.15",
+    "cspell": "8.17.5",
+    "eslint": "9.18.0",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.22.0"
+  }
+}

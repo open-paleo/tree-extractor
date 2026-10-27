@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tree Extractor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Tree Extractor</h1>
+        <p>Drop a figure of a rectangular phylogenetic tree. Everything runs in your browser.</p>
+    </header>
+    <main>
+        <section class="controls">
+            <label class="file">
+                <input type="file" id="file" accept="image/*">
+                <span>Choose an image</span>
+            </label>
+            <label><input type="checkbox" id="ocr" checked> Read labels (OCR)</label>
+            <label class="names">
+                <span>Known taxon names, one per line (optional)</span>
+                <textarea id="names" rows="4" placeholder="Haya griva&#10;Jeholosaurus shangyuanensis"></textarea>
+            </label>
+            <button id="run" disabled>Extract tree</button>
+            <p id="status" class="status">No image loaded.</p>
+            <fieldset class="layers">
+                <legend>Show</legend>
+                <label><input type="checkbox" data-layer="segments" checked> line art</label>
+                <label><input type="checkbox" data-layer="text" checked> text</label>
+                <label><input type="checkbox" data-layer="nodes" checked> nodes</label>
+                <label><input type="checkbox" data-layer="tips" checked> tips</label>
+            </fieldset>
+        </section>
+        <section class="view">
+            <div class="canvas-wrap"><canvas id="canvas"></canvas></div>
+        </section>
+        <section class="results">
+            <h2>Tips</h2>
+            <p class="hint">Edit a name to correct it; the tree below updates.</p>
+            <ol id="tips"></ol>
+            <h2>Quality checks</h2>
+            <ul id="qc"></ul>
+            <h2>Newick</h2>
+            <textarea id="newick" rows="6" readonly></textarea>
+            <div class="buttons">
+                <button id="download-newick" disabled>Download .nwk</button>
+                <button id="download-nexus" disabled>Download .nex</button>
+                <button id="download-json" disabled>Download document .json</button>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="/dist/web/app.js"></script>
+</body>
+</html>

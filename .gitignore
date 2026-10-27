@@ -1,0 +1,21 @@
+# NodeJS
+node_modules/
+
+# Compiled browser bundle, produced by `npm run build:web`
+dist/
+
+# Benchmark inputs and outputs. Figure images are copyrighted by their publishers and are never
+# committed; see bench/README.md for how to supply them locally.
+bench/images/
+bench/out/
+
+# Tesseract language data downloaded on first run
+eng.traineddata
+*.traineddata.gz
+
+# Local environment / secrets
+.env
+.env.*
+
+# MacOS
+.DS_Store

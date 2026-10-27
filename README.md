@@ -1,0 +1,65 @@
+# tree-extractor
+
+Extracts phylogenetic trees from figure images and writes them as Newick and Nexus. Built for the
+[Open Paleo](https://github.com/open-paleo) project, where published cladograms are the only
+machine-unreadable source for many fossil groups, but general enough for any rectangular tree
+figure.
+
+Everything runs in TypeScript with no native image library and no machine-learning model: the
+figure is reduced to dark pixels, its straight lines are traced into a graph, and labels are read with
+[Tesseract.js](https://github.com/naptha/tesseract.js) and matched against a list of taxon names
+when one is supplied. The same core runs in the browser and in Node, so the interactive viewer and
+the batch command line give identical results.
+
+## Status
+
+Early. On the first benchmark figure (a 52-taxon time-scaled consensus tree with several
+polytomies, colored clade boxes, range bars and small italic labels) the tree is recovered exactly,
+with every tip named, fully automatically. Expect other figure styles to need work; see
+`docs/design.md` for the approach and its known gaps.
+
+## Use
+
+Requires Node 24 or later.
+
+```sh
+npm install
+
+# Batch: one image in, Newick + Nexus + JSON document out, with a QC report on stdout
+npm run extract -- extract figure.png --names taxa.txt --out results/ --overlay
+
+# Interactive: build the browser bundle and serve the viewer at http://localhost:8787/src/web/
+npm run web
+```
+
+`--names` is a text file with one taxon name per line (for example the taxa of the paper's
+character matrix). OCR output is fuzzy-matched against it, which turns imperfect reads of small
+italic text into exact names. Without a list the raw OCR text is kept and uncertain tips are
+flagged.
+
+The viewer runs the same pipeline on a dropped image, draws what it found over the figure, lets
+you correct tip names, and downloads the tree. Structural correction (adding, removing and
+re-parenting nodes) is the next milestone.
+
+## Scope
+
+First release: rectangular trees (cladograms and phylograms) with the root on the left and tips
+on the right, tip labels, support values at nodes, polytomies. Not yet: slanted or circular trees,
+branch lengths, time-axis calibration.
+
+## Development
+
+```sh
+npm test            # unit tests (node:test)
+npm run bench       # benchmark against gold trees; see bench/README.md for supplying images
+npm run lint        # eslint, same style as the other Open Paleo repositories
+npm run typecheck
+```
+
+Code style follows the Open Paleo conventions (Allman braces, four-space indent, `type` over
+`interface`, no abbreviated names, JSDoc on everything exported).
+
+## License
+
+MIT. Tesseract.js is Apache-2.0; sharp (used only by the command line for image decoding) is
+Apache-2.0.
