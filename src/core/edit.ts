@@ -469,6 +469,7 @@ export function addTip(document: ExtractionDocument, x: number, y: number): Edit
         label: null,
         match: null,
         source: "manual",
+        age: null,
     };
     assignNearestTextLine(document, tip);
     document.tips.push(tip);
@@ -538,6 +539,7 @@ export function addNode(document: ExtractionDocument, x: number, y0: number, y1:
         textLine: null,
         label: null,
         source: "manual",
+        age: null,
     };
 
     for (const childId of taken)

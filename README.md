@@ -57,8 +57,9 @@ selected tip or node, dissolving a node into its parent. Re-parenting by drag is
 ## Scope
 
 First release: rectangular trees (cladograms and phylograms) with the root on the left and tips
-on the right, tip labels, support values at nodes, polytomies. Not yet: slanted or circular trees,
-branch lengths, time-axis calibration.
+on the right, tip labels, support values at nodes, polytomies. When a time axis with readable
+numbers is found, nodes and tips get ages and the Newick carries branch lengths in the axis's
+units. Not yet: slanted or circular trees, branch lengths without an axis.
 
 ## Development
 

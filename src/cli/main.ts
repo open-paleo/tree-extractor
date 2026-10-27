@@ -2,7 +2,7 @@
 /**
  * Command-line entry point.
  *
- *   tree-extractor extract <image> [--names <file>] [--out <dir>] [--no-ocr] [--overlay] [--profile key=value,...]
+ *   tree-extractor extract <image> [--names <file>] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--profile key=value,...]
  */
 
 import * as fs from "node:fs";
@@ -43,7 +43,7 @@ function parseArguments(argv: Array<string>): Arguments
             const name = argument.slice(2);
             const next = argv[index + 1];
 
-            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help")
+            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help" && name !== "no-lengths")
             {
                 flags.set(name, next);
                 index++;
@@ -75,6 +75,7 @@ function printUsage(): void
         "  --out <dir>      Output directory (default: current directory)",
         "  --crop x,y,w,h   Analyze only this region of the image (pixels)",
         "  --no-ocr         Trace the tree but do not read labels",
+        "  --no-lengths     Leave branch lengths out of the Newick even when a time axis was read",
         "  --profile k=v    Fix profile values instead of measuring them, comma separated:",
         "                   layout, supportLabels, tipsAligned, italic, widenText, condensing",
         "  --overlay        Also write <name>.overlay.png showing what was detected",
@@ -211,7 +212,7 @@ async function runExtract(parsed: Arguments): Promise<number>
 
     const stem = path.join(outDir, path.basename(imagePath, path.extname(imagePath)));
     fs.writeFileSync(`${stem}.json`, JSON.stringify(document, null, 2));
-    const newick = formatDocumentAsNewick(document);
+    const newick = formatDocumentAsNewick(document, { branchLengths: !parsed.flags.has("no-lengths") });
 
     if (newick !== null)
     {

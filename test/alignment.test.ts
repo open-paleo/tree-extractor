@@ -19,12 +19,12 @@ function createAlignedDocument(): ExtractionDocument
     for (let index = 0; index < 6; index++)
     {
         const y = 20 + index * 20;
-        tips.push({ id: `t${index + 1}`, x: 300, y, parent: "n1", textLine: `l${index + 1}`, label: null, match: null, source: "traced" });
+        tips.push({ id: `t${index + 1}`, x: 300, y, parent: "n1", textLine: `l${index + 1}`, label: null, match: null, source: "traced", age: null });
         textLines.push({ id: `l${index + 1}`, box: { x0: 310, y0: y - 6, x1: 400, y1: y + 6 }, glyphCount: 10, role: "tip", ocr: null });
     }
 
     textLines.push({ id: "l7", box: { x0: 310, y0: 134, x1: 400, y1: 146 }, glyphCount: 10, role: "unassigned", ocr: null });
-    const root: TreeNode = { id: "n1", x: 100, y0: 10, y1: 150, attachY: null, parent: null, children: tips.map((tip) => tip.id), textLine: null, label: null, source: "traced" };
+    const root: TreeNode = { id: "n1", x: 100, y0: 10, y1: 150, attachY: null, parent: null, children: tips.map((tip) => tip.id), textLine: null, label: null, source: "traced", age: null };
     const document: ExtractionDocument = {
         version: 1,
         image: { width: 420, height: 160, source: null, region: null },

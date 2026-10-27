@@ -18,7 +18,7 @@ import { createEmptyProfile } from "../src/core/profile.ts";
  */
 function createNode(id: string, x: number, y0: number, y1: number, children: Array<string>, parent: string | null): TreeNode
 {
-    return { id, x, y0, y1, attachY: null, parent, children, textLine: null, label: null, source: "traced" };
+    return { id, x, y0, y1, attachY: null, parent, children, textLine: null, label: null, source: "traced", age: null };
 }
 
 /**
@@ -33,7 +33,7 @@ function createNode(id: string, x: number, y0: number, y1: number, children: Arr
  */
 function createTip(id: string, x: number, y: number, parent: string, textLine: string | null): Tip
 {
-    return { id, x, y, parent, textLine, label: null, match: null, source: "traced" };
+    return { id, x, y, parent, textLine, label: null, match: null, source: "traced", age: null };
 }
 
 /**

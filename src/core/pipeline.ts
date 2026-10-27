@@ -7,7 +7,7 @@ import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverri
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
-import { calibrateAxis } from "./timescale.ts";
+import { assignAges, calibrateAxis } from "./timescale.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -898,6 +898,11 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
         if (document.profile.timeScaled.axis !== null)
         {
             document.profile.timeScaled.calibration = await calibrateAxis(document, textInk, gray, options.ocr, glyphHeight, thickness);
+
+            if (document.profile.timeScaled.calibration !== null)
+            {
+                document.qc.push(...assignAges(document, document.profile.timeScaled.calibration));
+            }
         }
 
         recordLap("ocr");

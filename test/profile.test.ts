@@ -16,7 +16,7 @@ import { applyProfileOverrides, chooseCondensing, classifySupportLabel, createEm
  */
 function createNode(id: string, y0: number, y1: number, attachY: number): TreeNode
 {
-    return { id, x: 100, y0, y1, attachY, parent: "n0", children: [], textLine: null, label: null, source: "traced" };
+    return { id, x: 100, y0, y1, attachY, parent: "n0", children: [], textLine: null, label: null, source: "traced", age: null };
 }
 
 /**
@@ -27,8 +27,8 @@ function createNode(id: string, y0: number, y1: number, attachY: number): TreeNo
  */
 function createDocumentWithTips(xs: Array<number>): ExtractionDocument
 {
-    const tips = xs.map((x, index) => ({ id: `t${index + 1}`, x, y: index * 10, parent: "n1", textLine: null, label: null, match: null, source: "traced" as const }));
-    const root: TreeNode = { id: "n1", x: 10, y0: 0, y1: xs.length * 10, attachY: null, parent: null, children: tips.map((tip) => tip.id), textLine: null, label: null, source: "traced" };
+    const tips = xs.map((x, index) => ({ id: `t${index + 1}`, x, y: index * 10, parent: "n1", textLine: null, label: null, match: null, source: "traced" as const, age: null }));
+    const root: TreeNode = { id: "n1", x: 10, y0: 0, y1: xs.length * 10, attachY: null, parent: null, children: tips.map((tip) => tip.id), textLine: null, label: null, source: "traced", age: null };
 
     return {
         version: 1,

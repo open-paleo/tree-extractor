@@ -117,6 +117,11 @@ export function translateDocument(document: ExtractionDocument, dx: number, dy: 
         document.profile.tipAlignment.x += dx;
     }
 
+    if (document.profile.timeScaled.calibration !== null)
+    {
+        document.profile.timeScaled.calibration.originX += dx;
+    }
+
     for (const branch of document.branches)
     {
         branch.x0 += dx;

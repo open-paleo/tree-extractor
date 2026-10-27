@@ -228,6 +228,11 @@ export type Tip = {
      * Who produced this tip.
      */
     source: Provenance;
+
+    /**
+     * Age at the tip's branch end in the units of the time axis, or null without a calibration.
+     */
+    age: number | null;
 };
 
 /**
@@ -283,6 +288,11 @@ export type TreeNode = {
      * Who produced this node.
      */
     source: Provenance;
+
+    /**
+     * Age of the junction in the units of the time axis, or null without a calibration.
+     */
+    age: number | null;
 };
 
 /**

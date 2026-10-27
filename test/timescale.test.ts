@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import type { ExtractionDocument, GrayImage, Mask, Segment } from "../src/core/types.ts";
-import { fitAxisCalibration, findAxis, parseAxisNumber } from "../src/core/timescale.ts";
+import { assignAges, computeAxisValue, fitAxisCalibration, findAxis, parseAxisNumber } from "../src/core/timescale.ts";
+import { formatDocumentAsNewick } from "../src/core/newick.ts";
 import { rotateGrayQuarter } from "../src/core/raster.ts";
 import { createEmptyProfile } from "../src/core/profile.ts";
 
@@ -104,4 +105,27 @@ test("an axis is found from the ticks hanging below its line", () =>
     const fromTicks = findAxis(document, ink, 10, 2);
     assert.ok(fromTicks !== null);
     assert.equal(fromTicks.ticks.length, 8);
+});
+
+test("ages follow the calibration and branch lengths reach the Newick", () =>
+{
+    const calibration = { originX: 2700, pixelsPerUnit: -20, points: 4, residual: 0 };
+    assert.equal(computeAxisValue(calibration, 100), 130);
+    const { document } = createAxisScene();
+    document.nodes = [
+        { id: "n1", x: 100, y0: 10, y1: 90, attachY: null, parent: null, children: ["t1", "n2"], textLine: null, label: null, source: "traced", age: null },
+        { id: "n2", x: 300, y0: 50, y1: 90, attachY: 70, parent: "n1", children: ["t2", "t3"], textLine: null, label: "90", source: "traced", age: null },
+    ];
+    document.tips = [
+        { id: "t1", x: 500, y: 10, parent: "n1", textLine: null, label: "A", match: null, source: "traced", age: null },
+        { id: "t2", x: 700, y: 50, parent: "n2", textLine: null, label: "B", match: null, source: "traced", age: null },
+        { id: "t3", x: 280, y: 90, parent: "n2", textLine: null, label: "C", match: null, source: "traced", age: null },
+    ];
+    document.root = "n1";
+    const issues = assignAges(document, calibration);
+    assert.deepEqual(issues.map((issue) => issue.code), ["ages-assigned", "branch-runs-backward"]);
+    assert.equal(document.nodes[0].age, 130);
+    assert.equal(document.tips[1].age, 100);
+    assert.equal(formatDocumentAsNewick(document), "(A:20,(B:20,C:0)90:10);");
+    assert.equal(formatDocumentAsNewick(document, { branchLengths: false }), "(A,(B,C)90);");
 });

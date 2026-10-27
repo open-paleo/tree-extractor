@@ -2,7 +2,7 @@
  * Newick reading and writing.
  */
 
-import type { ExtractionDocument, TreeNode } from "./types.ts";
+import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
 
 /**
  * A node of a parsed Newick tree.
@@ -70,12 +70,44 @@ export function getTipDisplayName(document: ExtractionDocument, tipId: string): 
 }
 
 /**
- * Serializes the document's main tree as Newick.
+ * Choices for Newick output.
+ */
+export type NewickOptions = {
+    /**
+     * Whether to write branch lengths, where the document has ages from a time axis.
+     */
+    branchLengths: boolean;
+};
+
+/**
+ * Formats a branch length: the difference in age between a parent and its child, never
+ * negative, with up to three decimals.
+ *
+ * @param parentAge - Age of the parent, or null.
+ * @param childAge - Age of the child, or null.
+ * @returns The ":length" suffix, or an empty string when either age is unknown.
+ */
+function formatLength(parentAge: number | null, childAge: number | null): string
+{
+    if (parentAge === null || childAge === null)
+    {
+        return "";
+    }
+
+    const length = Math.max(0, parentAge - childAge);
+
+    return `:${String(Math.round(length * 1000) / 1000)}`;
+}
+
+/**
+ * Serializes the document's main tree as Newick. Branch lengths are written when the document
+ * carries ages from a time axis, in the axis's units.
  *
  * @param document - Source document.
+ * @param options - Output choices; by default lengths are written when there are ages.
  * @returns Newick string with trailing semicolon, or null when there is no tree.
  */
-export function formatDocumentAsNewick(document: ExtractionDocument): string | null
+export function formatDocumentAsNewick(document: ExtractionDocument, options: NewickOptions = { branchLengths: true }): string | null
 {
     if (document.root === null)
     {
@@ -83,32 +115,43 @@ export function formatDocumentAsNewick(document: ExtractionDocument): string | n
     }
 
     const nodeById = new Map<string, TreeNode>();
+    const tipById = new Map<string, Tip>();
 
     for (const node of document.nodes)
     {
         nodeById.set(node.id, node);
     }
 
-    function render(id: string): string
+    for (const tip of document.tips)
+    {
+        tipById.set(tip.id, tip);
+    }
+
+    function render(id: string, parentAge: number | null): string
     {
         const node = nodeById.get(id);
 
         if (node === undefined)
         {
-            return formatLabel(getTipDisplayName(document, id));
+            const tip = tipById.get(id);
+            const length = options.branchLengths && tip !== undefined ? formatLength(parentAge, tip.age) : "";
+
+            return `${formatLabel(getTipDisplayName(document, id))}${length}`;
         }
 
         const parts = new Array<string>();
 
         for (const child of node.children)
         {
-            parts.push(render(child));
+            parts.push(render(child, node.age));
         }
 
-        return `(${parts.join(",")})${node.label === null ? "" : formatLabel(node.label)}`;
+        const length = options.branchLengths && parentAge !== null ? formatLength(parentAge, node.age) : "";
+
+        return `(${parts.join(",")})${node.label === null ? "" : formatLabel(node.label)}${length}`;
     }
 
-    return `${render(document.root)};`;
+    return `${render(document.root, null)};`;
 }
 
 /**

@@ -152,8 +152,11 @@ from a firm one.
    residual. Dieudonné 2026 does not: its axis numbers are eight pixels high, straddle the
    axis line, and touch their ticks and one another, and the reads come out in pieces. The
    axis line's own rows and the tick marks are blanked before the labels are stacked and read,
-   which was enough for Ke and not for that. Branch lengths in time from the calibration are
-   the next slice.
+   which was enough for Ke and not for that. Second slice: with a calibration, every node and
+   tip gets its age (the axis value at its column) and the Newick and Nexus output carry branch
+   lengths in the axis's units, never negative; a branch that would run backward in time by
+   more than a pixel is reported. A tip ending in a range bar takes the age of the bar's far
+   end, which is where its column is; telling the bar's start apart is still to do.
 
 Each step is one commit and one or two new benchmark figures chosen for the feature.
 

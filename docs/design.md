@@ -78,10 +78,11 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    whether the text ink was widened, how far label crops are condensed), time-scale signs (tint,
    the axis found from its ticks, range bars, and after label reading the calibration fit
    through the numbers along the axis), separate blocks of line art and the number of bridged
-   gaps. Label reading
-   takes its condensing from the profile; any value can be fixed through `profileOverrides`
-   (CLI `--profile`). `docs/profiles.md` has the plan for what else will read it. The benchmark
-   checks the profile against each case's expected values and reports a profile column.
+   gaps. Label reading takes its condensing from the profile, and with a calibration nodes and
+   tips get ages and the Newick carries branch lengths in the axis's units (`--no-lengths`
+   leaves them out); any value can be fixed through `profileOverrides` (CLI `--profile`).
+   `docs/profiles.md` has the plan for what else will read it. The benchmark checks the profile
+   against each case's expected values and reports a profile column.
 8. **QC**: unlabelled tips, unmatched names, duplicates, disconnected pieces, tips named by
    elimination, tips off the tip line and label rows at it without a tip (when the profile says
    the tips are aligned), and every rejected vertical with its reason are recorded in the

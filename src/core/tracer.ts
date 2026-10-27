@@ -965,6 +965,7 @@ export function traceRectangularTree(
             label: null,
             match: null,
             source: "traced",
+            age: null,
         });
     }
 
@@ -1018,6 +1019,7 @@ export function traceRectangularTree(
             textLine: null,
             label: null,
             source: "traced",
+            age: null,
         });
     }
 

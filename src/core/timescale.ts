@@ -4,7 +4,7 @@
  * recorded in the profile; what uses it (branch lengths in time) comes after.
  */
 
-import type { AxisCalibration, Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Segment } from "./types.ts";
+import type { AxisCalibration, Box, ExtractionDocument, GrayImage, Mask, OcrEngine, QcIssue, Segment } from "./types.ts";
 import { compareNumbers, cropAndScale, findConnectedComponents, rotateGrayQuarter } from "./raster.ts";
 
 /**
@@ -942,4 +942,101 @@ export function cropAxisLabel(gray: GrayImage, box: Box, band: LabelBand, ticks:
 function compareAxisPoints(left: AxisPoint, right: AxisPoint): number
 {
     return compareNumbers(left.x, right.x);
+}
+
+/**
+ * Value on the axis at a column.
+ *
+ * @param calibration - Axis calibration.
+ * @param x - Column.
+ * @returns The value.
+ */
+export function computeAxisValue(calibration: AxisCalibration, x: number): number
+{
+    return (x - calibration.originX) / calibration.pixelsPerUnit;
+}
+
+/**
+ * Gives every node and tip of the document its age from the calibration: the axis value at its
+ * column. A tip that ends in a range bar gets the age of the bar's far end, which is what its
+ * column is; the start of the bar is not told apart yet.
+ *
+ * @param document - Document updated in place.
+ * @param calibration - Axis calibration.
+ * @returns One informational issue describing the ages, plus a warning when branches run the
+ * wrong way in time.
+ */
+export function assignAges(document: ExtractionDocument, calibration: AxisCalibration): Array<QcIssue>
+{
+    const nodeById = new Map<string, number>();
+    let youngest = Infinity;
+    let oldest = -Infinity;
+
+    for (const node of document.nodes)
+    {
+        node.age = computeAxisValue(calibration, node.x);
+        nodeById.set(node.id, node.age);
+    }
+
+    for (const tip of document.tips)
+    {
+        tip.age = computeAxisValue(calibration, tip.x);
+        youngest = Math.min(youngest, tip.age);
+        oldest = Math.max(oldest, tip.age);
+    }
+
+    let reversed = 0;
+    const tolerance = Math.abs(1 / calibration.pixelsPerUnit);
+
+    for (const node of document.nodes)
+    {
+        const parentAge = node.parent === null ? undefined : nodeById.get(node.parent);
+
+        if (parentAge !== undefined && node.age !== null && node.age > parentAge + tolerance)
+        {
+            reversed++;
+        }
+    }
+
+    for (const tip of document.tips)
+    {
+        const parentAge = tip.parent === null ? undefined : nodeById.get(tip.parent);
+
+        if (parentAge !== undefined && tip.age !== null && tip.age > parentAge + tolerance)
+        {
+            reversed++;
+        }
+    }
+
+    const issues: Array<QcIssue> = [
+        {
+            severity: "info",
+            code: "ages-assigned",
+            message: `ages from the time axis: tips span ${formatAge(youngest)} to ${formatAge(oldest)} axis units; branch lengths are written to the Newick output`,
+            subject: null,
+        },
+    ];
+
+    if (reversed > 0)
+    {
+        issues.push({
+            severity: "warning",
+            code: "branch-runs-backward",
+            message: `${reversed} branch(es) end older than they start by more than a pixel; their lengths are written as 0`,
+            subject: null,
+        });
+    }
+
+    return issues;
+}
+
+/**
+ * Formats an age for a message.
+ *
+ * @param age - Age in axis units.
+ * @returns Up to two decimals, no trailing zeros.
+ */
+function formatAge(age: number): string
+{
+    return Number.isFinite(age) ? String(Math.round(age * 100) / 100) : "?";
 }

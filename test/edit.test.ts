@@ -18,11 +18,11 @@ function createFlatTree(): ExtractionDocument
         horizontals: [],
         verticals: [],
         textLines: [],
-        nodes: [{ id: "n1", x: 50, y0: 20, y1: 120, attachY: null, parent: null, children: ["t1", "t2", "t3"], textLine: null, label: null, source: "traced" }],
+        nodes: [{ id: "n1", x: 50, y0: 20, y1: 120, attachY: null, parent: null, children: ["t1", "t2", "t3"], textLine: null, label: null, source: "traced", age: null }],
         tips: [
-            { id: "t1", x: 150, y: 20, parent: "n1", textLine: null, label: null, match: null, source: "traced" },
-            { id: "t2", x: 150, y: 60, parent: "n1", textLine: null, label: null, match: null, source: "traced" },
-            { id: "t3", x: 150, y: 120, parent: "n1", textLine: null, label: null, match: null, source: "traced" },
+            { id: "t1", x: 150, y: 20, parent: "n1", textLine: null, label: null, match: null, source: "traced", age: null },
+            { id: "t2", x: 150, y: 60, parent: "n1", textLine: null, label: null, match: null, source: "traced", age: null },
+            { id: "t3", x: 150, y: 120, parent: "n1", textLine: null, label: null, match: null, source: "traced", age: null },
         ],
         root: "n1",
         qc: [],
@@ -39,7 +39,7 @@ function createFlatTree(): ExtractionDocument
 function createNestedTree(): ExtractionDocument
 {
     const document = createFlatTree();
-    document.nodes.push({ id: "n2", x: 100, y0: 60, y1: 120, attachY: 90, parent: "n1", children: ["t2", "t3"], textLine: null, label: null, source: "traced" });
+    document.nodes.push({ id: "n2", x: 100, y0: 60, y1: 120, attachY: 90, parent: "n1", children: ["t2", "t3"], textLine: null, label: null, source: "traced", age: null });
     document.nodes[0].children = ["t1", "n2"];
     document.tips[1].parent = "n2";
     document.tips[2].parent = "n2";
