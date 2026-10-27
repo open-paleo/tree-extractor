@@ -32,14 +32,19 @@ npm run extract -- extract figure.png --names taxa.txt --out results/ --overlay
 npm run web
 ```
 
+`--crop x,y,w,h` restricts the analysis to one region of the image (for example to leave out a
+time scale or a second panel); results are still reported in full-image coordinates.
+
 `--names` is a text file with one taxon name per line (for example the taxa of the paper's
 character matrix). OCR output is fuzzy-matched against it, which turns imperfect reads of small
 italic text into exact names. Without a list the raw OCR text is kept and uncertain tips are
 flagged.
 
-The viewer runs the same pipeline on a dropped image, draws what it found over the figure, lets
-you correct tip names, and downloads the tree. Structural correction (adding, removing and
-re-parenting nodes) is the next milestone.
+The viewer runs the same pipeline on a dropped image and draws what it found over the figure.
+Scroll to zoom, drag to pan, and use *Select region* to mark where the tree is when the figure
+holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
+other way round; labels are editable in place and the Newick updates. Structural correction
+(adding, removing and re-parenting nodes) is the next milestone.
 
 ## Scope
 

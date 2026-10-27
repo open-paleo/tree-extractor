@@ -46,7 +46,7 @@ function traceMaskToNewick(mask: Mask): string
     const trace = traceRectangularTree(horizontals, verticals, 3);
     const document: ExtractionDocument = {
         version: 1,
-        image: { width: mask.width, height: mask.height, source: null },
+        image: { width: mask.width, height: mask.height, source: null, region: null },
         horizontals,
         verticals,
         textLines: [],

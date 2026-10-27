@@ -32,14 +32,27 @@
                 <label><input type="checkbox" data-layer="nodes" checked> nodes</label>
                 <label><input type="checkbox" data-layer="tips" checked> tips</label>
             </fieldset>
+            <p class="hint">Scroll to zoom, drag to pan, click a tip or node to select it. Use <em>Select region</em> to mark where the tree is when the figure holds more than the tree.</p>
         </section>
         <section class="view">
-            <div class="canvas-wrap"><canvas id="canvas"></canvas></div>
+            <div class="toolbar">
+                <button id="fit" class="tool" disabled title="Fit the image in the view">Fit</button>
+                <button id="actual" class="tool" disabled title="Show at one image pixel per screen pixel">1:1</button>
+                <button id="zoom-in" class="tool" disabled title="Zoom in">+</button>
+                <button id="zoom-out" class="tool" disabled title="Zoom out">−</button>
+                <span id="zoom-level" class="muted"></span>
+                <span class="spacer"></span>
+                <button id="region-mode" class="tool" disabled title="Drag a rectangle around the tree">Select region</button>
+                <button id="clear-region" class="tool" disabled title="Analyze the whole image again">Clear region</button>
+            </div>
+            <div class="canvas-wrap" id="canvas-wrap"><canvas id="canvas"></canvas></div>
         </section>
         <section class="results">
             <h2>Tips</h2>
             <p class="hint">Edit a name to correct it; the tree below updates.</p>
-            <ol id="tips"></ol>
+            <ol id="tips" class="items"></ol>
+            <h2>Nodes</h2>
+            <ol id="nodes" class="items"></ol>
             <h2>Quality checks</h2>
             <ul id="qc"></ul>
             <h2>Newick</h2>

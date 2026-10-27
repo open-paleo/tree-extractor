@@ -1,40 +1,67 @@
 /**
- * Browser viewer: runs the extraction pipeline on a dropped image, draws what it found over the
- * figure, lets the user correct tip names and exports the tree.
+ * Browser viewer entry point: wires the page's elements to the viewer state, the canvas, the
+ * results panel and the extraction pipeline.
  */
 
-import type { ExtractionDocument, OcrEngine, RgbaImage, TreeNode } from "../core/types.ts";
+import type { OcrEngine } from "../core/types.ts";
 import { extractTree, formatTimings } from "../core/pipeline.ts";
-import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
-import { formatNexus } from "../core/nexus.ts";
 import { createTesseractOcr } from "../ocr/tesseract.ts";
+import type { Box } from "../core/types.ts";
+import type { Layers, Selection } from "./state.ts";
+import { createViewerState } from "./state.ts";
+import { CanvasView } from "./canvas.ts";
+import { findNode, findTip, getNodeMarkerY } from "./lookup.ts";
+import type { ResultElements } from "./results.ts";
+import { getSelectionFromEvent, highlightSelection, renderResults, updateNewick } from "./results.ts";
+import { downloadDocumentFile, downloadNewickFile, downloadNexusFile } from "./exports.ts";
+import { PointerController } from "./interaction.ts";
 
-type Layers = {
-    segments: boolean;
-    text: boolean;
-    nodes: boolean;
-    tips: boolean;
+/**
+ * Finds a required element in the page.
+ *
+ * @param selector - CSS selector.
+ * @returns The element.
+ */
+function getElement<T extends Element>(selector: string): T
+{
+    const element = document.querySelector<T>(selector);
+
+    if (element === null)
+    {
+        throw new Error(`missing element ${selector}`);
+    }
+
+    return element;
+}
+
+const fileInput = getElement<HTMLInputElement>("#file");
+const ocrCheckbox = getElement<HTMLInputElement>("#ocr");
+const namesInput = getElement<HTMLTextAreaElement>("#names");
+const runButton = getElement<HTMLButtonElement>("#run");
+const statusLine = getElement<HTMLParagraphElement>("#status");
+const canvasWrap = getElement<HTMLDivElement>("#canvas-wrap");
+const canvas = getElement<HTMLCanvasElement>("#canvas");
+const fitButton = getElement<HTMLButtonElement>("#fit");
+const actualButton = getElement<HTMLButtonElement>("#actual");
+const zoomInButton = getElement<HTMLButtonElement>("#zoom-in");
+const zoomOutButton = getElement<HTMLButtonElement>("#zoom-out");
+const zoomLevel = getElement<HTMLSpanElement>("#zoom-level");
+const regionModeButton = getElement<HTMLButtonElement>("#region-mode");
+const clearRegionButton = getElement<HTMLButtonElement>("#clear-region");
+const downloadNewick = getElement<HTMLButtonElement>("#download-newick");
+const downloadNexus = getElement<HTMLButtonElement>("#download-nexus");
+const downloadJson = getElement<HTMLButtonElement>("#download-json");
+const results: ResultElements = {
+    tipsList: getElement<HTMLOListElement>("#tips"),
+    nodesList: getElement<HTMLOListElement>("#nodes"),
+    qcList: getElement<HTMLUListElement>("#qc"),
+    newickOutput: getElement<HTMLTextAreaElement>("#newick"),
+    downloadButtons: [downloadNewick, downloadNexus, downloadJson],
 };
 
-const fileInput = document.querySelector<HTMLInputElement>("#file") as HTMLInputElement;
-const ocrCheckbox = document.querySelector<HTMLInputElement>("#ocr") as HTMLInputElement;
-const namesInput = document.querySelector<HTMLTextAreaElement>("#names") as HTMLTextAreaElement;
-const runButton = document.querySelector<HTMLButtonElement>("#run") as HTMLButtonElement;
-const statusLine = document.querySelector<HTMLParagraphElement>("#status") as HTMLParagraphElement;
-const canvas = document.querySelector<HTMLCanvasElement>("#canvas") as HTMLCanvasElement;
-const tipsList = document.querySelector<HTMLOListElement>("#tips") as HTMLOListElement;
-const qcList = document.querySelector<HTMLUListElement>("#qc") as HTMLUListElement;
-const newickOutput = document.querySelector<HTMLTextAreaElement>("#newick") as HTMLTextAreaElement;
-const downloadNewick = document.querySelector<HTMLButtonElement>("#download-newick") as HTMLButtonElement;
-const downloadNexus = document.querySelector<HTMLButtonElement>("#download-nexus") as HTMLButtonElement;
-const downloadJson = document.querySelector<HTMLButtonElement>("#download-json") as HTMLButtonElement;
-
-let image: RgbaImage | null = null;
-let bitmap: ImageBitmap | null = null;
-let extraction: ExtractionDocument | null = null;
+const state = createViewerState();
+const canvasView = new CanvasView(canvas);
 let ocrEngine: OcrEngine | null = null;
-let fileStem = "tree";
-const layers: Layers = { segments: true, text: true, nodes: true, tips: true };
 
 /**
  * Shows a status message.
@@ -47,6 +74,68 @@ function setStatus(message: string): void
 }
 
 /**
+ * Updates the zoom readout and tool button states.
+ */
+function updateToolbar(): void
+{
+    const loaded = state.bitmap !== null;
+    zoomLevel.textContent = loaded ? `${Math.round(canvasView.view.scale * 100)}%` : "";
+    fitButton.disabled = !loaded;
+    actualButton.disabled = !loaded;
+    zoomInButton.disabled = !loaded;
+    zoomOutButton.disabled = !loaded;
+    regionModeButton.disabled = !loaded;
+    clearRegionButton.disabled = state.region === null;
+    regionModeButton.classList.toggle("active", state.mode === "region");
+    canvas.classList.toggle("region", state.mode === "region");
+}
+
+/**
+ * Redraws the canvas and refreshes the toolbar.
+ */
+function redraw(): void
+{
+    canvasView.render(state);
+    updateToolbar();
+}
+
+/**
+ * Changes the selection, highlighting it in the lists and on the canvas.
+ *
+ * @param next - New selection, or null to clear.
+ * @param reveal - Whether to pan the canvas so the selection is visible.
+ */
+function select(next: Selection | null, reveal: boolean): void
+{
+    state.selection = next;
+    highlightSelection(results, next);
+
+    if (next !== null && reveal && state.extraction !== null)
+    {
+        if (next.kind === "tip")
+        {
+            const tip = findTip(state.extraction, next.id);
+
+            if (tip !== null)
+            {
+                canvasView.ensureVisible(state, tip.x, tip.y);
+            }
+        }
+        else
+        {
+            const node = findNode(state.extraction, next.id);
+
+            if (node !== null)
+            {
+                canvasView.ensureVisible(state, node.x, getNodeMarkerY(node));
+            }
+        }
+    }
+
+    redraw();
+}
+
+/**
  * Decodes a file into an RGBA image and shows it.
  *
  * @param file - Image file.
@@ -54,226 +143,42 @@ function setStatus(message: string): void
  */
 async function loadFile(file: File): Promise<void>
 {
-    bitmap = await createImageBitmap(file);
-    canvas.width = bitmap.width;
-    canvas.height = bitmap.height;
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const bitmap = await createImageBitmap(file);
+    const scratch = document.createElement("canvas");
+    scratch.width = bitmap.width;
+    scratch.height = bitmap.height;
+    const context = scratch.getContext("2d");
+
+    if (context === null)
+    {
+        throw new Error("could not get a drawing context");
+    }
+
     context.drawImage(bitmap, 0, 0);
     const data = context.getImageData(0, 0, bitmap.width, bitmap.height);
-    image = { width: data.width, height: data.height, data: data.data };
-    extraction = null;
-    fileStem = file.name.replace(/\.[^.]+$/, "");
+    state.bitmap = bitmap;
+    state.image = { width: data.width, height: data.height, data: data.data };
+    state.extraction = null;
+    state.region = null;
+    state.draftRegion = null;
+    state.selection = null;
+    state.mode = "pan";
+    state.fileStem = file.name.replace(/\.[^.]+$/, "");
     runButton.disabled = false;
     setStatus(`${file.name}: ${bitmap.width} × ${bitmap.height} px. Ready.`);
-    renderCanvas();
+    canvasView.resize(state);
+    canvasView.fit(state);
+    renderResults(results, null);
+    updateToolbar();
 }
 
 /**
- * Draws the image and the overlay for the current layer selection.
- */
-function renderCanvas(): void
-{
-    if (bitmap === null)
-    {
-        return;
-    }
-
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(bitmap, 0, 0);
-
-    if (extraction === null)
-    {
-        return;
-    }
-
-    const inTree = new Set<string>();
-    const nodeById = new Map<string, TreeNode>();
-
-    for (const node of extraction.nodes)
-    {
-        nodeById.set(node.id, node);
-    }
-
-    function visit(id: string): void
-    {
-        inTree.add(id);
-        const node = nodeById.get(id);
-
-        if (node !== undefined)
-        {
-            for (const child of node.children)
-            {
-                visit(child);
-            }
-        }
-    }
-
-    if (extraction.root !== null)
-    {
-        visit(extraction.root);
-    }
-
-    if (layers.segments)
-    {
-        context.fillStyle = "rgba(0, 120, 255, 0.35)";
-
-        for (const segment of extraction.horizontals)
-        {
-            const { x0, y0, x1, y1 } = segment.box;
-            context.fillRect(x0, y0, x1 - x0, y1 - y0);
-        }
-
-        context.fillStyle = "rgba(255, 140, 0, 0.35)";
-
-        for (const segment of extraction.verticals)
-        {
-            const { x0, y0, x1, y1 } = segment.box;
-            context.fillRect(x0, y0, x1 - x0, y1 - y0);
-        }
-    }
-
-    if (layers.text)
-    {
-        context.lineWidth = 1;
-
-        for (const line of extraction.textLines)
-        {
-            context.strokeStyle = line.role === "tip" ? "rgba(0, 170, 0, 0.9)" : line.role === "node" ? "rgba(160, 0, 200, 0.9)" : "rgba(160, 160, 160, 0.6)";
-            const { x0, y0, x1, y1 } = line.box;
-            context.strokeRect(x0 + 0.5, y0 + 0.5, x1 - x0, y1 - y0);
-        }
-    }
-
-    if (layers.nodes)
-    {
-        context.font = "10px sans-serif";
-
-        for (const node of extraction.nodes)
-        {
-            const connected = inTree.has(node.id);
-            context.fillStyle = connected ? "rgba(255, 80, 0, 0.95)" : "rgba(255, 0, 0, 0.6)";
-            const y = node.attachY ?? (node.y0 + node.y1) / 2;
-            context.beginPath();
-            context.arc(node.x, y, 4, 0, Math.PI * 2);
-            context.fill();
-
-            if (node.label !== null)
-            {
-                context.fillText(node.label, node.x + 6, y - 4);
-            }
-        }
-    }
-
-    if (layers.tips)
-    {
-        context.font = "10px sans-serif";
-
-        for (const tip of extraction.tips)
-        {
-            const connected = inTree.has(tip.id);
-            context.fillStyle = connected ? "rgba(0, 160, 0, 0.95)" : "rgba(255, 0, 0, 0.9)";
-            context.beginPath();
-            context.arc(tip.x, tip.y, 3, 0, Math.PI * 2);
-            context.fill();
-            context.fillText(tip.id, tip.x + 4, tip.y + 12);
-        }
-    }
-}
-
-/**
- * Rebuilds the tips list, quality-check list and tree text from the current document.
- */
-function renderResults(): void
-{
-    tipsList.replaceChildren();
-    qcList.replaceChildren();
-
-    if (extraction === null)
-    {
-        newickOutput.value = "";
-        downloadNewick.disabled = true;
-        downloadNexus.disabled = true;
-        downloadJson.disabled = true;
-
-        return;
-    }
-
-    const current = extraction;
-
-    for (const tip of current.tips)
-    {
-        const item = document.createElement("li");
-        const input = document.createElement("input");
-        input.value = getTipDisplayName(current, tip.id);
-
-        if (tip.textLine === null)
-        {
-            item.classList.add("unlabelled");
-        }
-        else if (tip.match !== null && !tip.match.accepted)
-        {
-            item.classList.add("unsure");
-        }
-
-        input.addEventListener("input", function handleTipEdit(): void
-        {
-            tip.label = input.value;
-            tip.match = null;
-            tip.source = "manual";
-            newickOutput.value = formatDocumentAsNewick(current) ?? "";
-        });
-
-        const id = document.createElement("span");
-        id.textContent = tip.id;
-        item.append(id, input);
-        tipsList.append(item);
-    }
-
-    for (const issue of current.qc)
-    {
-        const item = document.createElement("li");
-        item.className = issue.severity;
-        item.textContent = `${issue.code}: ${issue.message}`;
-        qcList.append(item);
-    }
-
-    newickOutput.value = formatDocumentAsNewick(current) ?? "(no tree found)";
-    downloadNewick.disabled = current.root === null;
-    downloadNexus.disabled = current.root === null;
-    downloadJson.disabled = false;
-}
-
-/**
- * Offers a text file for download.
+ * Reads the optional name list from the page.
  *
- * @param name - File name.
- * @param text - File contents.
- * @param type - Media type.
+ * @returns Names, one per non-blank line.
  */
-function downloadText(name: string, text: string, type: string): void
+function readNames(): Array<string>
 {
-    const url = URL.createObjectURL(new Blob([text], { type }));
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = name;
-    anchor.click();
-    URL.revokeObjectURL(url);
-}
-
-/**
- * Runs the pipeline on the loaded image.
- *
- * @returns Resolves when results are shown.
- */
-async function runExtraction(): Promise<void>
-{
-    if (image === null)
-    {
-        return;
-    }
-
-    runButton.disabled = true;
     const names = new Array<string>();
 
     for (const line of namesInput.value.split(/\r?\n/))
@@ -283,6 +188,23 @@ async function runExtraction(): Promise<void>
             names.push(line.trim());
         }
     }
+
+    return names;
+}
+
+/**
+ * Runs the pipeline on the loaded image, or on the marked region of it.
+ *
+ * @returns Resolves when results are shown.
+ */
+async function runExtraction(): Promise<void>
+{
+    if (state.image === null)
+    {
+        return;
+    }
+
+    runButton.disabled = true;
 
     try
     {
@@ -299,9 +221,15 @@ async function runExtraction(): Promise<void>
             ocrEngine = await createTesseractOcr(tesseract);
         }
 
-        setStatus("Tracing…");
-        extraction = await extractTree(image, { ocr: ocrCheckbox.checked ? ocrEngine : null, names, source: fileStem });
-        setStatus(`${extraction.tips.length} tips, ${extraction.nodes.length} nodes. ${formatTimings(extraction.timings)}.`);
+        setStatus(state.region === null ? "Tracing…" : "Tracing the selected region…");
+        state.extraction = await extractTree(state.image, {
+            ocr: ocrCheckbox.checked ? ocrEngine : null,
+            names: readNames(),
+            source: state.fileStem,
+            region: state.region,
+        });
+        state.selection = null;
+        setStatus(`${state.extraction.tips.length} tips, ${state.extraction.nodes.length} nodes. ${formatTimings(state.extraction.timings)}.`);
     }
     catch (error)
     {
@@ -309,25 +237,8 @@ async function runExtraction(): Promise<void>
     }
 
     runButton.disabled = false;
-    renderCanvas();
-    renderResults();
-}
-
-/**
- * Loads an image named by the page's ?image= query parameter, a convenience for development.
- *
- * @returns Resolves when the image is loaded or when there is none.
- */
-async function loadFromQuery(): Promise<void>
-{
-    const source = new URLSearchParams(location.search).get("image");
-
-    if (source !== null)
-    {
-        const response = await fetch(source);
-        const blob = await response.blob();
-        await loadFile(new File([blob], source.split("/").pop() ?? "image", { type: blob.type }));
-    }
+    renderResults(results, state.extraction);
+    select(null, false);
 }
 
 /**
@@ -385,8 +296,118 @@ function handleRunClick(): void
 function handleLayerChange(event: Event): void
 {
     const checkbox = event.currentTarget as HTMLInputElement;
-    layers[checkbox.dataset.layer as keyof Layers] = checkbox.checked;
-    renderCanvas();
+    state.layers[checkbox.dataset.layer as keyof Layers] = checkbox.checked;
+    redraw();
+}
+
+/**
+ * Fits the image in the view.
+ */
+function handleFitClick(): void
+{
+    canvasView.fit(state);
+    updateToolbar();
+}
+
+/**
+ * Shows the image at one image pixel per screen pixel, keeping the center fixed.
+ */
+function handleActualSizeClick(): void
+{
+    pointer.zoomAtCenter(1 / canvasView.view.scale);
+}
+
+/**
+ * Zooms in about the center.
+ */
+function handleZoomInClick(): void
+{
+    pointer.zoomAtCenter(1.25);
+}
+
+/**
+ * Zooms out about the center.
+ */
+function handleZoomOutClick(): void
+{
+    pointer.zoomAtCenter(0.8);
+}
+
+/**
+ * Switches between panning and drawing a region.
+ */
+function handleRegionModeClick(): void
+{
+    state.mode = state.mode === "region" ? "pan" : "region";
+    setStatus(state.mode === "region" ? "Drag a rectangle around the tree." : "Ready.");
+    updateToolbar();
+}
+
+/**
+ * Forgets the region so the whole image is analyzed.
+ */
+function handleClearRegionClick(): void
+{
+    state.region = null;
+    state.draftRegion = null;
+    setStatus("Region cleared; the whole image will be analyzed.");
+    redraw();
+}
+
+/**
+ * Selects the tip or node whose list entry was clicked.
+ *
+ * @param event - Click event from a list.
+ */
+function handleListClick(event: Event): void
+{
+    const selection = getSelectionFromEvent(event);
+
+    if (selection !== null)
+    {
+        select(selection, true);
+    }
+}
+
+/**
+ * Applies an edited label from a list entry to the document.
+ *
+ * @param event - Input event from a list.
+ */
+function handleListInput(event: Event): void
+{
+    const selection = getSelectionFromEvent(event);
+    const target = event.target;
+
+    if (selection === null || state.extraction === null || !(target instanceof HTMLInputElement))
+    {
+        return;
+    }
+
+    if (selection.kind === "tip")
+    {
+        const tip = findTip(state.extraction, selection.id);
+
+        if (tip !== null)
+        {
+            tip.label = target.value;
+            tip.match = null;
+            tip.source = "manual";
+        }
+    }
+    else
+    {
+        const node = findNode(state.extraction, selection.id);
+
+        if (node !== null)
+        {
+            node.label = target.value.length === 0 ? null : target.value;
+            node.source = "manual";
+        }
+    }
+
+    updateNewick(results, state.extraction);
+    redraw();
 }
 
 /**
@@ -394,9 +415,9 @@ function handleLayerChange(event: Event): void
  */
 function handleDownloadNewick(): void
 {
-    if (extraction !== null)
+    if (state.extraction !== null)
     {
-        downloadText(`${fileStem}.nwk`, `${formatDocumentAsNewick(extraction) ?? ""}\n`, "text/plain");
+        downloadNewickFile(state.extraction, state.fileStem);
     }
 }
 
@@ -405,29 +426,10 @@ function handleDownloadNewick(): void
  */
 function handleDownloadNexus(): void
 {
-    if (extraction === null)
+    if (state.extraction !== null)
     {
-        return;
+        downloadNexusFile(state.extraction, state.fileStem);
     }
-
-    const newick = formatDocumentAsNewick(extraction);
-
-    if (newick === null)
-    {
-        return;
-    }
-
-    const taxa = new Array<string>();
-
-    for (const tip of extraction.tips)
-    {
-        if (tip.parent !== null)
-        {
-            taxa.push(getTipDisplayName(extraction, tip.id));
-        }
-    }
-
-    downloadText(`${fileStem}.nex`, formatNexus(newick, taxa, "extracted", `Extracted from ${fileStem} by tree-extractor`), "text/plain");
 }
 
 /**
@@ -435,23 +437,88 @@ function handleDownloadNexus(): void
  */
 function handleDownloadJson(): void
 {
-    if (extraction !== null)
+    if (state.extraction !== null)
     {
-        downloadText(`${fileStem}.json`, JSON.stringify(extraction, null, 2), "application/json");
+        downloadDocumentFile(state.extraction, state.fileStem);
     }
 }
+
+/**
+ * Redraws when the canvas changes size.
+ */
+function handleResize(): void
+{
+    canvasView.resize(state);
+    updateToolbar();
+}
+
+/**
+ * Loads an image named by the page's ?image= query parameter, a convenience for development.
+ *
+ * @returns Resolves when the image is loaded or when there is none.
+ */
+async function loadFromQuery(): Promise<void>
+{
+    const source = new URLSearchParams(location.search).get("image");
+
+    if (source !== null)
+    {
+        const response = await fetch(source);
+        const blob = await response.blob();
+        await loadFile(new File([blob], source.split("/").pop() ?? "image", { type: blob.type }));
+    }
+}
+
+/**
+ * Reports a newly dragged-out region.
+ *
+ * @param region - The region.
+ */
+function handleRegionSet(region: Box): void
+{
+    setStatus(`Region set: ${region.x1 - region.x0} × ${region.y1 - region.y0} px at (${region.x0}, ${region.y0}). Extract to analyze only this area.`);
+}
+
+/**
+ * Selects what was clicked on the canvas.
+ *
+ * @param selection - Tip, node or null.
+ */
+function handleCanvasSelect(selection: Selection | null): void
+{
+    select(selection, false);
+}
+
+const pointer = new PointerController(canvas, canvasView, state, {
+    onSelect: handleCanvasSelect,
+    onRegionSet: handleRegionSet,
+    onViewChanged: updateToolbar,
+});
 
 fileInput.addEventListener("change", handleFileChange);
 document.body.addEventListener("dragover", handleDragOver);
 document.body.addEventListener("drop", handleDrop);
 runButton.addEventListener("click", handleRunClick);
+fitButton.addEventListener("click", handleFitClick);
+actualButton.addEventListener("click", handleActualSizeClick);
+zoomInButton.addEventListener("click", handleZoomInClick);
+zoomOutButton.addEventListener("click", handleZoomOutClick);
+regionModeButton.addEventListener("click", handleRegionModeClick);
+clearRegionButton.addEventListener("click", handleClearRegionClick);
+results.tipsList.addEventListener("click", handleListClick);
+results.nodesList.addEventListener("click", handleListClick);
+results.tipsList.addEventListener("input", handleListInput);
+results.nodesList.addEventListener("input", handleListInput);
 downloadNewick.addEventListener("click", handleDownloadNewick);
 downloadNexus.addEventListener("click", handleDownloadNexus);
 downloadJson.addEventListener("click", handleDownloadJson);
+new ResizeObserver(handleResize).observe(canvasWrap);
 
 for (const checkbox of document.querySelectorAll<HTMLInputElement>("input[data-layer]"))
 {
     checkbox.addEventListener("change", handleLayerChange);
 }
 
+canvasView.resize(state);
+updateToolbar();
 void loadFromQuery();

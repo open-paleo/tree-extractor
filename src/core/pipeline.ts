@@ -22,6 +22,7 @@ import { extractSegments } from "./segments.ts";
 import { traceRectangularTree } from "./tracer.ts";
 import { assignLabels, readLabels } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
+import { clampBox, cropImage, translateDocument } from "./geometry.ts";
 
 /**
  * Tunable thresholds for the pipeline. Defaults suit figures around 1000 to 2500 pixels wide.
@@ -139,6 +140,12 @@ export type ExtractOptions = {
      * Where the image came from, recorded in the document.
      */
     source: string | null;
+
+    /**
+     * Part of the image to analyze, or null for all of it. Results are reported in the full
+     * image's coordinates either way.
+     */
+    region: Box | null;
 };
 
 /**
@@ -443,12 +450,20 @@ export function formatTimings(timings: Record<string, number>): string
 /**
  * Runs the full pipeline on one image.
  *
- * @param image - Decoded RGBA image.
- * @param options - OCR engine, name list and threshold overrides.
+ * @param fullImage - Decoded RGBA image.
+ * @param options - OCR engine, name list, region and threshold overrides.
  * @returns The extraction document.
  */
-export async function extractTree(image: RgbaImage, options: Partial<ExtractOptions> = {}): Promise<ExtractionDocument>
+export async function extractTree(fullImage: RgbaImage, options: Partial<ExtractOptions> = {}): Promise<ExtractionDocument>
 {
+    const region = options.region === undefined || options.region === null ? null : clampBox(options.region, fullImage.width, fullImage.height);
+
+    if (region !== null && (region.x1 - region.x0 < 1 || region.y1 - region.y0 < 1))
+    {
+        throw new Error("the region to analyze is empty");
+    }
+
+    const image = region === null ? fullImage : cropImage(fullImage, region);
     const parameters = { ...defaultParameters, ...options.parameters };
     const names = options.names ?? [];
     const timings: Record<string, number> = {};
@@ -539,7 +554,7 @@ export async function extractTree(image: RgbaImage, options: Partial<ExtractOpti
 
     const document: ExtractionDocument = {
         version: 1,
-        image: { width: image.width, height: image.height, source: options.source ?? null },
+        image: { width: fullImage.width, height: fullImage.height, source: options.source ?? null, region },
         horizontals,
         verticals,
         textLines: text.lines,
@@ -565,6 +580,11 @@ export async function extractTree(image: RgbaImage, options: Partial<ExtractOpti
     }
 
     runQualityChecks(document);
+
+    if (region !== null)
+    {
+        translateDocument(document, region.x0, region.y0);
+    }
 
     return document;
 }

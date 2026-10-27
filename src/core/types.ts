@@ -327,6 +327,12 @@ export type ImageInfo = {
      * Path or URL of the source image, if known.
      */
     source: string | null;
+
+    /**
+     * The part of the image that was analyzed, or null for all of it. Coordinates in the
+     * document are always those of the full image.
+     */
+    region: Box | null;
 };
 
 /**

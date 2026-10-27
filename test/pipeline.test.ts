@@ -58,3 +58,21 @@ test("extractTree traces a drawn tree with a polytomy and a range bar, without O
     assert.equal(document.tips.length, 6);
     assert.ok(document.qc.every((issue) => issue.severity !== "error"));
 });
+
+test("extractTree on a region reports coordinates of the full image", async () =>
+{
+    const image = createBlankImage(300, 160);
+    paintRect(image, 60, 79, 100, 82);
+    paintRect(image, 100, 40, 103, 123);
+    paintRect(image, 100, 40, 220, 43);
+    paintRect(image, 100, 120, 220, 123);
+
+    const whole = await extractTree(image, { parameters: { glyphStripHorizontalRun: 20, glyphStripVerticalRun: 20 } });
+    const part = await extractTree(image, { region: { x0: 50, y0: 30, x1: 260, y1: 140 }, parameters: { glyphStripHorizontalRun: 20, glyphStripVerticalRun: 20 } });
+    assert.equal(formatDocumentAsNewick(part), "(t1,t2);");
+    assert.deepEqual(part.image.region, { x0: 50, y0: 30, x1: 260, y1: 140 });
+    assert.equal(part.image.width, 300);
+    assert.equal(part.tips[0].x, whole.tips[0].x);
+    assert.equal(part.tips[0].y, whole.tips[0].y);
+    assert.equal(part.nodes[0].x, whole.nodes[0].x);
+});
