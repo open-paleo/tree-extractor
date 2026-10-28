@@ -552,7 +552,7 @@ export function findAxisLabelBoxes(document: ExtractionDocument, textInk: Mask, 
     for (const line of document.textLines)
     {
         const { box } = line;
-        const inBand = box.y0 >= top && box.y1 <= bottom && box.x0 >= axis.box.x0 - glyphHeight && box.x1 <= axis.box.x1 + glyphHeight;
+        const inBand = line.frame === undefined && box.y0 >= top && box.y1 <= bottom && box.x0 >= axis.box.x0 - glyphHeight && box.x1 <= axis.box.x1 + glyphHeight;
 
         if (!inBand || line.glyphCount > 6 || box.x1 - box.x0 > 6 * glyphHeight)
         {

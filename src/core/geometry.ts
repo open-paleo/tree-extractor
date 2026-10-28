@@ -2,7 +2,7 @@
  * Geometry helpers for working on a region of a figure and mapping results back.
  */
 
-import type { Box, ExtractionDocument, RgbaImage } from "./types.ts";
+import type { Box, ExtractionDocument, Point, RgbaImage, RotatedFrame } from "./types.ts";
 
 /**
  * Clamps a box to an image and rounds it to whole pixels.
@@ -153,4 +153,68 @@ export function rotateBox(box: Box, width: number, height: number, quarterTurns:
         default:
             return { x0: box.x0, y0: box.y0, x1: box.x1, y1: box.y1 };
     }
+}
+
+/**
+ * Builds the frame that turns a zone of the figure by minus an angle, sized to hold the whole
+ * turned zone.
+ *
+ * @param zone - Zone of the figure the frame is for.
+ * @param angle - Slant of the labels in radians, positive downward to the right.
+ * @returns The frame.
+ */
+export function createRotatedFrame(zone: Box, angle: number): RotatedFrame
+{
+    const width = zone.x1 - zone.x0;
+    const height = zone.y1 - zone.y0;
+    const cosine = Math.abs(Math.cos(angle));
+    const sine = Math.abs(Math.sin(angle));
+    const frameWidth = Math.ceil(width * cosine + height * sine);
+    const frameHeight = Math.ceil(width * sine + height * cosine);
+
+    return {
+        angle,
+        sourceCenterX: (zone.x0 + zone.x1) / 2,
+        sourceCenterY: (zone.y0 + zone.y1) / 2,
+        centerX: frameWidth / 2,
+        centerY: frameHeight / 2,
+        width: frameWidth,
+        height: frameHeight,
+    };
+}
+
+/**
+ * Maps a figure point into a turned frame.
+ *
+ * @param frame - The frame.
+ * @param x - Figure x.
+ * @param y - Figure y.
+ * @returns The point in frame coordinates.
+ */
+export function mapPointToFrame(frame: RotatedFrame, x: number, y: number): Point
+{
+    const cosine = Math.cos(-frame.angle);
+    const sine = Math.sin(-frame.angle);
+    const dx = x - frame.sourceCenterX;
+    const dy = y - frame.sourceCenterY;
+
+    return { x: frame.centerX + dx * cosine - dy * sine, y: frame.centerY + dx * sine + dy * cosine };
+}
+
+/**
+ * Maps a point of a turned frame back into the figure.
+ *
+ * @param frame - The frame.
+ * @param x - Frame x.
+ * @param y - Frame y.
+ * @returns The point in figure coordinates.
+ */
+export function mapPointFromFrame(frame: RotatedFrame, x: number, y: number): Point
+{
+    const cosine = Math.cos(frame.angle);
+    const sine = Math.sin(frame.angle);
+    const dx = x - frame.centerX;
+    const dy = y - frame.centerY;
+
+    return { x: frame.sourceCenterX + dx * cosine - dy * sine, y: frame.sourceCenterY + dx * sine + dy * cosine };
 }

@@ -6,6 +6,7 @@
 
 import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
 import { cleanTaxonText, isLabelSized } from "./labels.ts";
+import { mapPointToFrame } from "./geometry.ts";
 
 /**
  * Outcome of an edit.
@@ -416,15 +417,17 @@ function assignNearestTextLine(document: ExtractionDocument, tip: Tip): void
     for (let index = 0; index < document.textLines.length; index++)
     {
         const line = document.textLines[index];
+        const point = line.frame === undefined ? tip : mapPointToFrame(line.frame, tip.x, tip.y);
         const center = (line.box.y0 + line.box.y1) / 2;
-        const offset = line.box.x0 - tip.x;
+        const offset = line.box.x0 - point.x;
+        const tolerance = line.frame === undefined ? 0.8 * glyph : 0.8 * Math.max(glyph, line.box.y1 - line.box.y0);
 
-        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || Math.abs(center - tip.y) > 0.8 * glyph || offset < -1.5 * glyph || offset > 5 * glyph)
+        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || Math.abs(center - point.y) > tolerance || offset < -1.5 * glyph || offset > 5 * glyph)
         {
             continue;
         }
 
-        const distance = Math.abs(offset) + Math.abs(center - tip.y);
+        const distance = Math.abs(offset) + Math.abs(center - point.y);
 
         if (distance < bestDistance)
         {

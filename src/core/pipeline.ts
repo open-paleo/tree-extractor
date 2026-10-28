@@ -9,6 +9,8 @@ import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
 import { chooseRoot } from "./tree.ts";
 import { detectOrientation } from "./orientation.ts";
+import { detectSlantedLabels } from "./slant.ts";
+import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
 import { extendTipsThroughMarkers, findFatShapes, keepSmallShapes, removeFrameSegments, splitColoredInk } from "./markers.ts";
@@ -181,6 +183,16 @@ export type Parameters = {
     rotation: "auto" | "none";
 
     /**
+     * Look for tip labels set at a slant and read them in a level frame.
+     */
+    slantedLabels: boolean;
+
+    /**
+     * Smallest label slant in degrees that gets a level frame.
+     */
+    minLabelSlant: number;
+
+    /**
      * Profile values fixed by the caller instead of measured.
      */
     profileOverrides: ProfileOverrides;
@@ -215,6 +227,8 @@ export const defaultParameters: Parameters = {
     extendThroughShapes: true,
     gapInkShare: 0.4,
     rotation: "auto",
+    slantedLabels: true,
+    minLabelSlant: 6,
     profileOverrides: {},
 };
 
@@ -803,6 +817,44 @@ export function formatTimings(timings: Record<string, number>): string
 }
 
 /**
+ * Replaces the level rows that lie in the slanted labels' zone with the rows found in the
+ * level frame, numbering the frame's rows on from the rest.
+ *
+ * @param lines - Rows found in the figure's frame.
+ * @param slanted - Rows found in the level frame, with the zone they cover.
+ * @returns The combined rows.
+ */
+function replaceZoneLines(lines: Array<TextLine>, slanted: SlantedLabels): Array<TextLine>
+{
+    const { zone } = slanted;
+    const kept = new Array<TextLine>();
+    let highest = 0;
+
+    for (const line of lines)
+    {
+        const centerX = (line.box.x0 + line.box.x1) / 2;
+        const centerY = (line.box.y0 + line.box.y1) / 2;
+        highest = Math.max(highest, Number(line.id.slice(1)) || 0);
+
+        if (!(centerX >= zone.x0 && centerX < zone.x1 && centerY >= zone.y0 && centerY < zone.y1))
+        {
+            kept.push(line);
+        }
+    }
+
+    // Numbered on from the highest id the figure's rows had, dropped ones included, so that no
+    // id is used twice.
+    for (const line of slanted.lines)
+    {
+        highest++;
+        line.id = `l${highest}`;
+        kept.push(line);
+    }
+
+    return kept;
+}
+
+/**
  * Records how the figure's orientation was decided, when it was turned or could not be
  * decided.
  *
@@ -988,6 +1040,19 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const lineArtBoxes = [...usedBoxes, ...findStubExtensions(lineInk, usedBoxes, glyphHeight)];
     const lineArtMask = dilate(createMaskFromBoxes(lineArtBoxes, image.width, image.height), 1);
     const text = detectTextLines(textInk, { lineArtMask, minY: parameters.textMinY });
+
+    // Labels set at a slant are found again in a level frame of their own; the level rows in
+    // that zone, fragments of the same labels, give way to them.
+    const slanted = parameters.slantedLabels ? detectSlantedLabels(textInk, lineArtMask, trace.tips, text.glyphHeight, (parameters.minLabelSlant * Math.PI) / 180) : null;
+    const textLines = slanted === null ? text.lines : replaceZoneLines(text.lines, slanted);
+    const slantIssues = new Array<QcIssue>();
+
+    if (slanted !== null)
+    {
+        const degrees = Math.round((slanted.measure.angle * 180) / Math.PI);
+        slantIssues.push({ severity: "info", code: "labels-slanted", message: `tip labels run at ${degrees} degrees (${slanted.measure.pairs} letter pairs, ${Math.round(100 * slanted.measure.share)}% agreeing); ${slanted.lines.length} row(s) found in a level frame of the label zone`, subject: null });
+    }
+
     recordLap("text");
 
     const document: ExtractionDocument = {
@@ -995,11 +1060,11 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         image: { width: fullWidth, height: fullHeight, source: options.source ?? null, region, quarterTurns },
         horizontals,
         verticals,
-        textLines: text.lines,
+        textLines,
         nodes: trace.nodes,
         tips: trace.tips,
         root: trace.root,
-        qc: [...orientationIssues, ...frameIssues, ...trace.issues],
+        qc: [...orientationIssues, ...frameIssues, ...trace.issues, ...slantIssues],
         rejectedVerticals: trace.rejected,
         branches: trace.branches,
         glyphHeight: text.glyphHeight,

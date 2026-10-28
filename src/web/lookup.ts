@@ -6,6 +6,7 @@
 import type { ExtractionDocument, TreeNode } from "../core/types.ts";
 import { collectConnected } from "../core/tree.ts";
 import type { Layers, Selection } from "./state.ts";
+import { mapPointToFrame } from "../core/geometry.ts";
 
 export { collectConnected };
 
@@ -34,7 +35,9 @@ function findLabelOwner(document: ExtractionDocument, imageX: number, imageY: nu
 
     for (const line of document.textLines)
     {
-        if (imageX >= line.box.x0 && imageX < line.box.x1 && imageY >= line.box.y0 && imageY < line.box.y1)
+        const point = line.frame === undefined ? { x: imageX, y: imageY } : mapPointToFrame(line.frame, imageX, imageY);
+
+        if (point.x >= line.box.x0 && point.x < line.box.x1 && point.y >= line.box.y0 && point.y < line.box.y1)
         {
             lineId = line.id;
             break;

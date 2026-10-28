@@ -3,8 +3,10 @@
  * against a name list.
  */
 
-import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressReporter, TextLine } from "./types.ts";
+import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressReporter, RotatedFrame, TextLine } from "./types.ts";
 import { cropAndScale } from "./raster.ts";
+import { mapPointToFrame } from "./geometry.ts";
+import { rotateGrayToFrame } from "./slant.ts";
 import { matchKnownName, matchName } from "./matching.ts";
 
 /**
@@ -75,12 +77,17 @@ export function assignLabels(document: ExtractionDocument): void
 
         for (const line of document.textLines)
         {
+            // A row found in a level frame is compared with the tip mapped into that frame, and
+            // since the glyph height was measured on level fragments of these labels, the row's
+            // own height sets the vertical tolerance there.
+            const point = line.frame === undefined ? tip : mapPointToFrame(line.frame, tip.x, tip.y);
             const center = (line.box.y0 + line.box.y1) / 2;
-            const offset = line.box.x0 - tip.x;
+            const offset = line.box.x0 - point.x;
+            const tolerance = line.frame === undefined ? 0.8 * glyph : 0.8 * Math.max(glyph, line.box.y1 - line.box.y0);
 
-            if (isLabelSized(line, glyph) && Math.abs(center - tip.y) <= 0.8 * glyph && offset >= -reachBack && offset <= 5 * glyph)
+            if (isLabelSized(line, glyph) && Math.abs(center - point.y) <= tolerance && offset >= -reachBack && offset <= 5 * glyph)
             {
-                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(center - tip.y) });
+                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(center - point.y) });
             }
         }
     }
@@ -288,7 +295,27 @@ export async function readLabels(
 ): Promise<void>
 {
     const total = document.tips.length + document.nodes.length;
+    const framed = new Map<RotatedFrame, GrayImage>();
     let done = 0;
+
+    // A row in a level frame is cropped from the erased image turned into that frame.
+    function chooseSource(line: TextLine): GrayImage
+    {
+        if (line.frame === undefined)
+        {
+            return erased;
+        }
+
+        let turned = framed.get(line.frame);
+
+        if (turned === undefined)
+        {
+            turned = rotateGrayToFrame(erased, line.frame);
+            framed.set(line.frame, turned);
+        }
+
+        return turned;
+    }
 
     for (const tip of document.tips)
     {
@@ -302,7 +329,10 @@ export async function readLabels(
 
         if (line !== undefined)
         {
-            line.ocr = await ocr.recognize(cropAndScale(erased, line.box, 3, scale, scale * document.profile.font.condensing), "text");
+            // The font profile describes the rows in the figure's frame; a row in a level frame
+            // is read as it is.
+            const condensing = line.frame === undefined ? document.profile.font.condensing : 1;
+            line.ocr = await ocr.recognize(cropAndScale(chooseSource(line), line.box, 3, scale, scale * condensing), "text");
             const cleaned = cleanTaxonText(line.ocr.text);
             tip.label = cleaned.length > 0 ? cleaned : null;
             tip.match = chooseMatch(tip.label, names, knownNames);
@@ -321,7 +351,7 @@ export async function readLabels(
 
         if (line !== undefined)
         {
-            line.ocr = await ocr.recognize(cropAndScale(erased, line.box, 3, scale), "digits");
+            line.ocr = await ocr.recognize(cropAndScale(chooseSource(line), line.box, 3, scale), "digits");
             const cleaned = cleanSupportText(line.ocr.text);
             node.label = cleaned.length > 0 ? cleaned : null;
         }

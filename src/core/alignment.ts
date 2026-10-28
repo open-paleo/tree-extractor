@@ -40,7 +40,8 @@ function findRowsWithoutTip(document: ExtractionDocument, tipX: number): Array<T
     {
         const offset = line.box.x0 - tipX;
 
-        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || offset < -1.5 * glyph || offset > 5 * glyph)
+        // A row in a level frame is not at the tip line in figure coordinates.
+        if (line.frame !== undefined || line.role !== "unassigned" || !isLabelSized(line, glyph) || offset < -1.5 * glyph || offset > 5 * glyph)
         {
             continue;
         }

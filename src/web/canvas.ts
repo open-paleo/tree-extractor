@@ -2,13 +2,47 @@
  * Image rendering: draws the figure and its overlays on a canvas under a zoom-and-pan transform.
  */
 
-import type { ExtractionDocument } from "../core/types.ts";
+import type { ExtractionDocument, RotatedFrame } from "../core/types.ts";
 import type { ViewTransform, ViewerState } from "./state.ts";
 import { collectConnected, getNodeMarkerY } from "./lookup.ts";
 import { findNodeById, findTipById } from "../core/edit.ts";
 
 const minScale = 0.05;
 const maxScale = 32;
+
+/**
+ * Applies a text row's level frame to the context, so that a box drawn in frame coordinates
+ * lands turned on the figure. Without a frame nothing happens.
+ *
+ * @param context - Drawing context.
+ * @param frame - The row's frame, if any.
+ */
+function enterFrame(context: CanvasRenderingContext2D, frame: RotatedFrame | undefined): void
+{
+    if (frame === undefined)
+    {
+        return;
+    }
+
+    context.save();
+    context.translate(frame.sourceCenterX, frame.sourceCenterY);
+    context.rotate(frame.angle);
+    context.translate(-frame.centerX, -frame.centerY);
+}
+
+/**
+ * Undoes enterFrame.
+ *
+ * @param context - Drawing context.
+ * @param frame - The row's frame, if any.
+ */
+function leaveFrame(context: CanvasRenderingContext2D, frame: RotatedFrame | undefined): void
+{
+    if (frame !== undefined)
+    {
+        context.restore();
+    }
+}
 
 /**
  * A canvas showing the figure with a view transform.
@@ -251,7 +285,9 @@ export class CanvasView
             {
                 context.strokeStyle = line.role === "tip" ? "rgba(0, 170, 0, 0.9)" : line.role === "node" ? "rgba(160, 0, 200, 0.9)" : "rgba(160, 160, 160, 0.6)";
                 const { x0, y0, x1, y1 } = line.box;
+                enterFrame(context, line.frame);
                 context.strokeRect(x0, y0, x1 - x0, y1 - y0);
+                leaveFrame(context, line.frame);
             }
         }
 
@@ -358,7 +394,9 @@ export class CanvasView
             if (line.id === textLine)
             {
                 const { x0, y0, x1, y1 } = line.box;
+                enterFrame(context, line.frame);
                 context.strokeRect(x0 - unit, y0 - unit, x1 - x0 + 2 * unit, y1 - y0 + 2 * unit);
+                leaveFrame(context, line.frame);
             }
         }
     }

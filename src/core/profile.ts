@@ -577,7 +577,8 @@ export function measureFont(glyphMask: Mask, textInk: Mask, lines: Array<TextLin
  */
 function isLongRow(line: TextLine, glyphHeight: number): boolean
 {
-    return line.box.x1 - line.box.x0 >= 6 * glyphHeight;
+    // A row in a level frame does not lie on the glyph mask where its box says.
+    return line.frame === undefined && line.box.x1 - line.box.x0 >= 6 * glyphHeight;
 }
 
 /**

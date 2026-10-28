@@ -91,6 +91,19 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    a legend). The main tree is then chosen again as the piece with the most tips, and once
    more after labels are read, since a chart or a frame can outnumber the tree before its
    pieces are recognized as debris.
+
+   Tip labels set at a slant, which a quarter turn leaves twenty or thirty degrees off level,
+   get a frame of their own (`src/core/slant.ts`). The slant is measured in the label zone,
+   right of the tip line over the tips' rows, from the direction in which letter-sized pieces of
+   ink follow their nearest right-hand neighbor: the angle most pairs agree on. When it is six
+   degrees or more, the zone is turned level into a frame sized to hold it, the rows are found
+   there, and they replace the level fragments the zone had. Each such row carries its frame, so
+   pairing maps the tip into the frame (with the row's own height as the vertical tolerance,
+   since the glyph height was measured on fragments), the OCR crop is cut from the erased image
+   turned into the frame and read without the figure's condensing, and the overlays draw the box
+   turned back. Level text measures near zero whether or not it is italic, so upright figures
+   are untouched. Averianov 2006, Kobayashi 2003 and Pacheco 2019 read their tips this way.
+
 6. **OCR and matching.** Each label is cropped from the image with the line art painted out and
    upscaled so that its letters are about 45 pixels high (at most three times, never less than
    one, since Tesseract's time grows with the crop's area and large letters need no help); letter-spaced text, recognized by the figure's letter gap in the
@@ -151,11 +164,6 @@ Large-font figures read two to three times faster for it; small fonts are unchan
 
 ## Known gaps
 
-- A turned tree's labels come out horizontal only when they were set at a right angle. Labels
-  set at a slant (Averianov 2006 and Kobayashi 2003 at about 60 degrees, Pacheco 2019 at about
-  70) are traced but not read: the row detector breaks a slanted label into short pieces and the
-  OCR gets fragments. Measuring the slant and turning each label crop before reading it is the
-  next step for these; the same would serve slanted labels on root-left trees.
 - Pectinate trees whose steps between successive nodes are shorter than the shortest line run
   (about ten pixels) lose those steps; the ink between two close verticals is then no segment.
   `findShortConnectors` recovers such pieces, but switched on it costs the tuned figures more

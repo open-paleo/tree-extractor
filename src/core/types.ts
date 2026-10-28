@@ -143,6 +143,12 @@ export type TextLine = {
      * Raw OCR output, if the line was read.
      */
     ocr: OcrResult | null;
+
+    /**
+     * The turned frame the box is measured in, when the row was found among labels set at a
+     * slant; absent for a row in the figure's own frame.
+     */
+    frame?: RotatedFrame;
 };
 
 /**
@@ -536,6 +542,63 @@ export type ProgressReporter = {
      * @param total - Items in the stage, or 0 when the stage is not itemized.
      */
     report(stage: string, done: number, total: number): void;
+};
+
+/**
+ * A point in pixels.
+ */
+export type Point = {
+    /**
+     * Horizontal coordinate.
+     */
+    x: number;
+
+    /**
+     * Vertical coordinate.
+     */
+    y: number;
+};
+
+/**
+ * A frame turned against the figure so that slanted labels read level. A figure point maps
+ * into it by turning about the source center by minus the angle and landing about the frame
+ * center; the frame is a canvas of its own width and height.
+ */
+export type RotatedFrame = {
+    /**
+     * Slant of the labels in radians, positive when they run downward to the right.
+     */
+    angle: number;
+
+    /**
+     * Center of the turn in the figure.
+     */
+    sourceCenterX: number;
+
+    /**
+     * Center of the turn in the figure.
+     */
+    sourceCenterY: number;
+
+    /**
+     * Where the source center lands in the frame.
+     */
+    centerX: number;
+
+    /**
+     * Where the source center lands in the frame.
+     */
+    centerY: number;
+
+    /**
+     * Frame canvas width.
+     */
+    width: number;
+
+    /**
+     * Frame canvas height.
+     */
+    height: number;
 };
 
 /**

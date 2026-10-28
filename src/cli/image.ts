@@ -65,7 +65,9 @@ export function renderOverlaySvg(document: ExtractionDocument): string
     {
         const color = line.role === "tip" ? "rgba(0,170,0,0.9)" : line.role === "node" ? "rgba(160,0,200,0.9)" : "rgba(160,160,160,0.6)";
         const { x0, y0, x1, y1 } = line.box;
-        parts.push(`<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="${color}" stroke-width="1"/>`);
+        const frame = line.frame;
+        const transform = frame === undefined ? "" : ` transform="translate(${frame.sourceCenterX} ${frame.sourceCenterY}) rotate(${(frame.angle * 180) / Math.PI}) translate(${-frame.centerX} ${-frame.centerY})"`;
+        parts.push(`<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="${color}" stroke-width="1"${transform}/>`);
     }
 
     for (const node of document.nodes)
