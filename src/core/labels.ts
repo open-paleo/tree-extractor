@@ -168,11 +168,64 @@ export function assignLabels(document: ExtractionDocument): void
  */
 export function cleanTaxonText(text: string): string
 {
-    return text
+    const cleaned = text
         .replace(/[^A-Za-z0-9 .'()-]/g, " ")
         .replace(/\s+/g, " ")
         .replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9.)]+$/g, "")
         .trim();
+
+    return dropRubbleWords(cleaned);
+}
+
+/**
+ * Whether a word is what a dashed or striped bar reads as: a letter four times in a row,
+ * three or fewer different letters in six or more, or five or more with no vowel or digit.
+ *
+ * @param letters - The word's letters and digits.
+ * @returns True for rubble.
+ */
+export function isRubbleWord(letters: string): boolean
+{
+    if (/(.)\1\1\1/i.test(letters) || (letters.length > 4 && !/[aeiouy0-9]/i.test(letters)))
+    {
+        return true;
+    }
+
+    return letters.length >= 6 && new Set(letters.toLowerCase()).size <= 3;
+}
+
+/**
+ * Drops what a dashed or striped bar leaves in a read: words with a letter four times in a
+ * row, with three or fewer different letters in six or more ("cmmmmmmmnn", "immemmmeem"), or
+ * long with no vowel, and short lowercase words before the first capital ("imi
+ * Confuciusornithidae"), since a name starts with a capital.
+ *
+ * @param text - Cleaned read.
+ * @returns The read without the rubble.
+ */
+function dropRubbleWords(text: string): string
+{
+    const words = text.split(" ");
+    const kept = new Array<string>();
+
+    for (const word of words)
+    {
+        const letters = word.replace(/[^A-Za-z0-9]/g, "");
+
+        if (letters.length === 0 || isRubbleWord(letters))
+        {
+            continue;
+        }
+
+        if (kept.length === 0 && letters.length <= 3 && letters === letters.toLowerCase() && /[A-Z]/.test(words.slice(words.indexOf(word) + 1).join("")))
+        {
+            continue;
+        }
+
+        kept.push(word);
+    }
+
+    return kept.join(" ");
 }
 
 /**
@@ -217,6 +270,16 @@ function chooseMatch(label: string | null, names: Array<string>, knownNames: Arr
         return exact !== null && exact.similarity >= 0.98 ? exact : null;
     }
 
+    // So is a single word with the ending of a family, subfamily, tribe, superfamily or order
+    // (Ornithomimosauria, Confuciusornithidae): the list's Ornithomimus is not its name,
+    // however well the stem matches.
+    if (isHigherTaxonName(label))
+    {
+        const exact = names.length === 0 ? null : matchName(label, names);
+
+        return exact !== null && exact.similarity >= 0.9 ? exact : null;
+    }
+
     const own = names.length === 0 ? null : matchName(label, names);
 
     if (own !== null && own.accepted)
@@ -240,6 +303,19 @@ function chooseMatch(label: string | null, names: Array<string>, knownNames: Arr
  *
  * @param label - Cleaned label.
  * @returns True for a name in capitals.
+ */
+export function isHigherTaxonName(label: string): boolean
+{
+    const word = label.trim();
+
+    return /^[A-Z][a-z]+$/.test(word) && /(sauria|idae|inae|ini|oidea|iformes|morpha|thoraces)$/.test(word);
+}
+
+/**
+ * Whether a label is printed in capitals, which marks a clade name.
+ *
+ * @param label - Cleaned label text.
+ * @returns True for COELURIDAE and the like.
  */
 export function isCladeName(label: string): boolean
 {

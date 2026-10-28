@@ -90,8 +90,70 @@ export function compareNames(left: string, right: string): number
 }
 
 /**
+ * Words that say nothing about which name it is.
+ */
+const fillerTokens = new Set(["sp", "cf", "aff", "nov", "gen", "indet", "et", "al"]);
+
+/**
+ * Words of a normalized name that carry it: "sp" and its kin are left out, and so is OCR
+ * rubble (a letter four times in a row, three or fewer different letters in six or more, or a
+ * long word with no vowel or digit; "CPC" is a collection prefix and stays).
+ *
+ * @param text - Normalized text.
+ * @returns Its carrying words.
+ */
+function listCarryingTokens(text: string): Array<string>
+{
+    const tokens = new Array<string>();
+
+    for (const token of text.split(" "))
+    {
+        if (token.length < 2 || fillerTokens.has(token) || /(.)\1\1\1/.test(token) || (token.length > 4 && !/[aeiouy0-9]/.test(token)) || (token.length >= 6 && new Set(token).size <= 3))
+        {
+            continue;
+        }
+
+        tokens.push(token);
+    }
+
+    return tokens;
+}
+
+/**
+ * Scores a read against a name by the words they share, whatever the order: a specimen
+ * number printed before the genus ("MOR 692 Avaceratops") is the list's "Avaceratops sp.
+ * MOR 692". Two shared words are needed, so a genus alone never passes as a species.
+ *
+ * @param target - Normalized read.
+ * @param name - Normalized name.
+ * @returns Share of the longer word set that is shared, or 0 with fewer than two shared words.
+ */
+export function compareTokenSets(target: string, name: string): number
+{
+    const targetTokens = listCarryingTokens(target);
+    const nameTokens = new Set(listCarryingTokens(name));
+    let shared = 0;
+
+    for (const token of targetTokens)
+    {
+        if (nameTokens.has(token))
+        {
+            shared++;
+        }
+    }
+
+    if (shared < 2)
+    {
+        return 0;
+    }
+
+    return shared / Math.max(targetTokens.length, nameTokens.size);
+}
+
+/**
  * Scores OCR text against one name, allowing the forms figures print: the full name, the genus
- * alone, or the genus abbreviated to its initial ("S. homheni" for "Stegosaurus homheni").
+ * alone, the genus abbreviated to its initial ("S. homheni" for "Stegosaurus homheni"), or
+ * the same words in another order.
  *
  * @param target - Normalized OCR text.
  * @param name - Normalized candidate name.
@@ -99,7 +161,7 @@ export function compareNames(left: string, right: string): number
  */
 export function scoreName(target: string, name: string): number
 {
-    let score = compareNames(target, name);
+    let score = Math.max(compareNames(target, name), compareTokenSets(target, name));
     const space = name.indexOf(" ");
     const targetSpace = target.indexOf(" ");
 

@@ -16,7 +16,9 @@ the batch command line give identical results.
 Early. Fourteen published figures are in the benchmark: eight the pipeline was tuned on, which
 all come out identical, and six drawn at random from the Open Paleo corpus and run cold first,
 of which two (a three-panel ceratopsian figure and a tyrannosauroid tree with range bars and
-collapsed clades) are identical and four have most of their tree right. A census of 178 tree
+collapsed clades) are identical, two name every tip (a 19-tip abelisaurid tree and a 30-tip
+centrosaurine tree with numbered node discs, range ovals and silhouettes, which names 29) and
+two have most of their tree right (a 52-tip paravian time tree names 50). A census of 178 tree
 figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-left trees at
 72 percent, slanted at 13 and vertical at 13. Vertical trees are turned a quarter and traced
 like the rest, and labels set at a slant are read in a level frame of their own (the four

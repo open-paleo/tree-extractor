@@ -4,8 +4,9 @@
  * fills), and the frame some figures draw around themselves.
  */
 
-import type { ExtractionDocument, Mask, QcIssue, RgbaImage, Segment } from "./types.ts";
-import { createMaskFromComponents, dilate, erode, findConnectedComponents, subtractMask } from "./raster.ts";
+import type { Box, ExtractionDocument, Mask, QcIssue, RgbaImage, Segment } from "./types.ts";
+import { createMaskFromComponents, dilate, erode, findConnectedComponents, subtractMask, closeMask } from "./raster.ts";
+import { deleteTip } from "./edit.ts";
 
 /**
  * Colored ink split by shape.
@@ -252,6 +253,7 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
     const { width, height, data } = fat;
     const half = Math.max(1, Math.round(thickness));
     let moved = 0;
+    const absorbed = new Array<string>();
 
     for (const tip of document.tips)
     {
@@ -288,5 +290,183 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
         }
     }
 
+    // A range bar traced as a segment of its own has a tip at its far end already, hung from
+    // whatever its end touched (a stage boundary, say), and now the branch that ran into the
+    // bar ends there too. The branch that started further left is the real one; the other goes.
+    for (const tip of document.tips)
+    {
+        for (const other of document.tips)
+        {
+            if (other !== tip && Math.abs(other.x - tip.x) <= 2 * half + 2 && Math.abs(other.y - tip.y) <= half
+                && (other.extendedFrom ?? other.x) > (tip.extendedFrom ?? tip.x) && !absorbed.includes(tip.id))
+            {
+                absorbed.push(other.id);
+            }
+        }
+    }
+
+    for (const id of absorbed)
+    {
+        deleteTip(document, id);
+    }
+
     return moved;
+}
+
+/**
+ * Finds filled discs the size of a node marker: a numbered circle drawn over a junction. Such a
+ * disc is round, a glyph or three across, and mostly filled even with a digit knocked out of
+ * it. Its halves beside the digit pass for glyphs and leave the line art, which cuts the
+ * branches at the junction they cover.
+ *
+ * The digit's strokes are closed first, so the disc is solid, and the ink is then eroded by
+ * the line thickness, so the branches vanish and the disc's core remains, to be measured and
+ * grown back. A disc is as wide as it is tall, to a tenth, and solid before the closing (half
+ * its box inked at least, where a two-digit support value closed into a blob inks a third),
+ * and lines enter it on at least two sides, which a label beside a branch has not.
+ *
+ * @param textInk - Dark pixels at the text threshold.
+ * @param lineInk - Line ink, for the branches entering the disc.
+ * @param glyphHeight - Glyph height in pixels.
+ * @param thickness - Line thickness in pixels.
+ * @returns Bounding boxes of the discs.
+ */
+export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number, thickness: number): Array<Box>
+{
+    const radius = Math.max(2, Math.round(thickness / 2) + 1);
+    const closed = closeMask(textInk, Math.max(2, Math.round(glyphHeight / 5)));
+    const { components } = findConnectedComponents(erode(closed, radius));
+    const discs = new Array<Box>();
+
+    for (const component of components)
+    {
+        const coreWidth = component.box.x1 - component.box.x0;
+        const coreHeight = component.box.y1 - component.box.y0;
+        const width = coreWidth + 2 * radius;
+        const height = coreHeight + 2 * radius;
+        const size = Math.max(width, height);
+
+        if (size < 1.5 * glyphHeight || size > 3.5 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || component.area < 0.6 * coreWidth * coreHeight)
+        {
+            continue;
+        }
+
+        const box: Box = { x0: component.box.x0 - radius, y0: component.box.y0 - radius, x1: component.box.x1 + radius, y1: component.box.y1 + radius };
+
+        if (measureInkShare(textInk, box) >= 0.5 && countSidesEntered(lineInk, box, thickness) >= 2)
+        {
+            discs.push(box);
+        }
+    }
+
+    return discs;
+}
+
+/**
+ * Share of a box's pixels that are inked.
+ *
+ * @param mask - Mask.
+ * @param box - The box.
+ * @returns A share from 0 to 1.
+ */
+function measureInkShare(mask: Mask, box: Box): number
+{
+    const { width, height, data } = mask;
+    let count = 0;
+    let area = 0;
+
+    for (let y = Math.max(0, box.y0); y < Math.min(height, box.y1); y++)
+    {
+        for (let x = Math.max(0, box.x0); x < Math.min(width, box.x1); x++)
+        {
+            count += data[y * width + x];
+            area++;
+        }
+    }
+
+    return area === 0 ? 0 : count / area;
+}
+
+/**
+ * Counts the sides of a box that line ink enters: a side counts when the band just outside
+ * it holds at least a line's thickness of ink.
+ *
+ * @param lineInk - Line ink.
+ * @param box - The box.
+ * @param thickness - Line thickness in pixels.
+ * @returns Sides entered, 0 to 4.
+ */
+function countSidesEntered(lineInk: Mask, box: Box, thickness: number): number
+{
+    const { width, height, data } = lineInk;
+    const band = 3;
+    const needed = Math.max(2, Math.round(0.6 * thickness * band));
+
+    function countInk(x0: number, y0: number, x1: number, y1: number): number
+    {
+        let count = 0;
+
+        for (let y = Math.max(0, y0); y < Math.min(height, y1); y++)
+        {
+            for (let x = Math.max(0, x0); x < Math.min(width, x1); x++)
+            {
+                count += data[y * width + x];
+            }
+        }
+
+        return count;
+    }
+
+    let sides = 0;
+    sides += countInk(box.x0 - band, box.y0, box.x0, box.y1) >= needed ? 1 : 0;
+    sides += countInk(box.x1, box.y0, box.x1 + band, box.y1) >= needed ? 1 : 0;
+    sides += countInk(box.x0, box.y0 - band, box.x1, box.y0) >= needed ? 1 : 0;
+    sides += countInk(box.x0, box.y1, box.x1, box.y1 + band) >= needed ? 1 : 0;
+
+    return sides;
+}
+
+/**
+ * Replaces each disc by a cross of line thickness, so that the branches meeting under it run
+ * on through as lines: the disc itself is cleared, since a run through a solid disc is too
+ * thick to pass for a line, and the horizontal arm then spans the disc's width and the
+ * vertical its height.
+ *
+ * @param lineArt - Mask painted in place.
+ * @param discs - Disc boxes.
+ * @param thickness - Line thickness in pixels.
+ */
+export function paintCrosses(lineArt: Mask, discs: Array<Box>, thickness: number): void
+{
+    const half = Math.max(1, Math.round(thickness / 2));
+
+    for (const disc of discs)
+    {
+        const centerX = Math.round((disc.x0 + disc.x1) / 2);
+        const centerY = Math.round((disc.y0 + disc.y1) / 2);
+
+        for (let y = Math.max(0, disc.y0); y < Math.min(lineArt.height, disc.y1); y++)
+        {
+            for (let x = Math.max(0, disc.x0); x < Math.min(lineArt.width, disc.x1); x++)
+            {
+                lineArt.data[y * lineArt.width + x] = 0;
+            }
+        }
+
+        for (let y = Math.max(0, centerY - half); y < Math.min(lineArt.height, centerY + half); y++)
+        {
+            for (let x = Math.max(0, disc.x0); x < Math.min(lineArt.width, disc.x1); x++)
+            {
+                lineArt.data[y * lineArt.width + x] = 1;
+            }
+        }
+
+        for (let y = Math.max(0, disc.y0); y < Math.min(lineArt.height, disc.y1); y++)
+        {
+            for (let x = Math.max(0, centerX - half); x < Math.min(lineArt.width, centerX + half); x++)
+            {
+                lineArt.data[y * lineArt.width + x] = 1;
+            }
+        }
+    }
 }

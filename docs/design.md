@@ -64,7 +64,16 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    verticals likewise for columns, so a thick branch cannot read as a short connector and a
    connector cannot be swallowed by the branch it crosses. The shortest run that counts is twice
    the line thickness, which is measured on the mask as the median vertical run of ink, so a
-   thick figure does not turn its verticals into stacks of short horizontals. Columns where the
+   thick figure does not turn its verticals into stacks of short horizontals. Only long pieces
+   (four times as wide as thick) count toward that thickness: a silhouette or a box is a blob of
+   wide runs, and counted as a thick line it once pushed the shortest vertical run past a
+   figure's own node connectors (Loewen 2024 lost every short connector that way). A filled
+   disc over a junction, a numbered node marker, is found first (round to a tenth, a glyph and
+   a half to three and a half across, half inked, with lines entering on two sides) and replaced
+   in the copy the segments are taken from by a cross of line thickness, since the disc's halves
+   beside the digit pass for glyphs and cut the branches under it. A vertical a third of a line
+   thick and a few thicknesses tall is a sliver, a rounded end or a stray edge, and is dropped
+   before it can take a branch's attachment from the vertical it leans on. Columns where the
    dark ink is glyph-high split a horizontal, label rows clip it, verticals inside label rows are
    dropped, and collinear pieces are rejoined across the gap a label's white background box cuts
    (up to six glyph heights for horizontals, far less for verticals, which stack), but only when
@@ -82,8 +91,10 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 5. **Labels.** Text is detected again with the traced line art (and any range-bar stub beyond it)
    painted out, then tip rows are assigned to the nearest branch end on their left and remaining
    rows to the nearest junction on their right. Before that, a tip whose branch runs into a
-   solid shape (a collapsed-clade wedge) or a colored marker (a range oval) of marker size moves
-   to the shape's far side, where its label is, and its label row may start as far back as the
+   solid shape (a collapsed-clade wedge, a range bar) or a colored marker (a range oval) no
+   taller than a label row, however long, moves to the shape's far side, where its label is;
+   when a bar traced as a segment of its own already had a tip at that end, the tip whose
+   branch started further left stays and the other goes, and its label row may start as far back as the
    branch did. A text row's box leaves out solid blocks (a range bar touching a label), so the
    row neither clips the branch stub next to the bar nor sits over it. Short unlabelled tips are
    dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
@@ -110,8 +121,15 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    profile, is condensed horizontally first. Reads are matched to the name list by edit distance, allowing
    the genus alone, the genus abbreviated to its initial, and a binomial read against a
    genus-only list; two names that share a generic ending such as *-saurus* are no closer than
-   their stems. A tip printed in capitals is a collapsed clade and keeps its printed name unless
-   a list has it exactly. A read the paper's list does not explain is offered to the known taxa of the
+   their stems. Reads are also scored by the words they share with a name whatever the order,
+   two shared words at least, so "MOR 692 Avaceratops" is the list's "Avaceratops sp. MOR 692".
+   What a dashed or striped bar reads as (a letter four times in a row, a long word of three
+   letters, a short lowercase word before the first capital) is dropped from the read first.
+   A tip printed in capitals is a collapsed clade and keeps its printed name unless a list has
+   it exactly, and so does a single word with the ending of a family or an order
+   (Ornithomimosauria, Compsognathidae), whose stem would otherwise match a genus of the list.
+   A tip that lies on the recognized time axis is dropped: the axis traces as a branch when a
+   frame line connects it to the tree, and its ends read the legend. A read the paper's list does not explain is offered to the known taxa of the
    data set (`names/known-taxa.txt`), which accepts only an exact name or a close one clear of
    its runner-up, and flags the tip as matched from outside the paper's taxa. Tips whose read
    matched nothing are then paired with the paper's names nobody claimed, by elimination, when

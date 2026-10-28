@@ -3,7 +3,7 @@
  * engine, so it runs in Node and in the browser alike.
  */
 
-import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Orientation, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
+import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Orientation, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, Segment, TextLine, Tip, TreeNode } from "./types.ts";
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
@@ -13,7 +13,7 @@ import { detectSlantedLabels } from "./slant.ts";
 import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
-import { extendTipsThroughMarkers, findFatShapes, keepSmallShapes, removeFrameSegments, splitColoredInk } from "./markers.ts";
+import { extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -35,10 +35,11 @@ import {
 import { detectTextLines } from "./text-lines.ts";
 import { extractSegments, findShortConnectors } from "./segments.ts";
 import { traceRectangularTree } from "./tracer.ts";
-import { assignLabels, readLabels, isCladeName } from "./labels.ts";
+import { assignLabels, readLabels, isCladeName, isHigherTaxonName } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
 import { normalizeName, scoreName } from "./matching.ts";
 import { clampBox, cropImage, rotateBox, translateDocument } from "./geometry.ts";
+import { deleteTip } from "./edit.ts";
 
 /**
  * Tunable thresholds for the pipeline. Defaults suit figures around 1000 to 2500 pixels wide.
@@ -183,6 +184,11 @@ export type Parameters = {
     rotation: "auto" | "none";
 
     /**
+     * Paint a cross through filled node discs so that the branches they cover connect.
+     */
+    nodeDiscs: boolean;
+
+    /**
      * Look for tip labels set at a slant and read them in a level frame.
      */
     slantedLabels: boolean;
@@ -227,6 +233,7 @@ export const defaultParameters: Parameters = {
     extendThroughShapes: true,
     gapInkShare: 0.4,
     rotation: "auto",
+    nodeDiscs: true,
     slantedLabels: true,
     minLabelSlant: 6,
     profileOverrides: {},
@@ -669,7 +676,7 @@ function assignLeftoverNames(document: ExtractionDocument, names: Array<string>)
         {
             taken.add(tip.match.name);
         }
-        else if (tip.label !== null && !isCladeName(tip.label))
+        else if (tip.label !== null && !isCladeName(tip.label) && !isHigherTaxonName(tip.label))
         {
             open.push(tip);
         }
@@ -817,6 +824,43 @@ export function formatTimings(timings: Record<string, number>): string
 }
 
 /**
+ * Drops tips that lie on the time axis: the axis line traces as a branch when a tick or a
+ * frame line connects it to the tree, and its ends then read the legend or the axis labels.
+ *
+ * @param document - Document with its profile measured.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns One informational issue per tip dropped.
+ */
+function dropAxisTips(document: ExtractionDocument, glyphHeight: number): Array<QcIssue>
+{
+    const axis = document.profile.timeScaled.axis;
+    const issues = new Array<QcIssue>();
+
+    if (axis === null)
+    {
+        return issues;
+    }
+
+    const onAxis = new Array<string>();
+
+    for (const tip of document.tips)
+    {
+        if (tip.y >= axis.y0 - glyphHeight && tip.y <= axis.y1 + glyphHeight && tip.x >= axis.x0 - 2 * glyphHeight && tip.x <= axis.x1 + 2 * glyphHeight)
+        {
+            onAxis.push(tip.id);
+        }
+    }
+
+    for (const id of onAxis)
+    {
+        deleteTip(document, id);
+        issues.push({ severity: "info", code: "axis-tip-dropped", message: `tip ${id} lay on the time axis and was dropped`, subject: null });
+    }
+
+    return issues;
+}
+
+/**
  * Replaces the level rows that lie in the slanted labels' zone with the rows found in the
  * level frame, numbering the frame's rows on from the rest.
  *
@@ -940,12 +984,29 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // reads as a stack of short horizontal runs and glues every branch it touches into one blob.
     const thickness = estimateLineThickness(lineInk);
     const minHorizontalRun = Math.max(parameters.minHorizontalRun, 2 * thickness);
-    const probe = extractSegments(lineInk, minHorizontalRun, Number.MAX_SAFE_INTEGER);
+
+    // A numbered disc over a junction cuts the branches there; a cross painted through it, in
+    // the copy the segments are taken from, lets them run on.
+    const nodeDiscs = parameters.nodeDiscs ? findNodeDiscs(textInk, lineInk, glyphHeight, thickness) : [];
+    const lineArt: Mask = { width: lineInk.width, height: lineInk.height, data: new Uint8Array(lineInk.data) };
+    paintCrosses(lineArt, nodeDiscs, thickness);
+    // The extractor judges a run's thickness on the text ink around it, so the disc goes there too.
+    const inkForRuns: Mask = nodeDiscs.length === 0 ? textInk : { width: textInk.width, height: textInk.height, data: new Uint8Array(textInk.data) };
+    paintCrosses(inkForRuns, nodeDiscs, thickness);
+    const probe = extractSegments(lineArt, minHorizontalRun, Number.MAX_SAFE_INTEGER);
     const thicknesses = new Array<number>();
 
+    // Only long pieces count: a silhouette or a box is a blob of wide runs, not a thick line,
+    // and would push the shortest vertical run past the figure's own node connectors.
     for (const segment of probe.horizontals)
     {
-        thicknesses.push(segment.box.y1 - segment.box.y0);
+        const width = segment.box.x1 - segment.box.x0;
+        const height = segment.box.y1 - segment.box.y0;
+
+        if (width >= 4 * height)
+        {
+            thicknesses.push(height);
+        }
     }
 
     thicknesses.sort(compareNumbers);
@@ -975,17 +1036,32 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         }
     }
 
-    const { horizontals, verticals, bridgedGaps } = extractSegments(
-        lineInk,
+    const { horizontals, verticals: allVerticals, bridgedGaps } = extractSegments(
+        lineArt,
         minHorizontalRun,
         minVerticalRun,
         reach,
         Math.round(1.2 * glyphHeight),
-        textInk,
+        inkForRuns,
         glyphHeight,
         textRows,
         parameters.gapInkShare,
     );
+    // A sliver a few pixels wide and tall beside a vertical is its rounded end or a stray edge,
+    // and would take the attachment of a branch that belongs to the vertical.
+    const verticals = new Array<Segment>();
+
+    for (const segment of allVerticals)
+    {
+        const width = segment.box.x1 - segment.box.x0;
+        const height = segment.box.y1 - segment.box.y0;
+
+        if (width > thickness / 3 || height > 3 * thickness)
+        {
+            verticals.push(segment);
+        }
+    }
+
     const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height)];
     // Steps between successive nodes of a pectinate tree can be shorter than the shortest run
     // that counts as a line; the ink between two close verticals supplies the missing branch.
@@ -1076,7 +1152,9 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // (a range oval) ends on the far side of it, where its label is.
     if (parameters.extendThroughShapes)
     {
-        const maxWidth = 10 * glyphHeight;
+        // A marker is no taller than a label row; its length is a range in time and can be as
+        // long as the figure.
+        const maxWidth = Infinity;
         const maxHeight = 2.5 * glyphHeight;
         extendTipsThroughMarkers(document, keepSmallShapes(findFatShapes(lineInk, Math.max(parameters.markerRadius, Math.round(thickness) + 1)), maxWidth, maxHeight), thickness, 2);
         extendTipsThroughMarkers(document, keepSmallShapes(markers, maxWidth, maxHeight), thickness, glyphHeight);
@@ -1103,6 +1181,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // When the tips end on one line, a label row at that line with no tip is a missed branch;
     // it is looked for in the line ink and added before labels are read.
     document.qc.push(...recoverAlignedTips(document, lineInk, thickness, minHorizontalRun));
+    document.qc.push(...dropAxisTips(document, glyphHeight));
     recordLap("profile");
 
     if (options.ocr)
