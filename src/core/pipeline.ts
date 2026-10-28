@@ -3,11 +3,13 @@
  * engine, so it runs in Node and in the browser alike.
  */
 
-import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
+import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Orientation, ProfileOverrides, ProgressReporter, QcIssue, RgbaImage, TextLine, Tip, TreeNode } from "./types.ts";
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
 import { chooseRoot } from "./tree.ts";
+import { detectOrientation } from "./orientation.ts";
+import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
 import { extendTipsThroughMarkers, findFatShapes, keepSmallShapes, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
@@ -24,6 +26,7 @@ import {
     estimateLineThickness,
     keepComponentsTouching,
     paintMask,
+    rotateRgbaQuarter,
     subtractMask,
     unionMask,
 } from "./raster.ts";
@@ -33,7 +36,7 @@ import { traceRectangularTree } from "./tracer.ts";
 import { assignLabels, readLabels, isCladeName } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
 import { normalizeName, scoreName } from "./matching.ts";
-import { clampBox, cropImage, translateDocument } from "./geometry.ts";
+import { clampBox, cropImage, rotateBox, translateDocument } from "./geometry.ts";
 
 /**
  * Tunable thresholds for the pipeline. Defaults suit figures around 1000 to 2500 pixels wide.
@@ -172,6 +175,12 @@ export type Parameters = {
     gapInkShare: number;
 
     /**
+     * Whether to detect a tree drawn on its side and turn it ("auto"), or to take the image
+     * as it is ("none").
+     */
+    rotation: "auto" | "none";
+
+    /**
      * Profile values fixed by the caller instead of measured.
      */
     profileOverrides: ProfileOverrides;
@@ -205,6 +214,7 @@ export const defaultParameters: Parameters = {
     shortConnectors: false,
     extendThroughShapes: true,
     gapInkShare: 0.4,
+    rotation: "auto",
     profileOverrides: {},
 };
 
@@ -793,26 +803,63 @@ export function formatTimings(timings: Record<string, number>): string
 }
 
 /**
+ * Records how the figure's orientation was decided, when it was turned or could not be
+ * decided.
+ *
+ * @param find - The detector's decision and evidence, or null when detection was off.
+ * @param quarterTurns - Clockwise quarter turns applied.
+ * @returns At most one informational issue.
+ */
+function describeOrientation(find: OrientationFind | null, quarterTurns: number): Array<QcIssue>
+{
+    if (find === null || find.orientation === "root-left")
+    {
+        return [];
+    }
+
+    const evidence = `${find.rightEnds} branch end(s) with a label to the right, ${find.topEnds} with one above, ${find.bottomEnds} with one below`;
+
+    if (find.orientation === "unknown")
+    {
+        return [{ severity: "info", code: "orientation-undecided", message: `the figure's orientation could not be decided (${evidence}; ${Math.round(100 * find.runCoverage)}% of the line art in straight runs), so it was taken as drawn`, subject: null }];
+    }
+
+    return [{ severity: "info", code: "figure-turned", message: `the figure was turned ${quarterTurns === 1 ? "clockwise" : "counterclockwise"} to put the root on the left (${evidence})`, subject: null }];
+}
+
+/**
  * Runs the full pipeline on one image.
  *
- * @param fullImage - Decoded RGBA image.
+ * @param sourceImage - Decoded RGBA image, as drawn.
  * @param options - OCR engine, name list, region and threshold overrides.
  * @returns The extraction document.
  */
-export async function extractTree(fullImage: RgbaImage, options: Partial<ExtractOptions> = {}): Promise<ExtractionDocument>
+export async function extractTree(sourceImage: RgbaImage, options: Partial<ExtractOptions> = {}): Promise<ExtractionDocument>
 {
-    const region = options.region === undefined || options.region === null ? null : clampBox(options.region, fullImage.width, fullImage.height);
+    const parameters = { ...defaultParameters, ...options.parameters };
+    const sourceRegion = options.region === undefined || options.region === null ? null : clampBox(options.region, sourceImage.width, sourceImage.height);
 
-    if (region !== null && (region.x1 - region.x0 < 1 || region.y1 - region.y0 < 1))
+    if (sourceRegion !== null && (sourceRegion.x1 - sourceRegion.x0 < 1 || sourceRegion.y1 - sourceRegion.y0 < 1))
     {
         throw new Error("the region to analyze is empty");
     }
 
-    const image = region === null ? fullImage : cropImage(fullImage, region);
-    const parameters = { ...defaultParameters, ...options.parameters };
+    // A tree drawn on its side is turned so that its root is on the left. The decision is made
+    // on the region alone, since the rest of a page can stand any way; everything after this
+    // works in the turned frame, and the document says how many turns it took.
+    const sourceCrop = sourceRegion === null ? sourceImage : cropImage(sourceImage, sourceRegion);
+    const orientationStarted = performance.now();
+    const orientationFind = parameters.rotation === "auto" ? detectOrientation(sourceCrop, parameters.inkThreshold, parameters.lineThreshold, parameters.maxChroma) : null;
+    const orientation: Orientation = orientationFind === null ? "root-left" : orientationFind.orientation;
+    const quarterTurns = orientation === "root-bottom" ? 1 : orientation === "root-top" ? 3 : 0;
+    const image = quarterTurns === 0 ? sourceCrop : rotateRgbaQuarter(sourceCrop, quarterTurns === 1);
+    const orientationIssues = describeOrientation(orientationFind, quarterTurns);
+    const fullWidth = quarterTurns % 2 === 0 ? sourceImage.width : sourceImage.height;
+    const fullHeight = quarterTurns % 2 === 0 ? sourceImage.height : sourceImage.width;
+    const region = sourceRegion === null ? null : rotateBox(sourceRegion, sourceImage.width, sourceImage.height, quarterTurns);
     const names = options.names ?? [];
     const knownNames = options.knownNames ?? [];
-    const timings: Record<string, number> = {};
+    const timings: Record<string, number> = { orientation: Math.round(performance.now() - orientationStarted) };
     let clock = performance.now();
 
     const progress = options.progress ?? null;
@@ -945,14 +992,14 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
 
     const document: ExtractionDocument = {
         version: 1,
-        image: { width: fullImage.width, height: fullImage.height, source: options.source ?? null, region },
+        image: { width: fullWidth, height: fullHeight, source: options.source ?? null, region, quarterTurns },
         horizontals,
         verticals,
         textLines: text.lines,
         nodes: trace.nodes,
         tips: trace.tips,
         root: trace.root,
-        qc: [...frameIssues, ...trace.issues],
+        qc: [...orientationIssues, ...frameIssues, ...trace.issues],
         rejectedVerticals: trace.rejected,
         branches: trace.branches,
         glyphHeight: text.glyphHeight,
@@ -986,6 +1033,7 @@ export async function extractTree(fullImage: RgbaImage, options: Partial<Extract
     // The profile is measured before labels are read, since reading them uses it (how far to
     // condense the crops); the parts that the read text can change are measured again after.
     document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, fragmented, widened, bridgedGaps, document });
+    document.profile.orientation = orientation;
     applyProfileOverrides(document.profile, parameters.profileOverrides);
     // When the tips end on one line, a label row at that line with no tip is a missed branch;
     // it is looked for in the line ink and added before labels are read.

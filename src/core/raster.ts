@@ -730,6 +730,56 @@ export function rotateGrayQuarter(image: GrayImage, clockwise: boolean): GrayIma
 }
 
 /**
+ * Swaps the axes of a mask: row y becomes column y.
+ *
+ * @param mask - Source mask.
+ * @returns The transposed mask.
+ */
+export function transposeMask(mask: Mask): Mask
+{
+    const { width, height, data } = mask;
+    const result = new Uint8Array(width * height);
+
+    for (let y = 0; y < height; y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+            result[x * height + y] = data[y * width + x];
+        }
+    }
+
+    return { width: height, height: width, data: result };
+}
+
+/**
+ * Turns an RGBA image a quarter turn.
+ *
+ * @param image - Source image.
+ * @param clockwise - Direction of the turn.
+ * @returns The turned image, with width and height swapped.
+ */
+export function rotateRgbaQuarter(image: RgbaImage, clockwise: boolean): RgbaImage
+{
+    const { width, height } = image;
+    const data = new Uint8ClampedArray(width * height * 4);
+
+    for (let y = 0; y < height; y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+            const source = (y * width + x) * 4;
+            const target = clockwise ? (x * height + (height - 1 - y)) * 4 : ((width - 1 - x) * height + y) * 4;
+            data[target] = image.data[source];
+            data[target + 1] = image.data[source + 1];
+            data[target + 2] = image.data[source + 2];
+            data[target + 3] = image.data[source + 3];
+        }
+    }
+
+    return { width: height, height: width, data };
+}
+
+/**
  * Pixels set in either mask.
  *
  * @param left - First mask.

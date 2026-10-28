@@ -14,7 +14,7 @@ function createFlatTree(): ExtractionDocument
     return {
         version: 1,
         profile: createEmptyProfile(),
-        image: { width: 200, height: 150, source: null, region: null },
+        image: { width: 200, height: 150, source: null, region: null, quarterTurns: 0 },
         horizontals: [],
         verticals: [],
         textLines: [],

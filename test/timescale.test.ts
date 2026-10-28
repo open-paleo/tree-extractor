@@ -74,7 +74,7 @@ function createAxisScene(): { document: ExtractionDocument; ink: Mask }
 
     const document: ExtractionDocument = {
         version: 1,
-        image: { width, height, source: null, region: null },
+        image: { width, height, source: null, region: null, quarterTurns: 0 },
         horizontals: [{ id: "h1", orientation: "horizontal", box: { x0: 40, y0: 180, x1: 400, y1: 182 } }],
         verticals,
         textLines: [],

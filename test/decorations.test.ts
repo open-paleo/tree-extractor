@@ -66,7 +66,7 @@ function createDocument(): ExtractionDocument
 
     return {
         version: 1,
-        image: { width: 600, height: 200, source: null, region: null },
+        image: { width: 600, height: 200, source: null, region: null, quarterTurns: 0 },
         horizontals: [],
         verticals: [],
         textLines: [

@@ -27,7 +27,7 @@ function createAlignedDocument(): ExtractionDocument
     const root: TreeNode = { id: "n1", x: 100, y0: 10, y1: 150, attachY: null, parent: null, children: tips.map((tip) => tip.id), textLine: null, label: null, source: "traced", age: null };
     const document: ExtractionDocument = {
         version: 1,
-        image: { width: 420, height: 160, source: null, region: null },
+        image: { width: 420, height: 160, source: null, region: null, quarterTurns: 0 },
         horizontals: [],
         verticals: [],
         textLines,

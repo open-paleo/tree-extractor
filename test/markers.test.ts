@@ -109,7 +109,7 @@ test("a tip touching a marker moves to the marker's far side", () =>
     const fat: Mask = { width, height, data };
     const document: ExtractionDocument = {
         version: 1,
-        image: { width, height, source: null, region: null },
+        image: { width, height, source: null, region: null, quarterTurns: 0 },
         horizontals: [],
         verticals: [],
         textLines: [],

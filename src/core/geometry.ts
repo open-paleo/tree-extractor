@@ -129,3 +129,28 @@ export function translateDocument(document: ExtractionDocument, dx: number, dy: 
         branch.y += dy;
     }
 }
+
+/**
+ * Maps a box from an image's coordinates to those of the same image turned by a number of
+ * clockwise quarter turns.
+ *
+ * @param box - Box in the source image.
+ * @param width - Source image width.
+ * @param height - Source image height.
+ * @param quarterTurns - Clockwise quarter turns, 0 to 3.
+ * @returns The box in the turned image.
+ */
+export function rotateBox(box: Box, width: number, height: number, quarterTurns: number): Box
+{
+    switch (((quarterTurns % 4) + 4) % 4)
+    {
+        case 1:
+            return { x0: height - box.y1, y0: box.x0, x1: height - box.y0, y1: box.x1 };
+        case 2:
+            return { x0: width - box.x1, y0: height - box.y1, x1: width - box.x0, y1: height - box.y0 };
+        case 3:
+            return { x0: box.y0, y0: width - box.x1, x1: box.y1, y1: width - box.x0 };
+        default:
+            return { x0: box.x0, y0: box.y0, x1: box.x1, y1: box.y1 };
+    }
+}

@@ -98,7 +98,9 @@ export function renderOverlaySvg(document: ExtractionDocument): string
  */
 export async function writeOverlay(imagePath: string, document: ExtractionDocument, outputPath: string): Promise<void>
 {
+    // The document's coordinates refer to the image as the pipeline saw it, turned if it was.
     await sharp(imagePath)
+        .rotate(90 * document.image.quarterTurns)
         .composite([{ input: Buffer.from(renderOverlaySvg(document)) }])
         .png()
         .toFile(outputPath);

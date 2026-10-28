@@ -48,7 +48,7 @@ function traceMaskToNewick(mask: Mask): string
     const document: ExtractionDocument = {
         version: 1,
         profile: createEmptyProfile(),
-        image: { width: mask.width, height: mask.height, source: null, region: null },
+        image: { width: mask.width, height: mask.height, source: null, region: null, quarterTurns: 0 },
         horizontals,
         verticals,
         textLines: [],

@@ -355,6 +355,12 @@ export type ImageInfo = {
      * document are always those of the full image.
      */
     region: Box | null;
+
+    /**
+     * Clockwise quarter turns applied to the source image before analysis. Every coordinate
+     * in the document, and the width and height here, refer to the turned image.
+     */
+    quarterTurns: number;
 };
 
 /**
@@ -533,6 +539,12 @@ export type ProgressReporter = {
 };
 
 /**
+ * Which way a tree figure stands: root on the left with tips on the right (what the pipeline
+ * traces), root at the bottom or top with the tree on its side, or undecided.
+ */
+export type Orientation = "root-left" | "root-bottom" | "root-top" | "unknown";
+
+/**
  * How a figure connects a node's vertical to its parent branch.
  */
 export type LayoutKind = "centered" | "staircase" | "unknown";
@@ -705,6 +717,11 @@ export type ProfileConfidence = {
  * what kind of figure this is. Values marked unknown leave every step at its default behavior.
  */
 export type FigureProfile = {
+    /**
+     * Which way the figure stood before it was turned for analysis.
+     */
+    orientation: Orientation;
+
     /**
      * Line thickness in pixels, as measured on the line ink.
      */

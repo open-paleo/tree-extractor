@@ -34,6 +34,7 @@ type BenchCase = {
  * Profile values a case expects; only the keys given are checked.
  */
 type ExpectedProfile = {
+    orientation?: string;
     layout?: LayoutKind;
     tipsAligned?: boolean;
     supportLabels?: SupportLabelStyle;
@@ -86,6 +87,7 @@ function checkProfile(expected: ExpectedProfile, profile: FigureProfile): Profil
         }
     }
 
+    compare("orientation", expected.orientation, profile.orientation);
     compare("layout", expected.layout, profile.layout);
     compare("tipsAligned", expected.tipsAligned, profile.tipAlignment.aligned);
     compare("supportLabels", expected.supportLabels, profile.supportLabels);

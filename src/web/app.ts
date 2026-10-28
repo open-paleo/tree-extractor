@@ -307,7 +307,18 @@ async function runExtraction(): Promise<void>
             source: state.fileStem,
         }, { onProgress: handleProgress });
         state.selection = null;
-        setStatus(`${state.extraction.tips.length} tips, ${state.extraction.nodes.length} nodes. ${formatTimings(state.extraction.timings)}.`);
+        const turns = state.extraction.image.quarterTurns;
+
+        if (turns !== 0)
+        {
+            // The pipeline turned the image to put the root on the left; its coordinates refer
+            // to the turned image, so the viewer turns its copy the same way and keeps it so.
+            await turnLoadedImage(turns);
+            state.extraction.image.quarterTurns = 0;
+        }
+
+        const turned = turns === 0 ? "" : ` Figure turned ${turns === 1 ? "clockwise" : "counterclockwise"} to put the root on the left.`;
+        setStatus(`${state.extraction.tips.length} tips, ${state.extraction.nodes.length} nodes. ${formatTimings(state.extraction.timings)}.${turned}`);
     }
     catch (error)
     {
@@ -318,6 +329,43 @@ async function runExtraction(): Promise<void>
     runButton.disabled = false;
     renderResults(results, state.extraction);
     select(null, false);
+}
+
+/**
+ * Turns the loaded image by quarter turns, replacing the bitmap and the pixel data the
+ * pipeline works on. The analysis region is dropped, since it was drawn on the old frame.
+ *
+ * @param quarterTurns - Clockwise quarter turns.
+ * @returns Resolves when the turned image is in place.
+ */
+async function turnLoadedImage(quarterTurns: number): Promise<void>
+{
+    if (state.bitmap === null)
+    {
+        return;
+    }
+
+    const swap = quarterTurns % 2 === 1;
+    const scratch = document.createElement("canvas");
+    scratch.width = swap ? state.bitmap.height : state.bitmap.width;
+    scratch.height = swap ? state.bitmap.width : state.bitmap.height;
+    const context = scratch.getContext("2d");
+
+    if (context === null)
+    {
+        throw new Error("could not get a drawing context");
+    }
+
+    context.translate(scratch.width / 2, scratch.height / 2);
+    context.rotate(quarterTurns * Math.PI / 2);
+    context.drawImage(state.bitmap, -state.bitmap.width / 2, -state.bitmap.height / 2);
+    const data = context.getImageData(0, 0, scratch.width, scratch.height);
+    state.bitmap = await createImageBitmap(scratch);
+    state.image = { width: data.width, height: data.height, data: data.data };
+    state.region = null;
+    state.draftRegion = null;
+    canvasView.resize(state);
+    canvasView.fit(state);
 }
 
 /**

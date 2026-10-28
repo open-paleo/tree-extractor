@@ -30,6 +30,19 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 
 ## Pipeline
 
+0. **Orientation.** A tree drawn with its root at the bottom or top is turned a quarter so
+   that its root is on the left, and everything after this works in the turned frame (the
+   document records the turns, and the viewer turns its copy of the image to match). The
+   decision comes from where branches end: a branch ends free at a tip, with the label just
+   past the end, so free ends of long horizontal runs with loose ink to their right say
+   root-left, and free ends of long vertical runs with ink above or below say root-bottom or
+   root-top. An end beside a long run of the other direction is a junction, not free. Runs are
+   taken only from large pieces of line ink, so letter strokes never count whatever the glyph
+   height was judged to be, and the ink past an end may be a range bar or a silhouette as well
+   as text. A figure whose line art lies mostly outside straight runs is slanted and is left as
+   drawn, as is one with too few labelled ends to decide (labels set as PDF text, say). On the
+   benchmark and holdout images this puts all thirty-five rectangular figures root-left, the
+   four vertical ones root-bottom and the four slanted ones undecided, in 0.1 to 0.9 seconds.
 1. **Masks.** Text ink is luminance below 140. Line ink is luminance below 180 with low chroma
    (so colored clade boxes and the red border drop out), extended by hysteresis into faint
    pixels (below 230) that touch it, except near glyphs, then closed by one pixel. This mends thin
@@ -127,6 +140,11 @@ Large-font figures read two to three times faster for it; small fonts are unchan
 
 ## Known gaps
 
+- A turned tree's labels come out horizontal only when they were set at a right angle. Labels
+  set at a slant (Averianov 2006 and Kobayashi 2003 at about 60 degrees, Pacheco 2019 at about
+  70) are traced but not read: the row detector breaks a slanted label into short pieces and the
+  OCR gets fragments. Measuring the slant and turning each label crop before reading it is the
+  next step for these; the same would serve slanted labels on root-left trees.
 - Pectinate trees whose steps between successive nodes are shorter than the shortest line run
   (about ten pixels) lose those steps; the ink between two close verticals is then no segment.
   `findShortConnectors` recovers such pieces, but switched on it costs the tuned figures more

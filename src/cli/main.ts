@@ -2,7 +2,7 @@
 /**
  * Command-line entry point.
  *
- *   tree-extractor extract <image> [--names <file>] [--known-names <file>|--no-known-names] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--profile key=value,...]
+ *   tree-extractor extract <image> [--names <file>] [--known-names <file>|--no-known-names] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--no-rotation] [--profile key=value,...]
  */
 
 import * as fs from "node:fs";
@@ -44,7 +44,7 @@ function parseArguments(argv: Array<string>): Arguments
             const name = argument.slice(2);
             const next = argv[index + 1];
 
-            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help" && name !== "no-lengths" && name !== "no-known-names")
+            if (next !== undefined && !next.startsWith("--") && name !== "no-ocr" && name !== "overlay" && name !== "help" && name !== "no-lengths" && name !== "no-known-names" && name !== "no-rotation")
             {
                 flags.set(name, next);
                 index++;
@@ -79,6 +79,7 @@ function printUsage(): void
         "                   (default: names/known-taxa.txt shipped with the tool; --no-known-names skips it)",
         "  --no-ocr         Trace the tree but do not read labels",
         "  --no-lengths     Leave branch lengths out of the Newick even when a time axis was read",
+        "  --no-rotation    Take the figure as drawn instead of turning a tree on its side root-left",
         "  --profile k=v    Fix profile values instead of measuring them, comma separated:",
         "                   layout, supportLabels, tipsAligned, italic, widenText, condensing",
         "  --overlay        Also write <name>.overlay.png showing what was detected",
@@ -233,7 +234,8 @@ async function runExtract(parsed: Arguments): Promise<number>
     const ocr = parsed.flags.has("no-ocr") ? null : await createTesseractOcr(tesseract);
     const profileFlag = parsed.flags.get("profile");
     const profileOverrides = typeof profileFlag === "string" ? parseProfileOverrides(profileFlag) : {};
-    const document = await extractTree(image, { ocr, names, knownNames, source: path.basename(imagePath), region, parameters: { profileOverrides } });
+    const rotation = parsed.flags.has("no-rotation") ? "none" : "auto";
+    const document = await extractTree(image, { ocr, names, knownNames, source: path.basename(imagePath), region, parameters: { profileOverrides, rotation } });
 
     if (ocr !== null)
     {

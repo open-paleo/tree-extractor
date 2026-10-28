@@ -32,7 +32,7 @@ function createDocumentWithTips(xs: Array<number>): ExtractionDocument
 
     return {
         version: 1,
-        image: { width: 500, height: 500, source: null, region: null },
+        image: { width: 500, height: 500, source: null, region: null, quarterTurns: 0 },
         horizontals: [],
         verticals: [],
         textLines: [],

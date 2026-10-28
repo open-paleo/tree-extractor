@@ -98,6 +98,7 @@ export type ProfileInput = {
 export function createEmptyProfile(): FigureProfile
 {
     return {
+        orientation: "root-left",
         lineThickness: 0,
         layout: "unknown",
         tipAlignment: { aligned: false, x: null, share: 0 },
@@ -129,6 +130,7 @@ export function measureProfile(input: ProfileInput): FigureProfile
     font.fragmented = input.fragmented;
     font.widened = input.widened;
     const profile: FigureProfile = {
+        orientation: "root-left",
         lineThickness: thickness,
         layout: layout.value,
         tipAlignment,
@@ -1103,6 +1105,7 @@ export function formatProfile(profile: FigureProfile): Array<string>
     const axis = profile.timeScaled.axis === null ? "none" : `${profile.timeScaled.ticks} ticks`;
     const scale = calibration === null ? "" : `, ${calibration.points} labels fit at ${Math.abs(calibration.pixelsPerUnit).toFixed(2)} px per unit (${calibration.pixelsPerUnit < 0 ? "older on the left" : "older on the right"}, residual ${calibration.residual.toFixed(1)} px)`;
     const time = `tinted ${Math.round(profile.timeScaled.tintedShare * 100)}%, band columns ${Math.round(profile.timeScaled.bandColumnShare * 100)}%${profile.timeScaled.bands ? " (bands)" : ""}, axis ${axis}${scale}, range bars ${profile.timeScaled.rangeBars}`;
+    lines.push(`orientation: ${profile.orientation}`);
     lines.push(`lines: ${profile.lineThickness} px thick`);
     lines.push(`layout: ${profile.layout} (${profile.confidence.layout.toFixed(2)})`);
     lines.push(`tips: ${tips}`);
