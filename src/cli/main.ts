@@ -14,6 +14,7 @@ import type { Box, LayoutKind, ProfileOverrides, SupportLabelStyle } from "../co
 import { extractTree, formatTimings } from "../core/pipeline.ts";
 import { formatProfile } from "../core/profile.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
+import { renderTreeSvg } from "../core/render.ts";
 import { formatNexus } from "../core/nexus.ts";
 import { createTesseractOcr } from "../ocr/tesseract.ts";
 import { loadImage, writeOverlay } from "./image.ts";
@@ -260,6 +261,12 @@ async function runExtract(parsed: Arguments): Promise<number>
         }
 
         fs.writeFileSync(`${stem}.nex`, formatNexus(newick, taxa, "extracted", `Extracted from ${path.basename(imagePath)} by tree-extractor`));
+        const svg = renderTreeSvg(document, { branchLengths: !parsed.flags.has("no-lengths") });
+
+        if (svg !== null)
+        {
+            fs.writeFileSync(`${stem}.svg`, `${svg}\n`);
+        }
     }
 
     if (parsed.flags.has("overlay"))

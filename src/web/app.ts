@@ -13,7 +13,7 @@ import { CanvasView } from "./canvas.ts";
 import { getNodeMarkerY } from "./lookup.ts";
 import type { ResultElements } from "./results.ts";
 import { getSelectionFromEvent, highlightSelection, renderResults, updateNewick } from "./results.ts";
-import { downloadDocumentFile, downloadNewickFile, downloadNexusFile } from "./exports.ts";
+import { downloadDocumentFile, downloadNewickFile, downloadNexusFile, downloadSvgFile } from "./exports.ts";
 import { PointerController } from "./interaction.ts";
 import type { EditResult } from "../core/edit.ts";
 import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById } from "../core/edit.ts";
@@ -60,6 +60,7 @@ const deleteButton = getElement<HTMLButtonElement>("#delete");
 const downloadNewick = getElement<HTMLButtonElement>("#download-newick");
 const downloadNexus = getElement<HTMLButtonElement>("#download-nexus");
 const downloadJson = getElement<HTMLButtonElement>("#download-json");
+const downloadSvg = getElement<HTMLButtonElement>("#download-svg");
 const results: ResultElements = {
     tipsList: getElement<HTMLOListElement>("#tips"),
     nodesList: getElement<HTMLOListElement>("#nodes"),
@@ -68,7 +69,8 @@ const results: ResultElements = {
     qcList: getElement<HTMLUListElement>("#qc"),
     profileList: getElement<HTMLUListElement>("#profile"),
     newickOutput: getElement<HTMLTextAreaElement>("#newick"),
-    downloadButtons: [downloadNewick, downloadNexus, downloadJson],
+    redraw: getElement<HTMLElement>("#redraw"),
+    downloadButtons: [downloadNewick, downloadNexus, downloadJson, downloadSvg],
 };
 
 const state = createViewerState();
@@ -366,6 +368,17 @@ async function turnLoadedImage(quarterTurns: number): Promise<void>
     state.draftRegion = null;
     canvasView.resize(state);
     canvasView.fit(state);
+}
+
+/**
+ * Downloads the redrawn tree as SVG.
+ */
+function handleDownloadSvg(): void
+{
+    if (state.extraction !== null)
+    {
+        downloadSvgFile(state.extraction, state.fileStem);
+    }
 }
 
 /**
@@ -736,6 +749,7 @@ results.nodesList.addEventListener("input", handleListInput);
 downloadNewick.addEventListener("click", handleDownloadNewick);
 downloadNexus.addEventListener("click", handleDownloadNexus);
 downloadJson.addEventListener("click", handleDownloadJson);
+downloadSvg.addEventListener("click", handleDownloadSvg);
 new ResizeObserver(handleResize).observe(canvasWrap);
 
 for (const checkbox of document.querySelectorAll<HTMLInputElement>("input[data-layer]"))

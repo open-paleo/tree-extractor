@@ -5,6 +5,7 @@
 import type { ExtractionDocument } from "../core/types.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
 import { formatNexus } from "../core/nexus.ts";
+import { renderTreeSvg } from "../core/render.ts";
 
 /**
  * Offers a text file for download.
@@ -71,4 +72,20 @@ export function downloadNexusFile(extraction: ExtractionDocument, fileStem: stri
 export function downloadDocumentFile(extraction: ExtractionDocument, fileStem: string): void
 {
     downloadText(`${fileStem}.json`, JSON.stringify(extraction, null, 2), "application/json");
+}
+
+/**
+ * Downloads the redrawn tree as SVG.
+ *
+ * @param extraction - Document with a tree.
+ * @param fileStem - File name without extension.
+ */
+export function downloadSvgFile(extraction: ExtractionDocument, fileStem: string): void
+{
+    const svg = renderTreeSvg(extraction);
+
+    if (svg !== null)
+    {
+        downloadText(`${fileStem}.svg`, `${svg}\n`, "image/svg+xml");
+    }
 }

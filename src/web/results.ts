@@ -4,6 +4,7 @@
 
 import type { ExtractionDocument } from "../core/types.ts";
 import { formatProfile } from "../core/profile.ts";
+import { renderTreeSvg } from "../core/render.ts";
 import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
 import type { Selection } from "./state.ts";
 import { collectConnected } from "./lookup.ts";
@@ -46,6 +47,11 @@ export type ResultElements = {
      * Newick output.
      */
     newickOutput: HTMLTextAreaElement;
+
+    /**
+     * Container for the redrawn tree.
+     */
+    redraw: HTMLElement;
 
     /**
      * Download buttons, enabled when there is a tree.
@@ -94,6 +100,10 @@ export function updateNewick(elements: ResultElements, extraction: ExtractionDoc
 {
     const newick = extraction === null ? null : formatDocumentAsNewick(extraction);
     elements.newickOutput.value = extraction === null ? "" : (newick ?? "(no tree found)");
+    // The markup is the renderer's own, with every label escaped.
+    const svg = extraction === null ? null : renderTreeSvg(extraction);
+    elements.redraw.innerHTML = svg ?? "";
+    elements.redraw.hidden = svg === null;
 
     for (const button of elements.downloadButtons)
     {

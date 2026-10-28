@@ -121,6 +121,17 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    document. On an aligned figure a label row without a tip is first searched for in the line
    ink, and a branch piece ending at the line gets its tip back before labels are read.
 
+## Redrawing
+
+`renderTreeSvg` (`src/core/render.ts`) draws the traced tree from the document alone: tips on
+evenly spaced rows in the figure's order, each node centered on its children, labels in a plain
+italic font with the matched name where there is one and the OCR read otherwise. When every
+member of the tree has an age the depths follow the ages and an axis with round ticks is drawn;
+otherwise each node sits one step left of its deepest child, so every tip ends on the tip line.
+The CLI writes it beside the Newick, and the viewer shows it under the Newick and updates it
+with every edit. It is the output for anyone who wants the figure back as a simple graphic, and
+the quickest check on the trace.
+
 ## Performance
 
 Measured on an Apple laptop, single thread, 2026-10-27. The pipeline without OCR takes 0.2 to

@@ -32,7 +32,7 @@ Requires Node 24 or later.
 ```sh
 npm install
 
-# Batch: one image in, Newick + Nexus + JSON document out, with a QC report on stdout
+# Batch: one image in; Newick, Nexus, a redrawn SVG and the JSON document out, with a QC report on stdout
 npm run extract -- extract figure.png --names taxa.txt --out results/ --overlay
 
 # Interactive: build the browser bundle and serve the viewer at http://localhost:8787/src/web/
@@ -58,6 +58,10 @@ other way round; labels are editable in place and the Newick updates. Missed or 
 elements can be fixed by hand: *Add tip* then click a branch end, *Add node* then drag along the
 missing vertical connector (it takes over the branches it crosses), and *Delete* removes the
 selected tip or node, dissolving a node into its parent. Re-parenting by drag is not there yet.
+Below the Newick, the traced tree is redrawn clean: root on the left, tips evenly spaced, branch
+lengths from the time axis when one was read. It updates with every edit, doubles as a check on
+the trace, and downloads as SVG, so a figure that went in on its side with silhouettes and bands
+comes out as a plain horizontal tree.
 
 ## Scope
 
