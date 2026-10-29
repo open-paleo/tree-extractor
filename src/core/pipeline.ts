@@ -10,6 +10,7 @@ import { pruneDecorations } from "./decorations.ts";
 import { chooseRoot } from "./tree.ts";
 import { detectOrientation } from "./orientation.ts";
 import { detectSlantedLabels } from "./slant.ts";
+import { traceSlantedTree } from "./slanted.ts";
 import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
@@ -189,6 +190,16 @@ export type Parameters = {
     nodeDiscs: boolean;
 
     /**
+     * Read a slanted figure from the skeleton of its line art.
+     */
+    slantedTrees: boolean;
+
+    /**
+     * Drop short unlabelled tips as debris; off, they stay, for seeing what the trace found.
+     */
+    dropDebris: boolean;
+
+    /**
      * Look for tip labels set at a slant and read them in a level frame.
      */
     slantedLabels: boolean;
@@ -234,6 +245,8 @@ export const defaultParameters: Parameters = {
     gapInkShare: 0.4,
     rotation: "auto",
     nodeDiscs: true,
+    slantedTrees: true,
+    dropDebris: true,
     slantedLabels: true,
     minLabelSlant: 6,
     profileOverrides: {},
@@ -606,7 +619,7 @@ function removeDebrisTips(document: ExtractionDocument, maxLength: number, minPi
  * @param document - Document updated in place.
  * @param maxLength - Longest branch such a tip can have.
  */
-function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number): void
+function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number, maxScrapLength = maxLength): void
 {
     for (const tip of document.tips)
     {
@@ -623,6 +636,8 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
             continue;
         }
 
+        const limit = numeric ? maxLength : maxScrapLength;
+
         let parentX: number | null = null;
 
         for (const node of document.nodes)
@@ -633,7 +648,7 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
             }
         }
 
-        if (parentX !== null && tip.x - parentX < maxLength)
+        if (parentX !== null && tip.x - parentX < limit)
         {
             for (const line of document.textLines)
             {
@@ -649,7 +664,7 @@ function removeNumericDebrisTips(document: ExtractionDocument, maxLength: number
         }
     }
 
-    removeDebrisTips(document, maxLength, 0);
+    removeDebrisTips(document, maxScrapLength, 0);
 }
 
 /**
@@ -947,6 +962,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const orientationStarted = performance.now();
     const orientationFind = parameters.rotation === "auto" ? detectOrientation(sourceCrop, parameters.inkThreshold, parameters.lineThreshold, parameters.maxChroma) : null;
     const orientation: Orientation = orientationFind === null ? "root-left" : orientationFind.orientation;
+    const slantedFigure = parameters.slantedTrees && orientationFind !== null && orientationFind.slanted;
     const quarterTurns = orientation === "root-bottom" ? 1 : orientation === "root-top" ? 3 : 0;
     const image = quarterTurns === 0 ? sourceCrop : rotateRgbaQuarter(sourceCrop, quarterTurns === 1);
     const orientationIssues = describeOrientation(orientationFind, quarterTurns);
@@ -1089,7 +1105,17 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         labelBoxes.push(line.box);
     }
 
-    const trace = traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight, connectors);
+    // A slanted figure is read from the skeleton of its line art instead of from segments; the
+    // rough text rows tell its root stub, which ends in nothing, from leaders, which end at text.
+    const roughBoxes = new Array<Box>();
+
+    for (const line of roughLines)
+    {
+        roughBoxes.push(line.box);
+    }
+
+    const slantedTrace = slantedFigure ? traceSlantedTree(lineInk, thickness, glyphHeight, roughBoxes) : null;
+    const trace = slantedTrace === null ? traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight, connectors) : slantedTrace.result;
     recordLap("trace");
     announce("Finding labels");
 
@@ -1114,12 +1140,14 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     const lineArtBoxes = [...usedBoxes, ...findStubExtensions(lineInk, usedBoxes, glyphHeight)];
-    const lineArtMask = dilate(createMaskFromBoxes(lineArtBoxes, image.width, image.height), 1);
+    const lineArtMask = slantedTrace === null
+        ? dilate(createMaskFromBoxes(lineArtBoxes, image.width, image.height), 1)
+        : dilate(slantedTrace.skeleton, Math.max(1, Math.round(thickness / 2) + 1));
     const text = detectTextLines(textInk, { lineArtMask, minY: parameters.textMinY });
 
     // Labels set at a slant are found again in a level frame of their own; the level rows in
     // that zone, fragments of the same labels, give way to them.
-    const slanted = parameters.slantedLabels ? detectSlantedLabels(textInk, lineArtMask, trace.tips, text.glyphHeight, (parameters.minLabelSlant * Math.PI) / 180) : null;
+    const slanted = parameters.slantedLabels ? detectSlantedLabels(textInk, lineArtMask, trace.tips, glyphHeight, (parameters.minLabelSlant * Math.PI) / 180) : null;
     const textLines = slanted === null ? text.lines : replaceZoneLines(text.lines, slanted);
     const slantIssues = new Array<QcIssue>();
 
@@ -1161,7 +1189,14 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     assignLabels(document);
-    removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
+
+    // A slanted tree's spurs were pruned on the skeleton, and its labels pair less surely
+    // (slanted text, tips at every depth), so an unlabelled tip is not debris there.
+    if (slantedTrace === null && parameters.dropDebris)
+    {
+        removeDebrisTips(document, 3 * glyphHeight, glyphHeight);
+    }
+
     // Clade brackets, axes and legends trace into small pieces beside the tree; they go now,
     // before any label of theirs is read.
     document.qc.push(...pruneDecorations(document));
@@ -1177,6 +1212,13 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // condense the crops); the parts that the read text can change are measured again after.
     document.profile = measureProfile({ image, textInk, lineInk, glyphMask, glyphHeight, thickness, fragmented, widened, bridgedGaps, document });
     document.profile.orientation = orientation;
+
+    if (slantedTrace !== null)
+    {
+        document.profile.layout = "slanted";
+        document.profile.confidence.layout = 1;
+    }
+
     applyProfileOverrides(document.profile, parameters.profileOverrides);
     // When the tips end on one line, a label row at that line with no tip is a missed branch;
     // it is looked for in the line ink and added before labels are read.
@@ -1191,7 +1233,9 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         // area, so the scale brings letters to about the target height and no further.
         const ocrScale = Math.min(parameters.ocrScale, Math.max(1, parameters.ocrGlyphTarget / glyphHeight));
         await readLabels(document, erased, options.ocr, ocrScale, names, knownNames, progress);
-        removeNumericDebrisTips(document, 3 * glyphHeight);
+        // A slanted figure's leader lines to bracketed numbers run the tips' way and read as
+        // numbers; they are debris whatever their length.
+        removeNumericDebrisTips(document, slantedTrace === null ? 3 * glyphHeight : Infinity, slantedTrace === null && parameters.dropDebris ? 3 * glyphHeight : 0);
 
         // Reading the labels can turn a piece's tips into debris; the main tree is chosen again.
         if (chooseRoot(document))

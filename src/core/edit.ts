@@ -418,16 +418,17 @@ function assignNearestTextLine(document: ExtractionDocument, tip: Tip): void
     {
         const line = document.textLines[index];
         const point = line.frame === undefined ? tip : mapPointToFrame(line.frame, tip.x, tip.y);
-        const center = (line.box.y0 + line.box.y1) / 2;
+        const rowHeight = line.box.y1 - line.box.y0;
+        const rise = line.frame === undefined ? (line.box.y0 + line.box.y1) / 2 - point.y : line.box.y1 - point.y;
+        const fits = line.frame === undefined ? Math.abs(rise) <= 0.8 * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
         const offset = line.box.x0 - point.x;
-        const tolerance = line.frame === undefined ? 0.8 * glyph : 0.8 * Math.max(glyph, line.box.y1 - line.box.y0);
 
-        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || Math.abs(center - point.y) > tolerance || offset < -1.5 * glyph || offset > 5 * glyph)
+        if (line.role !== "unassigned" || !isLabelSized(line, glyph) || !fits || offset < -1.5 * glyph || offset > 5 * glyph)
         {
             continue;
         }
 
-        const distance = Math.abs(offset) + Math.abs(center - point.y);
+        const distance = Math.abs(offset) + Math.abs(rise);
 
         if (distance < bestDistance)
         {

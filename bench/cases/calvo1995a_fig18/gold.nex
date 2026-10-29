@@ -1,0 +1,28 @@
+#NEXUS
+
+[ Calvo & Salgado 1995, Gaia 11, Fig. 18: cladogram of Rebbachisaurus tessonei among Sauropoda, a slanted cladogram from a poor-quality 1990s scan, small and low-resolution, with character numbers along the branches; 15 tips. 15 tips, slanted cladogram from a low-resolution scan. All tip names are readable, so none were assigned by matrix order. PROSAUROPODA and TITANOSAURIDAE are collapsed terminals (triangles) and are matrix rows under those names. Matrix spellings: Haplocantosaurus (printed Haplocanthosaurus), Apatosaurus_lousiae. Each tip line was projected along its slope to the spine to confirm which node it joins. Topology transcribed from the figure and checked node by node against the image (2026-10-28); topology only, no support values or node numbers. Licence: not open-licensed; image kept in bench/images, uncommitted. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=15;
+    TAXLABELS
+        PROSAUROPODA
+        Barapasaurus_tagorei
+        Omeisaurus
+        Camarasaurus
+        Brachiosaurus
+        Andesaurus_delgadoi
+        TITANOSAURIDAE
+        Haplocantosaurus_delfsi
+        Haplocantosaurus_priscus
+        Rebbachisaurus_tessonei
+        Dicraeosaurus
+        Amargasaurus_cazaui
+        Apatosaurus_lousiae
+        Diplodocus
+        Barosaurus_lentus
+    ;
+END;
+
+BEGIN TREES;
+    TREE calvo1995a_fig18 = [&R] (PROSAUROPODA,(Barapasaurus_tagorei,(Omeisaurus,(Camarasaurus,((Brachiosaurus,(Andesaurus_delgadoi,TITANOSAURIDAE)),(Haplocantosaurus_delfsi,(Haplocantosaurus_priscus,(Rebbachisaurus_tessonei,((Dicraeosaurus,Amargasaurus_cazaui),(Apatosaurus_lousiae,(Diplodocus,Barosaurus_lentus)))))))))));
+END;

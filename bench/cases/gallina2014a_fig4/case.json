@@ -10,5 +10,7 @@
   },
   "license": "CC BY",
   "attribution": "Gallina PA, Apesteguía S, Haluza A, Canale JI. (2014). A Diplodocid Sauropod Survivor from the Early Cretaceous of South America. PloS one 9(5): e97128. https://doi.org/10.1371/journal.pone.0097128. Fig. 4. CC BY.",
-  "region_note": "panel A (left); B starts after the blank gutter at x 960-1108"
+  "region_note": "panel A (left); B starts after the blank gutter at x 960-1108",
+  "gold": "gold.nex",
+  "gold_note": "Panel A only (region box), 28 tips, slanted cladogram. The root node separates Shunosaurus from a polytomy of Omeisaurus, Losillasaurus, Jobaria, Camarasaurus, Haplocanthosaurus, (Australodocus, Brachiosaurus) and Diplodocoidea. Diplodocoidea = (Amphicoelias, (Rebbachisauridae, Flagellicaudata)): the second branch leaves the stem just after the Diplodocoidea circle. Diplodocidae is a 4-way node (Apatosaurus, Supersaurus, Dinheirosaurus, Diplodocinae)."
 }

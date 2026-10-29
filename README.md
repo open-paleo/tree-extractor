@@ -21,9 +21,11 @@ centrosaurine tree with numbered node discs, range ovals and silhouettes, which 
 two have most of their tree right (a 52-tip paravian time tree names 50). A census of 178 tree
 figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-left trees at
 72 percent, slanted at 13 and vertical at 13. Vertical trees are turned a quarter and traced
-like the rest, and labels set at a slant are read in a level frame of their own (the four
-vertical figures in `bench/holdout/` come out with 12 of 12, 10 of 12, 15 of 19 and 44 of 52
-tips named, cold); slanted trees are not handled. On synthetic figures in five styles,
+like the rest, labels set at a slant are read in a level frame of their own (the four vertical
+figures in `bench/holdout/` come out with 12 of 12, 10 of 12, 15 of 19 and 44 of 52 tips
+named, cold), and slanted trees are read from the skeleton of their line art (of the four with
+gold, a 28-tip diplodocoid cladogram names 27 with 14 of 16 splits and a 20-tip titanosaur
+cladogram names 19 with all its splits; see `docs/design.md`). On synthetic figures in five styles,
 thirteen of fifteen are identical. Ten of the real figures are openly licensed and ship with the
 benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach and its
 known gaps.
@@ -72,7 +74,7 @@ First release: rectangular trees (cladograms and phylograms) with the root on th
 on the right, or drawn on their side with the root at the bottom or top (these are turned
 first), tip labels, support values at nodes, polytomies. When a time axis with readable
 numbers is found, nodes and tips get ages and the Newick carries branch lengths in the axis's
-units. Not yet: slanted or circular trees, branch lengths without an axis.
+units. Not yet: circular trees, branch lengths without an axis.
 
 ## Development
 

@@ -1,0 +1,33 @@
+#NEXUS
+
+[ Bonaparte, González Riga & Apesteguía 2006, Cretaceous Research 27: 364-376, Fig. 8: strict consensus of two MPTs for Ligabuesaurus, a slanted cladogram with angled tip labels along the top, numbered nodes and bracketed support values (e.g. 51/46) beside clade names; 20 tips. The figure prints 'Diplodocus carnegii' and 'Jobaria tinguidensis' where the matrix has 'Diplodus longus' and 'Jobaria tiguidensis'. 20 tips, slanted (diagonal) cladogram with the spine rising to the right. Node 5 is a 3-way polytomy (Ligabuesaurus, Phuwiangosaurus, rest): both branches meet the spine at the same point. Diplodocus joins the Jobaria branch (node 15); Mendozasaurus and Aeolosaurus pair (node 17) before joining Isisaurus (node 16). Matrix spellings are used where the figure differs: Diplodus_longus (printed Diplodocus carnegii), Jobaria_tiguidensis (printed tinguidensis), Opisthocoelicaudia_skarzynski (printed skarzynskii). Topology transcribed from the figure and checked node by node against the image (2026-10-28); topology only, no support values or node numbers. Licence: not open-licensed; image kept in bench/images, uncommitted. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Patagosaurus_fariasi
+        Jobaria_tiguidensis
+        Diplodus_longus
+        Camarasaurus_grandis
+        Brachiosaurus_brancai
+        Chubutisaurus_insignis
+        Ligabuesaurus_leanzai
+        Phuwiangosaurus_sirindhornae
+        Andesaurus_delgadoi
+        Malawisaurus_dixeyi
+        Lirainosaurus_astibiae
+        Isisaurus_colberti
+        Mendozasaurus_neguyelap
+        Aeolosaurus_rionegrinus
+        Rapetosaurus_krausei
+        Opisthocoelicaudia_skarzynski
+        Alamosaurus_sanjuanensis
+        Neuquensaurus_australis
+        Saltasaurus_loricatus
+        Rocasaurus_muniozi
+    ;
+END;
+
+BEGIN TREES;
+    TREE bonaparte2006a_fig8 = [&R] (Patagosaurus_fariasi,((Jobaria_tiguidensis,Diplodus_longus),(Camarasaurus_grandis,(Brachiosaurus_brancai,(Chubutisaurus_insignis,(Ligabuesaurus_leanzai,Phuwiangosaurus_sirindhornae,(Andesaurus_delgadoi,(Malawisaurus_dixeyi,(Lirainosaurus_astibiae,((Isisaurus_colberti,(Mendozasaurus_neguyelap,Aeolosaurus_rionegrinus)),(Rapetosaurus_krausei,(Opisthocoelicaudia_skarzynski,(Alamosaurus_sanjuanensis,(Neuquensaurus_australis,(Saltasaurus_loricatus,Rocasaurus_muniozi)))))))))))))));
+END;

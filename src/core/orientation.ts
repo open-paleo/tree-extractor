@@ -15,6 +15,7 @@
 import type { Mask, Orientation, RgbaImage } from "./types.ts";
 import { createDarkMask, createDirectionalRunMask, createLongRunMask, dilate, findConnectedComponents, subtractMask, transposeMask, unionMask } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
+import { findEndSide } from "./slanted.ts";
 
 /**
  * What the orientation was decided from.
@@ -50,6 +51,12 @@ export type OrientationFind = {
      * tree.
      */
     runCoverage: number;
+
+    /**
+     * True when the line art is mostly outside straight runs: a slanted tree, whose
+     * orientation then comes from which side of the lines the text lies on.
+     */
+    slanted: boolean;
 };
 
 /**
@@ -272,11 +279,13 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     const bottomEnds = alongColumns.forward;
     const standing = Math.max(topEnds, bottomEnds);
     let orientation: Orientation = "unknown";
+    const slanted = runCoverage < 0.3;
 
-    if (runCoverage < 0.3)
+    if (slanted)
     {
-        // Slanted, or not a line drawing at all: left as it is.
-        orientation = "unknown";
+        // A slanted tree's ends are its tips, all but the root, so the side of the line art its
+        // ends lie on is the tip side.
+        orientation = decideFromEndSide(lineArt);
     }
     else if (rightEnds >= 3 && rightEnds >= 2 * standing)
     {
@@ -287,5 +296,39 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
         orientation = topEnds >= bottomEnds ? "root-bottom" : "root-top";
     }
 
-    return { orientation, rightEnds, topEnds, bottomEnds, glyphHeight, runCoverage };
+    return { orientation, rightEnds, topEnds, bottomEnds, glyphHeight, runCoverage, slanted };
+}
+
+/**
+ * Decides the orientation from which side of the line art its ends lie on: ends to the right
+ * mean tips on the right, ends above mean tips above and the root below, and so on.
+ *
+ * @param lineArt - Large pieces of line ink.
+ * @returns The orientation, or unknown when the ends are not to one side.
+ */
+function decideFromEndSide(lineArt: Mask): Orientation
+{
+    const side = findEndSide(lineArt);
+
+    if (side === null)
+    {
+        return "unknown";
+    }
+
+    if (side.x > 0)
+    {
+        return "root-left";
+    }
+
+    if (side.y < 0)
+    {
+        return "root-bottom";
+    }
+
+    if (side.y > 0)
+    {
+        return "root-top";
+    }
+
+    return "unknown";
 }

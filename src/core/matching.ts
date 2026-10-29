@@ -165,6 +165,13 @@ export function scoreName(target: string, name: string): number
     const space = name.indexOf(" ");
     const targetSpace = target.indexOf(" ");
 
+    // A list that runs genus and species together ("Plateosaurusengelhardti") against a read
+    // of the genus alone: the read is the name's first third or more.
+    if (space < 0 && targetSpace < 0 && target.length >= 6 && target.length < name.length && name.startsWith(target) && target.length >= 0.35 * name.length)
+    {
+        score = Math.max(score, 0.9);
+    }
+
     // A list of genera against a figure of binomials: the read's first word is the name.
     if (space < 0 && targetSpace > 0)
     {
@@ -176,6 +183,16 @@ export function scoreName(target: string, name: string): number
         const genus = name.slice(0, space);
         const rest = name.slice(space + 1);
         score = Math.max(score, compareNames(target, genus) - 0.05);
+
+        // Two binomials of one genus with different species: the figure and the list disagree
+        // on the species (a different one, or a typo in the matrix), and the genus still ties
+        // the read to the list's row, well below a full match and never a toss-up between two
+        // species of the genus, since both score the same and only a margin accepts a score
+        // this low.
+        if (targetSpace > 2)
+        {
+            score = Math.max(score, Math.min(0.7, compareNames(target.slice(0, targetSpace), genus) - 0.2));
+        }
 
         if (targetSpace > 0 && target[0] === genus[0] && targetSpace <= 2)
         {

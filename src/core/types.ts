@@ -610,7 +610,7 @@ export type Orientation = "root-left" | "root-bottom" | "root-top" | "unknown";
 /**
  * How a figure connects a node's vertical to its parent branch.
  */
-export type LayoutKind = "centered" | "staircase" | "unknown";
+export type LayoutKind = "centered" | "staircase" | "slanted" | "unknown";
 
 /**
  * Where a figure prints support values.

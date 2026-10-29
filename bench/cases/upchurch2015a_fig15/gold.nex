@@ -1,0 +1,68 @@
+#NEXUS
+
+[ Upchurch et al. 2015, PLOS ONE 10: e0125819, Fig. 15: strict consensus of 28 MPTs (Carballido & Sander matrix with Haestasaurus), a large slanted cladogram with the root at the bottom left, tip labels running up the right side, bracketed numbers at nodes; 72 tips. 55 tips, a large slanted cladogram with one diagonal spine. Diplodocoidea is a collapsed clade and keeps its printed text: the matrix has 17 diplodocoids, and 72 - 17 = 55 tips, which checks the tip count. Matrix spellings run genus and species together (e.g. Plateosaurusengelhardti). Tip-to-node assignment was measured: each of the 27 departures from the spine was followed up its 45-degree line to the label it reaches. Lines that merge before the spine (Tastavinsaurus/Tehuelchesaurus into Galveosaurus; the Venenosaurus-Ligabuesaurus comb; Brachiosauridae) were read in zoomed crops; in each comb the branch joining nearest the tip is the most nested. Titanosauria and Saltasauridae are polytomies (fans), and the Rapetosaurus branch leaves the Saltasauridae fan node. Topology transcribed from the figure and checked node by node against the image (2026-10-28); topology only, no support values or node numbers. Licence: CC BY; see attribution.txt. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=55;
+    TAXLABELS
+        Plateosaurusengelhardti
+        Chinshakiangosauruschunghoensis
+        Mussauruspatagonicus
+        Antetonitrusingenipes
+        Lessemsaurussauropoides
+        Gongxianosaurusshibeiensis
+        Amygdalodonpatagonicus
+        Isanosaurusattavipachi
+        Shunosauruslii
+        Vulcanodonkaribaensis
+        Tazoudasaurusnaimi
+        Barapasaurustagorei
+        Cetiosaurusoxoniensis
+        Patagosaurusfariasi
+        Omeisaurus
+        Mamenchisaurus
+        Turiasaurusriodevensis
+        Losillasaurusgiganteus
+        Jobariatiguidensis
+        Haplocanthosauruspriscus
+        Diplodocoidea
+        Camarasaurus
+        Haestasaurus
+        Bellusaurussui
+        Europasaurusholgeri
+        Galveosaurusherreroi
+        Tastavinsaurussanzi
+        Tehuelchesaurusbenitezii
+        Euhelopuszdanskyi
+        Giraffatitanbrancai
+        Brachiosaurusaltithorax
+        Paluxysaurusjonesi
+        Erketuellisoni
+        Venenosaurusdicrocei
+        Cedarosaurus
+        Chubutisaurusinsignis
+        Wintonotitanwattsi
+        Ligabuesaurusleanzai
+        Phuwiangosaurussirindhornae
+        Andesaurusdelgadoi
+        Malarguesaurusflorenciae
+        Mendozasaurusneguyelap
+        Argentinosaurushuinculensis
+        Epachthosaurussciuttoi
+        Opisthocoelicaudiaskarzynskii
+        Alamosaurussanjuanensis
+        Diamantinasaurusmatildae
+        Malawisaurusdixeyi
+        Trigonosauruspricei
+        Nemegtosaurusmongoliensis
+        Rapetosauruskrausei
+        Tapuiasaurusmacedoi
+        Isisauruscolberti
+        Neuquensaurusaustralis
+        Saltasaurusloricatus
+    ;
+END;
+
+BEGIN TREES;
+    TREE upchurch2015a_fig15 = [&R] (Plateosaurusengelhardti,(Chinshakiangosauruschunghoensis,(Mussauruspatagonicus,(Antetonitrusingenipes,(Lessemsaurussauropoides,(Gongxianosaurusshibeiensis,(Amygdalodonpatagonicus,(Isanosaurusattavipachi,(Shunosauruslii,((Vulcanodonkaribaensis,Tazoudasaurusnaimi),(Barapasaurustagorei,((Cetiosaurusoxoniensis,Patagosaurusfariasi),((Omeisaurus,Mamenchisaurus),((Turiasaurusriodevensis,Losillasaurusgiganteus),((Jobariatiguidensis,Haplocanthosauruspriscus),(Diplodocoidea,((Camarasaurus,Haestasaurus),(Bellusaurussui,(Europasaurusholgeri,((Galveosaurusherreroi,(Tastavinsaurussanzi,Tehuelchesaurusbenitezii)),(Euhelopuszdanskyi,(((Giraffatitanbrancai,Brachiosaurusaltithorax),Paluxysaurusjonesi),(Erketuellisoni,((Venenosaurusdicrocei,(Cedarosaurus,(Chubutisaurusinsignis,(Wintonotitanwattsi,Ligabuesaurusleanzai)))),(Phuwiangosaurussirindhornae,(Andesaurusdelgadoi,Malarguesaurusflorenciae,Mendozasaurusneguyelap,Argentinosaurushuinculensis,(Epachthosaurussciuttoi,(Opisthocoelicaudiaskarzynskii,Alamosaurussanjuanensis,Diamantinasaurusmatildae,Malawisaurusdixeyi,Trigonosauruspricei,Nemegtosaurusmongoliensis,(Rapetosauruskrausei,(Tapuiasaurusmacedoi,Isisauruscolberti)),(Neuquensaurusaustralis,Saltasaurusloricatus)))))))))))))))))))))))))))));
+END;

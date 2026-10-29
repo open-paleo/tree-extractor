@@ -81,13 +81,16 @@ export function assignLabels(document: ExtractionDocument): void
             // since the glyph height was measured on level fragments of these labels, the row's
             // own height sets the vertical tolerance there.
             const point = line.frame === undefined ? tip : mapPointToFrame(line.frame, tip.x, tip.y);
-            const center = (line.box.y0 + line.box.y1) / 2;
             const offset = line.box.x0 - point.x;
-            const tolerance = line.frame === undefined ? 0.8 * glyph : 0.8 * Math.max(glyph, line.box.y1 - line.box.y0);
+            // In a frame a label stands on or above its branch, so the tip is measured against
+            // the row's bottom edge: from most of a row below it to about two glyphs above.
+            const rowHeight = line.box.y1 - line.box.y0;
+            const rise = line.frame === undefined ? (line.box.y0 + line.box.y1) / 2 - point.y : line.box.y1 - point.y;
+            const fits = line.frame === undefined ? Math.abs(rise) <= 0.8 * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
 
-            if (isLabelSized(line, glyph) && Math.abs(center - point.y) <= tolerance && offset >= -reachBack && offset <= 5 * glyph)
+            if (isLabelSized(line, glyph) && fits && offset >= -reachBack && offset <= 5 * glyph)
             {
-                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(center - point.y) });
+                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(rise) });
             }
         }
     }

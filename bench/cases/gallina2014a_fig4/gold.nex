@@ -1,0 +1,41 @@
+#NEXUS
+
+[ Gallina et al. 2014, PLOS ONE 9(5): e97128, Fig. 4: two slanted cladograms side by side, (A) strict consensus of the Diplodocoidea matrix with Leinkupal, 28 tips, and (B) a second analysis, 14 tips; open-circle nodes with clade names and support values in brackets. names.txt is for panel A (left). Panel A only (region box), 28 tips, slanted cladogram. The root node separates Shunosaurus from a polytomy of Omeisaurus, Losillasaurus, Jobaria, Camarasaurus, Haplocanthosaurus, (Australodocus, Brachiosaurus) and Diplodocoidea. Diplodocoidea = (Amphicoelias, (Rebbachisauridae, Flagellicaudata)): the second branch leaves the stem just after the Diplodocoidea circle. Diplodocidae is a 4-way node (Apatosaurus, Supersaurus, Dinheirosaurus, Diplodocinae). Topology transcribed from the figure and checked node by node against the image (2026-10-28); topology only, no support values or node numbers. Licence: CC BY. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Shunosaurus
+        Omeisaurus
+        Losillasaurus
+        Jobaria
+        Camarasaurus
+        Haplocanthosaurus
+        Australodocus
+        Brachiosaurus
+        Amphicoelias
+        Amazonsaurus
+        Histriasaurus
+        Rebbachisaurus
+        Zapalasaurus
+        Limaysaurus
+        Cathartesaura
+        Demandasaurus
+        Nigersaurus
+        Suuwassea
+        Amargasaurus
+        Dicraeosaurus
+        Brachytrachelopan
+        Apatosaurus
+        Supersaurus
+        Dinheirosaurus
+        Leinkupal
+        Tornieria
+        Diplodocus
+        Barosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE gallina2014a_fig4 = [&R] (Shunosaurus,(Omeisaurus,Losillasaurus,Jobaria,Camarasaurus,Haplocanthosaurus,(Australodocus,Brachiosaurus),(Amphicoelias,((Amazonsaurus,(Histriasaurus,Rebbachisaurus,Zapalasaurus,((Limaysaurus,Cathartesaura),(Demandasaurus,Nigersaurus)))),((Suuwassea,(Amargasaurus,(Dicraeosaurus,Brachytrachelopan))),(Apatosaurus,Supersaurus,Dinheirosaurus,(Leinkupal,(Tornieria,(Diplodocus,Barosaurus)))))))));
+END;

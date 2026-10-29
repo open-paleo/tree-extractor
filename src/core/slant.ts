@@ -163,7 +163,7 @@ export function measureLabelSlant(residue: Mask, zone: Box, glyphHeight: number)
     }
 
     // The mode of the angles in three-degree bins, refined to the mean of the angles within
-    // a bin and a half of it.
+    // two bins and a half of it.
     const binWidth = (3 * Math.PI) / 180;
     const bins = new Map<number, number>();
     let modeBin = 0;
@@ -188,7 +188,7 @@ export function measureLabelSlant(residue: Mask, zone: Box, glyphHeight: number)
 
     for (const angle of angles)
     {
-        if (Math.abs(angle - modeAngle) <= 1.5 * binWidth)
+        if (Math.abs(angle - modeAngle) <= 2.5 * binWidth)
         {
             sum += angle;
             agreeing++;
@@ -348,7 +348,7 @@ export function detectSlantedLabels(textInk: Mask, lineArtMask: Mask, tips: Arra
     const residue = subtractMask(textInk, lineArtMask);
     const measure = measureLabelSlant(residue, measureZone, glyphHeight);
 
-    if (measure.pairs < 15 || measure.share < 0.3 || Math.abs(measure.angle) < minAngle)
+    if (measure.pairs < 8 || measure.share < 0.25 || Math.abs(measure.angle) < minAngle)
     {
         return null;
     }
