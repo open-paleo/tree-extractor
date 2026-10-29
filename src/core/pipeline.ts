@@ -839,6 +839,100 @@ export function formatTimings(timings: Record<string, number>): string
 }
 
 /**
+ * Keeps the part of a mask from a little left of the tips' median column onward, and clears
+ * the rest.
+ *
+ * @param mask - Mask, copied.
+ * @param tips - Tips whose median column sets the line.
+ * @param margin - How far left of the median to keep, in pixels.
+ * @returns The clipped copy.
+ */
+function keepShapesBeyond(mask: Mask, tips: Array<Tip>, margin: number): Mask
+{
+    const xs = new Array<number>();
+
+    for (const tip of tips)
+    {
+        if (tip.parent !== null)
+        {
+            xs.push(tip.x);
+        }
+    }
+
+    xs.sort(compareNumbers);
+    const from = xs.length === 0 ? 0 : Math.max(0, Math.round(xs[Math.floor(xs.length / 2)] - margin));
+    const data = new Uint8Array(mask.data);
+
+    for (let y = 0; y < mask.height; y++)
+    {
+        data.fill(0, y * mask.width, y * mask.width + Math.min(from, mask.width));
+    }
+
+    return { width: mask.width, height: mask.height, data };
+}
+
+/**
+ * On a slanted figure whose tips end on one line, drops unlabelled tips that end well behind
+ * it: pieces of a bracket or a letter that touched the tree and were read as stubs.
+ *
+ * @param document - Document with its profile measured and labels paired.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns One informational issue per tip dropped.
+ */
+function dropTipsBehindLine(document: ExtractionDocument, glyphHeight: number): Array<QcIssue>
+{
+    const issues = new Array<QcIssue>();
+    const xs = new Array<number>();
+
+    for (const tip of document.tips)
+    {
+        if (tip.parent !== null)
+        {
+            xs.push(tip.x);
+        }
+    }
+
+    if (xs.length < 4)
+    {
+        return issues;
+    }
+
+    // The tip line of a slanted figure is looser than a rectangular one's, since stubs and
+    // markers end at slightly different columns: the median, with most tips within a glyph.
+    xs.sort(compareNumbers);
+    const line = xs[Math.floor(xs.length / 2)];
+    let near = 0;
+
+    for (const x of xs)
+    {
+        near += Math.abs(x - line) <= glyphHeight ? 1 : 0;
+    }
+
+    if (near < 0.6 * xs.length)
+    {
+        return issues;
+    }
+
+    const behind = new Array<string>();
+
+    for (const tip of document.tips)
+    {
+        if (tip.textLine === null && tip.x < line - 2 * glyphHeight)
+        {
+            behind.push(tip.id);
+        }
+    }
+
+    for (const id of behind)
+    {
+        deleteTip(document, id);
+        issues.push({ severity: "info", code: "tip-behind-line", message: `tip ${id} ended well behind the tip line with no label and was dropped`, subject: null });
+    }
+
+    return issues;
+}
+
+/**
  * Drops tips that lie on the time axis: the axis line traces as a branch when a tick or a
  * frame line connects it to the tree, and its ends then read the legend or the axis labels.
  *
@@ -1114,7 +1208,12 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         roughBoxes.push(line.box);
     }
 
-    const slantedTrace = slantedFigure ? traceSlantedTree(lineInk, thickness, glyphHeight, roughBoxes) : null;
+    // Filled triangles at the tips of a slanted figure read as glyphs and leave the line art;
+    // the fat shapes of the text ink at the tip line are what the tips' stubs run into. A first
+    // trace without them finds the tip line, so that bold text inside the tree does not pass
+    // for a marker.
+    const tipMarkers = slantedFigure ? keepShapesBeyond(findFatShapes(subtractMask(textInk, lineInk), Math.max(2, Math.round(thickness / 5))), traceSlantedTree(lineInk, thickness, glyphHeight, roughBoxes).result.tips, 2 * glyphHeight) : null;
+    const slantedTrace = slantedFigure ? traceSlantedTree(lineInk, thickness, glyphHeight, roughBoxes, tipMarkers) : null;
     const trace = slantedTrace === null ? traceRectangularTree(horizontals, verticals, tolerance, reach, labelBoxes, 3 * glyphHeight, labelRows, 1.5 * glyphHeight, connectors) : slantedTrace.result;
     recordLap("trace");
     announce("Finding labels");
@@ -1186,6 +1285,11 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         const maxHeight = 2.5 * glyphHeight;
         extendTipsThroughMarkers(document, keepSmallShapes(findFatShapes(lineInk, Math.max(parameters.markerRadius, Math.round(thickness) + 1)), maxWidth, maxHeight), thickness, 2);
         extendTipsThroughMarkers(document, keepSmallShapes(markers, maxWidth, maxHeight), thickness, glyphHeight);
+
+        if (tipMarkers !== null)
+        {
+            extendTipsThroughMarkers(document, keepSmallShapes(tipMarkers, maxWidth, maxHeight), thickness, 3);
+        }
     }
 
     assignLabels(document);
@@ -1224,6 +1328,12 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // it is looked for in the line ink and added before labels are read.
     document.qc.push(...recoverAlignedTips(document, lineInk, thickness, minHorizontalRun));
     document.qc.push(...dropAxisTips(document, glyphHeight));
+
+    if (slantedTrace !== null)
+    {
+        document.qc.push(...dropTipsBehindLine(document, glyphHeight));
+    }
+
     recordLap("profile");
 
     if (options.ocr)

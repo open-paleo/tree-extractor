@@ -24,8 +24,9 @@ figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-l
 like the rest, labels set at a slant are read in a level frame of their own (the four vertical
 figures in `bench/holdout/` come out with 12 of 12, 10 of 12, 15 of 19 and 44 of 52 tips
 named, cold), and slanted trees are read from the skeleton of their line art (of the four with
-gold, a 28-tip diplodocoid cladogram names 27 with 14 of 16 splits and a 20-tip titanosaur
-cladogram names 19 with all its splits; see `docs/design.md`). On synthetic figures in five styles,
+gold, a 28-tip diplodocoid cladogram names 27 with 14 of 16 splits, a 20-tip titanosaur
+cladogram names all 20 with all its splits, and a 55-tip sauropod cladogram names 45 with 29
+of 35; see `docs/design.md`). On synthetic figures in five styles,
 thirteen of fifteen are identical. Ten of the real figures are openly licensed and ship with the
 benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach and its
 known gaps.

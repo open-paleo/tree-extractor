@@ -166,10 +166,18 @@ export function scoreName(target: string, name: string): number
     const targetSpace = target.indexOf(" ");
 
     // A list that runs genus and species together ("Plateosaurusengelhardti") against a read
-    // of the genus alone: the read is the name's first third or more.
-    if (space < 0 && targetSpace < 0 && target.length >= 6 && target.length < name.length && name.startsWith(target) && target.length >= 0.35 * name.length)
+    // of the genus alone: the read is the name's first third or more. A read that lost its
+    // first letter ("sisaurus") is still inside the name, a little less surely.
+    if (space < 0 && targetSpace < 0 && target.length >= 6 && target.length < name.length && target.length >= 0.35 * name.length)
     {
-        score = Math.max(score, 0.9);
+        if (name.startsWith(target))
+        {
+            score = Math.max(score, 0.9);
+        }
+        else if (name.includes(target))
+        {
+            score = Math.max(score, 0.8);
+        }
     }
 
     // A list of genera against a figure of binomials: the read's first word is the name.

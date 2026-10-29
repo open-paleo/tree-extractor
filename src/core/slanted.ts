@@ -605,12 +605,65 @@ function otherEnd(edge: GraphEdge, point: number): number
  *
  * @param graph - Graph changed in place.
  * @param maxSpur - Longest spur to remove, in pixels.
+ * @param anchors - Marker pixels; an end whose stub runs into one is a tip and stays.
  * @returns Spurs removed.
  */
-function pruneSpurs(graph: SkeletonGraph, maxSpur: number): number
+function pruneSpurs(graph: SkeletonGraph, maxSpur: number, anchors: Mask | null = null): number
 {
     let removed = 0;
     let changed = true;
+    const reach = Math.max(3, Math.round(maxSpur));
+
+    // An end whose stub runs into a marker (a filled triangle or disc at a tip) is a tip
+    // however short the stub: two tips forking just before the tip line are read that way.
+    // The marker must lie ahead of the end along the stub, not merely beside it, or a spur
+    // next to a bold clade name would pass.
+    function isAnchored(point: GraphPoint, edge: GraphEdge): boolean
+    {
+        if (anchors === null || edge.path.length < 2)
+        {
+            return false;
+        }
+
+        const path = edge.to === point.id ? edge.path : [...edge.path].reverse();
+        const end = path[path.length - 1];
+
+        // Along the last few pixels, and along the whole stub, since a thick stub's end thins
+        // into a prong that may point aside.
+        for (const back of [path[Math.max(0, path.length - 5)], path[0]])
+        {
+            const dx = end.x - back.x;
+            const dy = end.y - back.y;
+            const length = Math.hypot(dx, dy);
+
+            if (length < 1e-6)
+            {
+                continue;
+            }
+
+            for (let step = 1; step <= reach; step++)
+            {
+                const x = Math.round(end.x + (dx / length) * step);
+                const y = Math.round(end.y + (dy / length) * step);
+
+                for (let oy = -1; oy <= 1; oy++)
+                {
+                    for (let ox = -1; ox <= 1; ox++)
+                    {
+                        const nx = x + ox;
+                        const ny = y + oy;
+
+                        if (nx >= 0 && ny >= 0 && nx < anchors.width && ny < anchors.height && anchors.data[ny * anchors.width + nx] === 1)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     while (changed)
     {
@@ -631,7 +684,7 @@ function pruneSpurs(graph: SkeletonGraph, maxSpur: number): number
                 const other = graph.points[otherEnd(edge, point.id)];
 
                 // A dead end hanging off a junction by less than a spur's length.
-                if (edge.length <= maxSpur && listLiveEdges(graph, other).length >= 3)
+                if (edge.length <= maxSpur && listLiveEdges(graph, other).length >= 3 && !isAnchored(point, edge))
                 {
                     edge.alive = false;
                     point.alive = false;
@@ -1156,55 +1209,72 @@ function pruneLeaders(graph: SkeletonGraph, component: Array<number>, rootEnd: n
     const sideY = side.y;
     const sideLength = 1;
     let removed = 0;
+    let changed = true;
 
-    for (const id of component)
+    // Removing a leader can leave a new end (the stroke of a bracket it ran into), which is
+    // judged in turn.
+    while (changed)
     {
-        const point = graph.points[id];
+        changed = false;
 
-        if (id === rootEnd || !point.alive)
+        for (const id of component)
         {
-            continue;
-        }
+            const point = graph.points[id];
 
-        const live = listLiveEdges(graph, point);
-
-        if (live.length !== 1)
-        {
-            continue;
-        }
-
-        const edge = graph.edges[live[0]];
-        const path = edge.to === id ? edge.path : [...edge.path].reverse();
-        // The direction of the last stretch, about two glyphs back from the end.
-        let back = path.length - 1;
-        let run = 0;
-
-        while (back > 0 && run < 2 * glyphHeight)
-        {
-            run += Math.hypot(path[back].x - path[back - 1].x, path[back].y - path[back - 1].y);
-            back--;
-        }
-
-        const dx = path[path.length - 1].x - path[back].x;
-        const dy = path[path.length - 1].y - path[back].y;
-        const length = Math.hypot(dx, dy);
-
-        if (length < 1e-6)
-        {
-            continue;
-        }
-
-        if ((dx * sideX + dy * sideY) / (length * sideLength) < -0.2)
-        {
-            edge.alive = false;
-            point.alive = false;
-            removed++;
-            const other = graph.points[otherEnd(edge, id)];
-            const remaining = listLiveEdges(graph, other);
-
-            if (remaining.length === 2)
+            if (id === rootEnd || !point.alive)
             {
-                joinThrough(graph, other, remaining[0], remaining[1]);
+                continue;
+            }
+
+            const live = listLiveEdges(graph, point);
+
+            if (live.length !== 1)
+            {
+                continue;
+            }
+
+            const edge = graph.edges[live[0]];
+            const path = edge.to === id ? edge.path : [...edge.path].reverse();
+            // The direction of the last stretch, about two glyphs back from the end.
+            let back = path.length - 1;
+            let run = 0;
+
+            while (back > 0 && run < 2 * glyphHeight)
+            {
+                run += Math.hypot(path[back].x - path[back - 1].x, path[back].y - path[back - 1].y);
+                back--;
+            }
+
+            const dx = path[path.length - 1].x - path[back].x;
+            const dy = path[path.length - 1].y - path[back].y;
+            const length = Math.hypot(dx, dy);
+
+            if (length < 1e-6)
+            {
+                continue;
+            }
+
+            // Away from the tips (well away: the lower stub of a forked pair points somewhat down
+            // and is a tip), or level and long: a slanted figure's branches slant, and a level
+            // line running out to a bracketed number beyond the labels is a leader. The level test
+            // looks at the stretch before the last two glyphs as well, since the bracket's own
+            // stroke turns the line's last pixels.
+            const away = (dx * sideX + dy * sideY) / (length * sideLength) < -0.5;
+            const level = edge.length >= 2 * glyphHeight && (isLevelStretch(path, 0, 2 * glyphHeight) || isLevelStretch(path, 2 * glyphHeight, 4 * glyphHeight));
+
+            if (away || level)
+            {
+                edge.alive = false;
+                point.alive = false;
+                removed++;
+                changed = true;
+                const other = graph.points[otherEnd(edge, id)];
+                const remaining = listLiveEdges(graph, other);
+
+                if (remaining.length === 2)
+                {
+                    joinThrough(graph, other, remaining[0], remaining[1]);
+                }
             }
         }
     }
@@ -1438,6 +1508,40 @@ function hasTextNear(textBoxes: Array<Box>, x: number, y: number, reach: number)
 }
 
 /**
+ * Whether the stretch of a path between two distances back from its end runs level.
+ *
+ * @param path - Path ending at the end in question.
+ * @param from - Distance back from the end where the stretch starts.
+ * @param to - Distance back from the end where the stretch ends.
+ * @returns True when the stretch is at least a glyph long and within ten degrees of level.
+ */
+function isLevelStretch(path: Array<Point>, from: number, to: number): boolean
+{
+    let near = path.length - 1;
+    let run = 0;
+
+    while (near > 0 && run < from)
+    {
+        run += Math.hypot(path[near].x - path[near - 1].x, path[near].y - path[near - 1].y);
+        near--;
+    }
+
+    let far = near;
+
+    while (far > 0 && run < to)
+    {
+        run += Math.hypot(path[far].x - path[far - 1].x, path[far].y - path[far - 1].y);
+        far--;
+    }
+
+    const dx = path[near].x - path[far].x;
+    const dy = path[near].y - path[far].y;
+    const length = Math.hypot(dx, dy);
+
+    return length >= (to - from) * 0.5 && Math.abs(dy / length) < 0.17;
+}
+
+/**
  * Orders children top to bottom, then left to right.
  *
  * @param left - First child point.
@@ -1512,9 +1616,10 @@ export function findEndSide(lineArt: Mask): Point | null
  * @param thickness - Line thickness in pixels.
  * @param glyphHeight - Glyph height in pixels.
  * @param textBoxes - Boxes of the figure's text rows, for telling the root stub from leaders.
+ * @param markers - Filled shapes at tips (triangles, discs), whose stubs are kept however short.
  * @returns The trace, with the skeleton and the branch paths.
  */
-export function traceSlantedTree(lineInk: Mask, thickness: number, glyphHeight: number, textBoxes: Array<Box> = []): SlantedTrace
+export function traceSlantedTree(lineInk: Mask, thickness: number, glyphHeight: number, textBoxes: Array<Box> = [], markers: Mask | null = null): SlantedTrace
 {
     // A branch that leaves a node circle, or a line broken by a crossing label, can stop a
     // pixel or two short of what it meets; a small closing mends that without merging the
@@ -1525,13 +1630,13 @@ export function traceSlantedTree(lineInk: Mask, thickness: number, glyphHeight: 
     // A spur the thinning leaves at a thick line's end is under a line thickness long; a real
     // stub to a tip, where two tips fork just before the tip line, can be little longer.
     const maxSpur = Math.max(0.8 * thickness, 0.3 * glyphHeight);
-    const spurs = pruneSpurs(graph, maxSpur);
+    const spurs = pruneSpurs(graph, maxSpur, markers);
     // A thick junction thinned into two or three close forks contracts to one, and so does a
     // ring drawn around a node.
     const chains = contractChains(graph, 1.2 * glyphHeight, 3 * glyphHeight);
     const rings = contractRings(graph, 2.5 * glyphHeight, 2.5 * glyphHeight);
     // Contraction can leave pass-through points and new short spurs.
-    pruneSpurs(graph, maxSpur);
+    pruneSpurs(graph, maxSpur, markers);
     const components = listComponents(graph);
     const issues = new Array<QcIssue>();
     const nodes = new Array<TreeNode>();

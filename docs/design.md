@@ -125,7 +125,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    two shared words at least, so "MOR 692 Avaceratops" is the list's "Avaceratops sp. MOR 692".
    A binomial read whose species the list spells otherwise still reaches the list's row through
    its genus, at a score capped well below a full match, so two species of one genus stay a
-   toss-up that the margin rejects.
+   toss-up that the margin rejects. Against a list that runs genus and species together, a
+   one-word read that begins the name, or that the name contains (a read that lost its first
+   letter), scores high but not full.
    What a dashed or striped bar reads as (a letter four times in a row, a long word of three
    letters, a short lowercase word before the first capital) is dropped from the read first.
    A tip printed in capitals is a collapsed clade and keeps its printed name unless a list has
@@ -169,13 +171,17 @@ reads the tree from the line art directly:
    leaves on diagonals are removed, since a run of them reads as one long junction.
 2. The skeleton becomes a graph: pixels with three or more neighbors are junctions, adjacent
    ones one junction, pixels with one neighbor are ends, and the pixel paths between them are
-   edges. Dead ends shorter than a line thickness are spurs of the thinning and go; junctions
+   edges. Dead ends shorter than a line thickness are spurs of the thinning and go, unless the
+   stub runs into a filled marker at the tip line (the triangles a figure ends paired tips
+   with read as glyphs and leave the line art; their stubs are tips however short); junctions
    joined by edges shorter than a glyph are one thick junction thinned into two and merge;
    short cycles within a glyph or two are rings drawn around nodes and merge.
 3. The tips' side is where the ends lie from the middle of the skeleton. The root is the end
    farthest back from that side and farthest from any other end, among ends with no text
    beside them: a leader line ends at its label, the root stub in nothing. Other ends whose
-   last stretch points away from the tips' side are leaders and go.
+   last stretch points well away from the tips' side are leaders and go, and so are long level
+   lines, which run out to bracketed numbers beyond the labels while every branch slants; the
+   stroke of such a bracket, left as a new end, is judged in turn.
 4. The tree follows from the root end: each junction is a node, each end a tip, children in
    figure order; cycles the contraction left are cut. A fan of lines spreading from one point
    thins into a chain of close forks, so a fork two or more of whose lines, followed back along
@@ -184,13 +190,14 @@ reads the tree from the line art directly:
 
 The rest of the pipeline runs as for a rectangular tree, with the skeleton as the line art to
 erase before reading labels; unlabelled tips are not dropped as debris, since the spurs were
-pruned on the skeleton and labels pair less surely on slanted figures. Against the gold trees:
+pruned on the skeleton and labels pair less surely on slanted figures, except that when most
+tips end within a glyph of one column, an unlabelled tip two glyphs or more behind that column
+is a piece of lettering that touched the tree and goes. Against the gold trees:
 Gallina 2014 (28 tips, a root fan of eight and ringed nodes) names 27 and recovers 14 of 16
 splits; Bonaparte 2006 (20 tips, turned from root-bottom, labels at 48 degrees) names 19 and
 recovers all 15 splits;
-Upchurch 2015 (55 tips, dense trunk, bracket leaders both sides) recovers 22 of 27 splits and
-names 39, the rest mostly pairs of tips whose lines fork just before the tip line and are read
-as one; Calvo 1995, a 588-pixel scan, traces its tree but its labels are beyond the OCR.
+Upchurch 2015 (55 tips, dense trunk, bracket leaders both sides) recovers 29 of 35 splits and
+names 45; Calvo 1995, a 588-pixel scan, traces its tree but its labels are beyond the OCR.
 
 ## Redrawing
 
@@ -222,10 +229,10 @@ Large-font figures read two to three times faster for it; small fonts are unchan
 
 ## Known gaps
 
-- Slanted trees: two tips whose lines fork within a line thickness of the tip line are read as
-  one tip (Upchurch 2015 loses most of its names this way); collapsed triangles are read as a
-  tip but their label is beyond the frame's reach; the leftover-name pairing can take a tip
-  whose read matched the known taxa under the figure's spelling instead of the matrix's.
+- Slanted trees: a few paired tips whose stubs end in no marker are still read as one;
+  collapsed triangles are read as a tip but their label is beyond the frame's reach; the
+  leftover-name pairing can take a tip whose read matched the known taxa under the figure's
+  spelling instead of the matrix's.
 - Pectinate trees whose steps between successive nodes are shorter than the shortest line run
   (about ten pixels) lose those steps; the ink between two close verticals is then no segment.
   `findShortConnectors` recovers such pieces, but switched on it costs the tuned figures more
