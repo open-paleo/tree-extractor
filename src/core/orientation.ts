@@ -81,18 +81,6 @@ type EndCount = {
 };
 
 /**
- * Glyph height of the figure's text: whichever reading, upright or on its side, finds more
- * glyphs in long rows decides, and the default stands in when neither finds any.
- *
- * @param textInk - Dark pixels at the text threshold.
- * @returns Glyph height in pixels.
- */
-function estimateGlyphHeightEitherWay(textInk: Mask): number
-{
-    return measureTextEitherWay(textInk).glyphHeight;
-}
-
-/**
  * Text measured upright and on its side.
  */
 type TextEitherWay = {
