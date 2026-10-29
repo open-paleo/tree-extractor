@@ -265,9 +265,10 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     const lineArt = keepLineArt(lineInk, 4 * glyphHeight);
     const horizontalRuns = createDirectionalRunMask(lineArt, long, true);
     const verticalRuns = createDirectionalRunMask(lineArt, long, false);
-    // Anything that is not white and not a long run: labels, but also the range bars and
-    // silhouettes a label can sit beyond.
-    const anyInk = createDarkMask(image, 230, false, maxChroma);
+    // Anything darker than the background and not a long run: labels, but also the range bars
+    // and silhouettes a label can sit beyond. The background is usually white, but a figure
+    // on a colored ground (a yellow panel, say) would otherwise have ink past every end.
+    const anyInk = createDarkMask(image, Math.min(230, measureBackgroundLuminance(image) - 30), false, maxChroma);
     const runs = unionMask(horizontalRuns, verticalRuns);
     const loose = subtractMask(anyInk, dilate(runs, 1));
     const alongRows = countLabelledEnds(horizontalRuns, verticalRuns, loose, glyphHeight);
@@ -331,4 +332,38 @@ function decideFromEndSide(lineArt: Mask): Orientation
     }
 
     return "unknown";
+}
+
+/**
+ * The most common luminance of the image, sampled, which is the background's.
+ *
+ * @param image - Source image.
+ * @returns A luminance from 0 to 255.
+ */
+function measureBackgroundLuminance(image: RgbaImage): number
+{
+    const counts = new Uint32Array(256);
+    const step = Math.max(1, Math.floor(Math.sqrt((image.width * image.height) / 200000)));
+
+    for (let y = 0; y < image.height; y += step)
+    {
+        for (let x = 0; x < image.width; x += step)
+        {
+            const index = (y * image.width + x) * 4;
+            const luminance = Math.round(0.299 * image.data[index] + 0.587 * image.data[index + 1] + 0.114 * image.data[index + 2]);
+            counts[luminance]++;
+        }
+    }
+
+    let best = 255;
+
+    for (let value = 0; value < 256; value++)
+    {
+        if (counts[value] > counts[best])
+        {
+            best = value;
+        }
+    }
+
+    return best;
 }

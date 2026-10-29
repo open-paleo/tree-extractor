@@ -61,3 +61,9 @@ Most slanted trees are root-at-bottom "V" cladograms, more often in pre-2010 pap
 - **Layout mix:** 8 rectangular root-left, 6 slanted, 3 vertical. That is more slanted and vertical trees than the census (72 / 13 / 13 %). Printed matrices come from older papers, which favour slanted cladograms.
 - **Features:** 6 have a time axis, 5 are multi-panel, 4 have silhouettes, 1 is a 1990s low-resolution scan (calvo1995a, 588 px), and 1 is stored flipped (calvo1995a). One extracts white-on-black (bonaparte2006a; the case image is a page render).
 - **Name lists are often supersets of the tips.** Seven cases show only part of a larger analysis, or tips collapsed to clade names (hartman2019a: 501 names, about 60 tips).
+
+## Later notes (2026-10-28)
+
+- **Grey ghost lineages.** han2015a Fig. 11 draws most branch length as pale grey ghost lines (about RGB 200) and only the range bars and node bars in black. A black-ink threshold sees almost none of the tree. It is a figure style of its own: a ghost-lineage chart of the analysis, not the cladogram itself.
+- **Wrapped columns.** Three figures flagged multi-panel in the census are one tree wrapped into two columns: fonseca2024a Fig. 2, senter2007a Fig. 4, and cau2021a Fig. 6, where a long connector line joins the columns. A second column is not a second tree; the manifest now runs them whole.
+- **Coloured backgrounds.** foth2017a Fig. 9 sits on a solid yellow panel with dashed stage lines; assuming a white background made the orientation step misread it.

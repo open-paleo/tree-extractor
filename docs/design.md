@@ -39,7 +39,8 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    root-top. An end beside a long run of the other direction is a junction, not free. Runs are
    taken only from large pieces of line ink, so letter strokes never count whatever the glyph
    height was judged to be, and the ink past an end may be a range bar or a silhouette as well
-   as text. A figure whose line art lies mostly outside straight runs is slanted and is left as
+   as text; ink is anything darker than the background, which is measured rather than assumed
+   white, since a figure on a yellow panel otherwise has ink past every end. A figure whose line art lies mostly outside straight runs is slanted and is left as
    drawn, as is one with too few labelled ends to decide (labels set as PDF text, say). On the
    benchmark and holdout images this puts all thirty-five rectangular figures root-left, the
    four vertical ones root-bottom and the four slanted ones undecided, in 0.1 to 0.9 seconds.

@@ -39,3 +39,16 @@ styles are in `bench/synthetic/generate.ts`; a new style is one more preset ther
 gold tree. `npm run bench:holdout` runs them cold and prints, per case, how many tips the tree
 has, how many matched a listed name, and the quality-check findings, without scoring. Once a
 case has been checked and a gold tree written, it moves to `bench/cases/`.
+
+## Batch run over a corpus
+
+`npm run bench:batch -- --manifest=<file.json> --root=<dir>` runs every figure of a manifest
+cold (no gold, nothing scored) and prints a summary by layout class: figures that yielded a
+tree, crashes, mean tips, the share of listed names matched where a list exists, seconds per
+figure, and the most frequent quality checks. The manifest is a JSON array with one row per
+figure: `id`, `image`, optional `names` and `region`, `layout`, `flags`, and `is_tree` (false
+rows are skipped without `--all`); paths are relative to `--root` or the manifest's directory.
+Per-figure results go to `<out>/results.jsonl` and `<out>/<id>/` (document and Newick, and an
+overlay with `--overlay`). The census of the Open Paleo corpus (`bench/images/census/`, not
+committed) is the set this was written for: `--manifest=bench/images/census/manifest.json
+--root=bench`.
