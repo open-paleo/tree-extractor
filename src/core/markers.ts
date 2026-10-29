@@ -5,7 +5,7 @@
  */
 
 import type { Box, ExtractionDocument, Mask, QcIssue, RgbaImage, Segment } from "./types.ts";
-import { createMaskFromComponents, dilate, erode, findConnectedComponents, subtractMask, closeMask } from "./raster.ts";
+import { createMaskFromComponents, dilate, erode, findConnectedComponents, subtractMask, closeMask, invertMask } from "./raster.ts";
 import { deleteTip } from "./edit.ts";
 
 /**
@@ -321,7 +321,7 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
  *
  * The digit's strokes are closed first, so the disc is solid, and the ink is then eroded by
  * the line thickness, so the branches vanish and the disc's core remains, to be measured and
- * grown back. A disc is as wide as it is tall, to a tenth, and solid before the closing (half
+ * grown back. An open ring around a junction is found by its outline instead. A disc is as wide as it is tall, to a tenth, and solid before the closing (half
  * its box inked at least, where a two-digit support value closed into a blob inks a third),
  * and lines enter it on at least two sides, which a label beside a branch has not.
  *
@@ -329,37 +329,93 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
  * @param lineInk - Line ink, for the branches entering the disc.
  * @param glyphHeight - Glyph height in pixels.
  * @param thickness - Line thickness in pixels.
+ * @param tintInk - Everything that is not white, for pale solid discs; the text ink by default.
  * @returns Bounding boxes of the discs.
  */
-export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number, thickness: number): Array<Box>
+export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number, thickness: number, tintInk: Mask = textInk): Array<Box>
 {
     const radius = Math.max(2, Math.round(thickness / 2) + 1);
-    const closed = closeMask(textInk, Math.max(2, Math.round(glyphHeight / 5)));
-    const { components } = findConnectedComponents(erode(closed, radius));
     const discs = new Array<Box>();
 
-    for (const component of components)
+    // Solid discs: dark ones in the text ink, half inked at least; then pale ones in everything
+    // that is not white, which must be nearly solid, since the gray fringe of a thick mark
+    // passes the looser test.
+    for (const [ink, minShare] of [[textInk, 0.5], [tintInk, 0.7]] as Array<[Mask, number]>)
     {
-        const coreWidth = component.box.x1 - component.box.x0;
-        const coreHeight = component.box.y1 - component.box.y0;
-        const width = coreWidth + 2 * radius;
-        const height = coreHeight + 2 * radius;
-        const size = Math.max(width, height);
+        const closed = closeMask(ink, Math.max(2, Math.round(glyphHeight / 5)));
+        const { components } = findConnectedComponents(erode(closed, radius));
 
-        if (size < 1.5 * glyphHeight || size > 3.5 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || component.area < 0.6 * coreWidth * coreHeight)
+        for (const component of components)
+        {
+            const coreWidth = component.box.x1 - component.box.x0;
+            const coreHeight = component.box.y1 - component.box.y0;
+            const width = coreWidth + 2 * radius;
+            const height = coreHeight + 2 * radius;
+            const size = Math.max(width, height);
+
+            if (size < 1.5 * glyphHeight || size > 3.5 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || component.area < 0.6 * coreWidth * coreHeight)
+            {
+                continue;
+            }
+
+            const box: Box = { x0: component.box.x0 - radius, y0: component.box.y0 - radius, x1: component.box.x1 + radius, y1: component.box.y1 + radius };
+
+            if (measureInkShare(ink, box) >= minShare && countSidesEntered(lineInk, box, thickness) >= 2 && !overlapsAny(discs, box))
+            {
+                discs.push(box);
+            }
+        }
+    }
+
+    // Rings: an open circle drawn around a junction, with a letter or a number inside. Its
+    // outline joins the lines that enter it, so it is found by its hole: a white region that
+    // touches no edge, a glyph to three across, round (a circle fills about four fifths of its
+    // box, a gap between branches all of it), with lines entering on two sides.
+    const holes = findConnectedComponents(invertMask(textInk)).components;
+
+    for (const hole of holes)
+    {
+        const width = hole.box.x1 - hole.box.x0;
+        const height = hole.box.y1 - hole.box.y0;
+        const size = Math.max(width, height);
+        const share = hole.area / Math.max(1, width * height);
+        const touchesEdge = hole.box.x0 === 0 || hole.box.y0 === 0 || hole.box.x1 === textInk.width || hole.box.y1 === textInk.height;
+
+        if (touchesEdge || size < glyphHeight || size > 3 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || share < 0.6 || share > 0.88)
         {
             continue;
         }
 
-        const box: Box = { x0: component.box.x0 - radius, y0: component.box.y0 - radius, x1: component.box.x1 + radius, y1: component.box.y1 + radius };
+        const rim = Math.max(2, Math.round(thickness));
+        const box: Box = { x0: hole.box.x0 - rim, y0: hole.box.y0 - rim, x1: hole.box.x1 + rim, y1: hole.box.y1 + rim };
 
-        if (measureInkShare(textInk, box) >= 0.5 && countSidesEntered(lineInk, box, thickness) >= 2)
+        if (countSidesEntered(lineInk, box, thickness) >= 2 && !overlapsAny(discs, box))
         {
             discs.push(box);
         }
     }
 
     return discs;
+}
+
+/**
+ * Whether a box overlaps any box of a list.
+ *
+ * @param boxes - Boxes.
+ * @param box - The box.
+ * @returns True on overlap.
+ */
+function overlapsAny(boxes: Array<Box>, box: Box): boolean
+{
+    for (const other of boxes)
+    {
+        if (other.x0 < box.x1 && other.x1 > box.x0 && other.y0 < box.y1 && other.y1 > box.y0)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**

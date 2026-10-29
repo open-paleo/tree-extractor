@@ -1097,7 +1097,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
 
     // A numbered disc over a junction cuts the branches there; a cross painted through it, in
     // the copy the segments are taken from, lets them run on.
-    const nodeDiscs = parameters.nodeDiscs ? findNodeDiscs(textInk, lineInk, glyphHeight, thickness) : [];
+    const nodeDiscs = parameters.nodeDiscs ? findNodeDiscs(textInk, lineInk, glyphHeight, thickness, createDarkMask(image, 230, false, parameters.maxChroma)) : [];
     const lineArt: Mask = { width: lineInk.width, height: lineInk.height, data: new Uint8Array(lineInk.data) };
     paintCrosses(lineArt, nodeDiscs, thickness);
     // The extractor judges a run's thickness on the text ink around it, so the disc goes there too.
@@ -1347,8 +1347,9 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         // numbers; they are debris whatever their length.
         removeNumericDebrisTips(document, slantedTrace === null ? 3 * glyphHeight : Infinity, slantedTrace === null && parameters.dropDebris ? 3 * glyphHeight : 0);
 
-        // Reading the labels can turn a piece's tips into debris; the main tree is chosen again.
-        if (chooseRoot(document))
+        // Reading the labels can turn a piece's tips into debris, and says which piece is the
+        // tree; the main tree is chosen again, by named tips first.
+        if (chooseRoot(document, true))
         {
             document.qc.push({ severity: "info", code: "root-changed", message: `the main tree is now ${document.root ?? ""}, the piece with the most tips once labels were read`, subject: document.root });
         }

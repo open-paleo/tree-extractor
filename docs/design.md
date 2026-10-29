@@ -72,11 +72,15 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    thick figure does not turn its verticals into stacks of short horizontals. Only long pieces
    (four times as wide as thick) count toward that thickness: a silhouette or a box is a blob of
    wide runs, and counted as a thick line it once pushed the shortest vertical run past a
-   figure's own node connectors (Loewen 2024 lost every short connector that way). A filled
-   disc over a junction, a numbered node marker, is found first (round to a tenth, a glyph and
-   a half to three and a half across, half inked, with lines entering on two sides) and replaced
-   in the copy the segments are taken from by a cross of line thickness, since the disc's halves
-   beside the digit pass for glyphs and cut the branches under it. A vertical a third of a line
+   figure's own node connectors (Loewen 2024 lost every short connector that way). A disc over
+   a junction, a numbered or lettered node marker, is found first and replaced in the copy the
+   segments are taken from by a cross of line thickness, since the disc's halves beside the
+   digit pass for glyphs and cut the branches under it. A dark solid disc is found in the text
+   ink (round to a tenth, a glyph and a half to three and a half across, half inked, with lines
+   entering on two sides), a pale one in everything that is not white under a stricter fill,
+   and an open ring by its hole: a white region touching no edge, a glyph to three across and
+   round, since a circle fills about four fifths of its box and a gap between branches all of
+   it. A vertical a third of a line
    thick and a few thicknesses tall is a sliver, a rounded end or a stray edge, and is dropped
    before it can take a branch's attachment from the vertical it leans on. Columns where the
    dark ink is glyph-high split a horizontal, label rows clip it, verticals inside label rows are
@@ -105,8 +109,8 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
    right of the tips (clade brackets), or above or below the tree without labels (a time axis,
    a legend). The main tree is then chosen again as the piece with the most tips, and once
-   more after labels are read, since a chart or a frame can outnumber the tree before its
-   pieces are recognized as debris.
+   more after labels are read, this time by named tips first, since a stratigraphic chart or a
+   frame can have more ends than the tree but none of them reads as a taxon.
 
    Tip labels set at a slant, which a quarter turn leaves twenty or thirty degrees off level,
    get a frame of their own (`src/core/slant.ts`). The slant is measured in the label zone,
