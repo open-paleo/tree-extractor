@@ -139,6 +139,29 @@ test("detectOrientation tells a root-left tree from the same tree on its side", 
     assert.equal(rootTop.bottomEnds, 4);
 });
 
+test("detectOrientation does not turn a dense root-left tree whose connectors look like tips", () =>
+{
+    // Twelve pairs of tips on short branches off node connectors, labels to the right: the
+    // connectors' ends are free with label ink above and below them.
+    const image = createWhiteImage(400, 560);
+
+    for (let pair = 0; pair < 12; pair++)
+    {
+        const top = 20 + pair * 44;
+        paintBlack(image, 200, top, 203, top + 24);
+        paintBlack(image, 200, top, 214, top + 3);
+        paintBlack(image, 200, top + 21, 214, top + 24);
+        paintBlack(image, 150, top + 11, 203, top + 14);
+        paintLabel(image, 220, top - 4, 9);
+        paintLabel(image, 220, top + 17, 9);
+    }
+
+    paintBlack(image, 150, 31, 153, 518);
+    paintBlack(image, 20, 270, 153, 273);
+    const find = detectOrientation(image, 140, 180, 40);
+    assert.ok(find.orientation === "root-left" || find.orientation === "unknown", `${find.orientation} with ${find.rightEnds} right, ${find.topEnds} top, ${find.bottomEnds} bottom, ${find.levelLabelGlyphs} level glyphs`);
+});
+
 test("detectOrientation leaves a figure with no labels undecided", () =>
 {
     const image = createWhiteImage(200, 120);

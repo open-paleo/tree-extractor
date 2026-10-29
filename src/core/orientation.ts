@@ -47,6 +47,12 @@ export type OrientationFind = {
     glyphHeight: number;
 
     /**
+     * Glyphs in level text rows lying beyond the right-hand ends of the horizontal runs: the
+     * tip labels of a root-left tree, which veto a turn.
+     */
+    levelLabelGlyphs: number;
+
+    /**
      * Share of the large line art lying in long horizontal or vertical runs; low for a slanted
      * tree.
      */
@@ -83,6 +89,38 @@ type EndCount = {
  */
 function estimateGlyphHeightEitherWay(textInk: Mask): number
 {
+    return measureTextEitherWay(textInk).glyphHeight;
+}
+
+/**
+ * Text measured upright and on its side.
+ */
+type TextEitherWay = {
+    /**
+     * Glyph height of whichever reading found more glyphs in long rows.
+     */
+    glyphHeight: number;
+
+    /**
+     * Glyphs in long rows read upright.
+     */
+    uprightGlyphs: number;
+
+    /**
+     * Glyphs in long rows read with the image on its side.
+     */
+    sidewaysGlyphs: number;
+};
+
+/**
+ * Measures the figure's text both ways: how many glyphs sit in long rows read upright and
+ * read on the side, and the glyph height of the reading that found more.
+ *
+ * @param textInk - Dark pixels at the text threshold.
+ * @returns The measurement.
+ */
+function measureTextEitherWay(textInk: Mask): TextEitherWay
+{
     const upright = detectTextLines(textInk, { lineArtMask: dilate(createLongRunMask(textInk, 28, 20), 1), minY: 0 });
     const transposed = transposeMask(textInk);
     const sideways = detectTextLines(transposed, { lineArtMask: dilate(createLongRunMask(transposed, 28, 20), 1), minY: 0 });
@@ -101,7 +139,7 @@ function estimateGlyphHeightEitherWay(textInk: Mask): number
 
     const chosen = sidewaysGlyphs > uprightGlyphs ? sideways : upright;
 
-    return chosen.glyphHeight > 0 ? chosen.glyphHeight : 12;
+    return { glyphHeight: chosen.glyphHeight > 0 ? chosen.glyphHeight : 12, uprightGlyphs, sidewaysGlyphs };
 }
 
 /**
@@ -258,7 +296,8 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
 {
     const lineInk = createDarkMask(image, lineThreshold, true, maxChroma);
     const textInk = createDarkMask(image, inkThreshold, false, maxChroma);
-    const glyphHeight = estimateGlyphHeightEitherWay(textInk);
+    const text = measureTextEitherWay(textInk);
+    const glyphHeight = text.glyphHeight;
     // Twice the glyph height: a letter with an ascender and a descender is shorter than that,
     // so letter strokes are not runs.
     const long = Math.max(12, Math.round(2 * glyphHeight));
@@ -279,6 +318,11 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     const topEnds = alongColumns.backward;
     const bottomEnds = alongColumns.forward;
     const standing = Math.max(topEnds, bottomEnds);
+    // A dense root-left tree with short terminal branches has node connectors whose ends look
+    // free, with the siblings' labels above and below them; its level label rows beyond the
+    // branch ends say what it is, and veto a turn, unless the figure has more text standing
+    // on its side than level, as a vertical tree with rotated labels and a level axis has.
+    const levelLabelGlyphs = text.sidewaysGlyphs > text.uprightGlyphs ? 0 : countLevelLabelGlyphs(textInk, horizontalRuns, glyphHeight);
     let orientation: Orientation = "unknown";
     const slanted = runCoverage < 0.3;
 
@@ -292,12 +336,67 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     {
         orientation = "root-left";
     }
-    else if (standing >= 3 && standing >= 2 * rightEnds)
+    else if (standing >= 3 && standing >= 2 * rightEnds && !(levelLabelGlyphs >= 40 && levelLabelGlyphs >= 3 * standing))
     {
         orientation = topEnds >= bottomEnds ? "root-bottom" : "root-top";
     }
 
-    return { orientation, rightEnds, topEnds, bottomEnds, glyphHeight, runCoverage, slanted };
+    return { orientation, rightEnds, topEnds, bottomEnds, levelLabelGlyphs, glyphHeight, runCoverage, slanted };
+}
+
+/**
+ * Counts the glyphs of long level text rows that begin beyond the right-hand ends of the
+ * horizontal runs, where a root-left tree's tip labels are, when there are at least eight such
+ * rows: a column of labels.
+ *
+ * @param textInk - Dark pixels at the text threshold.
+ * @param horizontalRuns - Mask of long horizontal runs.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns Glyphs in such rows.
+ */
+function countLevelLabelGlyphs(textInk: Mask, horizontalRuns: Mask, glyphHeight: number): number
+{
+    // The tip line: the column, to a glyph, that the most right-hand ends of long runs share.
+    const { components } = findConnectedComponents(horizontalRuns);
+    const bins = new Map<number, number>();
+    let bestBin = -1;
+    let bestCount = 0;
+
+    for (const component of components)
+    {
+        const bin = Math.floor(component.box.x1 / glyphHeight);
+        const count = (bins.get(bin) ?? 0) + 1;
+        bins.set(bin, count);
+
+        if (count > bestCount)
+        {
+            bestCount = count;
+            bestBin = bin;
+        }
+    }
+
+    if (bestCount < 3)
+    {
+        return 0;
+    }
+
+    const tipLine = (bestBin + 0.5) * glyphHeight;
+    const strip = dilate(createLongRunMask(textInk, 28, 20), 1);
+    const detection = detectTextLines(textInk, { lineArtMask: strip, minY: 0 });
+    let glyphs = 0;
+    let rows = 0;
+
+    for (const line of detection.lines)
+    {
+        if (line.glyphCount >= 5 && line.box.x0 >= tipLine - 2 * glyphHeight && line.box.x0 <= tipLine + 6 * glyphHeight)
+        {
+            glyphs += line.glyphCount;
+            rows++;
+        }
+    }
+
+    // A column of labels, not a few clade names or axis values that happen to start there.
+    return rows >= 8 ? glyphs : 0;
 }
 
 /**

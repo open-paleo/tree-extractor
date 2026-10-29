@@ -40,7 +40,11 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    taken only from large pieces of line ink, so letter strokes never count whatever the glyph
    height was judged to be, and the ink past an end may be a range bar or a silhouette as well
    as text; ink is anything darker than the background, which is measured rather than assumed
-   white, since a figure on a yellow panel otherwise has ink past every end. A figure whose line art lies mostly outside straight runs is slanted and is left as
+   white, since a figure on a yellow panel otherwise has ink past every end. One veto: a dense
+   root-left tree with short terminal branches has node connectors whose ends look free, with
+   the siblings' labels above and below them, so when many level label rows begin at the
+   column most branch ends share, eight rows at least and more text level than standing, the
+   figure is not turned however the ends count. A figure whose line art lies mostly outside straight runs is slanted and is left as
    drawn, as is one with too few labelled ends to decide (labels set as PDF text, say). On the
    benchmark and holdout images this puts all thirty-five rectangular figures root-left, the
    four vertical ones root-bottom and the four slanted ones undecided, in 0.1 to 0.9 seconds.
