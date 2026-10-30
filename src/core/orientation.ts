@@ -42,6 +42,16 @@ export type OrientationFind = {
     bottomEnds: number;
 
     /**
+     * Glyphs read as level text.
+     */
+    uprightGlyphs: number;
+
+    /**
+     * Glyphs read as text set on its side.
+     */
+    sidewaysGlyphs: number;
+
+    /**
      * Glyph height the windows were sized from.
      */
     glyphHeight: number;
@@ -328,8 +338,15 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     {
         orientation = topEnds >= bottomEnds ? "root-bottom" : "root-top";
     }
+    else if (standing >= 3 && standing > rightEnds && text.sidewaysGlyphs >= 1.2 * text.uprightGlyphs)
+    {
+        // A vertical time tree with a stage chart beside it has as many free right ends, the
+        // stage dividers with their ages past them, as free top ends; its text, mostly on its
+        // side, breaks the tie. A root-left tree's text is never mostly on its side.
+        orientation = topEnds >= bottomEnds ? "root-bottom" : "root-top";
+    }
 
-    return { orientation, rightEnds, topEnds, bottomEnds, levelLabelGlyphs, glyphHeight, runCoverage, slanted };
+    return { orientation, rightEnds, topEnds, bottomEnds, uprightGlyphs: text.uprightGlyphs, sidewaysGlyphs: text.sidewaysGlyphs, levelLabelGlyphs, glyphHeight, runCoverage, slanted };
 }
 
 /**

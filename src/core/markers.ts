@@ -141,6 +141,86 @@ function removeOutlines(thin: Mask, minSize: number, rim: number): void
 }
 
 /**
+ * Removes chart lines: a line spanning much of the figure that many segments of the other
+ * direction cross or end on. A stratigraphic band at the top of a time tree is a width-wide
+ * rule with dozens of stage dividers standing on it, and once a branch touches it, the
+ * dividers become tips of the tree. Nothing crosses a node connector, and the stem of a dense
+ * tree has many branches ending on it, so only crossings count, and they must not be dwarfed
+ * by endings. A band whose dividers stand on it without crossing (Wang 2025) is not caught;
+ * counting endings instead took a scale of Ke 2023 with it.
+ *
+ * @param horizontals - Horizontal segments, rewritten in place.
+ * @param verticals - Vertical segments, rewritten in place.
+ * @param width - Image width.
+ * @param height - Image height.
+ * @returns One informational issue per line dropped.
+ */
+export function removeChartLines(horizontals: Array<Segment>, verticals: Array<Segment>, width: number, height: number): Array<QcIssue>
+{
+    const issues = new Array<QcIssue>();
+
+    function judge(lines: Array<Segment>, others: Array<Segment>, alongX: boolean): Array<Segment>
+    {
+        const kept = new Array<Segment>();
+        const span = alongX ? width : height;
+
+        for (const line of lines)
+        {
+            const { box } = line;
+            const length = alongX ? box.x1 - box.x0 : box.y1 - box.y0;
+            let crossing = 0;
+            let ending = 0;
+
+            if (length >= 0.4 * span)
+            {
+                for (const other of others)
+                {
+                    const otherBox = other.box;
+                    const overlaps = alongX ? otherBox.x0 < box.x1 && otherBox.x1 > box.x0 : otherBox.y0 < box.y1 && otherBox.y1 > box.y0;
+
+                    if (!overlaps)
+                    {
+                        continue;
+                    }
+
+                    const before = alongX ? otherBox.y0 < box.y0 - 2 : otherBox.x0 < box.x0 - 2;
+                    const after = alongX ? otherBox.y1 > box.y1 + 2 : otherBox.x1 > box.x1 + 2;
+
+                    if (before && after)
+                    {
+                        crossing++;
+                    }
+                    else if (before || after)
+                    {
+                        ending++;
+                    }
+                }
+            }
+
+            if (crossing >= 6 && crossing >= ending / 4)
+            {
+                issues.push({ severity: "info", code: "chart-line-dropped", message: `${line.orientation} ${line.id} spanning the figure with ${crossing} segment(s) crossing and ${ending} ending on it was dropped as a chart line`, subject: null });
+            }
+            else
+            {
+                kept.push(line);
+            }
+        }
+
+        return kept;
+    }
+
+    const keptHorizontals = judge(horizontals, verticals, true);
+    const keptVerticals = judge(verticals, horizontals, false);
+    horizontals.length = 0;
+    horizontals.push(...keptHorizontals);
+    verticals.length = 0;
+    verticals.push(...keptVerticals);
+
+    return issues;
+}
+
+/**
  * The fat shapes of a mask: regions that survive an erosion, grown back by a pixel more. On
  * the line ink these are collapsed-clade wedges, filled discs and thick bars, never lines.
  *

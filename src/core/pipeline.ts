@@ -14,7 +14,7 @@ import { traceSlantedTree } from "./slanted.ts";
 import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
-import { extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeFrameSegments, splitColoredInk } from "./markers.ts";
+import { extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeChartLines, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -1022,7 +1022,7 @@ function describeOrientation(find: OrientationFind | null, quarterTurns: number)
         return [];
     }
 
-    const evidence = `${find.rightEnds} branch end(s) with a label to the right, ${find.topEnds} with one above, ${find.bottomEnds} with one below`;
+    const evidence = `${find.rightEnds} branch end(s) with a label to the right, ${find.topEnds} with one above, ${find.bottomEnds} with one below; ${find.uprightGlyphs} glyph(s) level, ${find.sidewaysGlyphs} on their side`;
 
     if (find.orientation === "unknown")
     {
@@ -1172,7 +1172,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         }
     }
 
-    const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height)];
+    const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height), ...removeChartLines(horizontals, verticals, image.width, image.height)];
     // Steps between successive nodes of a pectinate tree can be shorter than the shortest run
     // that counts as a line; the ink between two close verticals supplies the missing branch.
     const connectors = new Set<string>();

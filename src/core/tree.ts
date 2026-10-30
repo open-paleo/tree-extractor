@@ -100,6 +100,8 @@ export function chooseRoot(document: ExtractionDocument, byNames = false): boole
 
     // Once labels are read, the piece with the most named tips is the tree: a stratigraphic
     // chart or a frame can have more ends than the tree, but none of them reads as a taxon.
+    // Fewer than three names decide nothing, since without a taxon list a stray piece can
+    // carry a name or two from the known taxa while the tree carries none.
     for (const node of document.nodes)
     {
         if (node.parent !== null)
@@ -108,7 +110,8 @@ export function chooseRoot(document: ExtractionDocument, byNames = false): boole
         }
 
         const size = countTipsUnder(document, node.id);
-        const named = byNames ? countNamedTipsUnder(document, node.id) : 0;
+        const namedUnder = byNames ? countNamedTipsUnder(document, node.id) : 0;
+        const named = namedUnder >= 3 ? namedUnder : 0;
 
         if (named > bestNamed || (named === bestNamed && size > bestSize))
         {

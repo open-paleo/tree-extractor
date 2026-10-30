@@ -44,7 +44,11 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    root-left tree with short terminal branches has node connectors whose ends look free, with
    the siblings' labels above and below them, so when many level label rows begin at the
    column most branch ends share, eight rows at least and more text level than standing, the
-   figure is not turned however the ends count. A figure whose line art lies mostly outside straight runs is slanted and is left as
+   figure is not turned however the ends count. One tie-breaker: a vertical time tree with a
+   stage chart beside it has as many free right ends, the stage dividers with their ages past
+   them, as free top ends, so when the standing ends merely outnumber the right ends, the
+   figure is still turned if most of its text is on its side, which a root-left tree's never
+   is. A figure whose line art lies mostly outside straight runs is slanted and is left as
    drawn, as is one with too few labelled ends to decide (labels set as PDF text, say). On the
    benchmark and holdout images this puts all thirty-five rectangular figures root-left, the
    four vertical ones root-bottom and the four slanted ones undecided, in 0.1 to 0.9 seconds.
@@ -108,9 +112,14 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    row neither clips the branch stub next to the bar nor sits over it. Short unlabelled tips are
    dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
    right of the tips (clade brackets), or above or below the tree without labels (a time axis,
-   a legend). The main tree is then chosen again as the piece with the most tips, and once
-   more after labels are read, this time by named tips first, since a stratigraphic chart or a
-   frame can have more ends than the tree but none of them reads as a taxon.
+   a legend). A chart line, one spanning two fifths of the figure that six or more segments of
+   the other direction cross outright, is dropped before tracing, since a stage band's dividers
+   become tips once a branch touches the band (`removeChartLines`; only crossings count, because
+   the stem of a dense tree has dozens of branches ending on it). The main tree is then chosen
+   again as the piece with the most tips, and once
+   more after labels are read, this time by named tips first (three at least, since a stray
+   piece can carry a known name or two when there is no taxon list), since a stratigraphic
+   chart or a frame can have more ends than the tree but none of them reads as a taxon.
 
    Tip labels set at a slant, which a quarter turn leaves twenty or thirty degrees off level,
    get a frame of their own (`src/core/slant.ts`). The slant is measured in the label zone,
