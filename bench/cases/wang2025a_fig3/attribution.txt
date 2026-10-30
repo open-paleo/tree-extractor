@@ -1,0 +1,11 @@
+Authors: Wang, Y. M.; Zhang, Q. N.; Wang, Y. C.; Xu, H.; Chen, J.; Feng, Z.; Xu, X.; Wang, T.; You, H. L.
+Year: 2025
+Title: A new Early Jurassic dinosaur represents the earliest-diverging and oldest sauropodomorph of East Asia
+Journal: Scientific Reports 15
+DOI: https://doi.org/10.1038/s41598-025-12185-2
+Figure: Figure 3; image = embedded image at native resolution, unmodified, 1776x2363 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: Scientific Reports articles are published under the Creative Commons Attribution 4.0 licence
+Source: https://doi.org/10.1038/s41598-025-12185-2 (published PDF)
+Taxon list (names.txt): Supplementary File 2 (nex), NEXUS TAXLABELS, 79 taxa

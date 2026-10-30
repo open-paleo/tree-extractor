@@ -1,0 +1,9 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Wang et al. 2025, Scientific Reports 15, Figure 3: Time-calibrated sauropodomorph tree, thin lines, coloured range bars, 69 tips; several polytomies (a 6-way basal node, a 7-way node with Jaklapallisaurus to Nambalia, a 7-way node in Sauropodiformes, a 3-way Gongxianosaurus/Ingentia node). Matrix spellings: PVL_3808 (printed Riojasaurus PVL3808), NMQR3314 and NMQR1551 (printed Melanorosaurus NMQR...), Meroktenus (printed Meroktenos), Neosauropoda (printed NEOSAUROPODA, a matrix row). Image: embedded image at native resolution, unmodified (1776x2363 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Wang, Y. M.; Zhang, Q. N.; Wang, Y. C.; Xu, H.; Chen, J.; Feng, Z.; Xu, X.; Wang, T.; You, H. L. (2025). A new Early Jurassic dinosaur represents the earliest-diverging and oldest sauropodomorph of East Asia. Scientific Reports 15. https://doi.org/10.1038/s41598-025-12185-2. Figure 3. CC BY 4.0.",
+    "gold_note": "Time-calibrated sauropodomorph tree, thin lines, coloured range bars, 69 tips; several polytomies (a 6-way basal node, a 7-way node with Jaklapallisaurus to Nambalia, a 7-way node in Sauropodiformes, a 3-way Gongxianosaurus/Ingentia node). Matrix spellings: PVL_3808 (printed Riojasaurus PVL3808), NMQR3314 and NMQR1551 (printed Melanorosaurus NMQR...), Meroktenus (printed Meroktenos), Neosauropoda (printed NEOSAUROPODA, a matrix row)."
+}

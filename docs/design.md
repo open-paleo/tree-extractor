@@ -119,7 +119,17 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    when a bar traced as a segment of its own already had a tip at that end, the tip whose
    branch started further left stays and the other goes, and its label row may start as far back as the
    branch did. A text row's box leaves out solid blocks (a range bar touching a label), so the
-   row neither clips the branch stub next to the bar nor sits over it. Short unlabelled tips are
+   row neither clips the branch stub next to the bar nor sits over it; a block is a glyph wider
+   than a letter that fills its box, or one lying mostly on a fat colored shape, since an
+   outlined bar reads hollow once its edges are taken out as line art yet its fill is a marker
+   (Bellardini 2025's labels began at their bars and paired with nothing; this took it from 6
+   to 11 of 14 names and Wang 2025 from 40 to 52 of 69). A row that is such a block alone is
+   no text row at all, and neither clips a branch nor stands in for a label, which keeps a
+   branch running into a range oval whole for the marker extension to carry on (Loewen 2024).
+   Merging an outlined bar's two edges into one branch before tracing was tried instead and
+   dropped: two sister branches and their connector draw the same hollow shape, and even with
+   a filled interior required the merge gained nothing once the rows were right. Short
+   unlabelled tips are
    dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
    right of the tips (clade brackets), or above or below the tree without labels (a time axis,
    a legend). A stage chart is dropped whole before tracing (`removeChartStrips`): a strip

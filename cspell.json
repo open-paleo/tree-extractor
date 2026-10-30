@@ -158,7 +158,10 @@
         "Muñoz",
         "Adocus",
         "Ramírez",
-        "Velasco"
+        "Velasco",
+        "sauropodomorph",
+        "spinosaurid",
+        "Bellardini"
     ],
     "ignorePaths": [
         "node_modules/**",

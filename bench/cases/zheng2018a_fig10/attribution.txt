@@ -1,0 +1,11 @@
+Authors: Zheng, W.; Jin, X.; Azuma, Y.; Wang, Q.; Miyata, K.; Xu, X.
+Year: 2018
+Title: The most basal ankylosaurine dinosaur from the Albian-Cenomanian of China, with implications for the evolution of the tail club
+Journal: Scientific Reports 8
+DOI: https://doi.org/10.1038/s41598-018-21924-7
+Figure: Figure 10; image = vector figure: 300 dpi page render above the caption (colour), prose blocks and running head blanked, cropped to the remaining ink (previous wide crop kept in images/census/wide/), 1530x1441 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: Scientific Reports articles are published under the Creative Commons Attribution 4.0 licence
+Source: https://doi.org/10.1038/s41598-018-21924-7 (published PDF)
+Taxon list (names.txt): Supplementary PDF, Text S1 TNT matrix: 57 of the 59 declared rows recovered (2 rows could not be parsed from the PDF text)

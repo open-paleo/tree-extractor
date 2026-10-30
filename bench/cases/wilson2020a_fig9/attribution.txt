@@ -1,0 +1,11 @@
+Authors: Wilson, J. P.; Ryan, M. J.; Evans, D. C.
+Year: 2020
+Title: A new, transitional centrosaurine ceratopsid from the Upper Cretaceous Two Medicine Formation of Montana and the evolution of the 'Styracosaurus-line' dinosaurs
+Journal: Royal Society Open Science 7: 200284
+DOI: https://doi.org/10.1098/rsos.200284
+Figure: Figure 9; image = page render of the image area at 300 dpi, as printed, 1656x1369 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: Royal Society Open Science articles are published under the Creative Commons Attribution 4.0 licence
+Source: https://doi.org/10.1098/rsos.200284 (published PDF)
+Taxon list (names.txt): Supplementary File 2 (rsos200284supp2.nex), 28 taxa

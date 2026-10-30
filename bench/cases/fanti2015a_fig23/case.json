@@ -1,0 +1,9 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Fanti et al. 2015, PLOS ONE 10(4): e0123475, Figure 23: S-DIVA biogeography tree (Bayesian topology) with pie-chart nodes and a dispersal/vicariance curve above a stage timescale; 29 tips. Katepensaurus, Nigersaurus and the Demandasaurus clade sit on one vertical carrying two stacked pies: read as (Katepensaurus,(Nigersaurus,(Demandasaurus,(Rebbachisaurus,Tataouinea)))), two nodes at zero length. Image: embedded image at native resolution, unmodified (1937x1691 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Fanti, F.; Cau, A.; Cantelli, L.; Hassine, M.; Auditore, M. (2015). New information on Tataouinea hannibalis from the Early Cretaceous of Tunisia and implications for the tempo and mode of rebbachisaurid sauropod evolution. PLOS ONE 10(4): e0123475. https://doi.org/10.1371/journal.pone.0123475. Figure 23. CC BY 4.0.",
+    "gold_note": "S-DIVA biogeography tree (Bayesian topology) with pie-chart nodes and a dispersal/vicariance curve above a stage timescale; 29 tips. Katepensaurus, Nigersaurus and the Demandasaurus clade sit on one vertical carrying two stacked pies: read as (Katepensaurus,(Nigersaurus,(Demandasaurus,(Rebbachisaurus,Tataouinea)))), two nodes at zero length."
+}

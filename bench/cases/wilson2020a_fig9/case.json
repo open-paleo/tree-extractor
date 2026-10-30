@@ -1,0 +1,9 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Wilson et al. 2020, Royal Society Open Science 7: 200284, Figure 9: Time-calibrated ceratopsid tree, support values at nodes, a three-row timescale below; 28 tips, all matrix taxa. Image: page render of the image area at 300 dpi, as printed (1656x1369 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Wilson, J. P.; Ryan, M. J.; Evans, D. C. (2020). A new, transitional centrosaurine ceratopsid from the Upper Cretaceous Two Medicine Formation of Montana and the evolution of the 'Styracosaurus-line' dinosaurs. Royal Society Open Science 7: 200284. https://doi.org/10.1098/rsos.200284. Figure 9. CC BY 4.0.",
+    "gold_note": "Time-calibrated ceratopsid tree, support values at nodes, a three-row timescale below; 28 tips, all matrix taxa."
+}

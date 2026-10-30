@@ -1,0 +1,9 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Zheng et al. 2018, Scientific Reports 8, Figure 10: Time-calibrated ankylosaur tree, thin lines, range bars, 28 tips. Nodosauridae is a collapsed clade (printed). Topology traced from the line segments and checked against the image. Image: vector figure: 300 dpi page render above the caption (colour), prose blocks and running head blanked, cropped to the remaining ink (previous wide crop kept in images/census/wide/) (1530x1441 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Zheng, W.; Jin, X.; Azuma, Y.; Wang, Q.; Miyata, K.; Xu, X. (2018). The most basal ankylosaurine dinosaur from the Albian-Cenomanian of China, with implications for the evolution of the tail club. Scientific Reports 8. https://doi.org/10.1038/s41598-018-21924-7. Figure 10. CC BY 4.0.",
+    "gold_note": "Time-calibrated ankylosaur tree, thin lines, range bars, 28 tips. Nodosauridae is a collapsed clade (printed). Topology traced from the line segments and checked against the image."
+}

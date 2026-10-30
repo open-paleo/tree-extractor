@@ -1,7 +1,0 @@
-{
-  "image": "../../../images/census/barker2021a_fig7.png",
-  "names": "names.txt",
-  "source": "barker2021a Fig. 7 (census row barker2021a_fig7). page render of the image area at 300 dpi, as printed.",
-  "gold": "gold.nex",
-  "gold_note": "Time-calibrated spinosaurid tree with continent icons and silhouettes, 15 tips. Matrix spellings: Wight_A and Wight_B are the printed Ceratosuchops and Riparovenator (sister taxa, so the pairing does not affect the topology; the matrix does not say which is which), ML_1190_cf_Baryonyx (printed ML 1190 cf. Baryonyx), Spinosaurus_B. Other_megalosauroids is a collapsed outgroup and keeps its printed text."
-}

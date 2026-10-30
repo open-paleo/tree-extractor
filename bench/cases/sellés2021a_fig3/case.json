@@ -1,0 +1,15 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Sellés et al. 2021, Scientific Reports 11, Figure 3: Panel A of a time-calibrated troodontid tree with shaded subfamily boxes and geographic colour bars; 27 tips. The root is a 3-way node (Geminiraptor, Hesperornithoides, rest); Troodontinae has a 4-way node. Matrix spellings from the Hartman et al. matrix: IGM1001128, IGM100140, IGM10044, Troodon_sensu_lato, Urbacodon_mandibular_only. Image: embedded image at native resolution, unmodified (2008x1461 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Sellés, A. G.; Vila, B.; Brusatte, S. L.; Currie, P. J.; Galobart, À. (2021). A fast-growing basal troodontid (Dinosauria: Theropoda) from the latest Cretaceous of Europe. Scientific Reports 11. https://doi.org/10.1038/s41598-021-83745-5. Figure 3. CC BY 4.0.",
+    "region": {
+        "x0": 0,
+        "y0": 0,
+        "x1": 1426,
+        "y1": 1461
+    },
+    "gold_note": "Panel A of a time-calibrated troodontid tree with shaded subfamily boxes and geographic colour bars; 27 tips. The root is a 3-way node (Geminiraptor, Hesperornithoides, rest); Troodontinae has a 4-way node. Matrix spellings from the Hartman et al. matrix: IGM1001128, IGM100140, IGM10044, Troodon_sensu_lato, Urbacodon_mandibular_only."
+}

@@ -1,0 +1,9 @@
+{
+    "image": "figure.png",
+    "gold": "gold.nex",
+    "names": "names.txt",
+    "source": "Barker et al. 2021, Scientific Reports 11, Figure 7: Time-calibrated spinosaurid tree with continent icons and silhouettes, 15 tips. Matrix spellings: Wight_A and Wight_B are the printed Ceratosuchops and Riparovenator (sister taxa, so the pairing does not affect the topology; the matrix does not say which is which), ML_1190_cf_Baryonyx (printed ML 1190 cf. Baryonyx), Spinosaurus_B. Other_megalosauroids is a collapsed outgroup and keeps its printed text. Image: page render of the image area at 300 dpi, as printed (2101x1576 px). Gold tree and name list from the Open Paleo corpus session (2026-10-29).",
+    "license": "CC BY 4.0",
+    "attribution": "Barker, C. T.; Hone, D. W. E.; Naish, D.; Cau, A.; Lockwood, J. A. F.; Foster, B.; Clarkin, C. E.; Schneider, P.; Gostling, N. J. (2021). New spinosaurids from the Wessex Formation (Early Cretaceous, UK) and the European origins of Spinosauridae. Scientific Reports 11. https://doi.org/10.1038/s41598-021-97870-8. Figure 7. CC BY 4.0.",
+    "gold_note": "Time-calibrated spinosaurid tree with continent icons and silhouettes, 15 tips. Matrix spellings: Wight_A and Wight_B are the printed Ceratosuchops and Riparovenator (sister taxa, so the pairing does not affect the topology; the matrix does not say which is which), ML_1190_cf_Baryonyx (printed ML 1190 cf. Baryonyx), Spinosaurus_B. Other_megalosauroids is a collapsed outgroup and keeps its printed text."
+}

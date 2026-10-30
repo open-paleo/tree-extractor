@@ -13,12 +13,16 @@ the batch command line give identical results.
 
 ## Status
 
-Early. Eighteen published figures are in the benchmark: eight the pipeline was tuned on, which
-all come out identical, and ten drawn at random from the Open Paleo corpus and run cold first,
-of which two (a three-panel ceratopsian figure and a tyrannosauroid tree with range bars and
-collapsed clades) are identical, two name every tip (a 19-tip abelisaurid tree and a 30-tip
-centrosaurine tree with numbered node discs, range ovals and silhouettes, which names 29) and
-two have most of their tree right (a 52-tip paravian time tree names 50). A census of 178 tree
+Early. Twenty-five published figures are in the benchmark: eight the pipeline was tuned on,
+which all come out identical, ten drawn at random from the Open Paleo corpus and run cold
+first, of which two (a three-panel ceratopsian figure and a tyrannosauroid tree with range bars
+and collapsed clades) are identical, two name every tip (a 19-tip abelisaurid tree and a 30-tip
+centrosaurine tree with numbered node discs, range ovals and silhouettes) and two have most of
+their tree right (a 52-tip paravian time tree names 50), and seven time-calibrated figures
+added once the census showed that class weakest (stage charts, range bars, node rings), of
+which a 28-tip centrosaurine time tree is identical, a 69-tip sauropodomorph time tree names
+40 with all 28 scored splits right, and a 15-tip spinosaurid time tree names 11 with all 8. A
+census of 178 tree
 figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-left trees at
 72 percent, slanted at 13 and vertical at 13. Vertical trees are turned a quarter and traced
 like the rest, labels set at a slant are read in a level frame of their own (the four vertical
@@ -32,9 +36,11 @@ benchmark; see `bench/README.md` for the rest and `docs/design.md` for the appro
 known gaps.
 
 Across the whole census, run cold with the batch runner (`bench/batch.ts`), 178 trees
-give 168 trees of three tips or more and no crashes, at 3 seconds a figure: rectangular
-figures a median of 27 tips, slanted 11, vertical 14. On the 28 census figures with a
-taxon list, 88 percent of the traced tips carry an accepted name. Those numbers are
+give 168 trees of three tips or more and no crashes, at 4 seconds a figure: rectangular
+figures a median of 27 tips, slanted 11, vertical 12. On the 45 census figures with a
+taxon list, 87 percent of the traced tips carry an accepted name. On the 60 time-calibrated
+figures, 42 percent of tips have no label read, down from 54 before stage charts were
+dropped and pale range bars crossed; on the other 118 it is 10 percent. Those numbers are
 what the pipeline does unseen; the benchmark below is what it does on figures it was tuned on.
 
 ## Use

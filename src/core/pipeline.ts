@@ -15,7 +15,7 @@ import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
 import type { ChartStripFind } from "./markers.ts";
-import { createColoredMask, extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeChartLines, removeChartStrips, removeFrameSegments, splitColoredInk } from "./markers.ts";
+import { createColoredMask, extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, measureInkShare, paintCrosses, removeChartLines, removeChartStrips, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -379,6 +379,9 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     // kept aside, since a tip's branch may end at one and its label lie beyond it.
     const colored = splitColoredInk(image, parameters.coloredThreshold, parameters.coloredMinChroma, parameters.markerRadius);
     const paleMarkers = findFatShapes(createColoredMask(image, 235, 30), parameters.markerRadius);
+    // Row boxes leave out glyphs lying on these, so a range bar beside a label neither starts
+    // the row nor clips the branch that runs into it.
+    const roughMarkers = unionMask(colored.fat, paleMarkers);
     const strongInk = unionMask(createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma), colored.thin);
 
     // A rough text pass learns the glyph size and finds glyph pixels to keep out of the line art.
@@ -387,14 +390,14 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     let stripHorizontal = parameters.glyphStripHorizontalRun;
     let stripVertical = parameters.glyphStripVerticalRun;
     let roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
-    let rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+    let rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY, markerMask: roughMarkers });
 
     for (let pass = 0; pass < 3 && (2.3 * rough.glyphHeight > stripHorizontal || 1.7 * rough.glyphHeight > stripVertical); pass++)
     {
         stripHorizontal = Math.max(stripHorizontal, Math.round(2.3 * rough.glyphHeight));
         stripVertical = Math.max(stripVertical, Math.round(1.7 * rough.glyphHeight));
         roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
-        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY, markerMask: roughMarkers });
     }
 
     // A thin font breaks into fragments at the strict threshold, and very small text always
@@ -408,7 +411,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     {
         textInk = applyHysteresis(textInk, createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma));
         roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
-        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY });
+        rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY, markerMask: roughMarkers });
     }
 
     const glyphHeight = rough.glyphHeight;
@@ -1153,14 +1156,18 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // are support values, which sit on branches and must not clip them.
     const textRows = new Array<Box>();
     const labelRows = new Array<Box>();
+    const markerInk = unionMask(markers, paleMarkers);
 
     for (const line of roughLines)
     {
         // Touching letters, or an underscore joining words, can make a whole label one component.
         const width = line.box.x1 - line.box.x0;
         const wordsMerged = width >= 6 * glyphHeight;
+        // A row that is a range bar or oval alone, with no letters, is no text row: it must
+        // neither clip the branch that runs into it nor stand in for a label.
+        const marker = measureInkShare(markerInk, line.box) >= 0.5;
 
-        if ((line.glyphCount >= 5 || wordsMerged) && width >= 3 * glyphHeight)
+        if ((line.glyphCount >= 5 || wordsMerged) && width >= 3 * glyphHeight && !marker)
         {
             labelRows.push(line.box);
             textRows.push({ x0: line.box.x0 - glyphHeight, y0: line.box.y0 - 2, x1: line.box.x1 + glyphHeight, y1: line.box.y1 + 2 });
@@ -1195,6 +1202,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
 
     const chartStrips: ChartStripFind = parameters.chartStrips ? removeChartStrips(horizontals, verticals, image.width, image.height, glyphHeight, thickness) : { issues: [], axisRules: [], axisTicks: [] };
     const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height), ...chartStrips.issues, ...removeChartLines(horizontals, verticals, image.width, image.height)];
+
     // Steps between successive nodes of a pectinate tree can be shorter than the shortest run
     // that counts as a line; the ink between two close verticals supplies the missing branch.
     const connectors = new Set<string>();
@@ -1264,7 +1272,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const lineArtMask = slantedTrace === null
         ? dilate(createMaskFromBoxes(lineArtBoxes, image.width, image.height), 1)
         : dilate(slantedTrace.skeleton, Math.max(1, Math.round(thickness / 2) + 1));
-    const text = detectTextLines(textInk, { lineArtMask, minY: parameters.textMinY });
+    const text = detectTextLines(textInk, { lineArtMask, minY: parameters.textMinY, markerMask: unionMask(markers, paleMarkers) });
 
     // Labels set at a slant are found again in a level frame of their own; the level rows in
     // that zone, fragments of the same labels, give way to them.

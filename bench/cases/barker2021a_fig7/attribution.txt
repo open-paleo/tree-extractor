@@ -1,0 +1,11 @@
+Authors: Barker, C. T.; Hone, D. W. E.; Naish, D.; Cau, A.; Lockwood, J. A. F.; Foster, B.; Clarkin, C. E.; Schneider, P.; Gostling, N. J.
+Year: 2021
+Title: New spinosaurids from the Wessex Formation (Early Cretaceous, UK) and the European origins of Spinosauridae
+Journal: Scientific Reports 11
+DOI: https://doi.org/10.1038/s41598-021-97870-8
+Figure: Figure 7; image = page render of the image area at 300 dpi, as printed, 2101x1576 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: Scientific Reports articles are published under the Creative Commons Attribution 4.0 licence
+Source: https://doi.org/10.1038/s41598-021-97870-8 (published PDF)
+Taxon list (names.txt): Supplementary File 4 (txt), TNT matrix, 40 taxa

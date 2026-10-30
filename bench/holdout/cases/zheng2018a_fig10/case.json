@@ -1,7 +1,0 @@
-{
-  "image": "../../../images/census/zheng2018a_fig10.png",
-  "names": "names.txt",
-  "source": "zheng2018a Fig. 10 (census row zheng2018a_fig10). vector figure: 300 dpi page render above the caption (colour), prose blocks and running head blanked, cropped to the remaining ink (previous wide crop kept in images/census/wide/).",
-  "gold": "gold.nex",
-  "gold_note": "Time-calibrated ankylosaur tree, thin lines, range bars, 28 tips. Nodosauridae is a collapsed clade (printed). Topology traced from the line segments and checked against the image."
-}

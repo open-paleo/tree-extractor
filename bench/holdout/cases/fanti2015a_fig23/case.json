@@ -1,7 +1,0 @@
-{
-  "image": "../../../images/census/fanti2015a_fig23.png",
-  "names": "names.txt",
-  "source": "fanti2015a Fig. 23 (census row fanti2015a_fig23). embedded image at native resolution, unmodified.",
-  "gold": "gold.nex",
-  "gold_note": "S-DIVA biogeography tree (Bayesian topology) with pie-chart nodes and a dispersal/vicariance curve above a stage timescale; 29 tips. Katepensaurus, Nigersaurus and the Demandasaurus clade sit on one vertical carrying two stacked pies: read as (Katepensaurus,(Nigersaurus,(Demandasaurus,(Rebbachisaurus,Tataouinea)))), two nodes at zero length."
-}

@@ -1,0 +1,11 @@
+Authors: Fanti, F.; Cau, A.; Cantelli, L.; Hassine, M.; Auditore, M.
+Year: 2015
+Title: New information on Tataouinea hannibalis from the Early Cretaceous of Tunisia and implications for the tempo and mode of rebbachisaurid sauropod evolution
+Journal: PLOS ONE 10(4): e0123475
+DOI: https://doi.org/10.1371/journal.pone.0123475
+Figure: Figure 23; image = embedded image at native resolution, unmodified, 1937x1691 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: "Copyright: © 2015 Fanti et al. This is an open access article distributed under the terms of the Creative Commons Attribution License"
+Source: https://doi.org/10.1371/journal.pone.0123475 (published PDF)
+Taxon list (names.txt): S1 Text (doc) data matrix, 29 taxa (same list as fanti2015a_fig21)

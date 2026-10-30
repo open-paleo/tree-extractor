@@ -753,7 +753,7 @@ function overlapsAny(boxes: Array<Box>, box: Box): boolean
  * @param box - The box.
  * @returns A share from 0 to 1.
  */
-function measureInkShare(mask: Mask, box: Box): number
+export function measureInkShare(mask: Mask, box: Box): number
 {
     const { width, height, data } = mask;
     let count = 0;

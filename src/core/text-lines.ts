@@ -20,6 +20,12 @@ export type TextLineOptions = {
      * Rows above this are ignored (scale bars and axes), in pixels.
      */
     minY: number;
+
+    /**
+     * Fat colored shapes: range bars and markers. A glyph lying on one is a block, not text,
+     * however hollow it reads once the line art is taken out of it.
+     */
+    markerMask?: Mask;
 };
 
 /**
@@ -120,9 +126,10 @@ function compareLineLeftEdges(left: OpenLine, right: OpenLine): number
  *
  * @param line - Open row.
  * @param glyphHeight - Glyph height in pixels.
+ * @param markerMask - Fat colored shapes, when known.
  * @returns The box of the non-solid glyphs, or of all glyphs when every one is solid.
  */
-function measureTextBox(line: OpenLine, glyphHeight: number): Box
+function measureTextBox(line: OpenLine, glyphHeight: number, markerMask: Mask | undefined): Box
 {
     // The row keeps its own height: a fused tall glyph widens a row without stretching it, and
     // the box here only loses the columns of solid blocks.
@@ -134,7 +141,11 @@ function measureTextBox(line: OpenLine, glyphHeight: number): Box
         const width = glyph.box.x1 - glyph.box.x0;
         const height = glyph.box.y1 - glyph.box.y0;
         // A block that fills its box: a bar of any height, as long as it is wider than a letter.
-        const solid = width >= 1.2 * glyphHeight && glyph.area >= 0.85 * width * height && (height >= 0.8 * glyphHeight || width >= 1.5 * glyphHeight);
+        // An outlined range bar reads hollow once its edges are taken out as line art, but its
+        // colored fill is a fat marker, and a glyph as wide as a bar lying mostly on one is one,
+        // unless the marker goes on all around it: then it is a letter on a colored panel.
+        const filled = glyph.area >= 0.85 * width * height && (height >= 0.8 * glyphHeight || width >= 1.5 * glyphHeight);
+        const solid = width >= 1.2 * glyphHeight && (filled || (markerMask !== undefined && liesOnMarker(markerMask, glyph, glyphHeight)));
 
         if (!solid)
         {
@@ -144,6 +155,53 @@ function measureTextBox(line: OpenLine, glyphHeight: number): Box
     }
 
     return Number.isFinite(x0) ? { x0, y0: line.y0, x1, y1: line.y1 } : { x0: line.x0, y0: line.y0, x1: line.x1, y1: line.y1 };
+}
+
+/**
+ * Whether a glyph lies on a fat colored shape of its own size: the shape covers most of the
+ * glyph and little of a margin around it. A letter on a colored panel has the panel all
+ * around it as well.
+ *
+ * @param markerMask - Fat colored shapes.
+ * @param glyph - The glyph.
+ * @param glyphHeight - Glyph height in pixels.
+ * @returns True for a glyph that is itself a bar or a marker.
+ */
+function liesOnMarker(markerMask: Mask, glyph: Component, glyphHeight: number): boolean
+{
+    if (countMaskInBox(markerMask, glyph.box) < 0.5 * glyph.area)
+    {
+        return false;
+    }
+
+    const margin = Math.max(3, Math.round(glyphHeight / 3));
+    const grown: Box = { x0: glyph.box.x0 - margin, y0: glyph.box.y0 - margin, x1: glyph.box.x1 + margin, y1: glyph.box.y1 + margin };
+    const ringArea = (grown.x1 - grown.x0) * (grown.y1 - grown.y0) - (glyph.box.x1 - glyph.box.x0) * (glyph.box.y1 - glyph.box.y0);
+    const ringInk = countMaskInBox(markerMask, grown) - countMaskInBox(markerMask, glyph.box);
+
+    return ringInk <= 0.3 * ringArea;
+}
+
+/**
+ * Counts the set pixels of a mask within a box.
+ *
+ * @param mask - Mask.
+ * @param box - Box.
+ * @returns Set pixels.
+ */
+function countMaskInBox(mask: Mask, box: Box): number
+{
+    let count = 0;
+
+    for (let y = Math.max(0, box.y0); y < Math.min(mask.height, box.y1); y++)
+    {
+        for (let x = Math.max(0, box.x0); x < Math.min(mask.width, box.x1); x++)
+        {
+            count += mask.data[y * mask.width + x];
+        }
+    }
+
+    return count;
 }
 
 /**
@@ -493,7 +551,7 @@ export function detectTextLines(ink: Mask, options: TextLineOptions): TextDetect
         {
             textLines.push({
                 id: `l${textLines.length + 1}`,
-                box: measureTextBox(line, glyphHeight),
+                box: measureTextBox(line, glyphHeight, options.markerMask),
                 glyphCount: line.glyphs.length,
                 role: "unassigned",
                 ocr: null,

@@ -1,0 +1,11 @@
+Authors: Sellés, A. G.; Vila, B.; Brusatte, S. L.; Currie, P. J.; Galobart, À.
+Year: 2021
+Title: A fast-growing basal troodontid (Dinosauria: Theropoda) from the latest Cretaceous of Europe
+Journal: Scientific Reports 11
+DOI: https://doi.org/10.1038/s41598-021-83745-5
+Figure: Figure 3; image = embedded image at native resolution, unmodified, 2008x1461 px
+Licence: CC BY 4.0
+Licence URL: https://creativecommons.org/licenses/by/4.0/
+Licence statement: Scientific Reports articles are published under the Creative Commons Attribution 4.0 licence
+Source: https://doi.org/10.1038/s41598-021-83745-5 (published PDF)
+Taxon list (names.txt): Supplementary PDF, NEXUS TAXLABELS, 502 taxa (Hartman et al. 2019 matrix); the figure shows a small part
