@@ -1,0 +1,40 @@
+#NEXUS
+
+[ li2024a_fig8: Single MPT drawn against a stage timescale, Bremer and bootstrap values, 27 tips. Two places are drawn with crossing lines rather than a joining vertical: the ankylosaurs (read as ((Gastonia,Sauropelta),(Euoplocephalus,Paranthodon))) and the Baiyinosaurus clade (read as (Isaberrysaura,(Baiyinosaurus,Gigantspinosaurus)), which matches the text). Exclude those two splits if the reading is in doubt. Matrix spellings: D._armatus (printed Dacentrurus), S._stenops, S._homheni. Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=27;
+    TAXLABELS
+        Pisanosaurus
+        Lesothosaurus
+        Laquintasaura
+        Scutellosaurus
+        Emausaurus
+        Scelidosaurus
+        Gastonia
+        Sauropelta
+        Euoplocephalus
+        Paranthodon
+        Bashanosaurus
+        Chungkingosaurus
+        Huayangosaurus
+        Tuojiangosaurus
+        Isaberrysaura
+        Baiyinosaurus
+        Gigantspinosaurus
+        Alcovasaurus
+        Jiangjunosaurus
+        Kentrosaurus
+        Adratiklit
+        D._armatus
+        Hesperosaurus
+        Miragaia
+        Loricatosaurus
+        S._stenops
+        S._homheni
+    ;
+END;
+
+BEGIN TREES;
+    TREE li2024a_fig8 = [&R] (Pisanosaurus,(Lesothosaurus,((Laquintasaura,Scutellosaurus),(Emausaurus,(Scelidosaurus,(((Gastonia,Sauropelta),(Euoplocephalus,Paranthodon)),(Bashanosaurus,(Chungkingosaurus,(Huayangosaurus,(Tuojiangosaurus,((Isaberrysaura,(Baiyinosaurus,Gigantspinosaurus)),(Alcovasaurus,(Jiangjunosaurus,(Kentrosaurus,((Adratiklit,D._armatus),((Hesperosaurus,Miragaia),(Loricatosaurus,(S._stenops,S._homheni))))))))))))))))));
+END;

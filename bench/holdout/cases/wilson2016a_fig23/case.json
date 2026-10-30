@@ -1,0 +1,8 @@
+{
+  "image": "../../../images/census/wilson2016a_fig23.png",
+  "names": "names.txt",
+  "source": "wilson2016a Fig. 23 (census row wilson2016a_fig23). embedded image at native resolution, unmodified.",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Vertical time-calibrated sauropod tree, 22 tips in the gold. Nemegtosaurus and Tapuiasaurus are printed but attach only by dashed lines to lettered alternative positions (wildcards), so they are left out of the gold tree. No matrix held: tips keep their printed text."
+}

@@ -1,0 +1,8 @@
+{
+  "image": "../../../images/census/bellardini2025a_fig9.png",
+  "names": "names.txt",
+  "source": "bellardini2025a Fig. 9 (census row bellardini2025a_fig9). embedded image at native resolution, unmodified.",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated rebbachisaurid tree with continent icons and range bars, 14 tips; Flagellicaudata is a collapsed bar (printed). The terminal node is 4-way (Demandasaurus, Nigersaurus, Tataouinea, Rebbachisaurus). No matrix held: tips keep their printed text."
+}

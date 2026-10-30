@@ -1,0 +1,35 @@
+#NEXUS
+
+[ wilson2016a_fig23: Vertical time-calibrated sauropod tree, 22 tips in the gold. Nemegtosaurus and Tapuiasaurus are printed but attach only by dashed lines to lettered alternative positions (wildcards), so they are left out of the gold tree. No matrix held: tips keep their printed text. Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=22;
+    TAXLABELS
+        Haplocanthosaurus
+        Apatosaurus
+        Barosaurus
+        Diplodocus
+        Dicraeosaurus
+        Amargasaurus
+        Nigersaurus
+        Rayososaurus
+        Rebbachisaurus
+        Camarasaurus
+        Giraffatitan
+        Euhelopus
+        Phuwiangosaurus
+        Tangvayosaurus
+        Malawisaurus
+        Rapetosaurus
+        Isisaurus
+        Diamantinasaurus
+        Opisthocoelicaudia
+        Alamosaurus
+        Neuquensaurus
+        Saltasaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE wilson2016a_fig23 = [&R] ((Haplocanthosaurus,(((Apatosaurus,(Barosaurus,Diplodocus)),(Dicraeosaurus,Amargasaurus)),(Nigersaurus,Rayososaurus,Rebbachisaurus))),(Camarasaurus,(Giraffatitan,(Euhelopus,(Phuwiangosaurus,(Tangvayosaurus,(Malawisaurus,(Rapetosaurus,(Isisaurus,(Diamantinasaurus,((Opisthocoelicaudia,Alamosaurus),(Neuquensaurus,Saltasaurus))))))))))));
+END;

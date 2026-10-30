@@ -1,0 +1,7 @@
+{
+  "image": "../../../images/census/wilson2020a_fig9.png",
+  "names": "names.txt",
+  "source": "wilson2020a Fig. 9 (census row wilson2020a_fig9). page render of the image area at 300 dpi, as printed.",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated ceratopsid tree, support values at nodes, a three-row timescale below; 28 tips, all matrix taxa."
+}

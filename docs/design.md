@@ -83,8 +83,14 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    ink (round to a tenth, a glyph and a half to three and a half across, half inked, with lines
    entering on two sides), a pale one in everything that is not white under a stricter fill,
    and an open ring by its hole: a white region touching no edge, a glyph to three across and
-   round, since a circle fills about four fifths of its box and a gap between branches all of
-   it. A vertical a third of a line
+   round, since a circle fills about four fifths of its box less the letters inside it, and a
+   gap between branches all of it. The least fill accepted, 0.575, is a thin margin set on
+   the figures at hand: Barker 2021's two-letter rings fill 0.58 to 0.60 of their box and need
+   the cross, and the numbered callout rings of Alarcón-Muñoz 2023, which sit beside the tree
+   with arrows to the nodes, fill 0.57 and must not get one, since a cross painted through a
+   ring that is not on the junction joins the branches around it wrongly. Tests on where the
+   lines enter (at the middle of a side, not running along it) were tried and dropped: the
+   boxed support values of Ramírez-Velasco 2021 sit against their connectors and fail them. A vertical a third of a line
    thick and a few thicknesses tall is a sliver, a rounded end or a stray edge, and is dropped
    before it can take a branch's attachment from the vertical it leans on. Columns where the
    dark ink is glyph-high split a horizontal, label rows clip it, verticals inside label rows are
@@ -106,16 +112,30 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    rows to the nearest junction on their right. Before that, a tip whose branch runs into a
    solid shape (a collapsed-clade wedge, a range bar) or a colored marker (a range oval) no
    taller than a label row, however long, moves to the shape's far side, where its label is;
+   a shape in any tint however pale counts too (Wang 2025's light green range bars are too
+   light for the ink masks and too neutral for the colored one), but only when a text row
+   begins within four glyphs of the new end, since pale fills and stage bands no label follows
+   are everywhere in a time tree;
    when a bar traced as a segment of its own already had a tip at that end, the tip whose
    branch started further left stays and the other goes, and its label row may start as far back as the
    branch did. A text row's box leaves out solid blocks (a range bar touching a label), so the
    row neither clips the branch stub next to the bar nor sits over it. Short unlabelled tips are
    dropped as debris, and so are disconnected pieces that lie where decorations go: entirely
    right of the tips (clade brackets), or above or below the tree without labels (a time axis,
-   a legend). A chart line, one spanning two fifths of the figure that six or more segments of
-   the other direction cross outright, is dropped before tracing, since a stage band's dividers
-   become tips once a branch touches the band (`removeChartLines`; only crossings count, because
-   the stem of a dense tree has dozens of branches ending on it). The main tree is then chosen
+   a legend). A stage chart is dropped whole before tracing (`removeChartStrips`): a strip
+   along the top or bottom edge, bounded by a rule spanning two fifths of the width, holding
+   eight or more dividers in rows, where a row is four or more verticals sharing a top and a
+   bottom that each meet a horizontal at an end; a tree's connectors never align like that,
+   and the dashes of a dashed stage line through a tree align but meet nothing. The innermost
+   such rule with a divider row within six glyphs of it and no connector running on from it
+   into the tree bounds the strip (Ke 2023's long Adocus branch lies just above its chart and
+   has one; Han 2024's longest branch lies a quarter of the figure above its chart). Everything
+   in the strip goes,
+   and its long rules and short verticals come back after the trace for the time axis, whose
+   ages are printed along one of them. A chart line the strip missed, one spanning two fifths
+   of the figure that six or more segments of the other direction cross outright, is dropped
+   on its own (`removeChartLines`; only crossings count, because the stem of a dense tree has
+   dozens of branches ending on it). The main tree is then chosen
    again as the piece with the most tips, and once
    more after labels are read, this time by named tips first (three at least, since a stray
    piece can carry a known name or two when there is no taxon list), since a stratigraphic

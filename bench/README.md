@@ -35,10 +35,15 @@ styles are in `bench/synthetic/generate.ts`; a new style is one more preset ther
 
 ## Held-out cases
 
-`bench/holdout/cases/` holds figures the pipeline was never tuned on, with a name list but no
-gold tree. `npm run bench:holdout` runs them cold and prints, per case, how many tips the tree
-has, how many matched a listed name, and the quality-check findings, without scoring. Once a
-case has been checked and a gold tree written, it moves to `bench/cases/`.
+`bench/holdout/cases/` holds figures the pipeline was never tuned on, with a name list and,
+for some, a gold tree (`gold.nex` plus `gold_note` in `case.json`). `npm run bench:holdout`
+runs them cold: a case without gold prints how many tips the tree has, how many matched a
+listed name, and the quality-check findings; a case with gold is scored like a benchmark case
+but never expected identical. Ten of the cases with gold are time-calibrated figures (stage
+charts, range bars, node rings), the class the census found weakest; three of them (Hu 2009,
+Wilson 2016, Bellardini 2025) are not openly licensed and their images stay out of the
+repository, referenced from `bench/images/census/`. Once a case has been checked and is
+stable, it moves to `bench/cases/`.
 
 ## Batch run over a corpus
 

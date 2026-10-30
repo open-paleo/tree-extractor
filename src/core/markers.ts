@@ -56,7 +56,7 @@ export function splitColoredInk(image: RgbaImage, threshold: number, minChroma: 
  * @param minChroma - Chroma a pixel must exceed.
  * @returns The mask.
  */
-function createColoredMask(image: RgbaImage, threshold: number, minChroma: number): Mask
+export function createColoredMask(image: RgbaImage, threshold: number, minChroma: number): Mask
 {
     const { width, height, data } = image;
     const mask = new Uint8Array(width * height);
@@ -138,6 +138,234 @@ function removeOutlines(thin: Mask, minSize: number, rim: number): void
             thin.data[index] = 0;
         }
     }
+}
+
+/**
+ * What removing a stage chart found.
+ */
+export type ChartStripFind = {
+    /**
+     * One informational issue per strip dropped.
+     */
+    issues: Array<QcIssue>;
+
+    /**
+     * The long rules of each strip, kept aside for the time axis: the ages are printed along
+     * one of them.
+     */
+    axisRules: Array<Segment>;
+
+    /**
+     * The short verticals of each strip, kept aside with the rules: the axis may be a row of
+     * ticks with no line.
+     */
+    axisTicks: Array<Segment>;
+};
+
+/**
+ * Removes stage charts: a strip along the top or bottom of the figure, bounded by a rule
+ * spanning two fifths of the width, holding eight or more dividers in rows. A time tree's
+ * chart of periods, epochs and stages is drawn that way, and once a branch touches a rule,
+ * every divider becomes a tip. Dividers are told from a tree's connectors by their rows: the
+ * dividers between two rules share a top and a bottom, four or more at a time, as connectors
+ * never do. The innermost qualifying rule with a divider row within six glyphs of it and no
+ * connector running on from it into the tree bounds the strip, and every segment lying within
+ * the strip goes, the rules included; the long rules and the short verticals are returned so
+ * the time axis can still be read.
+ *
+ * @param horizontals - Horizontal segments, rewritten in place.
+ * @param verticals - Vertical segments, rewritten in place.
+ * @param width - Image width.
+ * @param height - Image height.
+ * @param glyphHeight - Glyph height in pixels.
+ * @param thickness - Line thickness in pixels.
+ * @returns Issues and the rules kept for the axis.
+ */
+export function removeChartStrips(horizontals: Array<Segment>, verticals: Array<Segment>, width: number, height: number, glyphHeight: number, thickness: number): ChartStripFind
+{
+    const issues = new Array<QcIssue>();
+    const axisRules = new Array<Segment>();
+    const axisTicks = new Array<Segment>();
+    const slack = Math.max(2, Math.round(thickness));
+    // A band edge may run a little past the rule it stands on.
+    const overshoot = Math.max(slack, glyphHeight);
+    const bin = 2 * slack;
+
+    function keyRow(box: Box): string
+    {
+        return `${Math.round(box.y0 / bin)}:${Math.round(box.y1 / bin)}`;
+    }
+
+    // A divider stands on a rule, or hangs from one: a horizontal of any length meets one of
+    // its ends. The dashes of a dashed stage line through a tree align in rows too, and meet
+    // nothing.
+    function meetsHorizontal(box: Box): boolean
+    {
+        for (const horizontal of horizontals)
+        {
+            const other = horizontal.box;
+
+            if (other.x0 <= box.x1 + slack && other.x1 >= box.x0 - slack
+                && ((other.y1 >= box.y0 - slack && other.y0 <= box.y0 + slack) || (other.y1 >= box.y1 - slack && other.y0 <= box.y1 + slack)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function findDividerRows(stripTop: number, stripBottom: number): Map<string, number>
+    {
+        const rows = new Map<string, number>();
+
+        for (const vertical of verticals)
+        {
+            const { box } = vertical;
+
+            if (box.y0 >= stripTop - overshoot && box.y1 <= stripBottom + overshoot && meetsHorizontal(box))
+            {
+                const key = keyRow(box);
+                rows.set(key, (rows.get(key) ?? 0) + 1);
+            }
+        }
+
+        for (const [key, members] of rows)
+        {
+            if (members < 4)
+            {
+                rows.delete(key);
+            }
+        }
+
+        return rows;
+    }
+
+    function countDividers(rows: Map<string, number>): number
+    {
+        let count = 0;
+
+        for (const members of rows.values())
+        {
+            count += members;
+        }
+
+        return count;
+    }
+
+    // The gap between the rule and the nearest divider row: a chart's rule has its dividers
+    // right under it, a long branch in the tree above the chart has the tree's last rows in
+    // between.
+    function measureGapToRows(rows: Map<string, number>, rule: Segment, atTop: boolean): number
+    {
+        let gap = Infinity;
+
+        for (const vertical of verticals)
+        {
+            const { box } = vertical;
+
+            if (rows.has(keyRow(box)))
+            {
+                gap = Math.min(gap, Math.max(0, atTop ? rule.box.y0 - box.y1 : box.y0 - rule.box.y1));
+            }
+        }
+
+        return gap;
+    }
+
+    // A long branch just inside the chart is as long and as deep as a rule, but a connector
+    // meets it and runs on into the tree; a band edge crossing a chart rule runs a couple of
+    // glyphs past it at most.
+    function hasConnector(rule: Segment, atTop: boolean): boolean
+    {
+        const reach = 3 * glyphHeight;
+
+        for (const vertical of verticals)
+        {
+            const { box } = vertical;
+            const meets = box.x0 <= rule.box.x1 + slack && box.x1 >= rule.box.x0 - slack && box.y1 >= rule.box.y0 - slack && box.y0 <= rule.box.y1 + slack;
+            const beyond = atTop ? box.y1 - rule.box.y1 : rule.box.y0 - box.y0;
+
+            if (meets && beyond > reach)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    for (const atTop of [true, false])
+    {
+        let best: Segment | null = null;
+        let bestDepth = 0;
+        let bestDividers = 0;
+
+        for (const rule of horizontals)
+        {
+            const depth = atTop ? rule.box.y1 : height - rule.box.y0;
+
+            if (rule.box.x1 - rule.box.x0 < 0.4 * width || depth > 0.35 * height)
+            {
+                continue;
+            }
+
+            const rows = findDividerRows(atTop ? 0 : rule.box.y0, atTop ? rule.box.y1 : height);
+            const dividers = countDividers(rows);
+
+            if (dividers >= 8 && depth > bestDepth && !hasConnector(rule, atTop) && measureGapToRows(rows, rule, atTop) <= 6 * glyphHeight)
+            {
+                best = rule;
+                bestDepth = depth;
+                bestDividers = dividers;
+            }
+        }
+
+        if (best === null)
+        {
+            continue;
+        }
+
+        // Segments within the strip go; a divider in a row may run a little past the rule, but
+        // a tree's own segment that close to the rule stays.
+        const stripTop = atTop ? 0 : best.box.y0 - slack;
+        const stripBottom = atTop ? best.box.y1 + slack : height;
+        const rows = findDividerRows(atTop ? 0 : best.box.y0, atTop ? best.box.y1 : height);
+        let dropped = 0;
+
+        for (const list of [horizontals, verticals])
+        {
+            const kept = new Array<Segment>();
+
+            for (const segment of list)
+            {
+                const { box } = segment;
+                const inside = box.y0 >= stripTop && box.y1 <= stripBottom;
+                const inRow = list === verticals && box.y0 >= stripTop - overshoot && box.y1 <= stripBottom + overshoot && rows.has(keyRow(box));
+
+                if (inside || inRow)
+                {
+                    dropped++;
+
+                    if (list === horizontals ? box.x1 - box.x0 >= 0.4 * width : box.y1 - box.y0 <= 3 * glyphHeight)
+                    {
+                        (list === horizontals ? axisRules : axisTicks).push(segment);
+                    }
+                }
+                else
+                {
+                    kept.push(segment);
+                }
+            }
+
+            list.length = 0;
+            list.push(...kept);
+        }
+
+        issues.push({ severity: "info", code: "chart-strip-dropped", message: `a stage chart along the ${atTop ? "top" : "bottom"} edge, bounded by ${best.id} with ${bestDividers} divider(s) in rows, was dropped (${dropped} segment(s))`, subject: null });
+    }
+
+    return { issues, axisRules, axisTicks };
 }
 
 /**
@@ -326,14 +554,30 @@ export function keepSmallShapes(mask: Mask, maxWidth: number, maxHeight: number)
  * @param fat - Fat shapes.
  * @param thickness - Line thickness in pixels.
  * @param maxGap - Largest gap between the branch end and the shape that still counts.
+ * @param labelReach - When given, a move is kept only when a text row begins within this many
+ * pixels past the new end; shapes in any pale tint include stage bands and fills that no
+ * label follows.
  * @returns Number of tips moved.
  */
-export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask, thickness: number, maxGap: number): number
+export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask, thickness: number, maxGap: number, labelReach: number | null = null): number
 {
     const { width, height, data } = fat;
     const half = Math.max(1, Math.round(thickness));
     let moved = 0;
     const absorbed = new Array<string>();
+
+    function hasLabelBeyond(end: number, y: number): boolean
+    {
+        for (const line of document.textLines)
+        {
+            if (line.glyphCount >= 2 && line.box.x0 >= end - 2 && line.box.x0 <= end + (labelReach as number) && line.box.y0 <= y + half && line.box.y1 >= y - half)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     for (const tip of document.tips)
     {
@@ -362,7 +606,7 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
             }
         }
 
-        if (end > tip.x + 2)
+        if (end > tip.x + 2 && (labelReach === null || hasLabelBeyond(end + 1, Math.round(tip.y))))
         {
             tip.extendedFrom ??= tip.x;
             tip.x = end + 1;
@@ -450,7 +694,11 @@ export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number,
     // Rings: an open circle drawn around a junction, with a letter or a number inside. Its
     // outline joins the lines that enter it, so it is found by its hole: a white region that
     // touches no edge, a glyph to three across, round (a circle fills about four fifths of its
-    // box, a gap between branches all of it), with lines entering on two sides.
+    // box, less the letters inside, a gap between branches all of it), with lines entering on
+    // two sides. The least fill, 0.575, lets a ring with two wide letters through (Barker 2021's
+    // "DE" ring fills 0.60, its "C" rings 0.58) and keeps out the numbered callout rings of
+    // Alarcón-Muñoz 2023 (0.57), which sit beside the tree with arrows to the nodes; it is a
+    // thin margin.
     const holes = findConnectedComponents(invertMask(textInk)).components;
 
     for (const hole of holes)
@@ -461,7 +709,7 @@ export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number,
         const share = hole.area / Math.max(1, width * height);
         const touchesEdge = hole.box.x0 === 0 || hole.box.y0 === 0 || hole.box.x1 === textInk.width || hole.box.y1 === textInk.height;
 
-        if (touchesEdge || size < glyphHeight || size > 3 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || share < 0.6 || share > 0.88)
+        if (touchesEdge || size < glyphHeight || size > 3 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || share < 0.575 || share > 0.88)
         {
             continue;
         }

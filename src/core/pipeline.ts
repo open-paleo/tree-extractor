@@ -14,7 +14,8 @@ import { traceSlantedTree } from "./slanted.ts";
 import type { SlantedLabels } from "./slant.ts";
 import type { OrientationFind } from "./orientation.ts";
 import { assignAges, calibrateAxis } from "./timescale.ts";
-import { extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeChartLines, removeFrameSegments, splitColoredInk } from "./markers.ts";
+import type { ChartStripFind } from "./markers.ts";
+import { createColoredMask, extendTipsThroughMarkers, findFatShapes, findNodeDiscs, keepSmallShapes, paintCrosses, removeChartLines, removeChartStrips, removeFrameSegments, splitColoredInk } from "./markers.ts";
 import {
     applyHysteresis,
     closeMask,
@@ -190,6 +191,16 @@ export type Parameters = {
     nodeDiscs: boolean;
 
     /**
+     * Whether to drop a stage chart along the top or bottom edge before tracing.
+     */
+    chartStrips: boolean;
+
+    /**
+     * Whether tips extend through shapes in any pale tint, such as light range bars.
+     */
+    paleMarkers: boolean;
+
+    /**
      * Read a slanted figure from the skeleton of its line art.
      */
     slantedTrees: boolean;
@@ -245,6 +256,8 @@ export const defaultParameters: Parameters = {
     gapInkShare: 0.4,
     rotation: "auto",
     nodeDiscs: true,
+    chartStrips: true,
+    paleMarkers: true,
     slantedTrees: true,
     dropDebris: true,
     slantedLabels: true,
@@ -324,6 +337,13 @@ export type PreparedMasks = {
     markers: Mask;
 
     /**
+     * Fat shapes in any tint, however pale: the light green and pink range bars of a time tree
+     * are too light for the ink masks and too neutral for the colored one, yet a branch ends at
+     * one and its label lies beyond it.
+     */
+    paleMarkers: Mask;
+
+    /**
      * Whether the strict text threshold broke letters into fragments.
      */
     fragmented: boolean;
@@ -358,6 +378,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     // Lines drawn in color join the line ink; colored markers and fills stay out of it and are
     // kept aside, since a tip's branch may end at one and its label lie beyond it.
     const colored = splitColoredInk(image, parameters.coloredThreshold, parameters.coloredMinChroma, parameters.markerRadius);
+    const paleMarkers = findFatShapes(createColoredMask(image, 235, 30), parameters.markerRadius);
     const strongInk = unionMask(createDarkMask(image, parameters.lineThreshold, true, parameters.maxChroma), colored.thin);
 
     // A rough text pass learns the glyph size and finds glyph pixels to keep out of the line art.
@@ -410,7 +431,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
-    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, fragmented, widened, glyphHeight, roughLines: rough.lines };
+    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, paleMarkers, fragmented, widened, glyphHeight, roughLines: rough.lines };
 }
 
 /**
@@ -1086,7 +1107,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     announce("Preparing masks");
-    const { gray, textInk, lineInk, glyphMask, markers, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
+    const { gray, textInk, lineInk, glyphMask, markers, paleMarkers, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
     announce("Finding segments");
 
@@ -1172,7 +1193,8 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         }
     }
 
-    const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height), ...removeChartLines(horizontals, verticals, image.width, image.height)];
+    const chartStrips: ChartStripFind = parameters.chartStrips ? removeChartStrips(horizontals, verticals, image.width, image.height, glyphHeight, thickness) : { issues: [], axisRules: [], axisTicks: [] };
+    const frameIssues = [...removeFrameSegments(horizontals, image.width, image.height), ...removeFrameSegments(verticals, image.width, image.height), ...chartStrips.issues, ...removeChartLines(horizontals, verticals, image.width, image.height)];
     // Steps between successive nodes of a pectinate tree can be shorter than the shortest run
     // that counts as a line; the ink between two close verticals supplies the missing branch.
     const connectors = new Set<string>();
@@ -1275,6 +1297,11 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         timings,
     };
 
+    // One of the chart's rules carries the ages; they return for the axis reader now that the
+    // tracer has had the segments without them.
+    horizontals.push(...chartStrips.axisRules);
+    verticals.push(...chartStrips.axisTicks);
+
     // A tip whose branch runs into a solid shape (a collapsed-clade wedge) or a colored marker
     // (a range oval) ends on the far side of it, where its label is.
     if (parameters.extendThroughShapes)
@@ -1285,6 +1312,11 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         const maxHeight = 2.5 * glyphHeight;
         extendTipsThroughMarkers(document, keepSmallShapes(findFatShapes(lineInk, Math.max(parameters.markerRadius, Math.round(thickness) + 1)), maxWidth, maxHeight), thickness, 2);
         extendTipsThroughMarkers(document, keepSmallShapes(markers, maxWidth, maxHeight), thickness, glyphHeight);
+
+        if (parameters.paleMarkers)
+        {
+            extendTipsThroughMarkers(document, keepSmallShapes(paleMarkers, maxWidth, maxHeight), thickness, glyphHeight, 4 * glyphHeight);
+        }
 
         if (tipMarkers !== null)
         {

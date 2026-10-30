@@ -3,5 +3,7 @@
   "names": "names.txt",
   "source": "Li et al. 2024, Scientific Reports 14: 15241, Fig. 8: single most parsimonious tree of Stegosauria/Thyreophora, time-calibrated with a Mesozoic stage timescale and grey bands, Bremer above and bootstrap below branches; 44 tips. Image: embedded image extracted from the PDF at native resolution, unmodified (1595x2124 px).",
   "license": "CC BY 4.0",
-  "attribution": "Li, N.; Maidment, S. C. R.; Li, D.; You, H.; Peng, G. (2024). A new stegosaur (Dinosauria: Ornithischia) from the Middle Jurassic of Gansu Province, China. Scientific reports 14(1): 15241. https://doi.org/10.1038/s41598-024-66280-x. Fig. 8. CC BY 4.0."
+  "attribution": "Li, N.; Maidment, S. C. R.; Li, D.; You, H.; Peng, G. (2024). A new stegosaur (Dinosauria: Ornithischia) from the Middle Jurassic of Gansu Province, China. Scientific reports 14(1): 15241. https://doi.org/10.1038/s41598-024-66280-x. Fig. 8. CC BY 4.0.",
+  "gold": "gold.nex",
+  "gold_note": "Single MPT drawn against a stage timescale, Bremer and bootstrap values, 27 tips. Two places are drawn with crossing lines rather than a joining vertical: the ankylosaurs (read as ((Gastonia,Sauropelta),(Euoplocephalus,Paranthodon))) and the Baiyinosaurus clade (read as (Isaberrysaura,(Baiyinosaurus,Gigantspinosaurus)), which matches the text). Exclude those two splits if the reading is in doubt. Matrix spellings: D._armatus (printed Dacentrurus), S._stenops, S._homheni."
 }

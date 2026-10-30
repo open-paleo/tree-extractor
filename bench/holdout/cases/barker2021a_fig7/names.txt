@@ -1,0 +1,41 @@
+Eoraptor
+Meleagris
+Acrocanthosaurus
+Afrovenator
+Allosaurus fragilis
+Asfaltovenator
+Ceratosaurus
+Coelophysis rhodesiensis
+Coelurus
+Concavenator
+Dilophosaurus
+Dubreuillosaurus
+Duriavenator
+Eustreptospondylus
+Guanlong
+Haplocheirus
+Magnosaurus
+Marshosaurus
+Megalosaurus
+Monolophosaurus
+Neovenator
+Ornitholestes
+Piatnitzkysaurus
+Sinraptor dongi
+Torvosaurus gurneyi
+Torvosaurus tanneri
+Baryonyx
+Ichthyovenator
+Irritator
+MSNM V4047
+Spinosaurus type
+Suchomimus
+FSAC KK11888
+Sigilmassasaurus
+Spinosaurus B
+Wight A
+Wight B
+ML 1190 cf Baryonyx
+Vallibonavenatrix
+Camarillasaurus
+Other megalosauroids

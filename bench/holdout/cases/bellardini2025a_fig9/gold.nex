@@ -1,0 +1,27 @@
+#NEXUS
+
+[ bellardini2025a_fig9: Time-calibrated rebbachisaurid tree with continent icons and range bars, 14 tips; Flagellicaudata is a collapsed bar (printed). The terminal node is 4-way (Demandasaurus, Nigersaurus, Tataouinea, Rebbachisaurus). No matrix held: tips keep their printed text. Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=14;
+    TAXLABELS
+        Flagellicaudata
+        Amazonsaurus
+        Histriasaurus
+        Comahuesaurus
+        Astigmasaura
+        Sidersaura
+        Itapeuasaurus
+        Lavocatisaurus
+        Limaysaurus
+        Katepensaurus
+        Demandasaurus
+        Nigersaurus
+        Tataouinea
+        Rebbachisaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE bellardini2025a_fig9 = [&R] (Flagellicaudata,(Amazonsaurus,(Histriasaurus,(Comahuesaurus,((Astigmasaura,(Sidersaura,Itapeuasaurus)),(Lavocatisaurus,(Limaysaurus,(Katepensaurus,(Demandasaurus,Nigersaurus,Tataouinea,Rebbachisaurus)))))))));
+END;

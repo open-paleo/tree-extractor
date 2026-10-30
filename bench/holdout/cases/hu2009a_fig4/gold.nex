@@ -1,0 +1,31 @@
+#NEXUS
+
+[ hu2009a_fig4: Vertical time-calibrated theropod tree, root at the bottom, rotated labels, thick range bars; 18 tips, most of them collapsed clades. No matrix held: tips keep their printed text. Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=18;
+    TAXLABELS
+        Coelophysoidea
+        Ceratosauria
+        Basal_tetanurans
+        Tyrannosauroidea
+        Compsognathidae
+        Ornithomimosauria
+        Ornitholestes_hermanni
+        Therizinosauroidae
+        Alvarezsauroidea
+        Oviraptorosauria
+        Sinovenator_changii
+        Anchiornis_huxleyi
+        Mei_long
+        Other_troodontids
+        Dromaeosauridae
+        Scansoriopterygidae
+        Archaeopteryx
+        Other_avians
+    ;
+END;
+
+BEGIN TREES;
+    TREE hu2009a_fig4 = [&R] (Coelophysoidea,(Ceratosauria,(Basal_tetanurans,(Tyrannosauroidea,(Compsognathidae,(Ornithomimosauria,(Ornitholestes_hermanni,(Therizinosauroidae,(Alvarezsauroidea,(Oviraptorosauria,(((Sinovenator_changii,(Anchiornis_huxleyi,(Mei_long,Other_troodontids))),Dromaeosauridae),(Scansoriopterygidae,(Archaeopteryx,Other_avians)))))))))))));
+END;

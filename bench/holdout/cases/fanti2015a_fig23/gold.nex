@@ -1,0 +1,42 @@
+#NEXUS
+
+[ fanti2015a_fig23: S-DIVA biogeography tree (Bayesian topology) with pie-chart nodes and a dispersal/vicariance curve above a stage timescale; 29 tips. Katepensaurus, Nigersaurus and the Demandasaurus clade sit on one vertical carrying two stacked pies: read as (Katepensaurus,(Nigersaurus,(Demandasaurus,(Rebbachisaurus,Tataouinea)))), two nodes at zero length. Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=29;
+    TAXLABELS
+        Shunosaurus_lii
+        Patagosaurus_fariasi
+        Omeisaurus
+        Mamenchisaurus
+        Suuwassea_emiliae
+        Amargasaurus_cazaui
+        Brachytrachelopan_mesai
+        Dicraeosaurus_hansemanni
+        Apatosaurus
+        Barosaurus_lentus
+        Diplodocus
+        Comahuesaurus_windhauseni
+        Cathartesaura_anaerobica
+        Limaysaurus_tessonei
+        Amazonsaurus_maranhensis
+        Katepensaurus_goicoecheai
+        Nigersaurus_taqueti
+        Demandasaurus_darwini
+        Rebbachisaurus_garasbae
+        Tataouinea_hannibalis
+        Histriasaurus_boscarolli
+        Zapalasaurus_bonapartei
+        Jobaria_tiguidensis
+        Europasaurus_holgeri
+        Giraffatitan_brancai
+        Camarasaurus
+        Turiasaurus_riodevensis
+        Losillasaurus_giganteus
+        Haplocanthosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE fanti2015a_fig23 = [&R] (Shunosaurus_lii,(Patagosaurus_fariasi,((Omeisaurus,Mamenchisaurus),((((Suuwassea_emiliae,((Amargasaurus_cazaui,Brachytrachelopan_mesai),Dicraeosaurus_hansemanni)),(Apatosaurus,(Barosaurus_lentus,Diplodocus))),((((Comahuesaurus_windhauseni,(Cathartesaura_anaerobica,Limaysaurus_tessonei)),Amazonsaurus_maranhensis),(Katepensaurus_goicoecheai,(Nigersaurus_taqueti,(Demandasaurus_darwini,(Rebbachisaurus_garasbae,Tataouinea_hannibalis))))),(Histriasaurus_boscarolli,Zapalasaurus_bonapartei))),(Jobaria_tiguidensis,(((Europasaurus_holgeri,Giraffatitan_brancai),Camarasaurus),((Turiasaurus_riodevensis,Losillasaurus_giganteus),Haplocanthosaurus)))))));
+END;

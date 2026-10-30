@@ -1,0 +1,82 @@
+#NEXUS
+
+[ wang2025a_fig3: Time-calibrated sauropodomorph tree, thin lines, coloured range bars, 69 tips; several polytomies (a 6-way basal node, a 7-way node with Jaklapallisaurus to Nambalia, a 7-way node in Sauropodiformes, a 3-way Gongxianosaurus/Ingentia node). Matrix spellings: PVL_3808 (printed Riojasaurus PVL3808), NMQR3314 and NMQR1551 (printed Melanorosaurus NMQR...), Meroktenus (printed Meroktenos), Neosauropoda (printed NEOSAUROPODA, a matrix row). Topology transcribed from the figure and checked node by node (2026-10-29); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=69;
+    TAXLABELS
+        Pampadromaeus
+        Chromogisaurus
+        Saturnalia
+        Panphagia
+        Buriolestes
+        Eoraptor
+        Bagualosaurus
+        Jaklapallisaurus
+        Efraasia
+        Pantydraco
+        Thecodontosaurus
+        Arcusaurus
+        Nambalia
+        Unaysaurus
+        Plateosaurus_erlenbergensis
+        Plateosaurus_trossingensis
+        Plateosaurus_gracilis
+        Pradhania
+        Musankwa
+        Macrocollum
+        Wudingloong
+        Plateosauravus
+        Ruehleia
+        Anchisaurus
+        Lufengosaurus
+        PVL_3808
+        Coloradisaurus
+        Glacialisaurus
+        Massospondylus
+        Adeopapposaurus
+        Leyesaurus
+        Sarahsaurus
+        Ngwevu
+        Qianlong
+        Yunnanosaurus
+        Xingxiulong
+        Jingshanosaurus
+        Seitaad
+        Irisosaurus
+        Mussaurus
+        Yizhousaurus
+        Eucnemesaurus_fortis
+        Eucnemesaurus_entaxonis
+        Kholumolumo
+        Sefapanosaurus
+        NMQR3314
+        Aardonyx
+        Meroktenus
+        Camelotia
+        NMQR1551
+        Blikanasaurus
+        Lessemsaurus
+        Ledumahadi
+        Antetonitrus
+        Leonerasaurus
+        Gongxianosaurus
+        Ingentia
+        Pulanesaura
+        Vulcanodon
+        Isanosaurus
+        Tazoudasaurus
+        Spinophorosaurus
+        Shunosaurus
+        Mamenchisaurus
+        Barapasaurus
+        Omeisaurus
+        Patagosaurus
+        Cetiosaurus
+        Neosauropoda
+    ;
+END;
+
+BEGIN TREES;
+    TREE wang2025a_fig3 = [&R] ((Pampadromaeus,Chromogisaurus,Saturnalia,Panphagia,Buriolestes,Eoraptor),(Bagualosaurus,(Jaklapallisaurus,Efraasia,Pantydraco,Thecodontosaurus,Arcusaurus,Nambalia,((Unaysaurus,(Plateosaurus_erlenbergensis,(Plateosaurus_trossingensis,Plateosaurus_gracilis))),((Pradhania,Musankwa,Macrocollum),((Wudingloong,(Plateosauravus,Ruehleia)),(Anchisaurus,(((Lufengosaurus,(PVL_3808,(Coloradisaurus,Glacialisaurus))),(Massospondylus,((Adeopapposaurus,Leyesaurus),(Sarahsaurus,Ngwevu)))),((Qianlong,Yunnanosaurus),(Xingxiulong,((Jingshanosaurus,Seitaad),((Irisosaurus,Mussaurus),(Yizhousaurus,((Eucnemesaurus_fortis,Eucnemesaurus_entaxonis),(Kholumolumo,Sefapanosaurus,NMQR3314,Aardonyx,Meroktenus,(Camelotia,NMQR1551),(Blikanasaurus,((Lessemsaurus,(Ledumahadi,Antetonitrus)),(Leonerasaurus,(Gongxianosaurus,Ingentia,(Pulanesaura,(Vulcanodon,(Isanosaurus,(Tazoudasaurus,(Spinophorosaurus,(Shunosaurus,(Mamenchisaurus,Barapasaurus,(Omeisaurus,(Patagosaurus,(Cetiosaurus,Neosauropoda)))))))))))))))))))))))))))));
+END;

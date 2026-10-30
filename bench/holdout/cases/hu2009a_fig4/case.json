@@ -1,0 +1,8 @@
+{
+  "image": "../../../images/census/hu2009a_fig4.png",
+  "names": "names.txt",
+  "source": "hu2009a Fig. 4 (census row hu2009a_fig4). vector figure: 300 dpi page render above the caption (colour), prose blocks and running head blanked, cropped to the remaining ink (previous wide crop kept in images/census/wide/).",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Vertical time-calibrated theropod tree, root at the bottom, rotated labels, thick range bars; 18 tips, most of them collapsed clades. No matrix held: tips keep their printed text."
+}
