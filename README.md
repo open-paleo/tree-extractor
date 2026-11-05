@@ -13,35 +13,37 @@ the batch command line give identical results.
 
 ## Status
 
-Early. Twenty-five published figures are in the benchmark: eight the pipeline was tuned on,
-which all come out identical, ten drawn at random from the Open Paleo corpus and run cold
-first, of which two (a three-panel ceratopsian figure and a tyrannosauroid tree with range bars
-and collapsed clades) are identical, two name every tip (a 19-tip abelisaurid tree and a 30-tip
-centrosaurine tree with numbered node discs, range ovals and silhouettes) and two have most of
-their tree right (a 52-tip paravian time tree names 50), and seven time-calibrated figures
-added once the census showed that class weakest (stage charts, range bars, node rings), of
-which a 28-tip centrosaurine time tree is identical, a 69-tip sauropodomorph time tree names
-40 with all 28 scored splits right, and a 15-tip spinosaurid time tree names 11 with all 8. A
-census of 178 tree
-figures from the same corpus (`bench/holdout/census.md`) puts rectangular root-left trees at
-72 percent, slanted at 13 and vertical at 13. Vertical trees are turned a quarter and traced
-like the rest, labels set at a slant are read in a level frame of their own (the four vertical
-figures in `bench/holdout/` come out with 12 of 12, 10 of 12, 15 of 19 and 44 of 52 tips
-named, cold), and slanted trees are read from the skeleton of their line art (of the four with
-gold, a 28-tip diplodocoid cladogram names 27 with 14 of 16 splits, a 20-tip titanosaur
-cladogram names all 20 with all its splits, and a 55-tip sauropod cladogram names 45 with 29
-of 35; see `docs/design.md`). On synthetic figures in five styles,
-thirteen of fifteen are identical. Ten of the real figures are openly licensed and ship with the
-benchmark; see `bench/README.md` for the rest and `docs/design.md` for the approach and its
-known gaps.
+Early, and measured. Three sets of figures say where it stands.
 
-Across the whole census, run cold with the batch runner (`bench/batch.ts`), 178 trees
-give 168 trees of three tips or more and no crashes, at 4 seconds a figure: rectangular
-figures a median of 27 tips, slanted 11, vertical 12. On the 45 census figures with a
-taxon list, 87 percent of the traced tips carry an accepted name. On the 60 time-calibrated
-figures, 42 percent of tips have no label read, down from 54 before stage charts were
-dropped and pale range bars crossed; on the other 118 it is 10 percent. Those numbers are
-what the pipeline does unseen; the benchmark below is what it does on figures it was tuned on.
+**Benchmark** (`npm run bench`): twenty-five published figures with gold trees and fifteen
+synthetic ones. Eleven of the published figures come out identical, tips, names and splits, among
+them a 75-tip staircase consensus with clade arrows, a 68-tip strict consensus with lettered
+clades, a 60-tip stegosaur consensus and a 28-tip centrosaurine time tree. Of the rest, most name
+nearly every tip and recover most splits: a 30-tip centrosaurine tree with node discs, range
+ovals and silhouettes names all 30 with all 19 scored splits, a 69-tip sauropodomorph time tree
+names 51 with all 33, a 52-tip paravian time tree names 50 with 31 of 47. The weakest are a
+15-tip slanted cladogram from a low-resolution 1990s scan, whose labels are too small to read,
+and two figures with thick range bars or pie-chart nodes. Twelve of the fifteen synthetic figures
+are identical. Eighteen of the published figures are openly licensed and ship with the benchmark;
+`bench/README.md` says how to supply the rest.
+
+**Held out** (`npm run bench:holdout`): nine figures the pipeline is never tuned on, run cold.
+
+**Census** (`npm run bench:census`): 178 tree figures drawn from the Open Paleo corpus
+(`bench/holdout/census.md` gives the sampling), run cold with the batch runner. All 178 run
+without a crash, 168 give a tree of three tips or more, at a median of 3 seconds a figure;
+rectangular figures yield a median of 27 tips, slanted 11, vertical 12. On the 66 figures with
+a taxon list, 86 percent of the traced tips carry an accepted name. The class that still lags
+is the time-calibrated figure: 41 percent of its tips have no label read, against 10 percent
+elsewhere, mostly from thick or outlined range bars and node markers that stand between a tip
+and its label. The census itself lives in the private corpus archive, not here.
+
+**What it handles**: rectangular trees with the root on the left; vertical trees, which are
+turned a quarter, and their labels set on their side, read in a level frame; slanted trees,
+traced from the skeleton of their line art; polytomies; support values and node labels;
+filled and open node markers; stage charts, time axes and range bars, with ages assigned when
+an axis reads; silhouettes, legends, frames and callouts; multi-panel figures through a
+region. `docs/design.md` describes each step and its known gaps.
 
 ## Use
 
@@ -83,21 +85,29 @@ comes out as a plain horizontal tree.
 
 ## Scope
 
-First release: rectangular trees (cladograms and phylograms) with the root on the left and tips
-on the right, or drawn on their side with the root at the bottom or top (these are turned
-first), tip labels, support values at nodes, polytomies. When a time axis with readable
-numbers is found, nodes and tips get ages and the Newick carries branch lengths in the axis's
-units. Not yet: circular trees, branch lengths without an axis.
+Trees drawn with straight branches: rectangular, with the root at the left, bottom or top,
+and slanted. Tip labels, support values at nodes, polytomies, collapsed clades drawn as
+wedges or bars. When a time axis with readable numbers is found, nodes and tips get ages and
+the Newick carries branch lengths in the axis's units. Not yet: circular trees, branch lengths
+without an axis, labels set as PDF text over a raster (nothing is there to read), and a
+figure that holds several trees is read one region at a time.
 
 ## Development
 
 ```sh
-npm test            # unit tests (node:test)
-npm run bench       # benchmark against gold trees; see bench/README.md for supplying images
+npm test                 # unit tests (node:test)
+npm run bench            # benchmark against gold trees; see bench/README.md for supplying images
+npm run bench:strict     # the same, failing when a case expected identical is not
+npm run bench:holdout    # the held-out figures, cold
+npm run bench:census     # the corpus census, from a checkout named corpus beside this one
 npm run bench:generate   # render synthetic figures in several styles for the benchmark
-npm run lint        # eslint, same style as the other Open Paleo repositories
+npm run lint             # eslint, same style as the other Open Paleo repositories
 npm run typecheck
+npm run spellcheck
 ```
+
+Any change under `src/core` must leave `npm run bench:strict` green; the cases it must keep
+identical are listed in `bench/expectations.json`.
 
 Code style follows the Open Paleo conventions (Allman braces, four-space indent, `type` over
 `interface`, no abbreviated names, JSDoc on everything exported).
