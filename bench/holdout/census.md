@@ -1,4 +1,4 @@
-# Phylogeny figure census (open-paleo-papers corpus, 2026-10-27)
+# Phylogeny figure census (corpus corpus, 2026-10-27)
 
 ## How the sample was drawn
 

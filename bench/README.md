@@ -41,7 +41,7 @@ runs them cold: a case without gold prints how many tips the tree has, how many 
 listed name, and the quality-check findings; a case with gold is scored like a benchmark case
 but never expected identical. Three such cases are time-calibrated figures that are not openly
 licensed (Hu 2009, Wilson 2016, Bellardini 2025); their images stay out of the repository,
-referenced from `bench/images/census/`, while the seven openly licensed ones of the same batch
+referenced from the corpus archive's `census/figures/`, while the seven openly licensed ones of the same batch
 moved to `bench/cases/` with their images. Once a case has been checked and is stable, it
 moves to `bench/cases/`.
 
@@ -54,6 +54,7 @@ figure, and the most frequent quality checks. The manifest is a JSON array with 
 figure: `id`, `image`, optional `names` and `region`, `layout`, `flags`, and `is_tree` (false
 rows are skipped without `--all`); paths are relative to `--root` or the manifest's directory.
 Per-figure results go to `<out>/results.jsonl` and `<out>/<id>/` (document and Newick, and an
-overlay with `--overlay`). The census of the Open Paleo corpus (`bench/images/census/`, not
-committed) is the set this was written for: `--manifest=bench/images/census/manifest.json
---root=bench`.
+overlay with `--overlay`). The census of the Open Paleo corpus is the set this was written for. It lives in the
+`census/` folder of Sarah's corpus archive (manifest, figures and taxon lists), which is
+private and not part of the public `open-paleo/corpus` repository; `npm run bench:census`
+runs it from a checkout named `corpus` beside this one.

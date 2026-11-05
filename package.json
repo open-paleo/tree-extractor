@@ -24,7 +24,8 @@
     "web": "npm run build:web && node --experimental-strip-types scripts/serve.ts",
     "names:import": "node --experimental-strip-types scripts/import-known-names.ts",
     "bench:holdout": "node --experimental-strip-types bench/run.ts --holdout",
-    "bench:batch": "node --experimental-strip-types bench/batch.ts"
+    "bench:batch": "node --experimental-strip-types bench/batch.ts",
+    "bench:census": "node --experimental-strip-types bench/batch.ts --manifest=../corpus/census/manifest.json --root=../corpus/census"
   },
   "dependencies": {
     "sharp": "^0.35.5",

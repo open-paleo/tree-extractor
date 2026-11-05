@@ -1,5 +1,5 @@
 {
-  "image": "../../../images/census/hu2009a_fig4.png",
+  "image": "../../../../../corpus/census/figures/hu2009a_fig4.png",
   "names": "names.txt",
   "source": "hu2009a Fig. 4 (census row hu2009a_fig4). vector figure: 300 dpi page render above the caption (colour), prose blocks and running head blanked, cropped to the remaining ink (previous wide crop kept in images/census/wide/).",
   "names_note": "no matrix held; list = the printed tip names",

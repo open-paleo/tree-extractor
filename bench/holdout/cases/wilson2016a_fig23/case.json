@@ -1,5 +1,5 @@
 {
-  "image": "../../../images/census/wilson2016a_fig23.png",
+  "image": "../../../../../corpus/census/figures/wilson2016a_fig23.png",
   "names": "names.txt",
   "source": "wilson2016a Fig. 23 (census row wilson2016a_fig23). embedded image at native resolution, unmodified.",
   "names_note": "no matrix held; list = the printed tip names",
