@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import type { ExtractionDocument } from "../src/core/types.ts";
 import { createEmptyProfile } from "../src/core/profile.ts";
-import { addNode, addTip, deleteNode, deleteTip } from "../src/core/edit.ts";
+import { addNode, addTip, deleteNode, deleteTip, moveUnder } from "../src/core/edit.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 
 /**
@@ -107,4 +107,34 @@ test("new identifiers are unique among current elements", () =>
     }
 
     assert.equal(ids.size, 4);
+});
+
+test("moveUnder moves a tip under another node and collapses the parent it leaves", () =>
+{
+    const document = createNestedTree();
+    const result = moveUnder(document, "t1", "n2");
+    assert.equal(result.ok, true);
+    assert.equal(formatDocumentAsNewick(document), "(t1,t2,t3);");
+    assert.equal(document.nodes.length, 1);
+    assert.equal(document.nodes[0].id, "n2");
+    assert.equal(document.root, "n2");
+});
+
+test("moveUnder grows the new parent's vertical to reach the moved element", () =>
+{
+    const document = createNestedTree();
+    moveUnder(document, "t1", "n2");
+    const node = document.nodes.find((candidate) => candidate.id === "n2");
+    assert.ok(node !== undefined);
+    assert.equal(node.y0, 20);
+    assert.equal(node.y1, 120);
+});
+
+test("moveUnder refuses a node's own descendant, the root and the current parent", () =>
+{
+    const document = createNestedTree();
+    assert.equal(moveUnder(document, "n1", "n2").ok, false);
+    assert.equal(moveUnder(document, "n2", "n2").ok, false);
+    assert.equal(moveUnder(document, "t2", "n2").ok, false);
+    assert.equal(formatDocumentAsNewick(document), "(t1,(t2,t3));");
 });

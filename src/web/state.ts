@@ -102,7 +102,37 @@ export type DragState = {
 /**
  * What a click or drag on the canvas does.
  */
-export type Mode = "pan" | "region" | "add-tip" | "add-node";
+export type Mode = "pan" | "region" | "add-tip" | "add-node" | "move";
+
+/**
+ * A tip or node being dragged to a new parent.
+ */
+export type DraftMove = {
+    /**
+     * What is being moved.
+     */
+    selection: Selection;
+
+    /**
+     * Where the element is, in image pixels.
+     */
+    fromX: number;
+
+    /**
+     * Where the element is, in image pixels.
+     */
+    fromY: number;
+
+    /**
+     * Where the pointer is, in image pixels.
+     */
+    toX: number;
+
+    /**
+     * Where the pointer is, in image pixels.
+     */
+    toY: number;
+};
 
 /**
  * Everything the viewer knows about the current figure.
@@ -139,6 +169,11 @@ export type ViewerState = {
     draftSpan: Box | null;
 
     /**
+     * Tip or node being dragged to a new parent, while the pointer is down in move mode.
+     */
+    draftMove: DraftMove | null;
+
+    /**
      * Selected tip or node.
      */
     selection: Selection | null;
@@ -173,6 +208,7 @@ export function createViewerState(): ViewerState
         region: null,
         draftRegion: null,
         draftSpan: null,
+        draftMove: null,
         selection: null,
         layers: { segments: true, text: true, nodes: true, tips: true },
         mode: "pan",

@@ -154,6 +154,7 @@ canvas.region { cursor: crosshair; }
 button.tool.danger { color: #cf222e; }
 button.tool.danger:disabled { color: var(--ink); }
 canvas.add { cursor: crosshair; }
+canvas.move { cursor: grab; }
 
 .box { border: 1px solid var(--line); border-radius: 6px; background: var(--bg); margin-bottom: 12px; overflow: hidden; }
 .box h2 { font-size: 13px; margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--line); background: var(--panel); }

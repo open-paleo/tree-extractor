@@ -4,9 +4,10 @@
  */
 
 import type { Box } from "../core/types.ts";
-import type { DragState, Selection, ViewerState } from "./state.ts";
+import type { DraftMove, DragState, Selection, ViewerState } from "./state.ts";
 import type { CanvasView } from "./canvas.ts";
 import { hitTest } from "./lookup.ts";
+import { findNodeById, findTipById } from "../core/edit.ts";
 
 const clickSlop = 4;
 const minRegionSize = 10;
@@ -45,6 +46,14 @@ export type InteractionCallbacks = {
      * @param y1 - Bottom.
      */
     onAddNode(x: number, y0: number, y1: number): void;
+
+    /**
+     * Called when the user has dropped a tip or node on the node it should hang from.
+     *
+     * @param selection - What was dragged.
+     * @param parentId - Node it was dropped on.
+     */
+    onMoveUnder(selection: Selection, parentId: string): void;
 
     /**
      * Called after the view transform or an overlay changed and the toolbar should refresh.
@@ -153,10 +162,47 @@ export class PointerController
         {
             this.state.draftSpan = { x0: imageX, y0: imageY, x1: imageX, y1: imageY };
         }
+        else if (this.state.mode === "move" && this.state.extraction !== null)
+        {
+            this.startMove(imageX, imageY);
+        }
         else
         {
             this.canvas.classList.add("panning");
         }
+    }
+
+    /**
+     * Picks up the tip or node under the pointer for a move; pressing on nothing pans.
+     *
+     * @param imageX - Pointer x in image pixels.
+     * @param imageY - Pointer y in image pixels.
+     */
+    private startMove(imageX: number, imageY: number): void
+    {
+        const document = this.state.extraction;
+
+        if (document === null)
+        {
+            return;
+        }
+
+        const radius = 12 / this.canvasView.view.scale;
+        const selection = hitTest(document, this.state.layers, imageX, imageY, radius);
+
+        if (selection === null)
+        {
+            this.canvas.classList.add("panning");
+
+            return;
+        }
+
+        const tip = selection.kind === "tip" ? findTipById(document, selection.id) : null;
+        const node = selection.kind === "node" ? findNodeById(document, selection.id) : null;
+        const fromX = tip !== null ? tip.x : node !== null ? node.x : imageX;
+        const fromY = tip !== null ? tip.y : node !== null ? (node.y0 + node.y1) / 2 : imageY;
+        this.state.draftMove = { selection, fromX, fromY, toX: imageX, toY: imageY };
+        this.callbacks.onSelect(selection);
     }
 
     /**
@@ -198,6 +244,12 @@ export class PointerController
             this.state.draftSpan.y1 = this.canvasView.toImageY(screenY);
             this.canvasView.render(this.state);
         }
+        else if (this.state.draftMove !== null)
+        {
+            this.state.draftMove.toX = this.canvasView.toImageX(screenX);
+            this.state.draftMove.toY = this.canvasView.toImageY(screenY);
+            this.canvasView.render(this.state);
+        }
         else
         {
             this.canvasView.panTo(this.state, drag.startOffsetX + (screenX - drag.startX), drag.startOffsetY + (screenY - drag.startY));
@@ -236,6 +288,13 @@ export class PointerController
             return;
         }
 
+        if (this.state.draftMove !== null)
+        {
+            this.finishMove(this.state.draftMove, drag.moved);
+
+            return;
+        }
+
         if (drag.moved || this.state.extraction === null)
         {
             return;
@@ -254,6 +313,32 @@ export class PointerController
 
         const radius = 12 / this.canvasView.view.scale;
         this.callbacks.onSelect(hitTest(this.state.extraction, this.state.layers, imageX, imageY, radius));
+    }
+
+    /**
+     * Drops a dragged tip or node on the node under the pointer; a drop elsewhere, or a mere
+     * click, leaves the tree as it was and the element selected.
+     *
+     * @param draft - The move in progress.
+     * @param moved - Whether the pointer actually moved.
+     */
+    private finishMove(draft: DraftMove, moved: boolean): void
+    {
+        this.state.draftMove = null;
+
+        if (moved && this.state.extraction !== null)
+        {
+            const radius = 12 / this.canvasView.view.scale;
+            const target = hitTest(this.state.extraction, this.state.layers, draft.toX, draft.toY, radius);
+
+            if (target !== null && target.kind === "node" && target.id !== draft.selection.id)
+            {
+                this.callbacks.onMoveUnder(draft.selection, target.id);
+            }
+        }
+
+        this.canvasView.render(this.state);
+        this.callbacks.onViewChanged();
     }
 
     /**

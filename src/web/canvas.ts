@@ -243,6 +243,21 @@ export class CanvasView
             context.lineTo(state.draftSpan.x0, state.draftSpan.y1);
             context.stroke();
         }
+
+        if (state.draftMove !== null)
+        {
+            context.strokeStyle = "rgba(255, 80, 0, 0.95)";
+            context.lineWidth = 2 * unit;
+            context.setLineDash([6 * unit, 4 * unit]);
+            context.beginPath();
+            context.moveTo(state.draftMove.fromX, state.draftMove.fromY);
+            context.lineTo(state.draftMove.toX, state.draftMove.toY);
+            context.stroke();
+            context.setLineDash([]);
+            context.beginPath();
+            context.arc(state.draftMove.toX, state.draftMove.toY, 6 * unit, 0, 2 * Math.PI);
+            context.stroke();
+        }
     }
 
     /**

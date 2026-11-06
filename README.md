@@ -76,8 +76,9 @@ Scroll to zoom, drag to pan, and use *Select region* to mark where the tree is w
 holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
 other way round; labels are editable in place and the Newick updates. Missed or spurious
 elements can be fixed by hand: *Add tip* then click a branch end, *Add node* then drag along the
-missing vertical connector (it takes over the branches it crosses), and *Delete* removes the
-selected tip or node, dissolving a node into its parent. Re-parenting by drag is not there yet.
+missing vertical connector (it takes over the branches it crosses), *Move* then drag a tip or
+node onto the node it should hang from (the parent it leaves collapses if only one child
+remains), and *Delete* removes the selected tip or node, dissolving a node into its parent.
 Below the Newick, the traced tree is redrawn clean: root on the left, tips evenly spaced, branch
 lengths from the time axis when one was read. It updates with every edit, doubles as a check on
 the trace, and downloads as SVG, so a figure that went in on its side with silhouettes and bands

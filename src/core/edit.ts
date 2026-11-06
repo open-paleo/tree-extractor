@@ -564,3 +564,94 @@ export function addNode(document: ExtractionDocument, x: number, y0: number, y1:
 
     return { ok: true, message: `added node ${node.id} under ${parent.id} with ${taken.length} child(ren)`, id: node.id };
 }
+
+/**
+ * Moves a tip or node under another node. The element leaves its parent, which collapses
+ * when left with one child, and joins the new parent's children in order of height; the new
+ * parent's vertical grows to reach the element when it does not already. Moving an element
+ * under itself or one of its own descendants is refused, as is moving the root.
+ *
+ * @param document - Document updated in place.
+ * @param id - Tip or node to move.
+ * @param parentId - Node to move it under.
+ * @returns Outcome.
+ */
+export function moveUnder(document: ExtractionDocument, id: string, parentId: string): EditResult
+{
+    const tip = findTipById(document, id);
+    const node = tip === null ? findNodeById(document, id) : null;
+    const element = tip ?? node;
+
+    if (element === null)
+    {
+        return { ok: false, message: `no tip or node ${id}`, id: null };
+    }
+
+    const parent = findNodeById(document, parentId);
+
+    if (parent === null)
+    {
+        return { ok: false, message: `no node ${parentId}`, id: null };
+    }
+
+    if (element.parent === parentId)
+    {
+        return { ok: false, message: `${id} already hangs from ${parentId}`, id: null };
+    }
+
+    if (node !== null && (node.id === parentId || isDescendant(document, parentId, node.id)))
+    {
+        return { ok: false, message: `${parentId} lies under ${id}; a node cannot hang from its own descendant`, id: null };
+    }
+
+    if (node !== null && node.parent === null)
+    {
+        return { ok: false, message: `${id} is the root; move its children instead`, id: null };
+    }
+
+    const oldParentId = element.parent;
+    element.parent = parentId;
+    parent.children.push(id);
+    sortChildren(document, parent);
+    const height = getChildHeight(document, id);
+    parent.y0 = Math.min(parent.y0, height);
+    parent.y1 = Math.max(parent.y1, height);
+
+    if (oldParentId !== null)
+    {
+        const oldParent = findNodeById(document, oldParentId);
+
+        if (oldParent !== null)
+        {
+            removeChild(oldParent, id);
+            collapseDegenerateNode(document, oldParent.id);
+        }
+    }
+
+    return { ok: true, message: `moved ${id} under ${parentId}`, id };
+}
+
+/**
+ * Whether a node lies under another.
+ *
+ * @param document - Document.
+ * @param id - Node to test.
+ * @param ancestorId - Candidate ancestor.
+ * @returns True when the ancestor is on the node's path to the root.
+ */
+function isDescendant(document: ExtractionDocument, id: string, ancestorId: string): boolean
+{
+    let current = findNodeById(document, id);
+
+    while (current !== null && current.parent !== null)
+    {
+        if (current.parent === ancestorId)
+        {
+            return true;
+        }
+
+        current = findNodeById(document, current.parent);
+    }
+
+    return false;
+}

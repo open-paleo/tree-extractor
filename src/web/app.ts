@@ -16,7 +16,7 @@ import { getSelectionFromEvent, highlightSelection, renderResults, updateNewick 
 import { downloadDocumentFile, downloadNewickFile, downloadNexusFile, downloadSvgFile } from "./exports.ts";
 import { PointerController } from "./interaction.ts";
 import type { EditResult } from "../core/edit.ts";
-import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById } from "../core/edit.ts";
+import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById, moveUnder } from "../core/edit.ts";
 import { ExtractionClient } from "./extraction-client.ts";
 
 /**
@@ -56,6 +56,7 @@ const modeHint = getElement<HTMLParagraphElement>("#mode-hint");
 const clearRegionButton = getElement<HTMLButtonElement>("#clear-region");
 const addTipButton = getElement<HTMLButtonElement>("#add-tip");
 const addNodeButton = getElement<HTMLButtonElement>("#add-node");
+const moveButton = getElement<HTMLButtonElement>("#move");
 const deleteButton = getElement<HTMLButtonElement>("#delete");
 const downloadNewick = getElement<HTMLButtonElement>("#download-newick");
 const downloadNexus = getElement<HTMLButtonElement>("#download-nexus");
@@ -97,6 +98,7 @@ function updateModeHint(): void
         region: "Drag a rectangle around the tree, then press Extract tree to analyze only that area. Escape cancels.",
         "add-tip": "Click where the new tip's branch ends. Escape cancels.",
         "add-node": "Drag along the missing vertical connector, from its top to its bottom. Escape cancels.",
+        move: "Drag a tip or node and drop it on the node it should hang from. Escape leaves move mode.",
     };
     const hint = hints[state.mode];
     modeHint.hidden = hint === undefined;
@@ -119,12 +121,15 @@ function updateToolbar(): void
     const extracted = state.extraction !== null;
     addTipButton.disabled = !extracted;
     addNodeButton.disabled = !extracted;
+    moveButton.disabled = !extracted;
     deleteButton.disabled = !extracted || state.selection === null;
     regionModeButton.classList.toggle("active", state.mode === "region");
     addTipButton.classList.toggle("active", state.mode === "add-tip");
     addNodeButton.classList.toggle("active", state.mode === "add-node");
+    moveButton.classList.toggle("active", state.mode === "move");
     canvas.classList.toggle("region", state.mode === "region");
     canvas.classList.toggle("add", state.mode === "add-tip" || state.mode === "add-node");
+    canvas.classList.toggle("move", state.mode === "move");
     updateModeHint();
 }
 
@@ -660,6 +665,29 @@ function handleAddNode(x: number, y0: number, y1: number): void
 }
 
 /**
+ * Moves a dragged tip or node under the node it was dropped on.
+ *
+ * @param selection - What was dragged.
+ * @param parentId - Node it was dropped on.
+ */
+function handleMoveUnder(selection: Selection, parentId: string): void
+{
+    if (state.extraction !== null)
+    {
+        finishEdit(moveUnder(state.extraction, selection.id, parentId), selection.kind);
+    }
+}
+
+/**
+ * Enters or leaves move mode.
+ */
+function handleMoveClick(): void
+{
+    state.mode = state.mode === "move" ? "pan" : "move";
+    updateToolbar();
+}
+
+/**
  * Enters or leaves add-tip mode.
  */
 function handleAddTipClick(): void
@@ -705,6 +733,7 @@ function handleKeyDown(event: KeyboardEvent): void
         state.mode = "pan";
         state.draftRegion = null;
         state.draftSpan = null;
+        state.draftMove = null;
         setStatus("Ready.");
         redraw();
     }
@@ -725,6 +754,7 @@ const pointer = new PointerController(canvas, canvasView, state, {
     onRegionSet: handleRegionSet,
     onAddTip: handleAddTip,
     onAddNode: handleAddNode,
+    onMoveUnder: handleMoveUnder,
     onViewChanged: updateToolbar,
 });
 
@@ -740,6 +770,7 @@ regionModeButton.addEventListener("click", handleRegionModeClick);
 clearRegionButton.addEventListener("click", handleClearRegionClick);
 addTipButton.addEventListener("click", handleAddTipClick);
 addNodeButton.addEventListener("click", handleAddNodeClick);
+moveButton.addEventListener("click", handleMoveClick);
 deleteButton.addEventListener("click", handleDeleteClick);
 document.addEventListener("keydown", handleKeyDown);
 results.tipsList.addEventListener("click", handleListClick);
