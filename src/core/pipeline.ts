@@ -7,7 +7,7 @@ import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Orientation, 
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
-import { chooseRoot, pruneDegenerateNodes, refreshDisconnectedIssues } from "./tree.ts";
+import { assignPixelLengths, chooseRoot, pruneDegenerateNodes, refreshDisconnectedIssues } from "./tree.ts";
 import { detectOrientation } from "./orientation.ts";
 import { detectSlantedLabels } from "./slant.ts";
 import { traceSlantedTree } from "./slanted.ts";
@@ -1420,6 +1420,19 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     document.qc.push(...checkTipAlignment(document));
+
+    // A phylogram with no readable axis still says something by its branch lengths; they are
+    // written in pixels.
+    if (document.profile.timeScaled.calibration === null && !document.profile.tipAlignment.aligned && slantedTrace === null && document.root !== null)
+    {
+        const assigned = assignPixelLengths(document);
+
+        if (assigned > 0)
+        {
+            document.qc.push({ severity: "info", code: "branch-lengths-pixels", message: `tips are not aligned and no time axis was read, so the ${assigned} branch length(s) are written in pixels`, subject: null });
+        }
+    }
+
     runQualityChecks(document);
 
     // The checks about loose pieces are made again now that every step has had its say.

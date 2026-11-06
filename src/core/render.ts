@@ -119,6 +119,12 @@ type TreeLayout = {
      * Oldest and youngest age when ages set the depths, or null in the stepped layout.
      */
     ages: [number, number] | null;
+
+    /**
+     * Whether depths came from ages or pixel lengths, so that tips end where their branches do
+     * and labels follow them; in the stepped layout every tip ends on the tip line.
+     */
+    depthsUsed: boolean;
 };
 
 /**
@@ -197,46 +203,82 @@ function listChildrenInOrder(index: TreeIndex, node: TreeNode): Array<string>
 }
 
 /**
- * Whether every member of the tree under the root has an age, so that ages can set the
- * branch lengths.
+ * Depths of every member of the tree, and where they came from.
+ */
+type Depths = {
+    /**
+     * Depth by identifier, as an age: larger is nearer the root.
+     */
+    byId: Map<string, number>;
+
+    /**
+     * True when the depths are ages in the axis's units, which an axis can be drawn for.
+     */
+    fromAges: boolean;
+};
+
+/**
+ * The depth of every member of the tree under the root, as an age: the ages themselves when
+ * every member has one, or else the pixel lengths of a phylogram summed from the root and
+ * negated, so that the root is the oldest; null when neither is complete.
  *
  * @param index - Tree index.
  * @param root - Root identifier.
- * @returns True when ages are complete.
+ * @returns Depths by identifier, or null.
  */
-function hasCompleteAges(index: TreeIndex, root: string): boolean
+function collectDepths(index: TreeIndex, root: string): Depths | null
 {
-    const pending = [root];
+    const ages = new Map<string, number>();
+    const lengths = new Map<string, number>();
+    let agesComplete = true;
+    let lengthsComplete = true;
+    const pending: Array<[string, number]> = [[root, 0]];
 
     while (pending.length > 0)
     {
-        const id = pending.pop() as string;
+        const [id, depth] = pending.pop() as [string, number];
         const node = index.nodes.get(id);
+        const member = node ?? index.tips.get(id);
 
-        if (node !== undefined)
+        if (member === undefined)
         {
-            if (node.age === null)
-            {
-                return false;
-            }
+            return null;
+        }
 
-            for (const child of listChildrenInOrder(index, node))
-            {
-                pending.push(child);
-            }
+        if (member.age === null)
+        {
+            agesComplete = false;
         }
         else
         {
-            const tip = index.tips.get(id);
+            ages.set(id, member.age);
+        }
 
-            if (tip === undefined || tip.age === null)
+        const own = id === root ? 0 : member.length;
+
+        if (own === undefined)
+        {
+            lengthsComplete = false;
+        }
+
+        const total = depth - (own ?? 0);
+        lengths.set(id, total);
+
+        if (node !== undefined)
+        {
+            for (const child of listChildrenInOrder(index, node))
             {
-                return false;
+                pending.push([child, total]);
             }
         }
     }
 
-    return true;
+    if (agesComplete)
+    {
+        return { byId: ages, fromAges: true };
+    }
+
+    return lengthsComplete ? { byId: lengths, fromAges: false } : null;
 }
 
 /**
@@ -263,7 +305,9 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
 {
     const index = indexTree(document);
     const root = document.root as string;
-    const useAges = options.branchLengths && hasCompleteAges(index, root);
+    const depths = options.branchLengths ? collectDepths(index, root) : null;
+    const ageOf = depths === null ? null : depths.byId;
+    const useAges = depths !== null && depths.fromAges;
     const placed = new Array<Placed>();
     let nextRow = 0;
     let oldest = -Infinity;
@@ -287,10 +331,12 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
             levelOf.set(id, 0);
             const tip = index.tips.get(id);
 
-            if (useAges && tip !== undefined && tip.age !== null)
+            const tipAge = ageOf === null || tip === undefined ? undefined : ageOf.get(tip.id);
+
+            if (tipAge !== undefined)
             {
-                oldest = Math.max(oldest, tip.age);
-                youngest = Math.min(youngest, tip.age);
+                oldest = Math.max(oldest, tipAge);
+                youngest = Math.min(youngest, tipAge);
             }
 
             return 0;
@@ -324,9 +370,11 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
         spanOf.set(id, [first, last]);
         levelOf.set(id, deepest);
 
-        if (useAges && node.age !== null)
+        const nodeAge = ageOf === null ? undefined : ageOf.get(node.id);
+
+        if (nodeAge !== undefined)
         {
-            oldest = Math.max(oldest, node.age);
+            oldest = Math.max(oldest, nodeAge);
         }
 
         return deepest;
@@ -338,10 +386,9 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
 
     function placeX(id: string): number
     {
-        if (useAges)
+        if (ageOf !== null)
         {
-            const member = index.nodes.get(id) ?? index.tips.get(id);
-            const age = member === undefined || member.age === null ? youngest : member.age;
+            const age = ageOf.get(id) ?? youngest;
             const range = Math.max(1e-9, oldest - youngest);
 
             return margin + ((oldest - age) / range) * options.treeWidth;
@@ -378,7 +425,7 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
 
     place(root, null);
 
-    return { placed, ages: useAges && Number.isFinite(oldest) && Number.isFinite(youngest) ? [oldest, youngest] : null };
+    return { placed, ages: useAges && Number.isFinite(oldest) && Number.isFinite(youngest) ? [oldest, youngest] : null, depthsUsed: ageOf !== null };
 }
 
 /**
@@ -421,7 +468,8 @@ export function renderTreeSvg(document: ExtractionDocument, options: Partial<Ren
     }
 
     const settings: RenderOptions = { ...defaultRenderOptions, ...options };
-    const { placed, ages } = layOutTree(document, settings);
+    const layout = layOutTree(document, settings);
+    const { placed, ages } = layout;
     const fontSize = settings.fontSize;
     const margin = 2.5 * fontSize;
     let tipLineX = 0;
@@ -489,7 +537,7 @@ export function renderTreeSvg(document: ExtractionDocument, options: Partial<Ren
 
         if (member.isTip)
         {
-            const tipX = ages === null ? tipLineX : member.x;
+            const tipX = layout.depthsUsed ? member.x : tipLineX;
             parts.push(`<text x="${(tipX + labelGap).toFixed(1)}" y="${member.y.toFixed(1)}" dominant-baseline="middle" font-style="italic">${escapeXml(member.label)}</text>`);
         }
         else

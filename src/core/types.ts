@@ -246,6 +246,12 @@ export type Tip = {
     age: number | null;
 
     /**
+     * Length of the branch from the parent in pixels, set for a phylogram with no readable time
+     * axis; absent otherwise.
+     */
+    length?: number;
+
+    /**
      * Where the branch itself ended, when the tip was moved to the far side of a marker or a
      * solid shape the branch ran into; absent otherwise.
      */
@@ -310,6 +316,12 @@ export type TreeNode = {
      * Age of the junction in the units of the time axis, or null without a calibration.
      */
     age: number | null;
+
+    /**
+     * Length of the branch from the parent in pixels, set for a phylogram with no readable time
+     * axis; absent otherwise.
+     */
+    length?: number;
 };
 
 /**

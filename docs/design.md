@@ -269,7 +269,17 @@ names 45; Calvo 1995, a 588-pixel scan, traces its tree but its labels are beyon
 evenly spaced rows in the figure's order, each node centered on its children, labels in a plain
 italic font with the matched name where there is one and the OCR read otherwise. When every
 member of the tree has an age the depths follow the ages and an axis with round ticks is drawn;
-otherwise each node sits one step left of its deepest child, so every tip ends on the tip line.
+when instead every branch has a length in pixels the depths follow those; otherwise each node
+sits one step left of its deepest child, so every tip ends on the tip line.
+
+**Branch lengths without an axis.** A phylogram's drawn lengths carry its only information
+about time or change, so when the tips do not line up and no time axis was read, every branch
+gets its length in pixels (`assignPixelLengths`): the distance from the parent's junction to
+the child's junction or to the branch end as drawn, before any marker carried the tip on. The
+Newick carries these where it would carry age differences, a quality check says the units are
+pixels, and the redraw uses them for depth. A cladogram, whose tips line up, gets none, since
+its lengths mean nothing; a time tree whose axis could not be read gets pixel lengths, which
+are at least proportional to its ages.
 The CLI writes it beside the Newick, and the viewer shows it under the Newick and updates it
 with every edit. It is the output for anyone who wants the figure back as a simple graphic, and
 the quickest check on the trace.

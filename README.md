@@ -92,9 +92,10 @@ comes out as a plain horizontal tree.
 Trees drawn with straight branches: rectangular, with the root at the left, bottom or top,
 and slanted. Tip labels, support values at nodes, polytomies, collapsed clades drawn as
 wedges or bars. When a time axis with readable numbers is found, nodes and tips get ages and
-the Newick carries branch lengths in the axis's units. Not yet: circular trees, branch lengths
-without an axis, labels set as PDF text over a raster (nothing is there to read), and a
-figure that holds several trees is read one region at a time.
+the Newick carries branch lengths in the axis's units; a phylogram with no readable axis, told
+by its tips not lining up, gets its branch lengths in pixels. Not yet: circular trees, labels
+set as PDF text over a raster (nothing is there to read), and a figure that holds several
+trees is read one region at a time.
 
 ## Development
 

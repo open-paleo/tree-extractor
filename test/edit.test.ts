@@ -4,7 +4,7 @@ import { test } from "node:test";
 import type { ExtractionDocument } from "../src/core/types.ts";
 import { createEmptyProfile } from "../src/core/profile.ts";
 import { addNode, addTip, deleteNode, deleteTip, moveUnder } from "../src/core/edit.ts";
-import { refreshDisconnectedIssues } from "../src/core/tree.ts";
+import { assignPixelLengths, refreshDisconnectedIssues } from "../src/core/tree.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 
 /**
@@ -165,4 +165,13 @@ test("refreshDisconnectedIssues names the loose pieces that exist now", () =>
     );
     refreshDisconnectedIssues(document);
     assert.deepEqual(document.qc.map((issue) => issue.subject), ["n9", "t9"]);
+});
+
+test("assignPixelLengths measures each branch from its parent and the Newick carries it", () =>
+{
+    const document = createNestedTree();
+    document.tips[0].x = 120;
+    assert.equal(assignPixelLengths(document), 4);
+    assert.equal(formatDocumentAsNewick(document), "(t1:70,(t2:50,t3:50):50);");
+    assert.equal(formatDocumentAsNewick(document, { branchLengths: false }), "(t1,(t2,t3));");
 });

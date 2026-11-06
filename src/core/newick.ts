@@ -74,7 +74,8 @@ export function getTipDisplayName(document: ExtractionDocument, tipId: string): 
  */
 export type NewickOptions = {
     /**
-     * Whether to write branch lengths, where the document has ages from a time axis.
+     * Whether to write branch lengths, where the document has ages from a time axis or
+     * lengths in pixels from a phylogram without one.
      */
     branchLengths: boolean;
 };
@@ -85,13 +86,14 @@ export type NewickOptions = {
  *
  * @param parentAge - Age of the parent, or null.
  * @param childAge - Age of the child, or null.
- * @returns The ":length" suffix, or an empty string when either age is unknown.
+ * @param pixels - Length in pixels, used when either age is unknown.
+ * @returns The ":length" suffix, or an empty string when nothing is known.
  */
-function formatLength(parentAge: number | null, childAge: number | null): string
+function formatLength(parentAge: number | null, childAge: number | null, pixels: number | undefined): string
 {
     if (parentAge === null || childAge === null)
     {
-        return "";
+        return pixels === undefined ? "" : `:${String(pixels)}`;
     }
 
     const length = Math.max(0, parentAge - childAge);
@@ -134,7 +136,7 @@ export function formatDocumentAsNewick(document: ExtractionDocument, options: Ne
         if (node === undefined)
         {
             const tip = tipById.get(id);
-            const length = options.branchLengths && tip !== undefined ? formatLength(parentAge, tip.age) : "";
+            const length = options.branchLengths && tip !== undefined ? formatLength(parentAge, tip.age, tip.length) : "";
 
             return `${formatLabel(getTipDisplayName(document, id))}${length}`;
         }
@@ -146,7 +148,7 @@ export function formatDocumentAsNewick(document: ExtractionDocument, options: Ne
             parts.push(render(child, node.age));
         }
 
-        const length = options.branchLengths && parentAge !== null ? formatLength(parentAge, node.age) : "";
+        const length = options.branchLengths && node.parent !== null ? formatLength(parentAge, node.age, node.length) : "";
 
         return `(${parts.join(",")})${node.label === null ? "" : formatLabel(node.label)}${length}`;
     }

@@ -248,3 +248,49 @@ export function refreshDisconnectedIssues(document: ExtractionDocument): void
 
     document.qc = kept;
 }
+
+/**
+ * Gives every branch of a phylogram its length in pixels: the distance from the parent's
+ * junction to the child's junction or branch end. Meant for a figure whose tips do not line
+ * up and whose time axis, if any, could not be read, where the drawn lengths carry the only
+ * information there is; a cladogram's lengths mean nothing, and ages from an axis are better.
+ *
+ * @param document - Document updated in place.
+ * @returns Number of branches given a length.
+ */
+export function assignPixelLengths(document: ExtractionDocument): number
+{
+    const nodeById = new Map<string, TreeNode>();
+
+    for (const node of document.nodes)
+    {
+        nodeById.set(node.id, node);
+    }
+
+    let assigned = 0;
+
+    for (const node of document.nodes)
+    {
+        const parent = node.parent === null ? null : nodeById.get(node.parent);
+
+        if (parent !== undefined && parent !== null)
+        {
+            node.length = Math.max(0, Math.round(node.x - parent.x));
+            assigned++;
+        }
+    }
+
+    for (const tip of document.tips)
+    {
+        const parent = tip.parent === null ? null : nodeById.get(tip.parent);
+
+        if (parent !== undefined && parent !== null)
+        {
+            // The branch ends where it was drawn, not where a marker it ran into carried the tip.
+            tip.length = Math.max(0, Math.round((tip.extendedFrom ?? tip.x) - parent.x));
+            assigned++;
+        }
+    }
+
+    return assigned;
+}
