@@ -163,7 +163,8 @@
         "spinosaurid",
         "Bellardini",
         "Rebbachisaurus",
-        "Turiasaurus"
+        "Turiasaurus",
+        "undoable"
     ],
     "ignorePaths": [
         "node_modules/**",

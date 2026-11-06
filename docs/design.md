@@ -332,7 +332,9 @@ Large-font figures read two to three times faster for it; small fonts are unchan
   `src/core/edit.ts`). The checks about loose pieces are remade at the end of the pipeline and
   after every edit (`refreshDisconnectedIssues`), since the trace records them before later
   steps dissolve nodes and choose the root again, and a check naming an element that no longer
-  exists leads nowhere.
+  exists leads nowhere. Every edit is undoable: the viewer keeps a copy of the document before
+  each one (the keystrokes of one label share a copy), and undo and redo swap the current
+  document for a copy, back to the extraction itself.
 - On the synthetic benchmark, clean, serif, dense and most touching-label figures come out
   identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
   most of a short branch, or where a range bar extends left past the branch's start; both are

@@ -105,6 +105,21 @@ export type DragState = {
 export type Mode = "pan" | "region" | "add-tip" | "add-node" | "move";
 
 /**
+ * A document as it was before an edit, with what the edit did.
+ */
+export type HistoryEntry = {
+    /**
+     * The document before the edit.
+     */
+    document: ExtractionDocument;
+
+    /**
+     * What the edit did, for the status line when it is undone or redone.
+     */
+    description: string;
+};
+
+/**
  * A tip or node being dragged to a new parent.
  */
 export type DraftMove = {
@@ -174,6 +189,21 @@ export type ViewerState = {
     draftMove: DraftMove | null;
 
     /**
+     * Documents as they were before each edit, oldest first.
+     */
+    history: Array<HistoryEntry>;
+
+    /**
+     * Documents undone, most recently undone last, until a new edit discards them.
+     */
+    future: Array<HistoryEntry>;
+
+    /**
+     * Key of the last edit recorded, so successive keystrokes in one label make one entry.
+     */
+    lastEditKey: string | null;
+
+    /**
      * Selected tip or node.
      */
     selection: Selection | null;
@@ -209,6 +239,9 @@ export function createViewerState(): ViewerState
         draftRegion: null,
         draftSpan: null,
         draftMove: null,
+        history: [],
+        future: [],
+        lastEditKey: null,
         selection: null,
         layers: { segments: true, text: true, nodes: true, tips: true },
         mode: "pan",

@@ -7,7 +7,7 @@ import type { OcrEngine } from "../core/types.ts";
 import { formatTimings } from "../core/pipeline.ts";
 import { createTesseractOcr } from "../ocr/tesseract.ts";
 import type { Box } from "../core/types.ts";
-import type { Layers, Selection } from "./state.ts";
+import type { HistoryEntry, Layers, Selection } from "./state.ts";
 import { createViewerState } from "./state.ts";
 import { CanvasView } from "./canvas.ts";
 import { getNodeMarkerY } from "./lookup.ts";
@@ -58,6 +58,8 @@ const clearRegionButton = getElement<HTMLButtonElement>("#clear-region");
 const addTipButton = getElement<HTMLButtonElement>("#add-tip");
 const addNodeButton = getElement<HTMLButtonElement>("#add-node");
 const moveButton = getElement<HTMLButtonElement>("#move");
+const undoButton = getElement<HTMLButtonElement>("#undo");
+const redoButton = getElement<HTMLButtonElement>("#redo");
 const deleteButton = getElement<HTMLButtonElement>("#delete");
 const downloadNewick = getElement<HTMLButtonElement>("#download-newick");
 const downloadNexus = getElement<HTMLButtonElement>("#download-nexus");
@@ -123,6 +125,8 @@ function updateToolbar(): void
     addTipButton.disabled = !extracted;
     addNodeButton.disabled = !extracted;
     moveButton.disabled = !extracted;
+    undoButton.disabled = state.history.length === 0;
+    redoButton.disabled = state.future.length === 0;
     deleteButton.disabled = !extracted || state.selection === null;
     regionModeButton.classList.toggle("active", state.mode === "region");
     addTipButton.classList.toggle("active", state.mode === "add-tip");
@@ -162,6 +166,111 @@ function finishEdit(result: EditResult, kind: "tip" | "node"): void
 }
 
 /**
+ * Forgets the edit history, when a new image or a new extraction replaces the document.
+ */
+function clearHistory(): void
+{
+    state.history = [];
+    state.future = [];
+    state.lastEditKey = null;
+}
+
+const historyLimit = 100;
+
+/**
+ * Keeps a copy of the document before an edit, so the edit can be undone. Successive edits
+ * with the same key, the keystrokes of one label, share one entry. Redo is discarded.
+ *
+ * @param key - What is being edited, such as "label:t5".
+ * @param description - What the edit does, for the status line.
+ */
+function recordEdit(key: string, description: string): void
+{
+    if (state.extraction === null)
+    {
+        return;
+    }
+
+    if (key === state.lastEditKey && state.history.length > 0)
+    {
+        return;
+    }
+
+    state.history.push({ document: structuredClone(state.extraction), description });
+
+    if (state.history.length > historyLimit)
+    {
+        state.history.shift();
+    }
+
+    state.future = [];
+    state.lastEditKey = key;
+}
+
+/**
+ * Runs an edit against a recorded copy, keeping the copy only when the edit was applied.
+ *
+ * @param description - What the edit does.
+ * @param run - The edit.
+ * @param kind - What the edit would have created.
+ */
+function applyEdit(description: string, run: () => EditResult, kind: "tip" | "node"): void
+{
+    recordEdit(`edit:${state.history.length}:${description}`, description);
+    const result = run();
+
+    if (!result.ok)
+    {
+        state.history.pop();
+        state.lastEditKey = null;
+    }
+
+    finishEdit(result, kind);
+}
+
+/**
+ * Puts the document back as it was before the last edit, or after the last undone one.
+ *
+ * @param from - Entries to take from.
+ * @param to - Entries to put the current document on.
+ * @param verb - "Undid" or "Redid".
+ */
+function stepHistory(from: Array<HistoryEntry>, to: Array<HistoryEntry>, verb: string): void
+{
+    const entry = from.pop();
+
+    if (entry === undefined || state.extraction === null)
+    {
+        return;
+    }
+
+    to.push({ document: state.extraction, description: entry.description });
+    state.extraction = entry.document;
+    state.lastEditKey = null;
+    refreshDisconnectedIssues(state.extraction);
+    renderResults(results, state.extraction);
+    updateNewick(results, state.extraction);
+    setStatus(`${verb}: ${entry.description}.`);
+    select(null, false);
+}
+
+/**
+ * Undoes the last edit.
+ */
+function undo(): void
+{
+    stepHistory(state.history, state.future, "Undid");
+}
+
+/**
+ * Redoes the last undone edit.
+ */
+function redo(): void
+{
+    stepHistory(state.future, state.history, "Redid");
+}
+
+/**
  * Deletes the selected tip or node.
  */
 function deleteSelection(): void
@@ -171,10 +280,9 @@ function deleteSelection(): void
         return;
     }
 
-    const result = state.selection.kind === "tip"
-        ? deleteTip(state.extraction, state.selection.id)
-        : deleteNode(state.extraction, state.selection.id);
-    finishEdit(result, state.selection.kind);
+    const document = state.extraction;
+    const selection = state.selection;
+    applyEdit(`deleted ${selection.id}`, () => selection.kind === "tip" ? deleteTip(document, selection.id) : deleteNode(document, selection.id), selection.kind);
 }
 
 /**
@@ -250,6 +358,7 @@ async function loadFile(file: File): Promise<void>
     state.draftRegion = null;
     state.draftSpan = null;
     state.selection = null;
+    clearHistory();
     state.mode = "pan";
     state.fileStem = file.name.replace(/\.[^.]+$/, "");
     runButton.disabled = false;
@@ -320,6 +429,7 @@ async function runExtraction(): Promise<void>
             source: state.fileStem,
         }, { onProgress: handleProgress });
         state.selection = null;
+        clearHistory();
         const turns = state.extraction.image.quarterTurns;
 
         if (turns !== 0)
@@ -546,6 +656,8 @@ function handleListInput(event: Event): void
         return;
     }
 
+    recordEdit(`label:${selection.id}`, `edited the label of ${selection.id}`);
+
     if (selection.kind === "tip")
     {
         const tip = findTipById(state.extraction, selection.id);
@@ -649,9 +761,11 @@ function handleRegionSet(region: Box): void
  */
 function handleAddTip(x: number, y: number): void
 {
-    if (state.extraction !== null)
+    const document = state.extraction;
+
+    if (document !== null)
     {
-        finishEdit(addTip(state.extraction, x, y), "tip");
+        applyEdit("added a tip", () => addTip(document, x, y), "tip");
     }
 }
 
@@ -664,9 +778,11 @@ function handleAddTip(x: number, y: number): void
  */
 function handleAddNode(x: number, y0: number, y1: number): void
 {
-    if (state.extraction !== null)
+    const document = state.extraction;
+
+    if (document !== null)
     {
-        finishEdit(addNode(state.extraction, x, y0, y1), "node");
+        applyEdit("added a node", () => addNode(document, x, y0, y1), "node");
     }
 }
 
@@ -678,9 +794,11 @@ function handleAddNode(x: number, y0: number, y1: number): void
  */
 function handleMoveUnder(selection: Selection, parentId: string): void
 {
-    if (state.extraction !== null)
+    const document = state.extraction;
+
+    if (document !== null)
     {
-        finishEdit(moveUnder(state.extraction, selection.id, parentId), selection.kind);
+        applyEdit(`moved ${selection.id} under ${parentId}`, () => moveUnder(document, selection.id, parentId), selection.kind);
     }
 }
 
@@ -729,10 +847,30 @@ function handleKeyDown(event: KeyboardEvent): void
     const target = event.target;
     const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
+    const shortcut = event.metaKey || event.ctrlKey;
+
     if (!typing && (event.key === "Delete" || event.key === "Backspace"))
     {
         event.preventDefault();
         deleteSelection();
+    }
+    else if (!typing && shortcut && (event.key === "z" || event.key === "Z"))
+    {
+        event.preventDefault();
+
+        if (event.shiftKey)
+        {
+            redo();
+        }
+        else
+        {
+            undo();
+        }
+    }
+    else if (!typing && shortcut && event.key === "y")
+    {
+        event.preventDefault();
+        redo();
     }
     else if (!typing && event.key === "Escape" && state.mode !== "pan")
     {
@@ -777,6 +915,8 @@ clearRegionButton.addEventListener("click", handleClearRegionClick);
 addTipButton.addEventListener("click", handleAddTipClick);
 addNodeButton.addEventListener("click", handleAddNodeClick);
 moveButton.addEventListener("click", handleMoveClick);
+undoButton.addEventListener("click", undo);
+redoButton.addEventListener("click", redo);
 deleteButton.addEventListener("click", handleDeleteClick);
 document.addEventListener("keydown", handleKeyDown);
 results.tipsList.addEventListener("click", handleListClick);

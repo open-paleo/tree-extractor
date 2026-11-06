@@ -80,7 +80,8 @@ missing vertical connector (it takes over the branches it crosses), *Move* then 
 node onto the node it should hang from (the parent it leaves collapses if only one child
 remains), and *Delete* removes the selected tip or node, dissolving a node into its parent. A
 piece the trace could not connect stays in the results, drawn in red; the quality check that
-names it selects it when clicked, and moving its root onto the right node restores it.
+names it selects it when clicked, and moving its root onto the right node restores it. Every
+edit can be undone and redone (Ctrl+Z and Ctrl+Shift+Z, or the buttons), back to the extraction.
 Below the Newick, the traced tree is redrawn clean: root on the left, tips evenly spaced, branch
 lengths from the time axis when one was read. It updates with every edit, doubles as a check on
 the trace, and downloads as SVG, so a figure that went in on its side with silhouettes and bands
