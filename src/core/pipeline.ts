@@ -7,7 +7,7 @@ import type { Box, ExtractionDocument, GrayImage, Mask, OcrEngine, Orientation, 
 import { applyProfileOverrides, createEmptyProfile, measureProfile, measureTextMarks } from "./profile.ts";
 import { checkTipAlignment, recoverAlignedTips } from "./alignment.ts";
 import { pruneDecorations } from "./decorations.ts";
-import { chooseRoot } from "./tree.ts";
+import { chooseRoot, pruneDegenerateNodes } from "./tree.ts";
 import { detectOrientation } from "./orientation.ts";
 import { detectSlantedLabels } from "./slant.ts";
 import { traceSlantedTree } from "./slanted.ts";
@@ -1332,7 +1332,16 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         }
     }
 
-    assignLabels(document);
+    // A junction the trace found nothing beyond, or one whose other children were lost, is
+    // no split; it goes before the labels, so a tip never hangs from an empty node.
+    const dissolved = pruneDegenerateNodes(document);
+
+    if (dissolved > 0)
+    {
+        document.qc.push({ severity: "info", code: "degenerate-node-dissolved", message: `${dissolved} node(s) with fewer than two children were dissolved`, subject: null });
+    }
+
+    assignLabels(document, slantedTrace !== null);
 
     // A slanted tree's spurs were pruned on the skeleton, and its labels pair less surely
     // (slanted text, tips at every depth), so an unlabelled tip is not debris there.

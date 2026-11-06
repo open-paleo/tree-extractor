@@ -195,7 +195,7 @@ function removeChild(node: TreeNode, childId: string): void
  * @param document - Document updated in place.
  * @param nodeId - Node to check.
  */
-function collapseDegenerateNode(document: ExtractionDocument, nodeId: string): void
+export function collapseDegenerateNode(document: ExtractionDocument, nodeId: string): void
 {
     const node = findNodeById(document, nodeId);
 

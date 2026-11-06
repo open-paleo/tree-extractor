@@ -399,7 +399,9 @@ export function removeChartLines(horizontals: Array<Segment>, verticals: Array<S
             let crossing = 0;
             let ending = 0;
 
-            if (length >= 0.4 * span)
+            // A line need only reach across a sixth of the figure: a stage line is cut into
+            // pieces wherever a junction of the tree happens to sit on it.
+            if (length >= 0.15 * span)
             {
                 for (const other of others)
                 {
@@ -425,7 +427,7 @@ export function removeChartLines(horizontals: Array<Segment>, verticals: Array<S
                 }
             }
 
-            if (crossing >= 6 && crossing >= ending / 4)
+            if (crossing >= 6)
             {
                 issues.push({ severity: "info", code: "chart-line-dropped", message: `${line.orientation} ${line.id} spanning the figure with ${crossing} segment(s) crossing and ${ending} ending on it was dropped as a chart line`, subject: null });
             }

@@ -118,8 +118,13 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    are everywhere in a time tree;
    when a bar traced as a segment of its own already had a tip at that end, the tip whose
    branch started further left stays and the other goes, and its label row may start as far back as the
-   branch did. A text row's box leaves out solid blocks (a range bar touching a label), so the
-   row neither clips the branch stub next to the bar nor sits over it; a block is a glyph wider
+   branch did. In a slanted tree the branch meets its label low, so there a level row may
+   stand up to a glyph and a fifth above the tip (Gallina 2014's Rebbachisaurus sat fifteen
+   pixels above its tip at a glyph height of eighteen). A text row's box leaves out solid blocks (a range bar touching a label), so the
+   row neither clips the branch stub next to the bar nor sits over it. Before labels are
+   assigned, every node with fewer than two children is dissolved (`pruneDegenerateNodes`): a
+   junction the trace found nothing beyond, or one whose other children were lost, is no
+   split, and the slanted tracer left two such empty nodes in Gallina's output; a block is a glyph wider
    than a letter that fills its box, or one lying mostly on a fat colored shape, since an
    outlined bar reads hollow once its edges are taken out as line art yet its fill is a marker
    (Bellardini 2025's labels began at their bars and paired with nothing; this took it from 6
@@ -142,10 +147,12 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    has one; Han 2024's longest branch lies a quarter of the figure above its chart). Everything
    in the strip goes,
    and its long rules and short verticals come back after the trace for the time axis, whose
-   ages are printed along one of them. A chart line the strip missed, one spanning two fifths
-   of the figure that six or more segments of the other direction cross outright, is dropped
-   on its own (`removeChartLines`; only crossings count, because the stem of a dense tree has
-   dozens of branches ending on it). The main tree is then chosen
+   ages are printed along one of them. A chart line the strip missed, one reaching across a
+   sixth of the figure that six or more segments of the other direction cross outright, is
+   dropped on its own (`removeChartLines`; only crossings count, because the stem of a dense
+   tree has dozens of branches ending on it, and a sixth rather than more because a stage
+   line through a tree is cut into pieces wherever a junction sits on it, as Hartman 2019's
+   are). The main tree is then chosen
    again as the piece with the most tips, and once
    more after labels are read, this time by named tips first (three at least, since a stray
    piece can carry a known name or two when there is no taxon list), since a stratigraphic

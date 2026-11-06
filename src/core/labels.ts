@@ -61,8 +61,9 @@ function comparePairingDistances(left: Pairing, right: Pairing): number
  * junction with the parent branch), nearest first, each line used at most once.
  *
  * @param document - Document whose tips, nodes and text lines are updated in place.
+ * @param slanted - Whether the tree was traced as slanted, whose labels sit higher above the tip.
  */
-export function assignLabels(document: ExtractionDocument): void
+export function assignLabels(document: ExtractionDocument, slanted = false): void
 {
     const glyph = document.glyphHeight;
     const used = new Set<string>();
@@ -86,7 +87,9 @@ export function assignLabels(document: ExtractionDocument): void
             // the row's bottom edge: from most of a row below it to about two glyphs above.
             const rowHeight = line.box.y1 - line.box.y0;
             const rise = line.frame === undefined ? (line.box.y0 + line.box.y1) / 2 - point.y : line.box.y1 - point.y;
-            const fits = line.frame === undefined ? Math.abs(rise) <= 0.8 * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
+            // A slanted branch meets its label low, at the baseline rather than the middle, so
+            // there the row may stand up to a glyph and a fifth above the tip.
+            const fits = line.frame === undefined ? rise <= 0.8 * glyph && rise >= -(slanted ? 1.2 : 0.8) * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
 
             if (isLabelSized(line, glyph) && fits && offset >= -reachBack && offset <= 5 * glyph)
             {

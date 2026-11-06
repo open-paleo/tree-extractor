@@ -3,6 +3,7 @@
  */
 
 import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
+import { collapseDegenerateNode } from "./edit.ts";
 
 /**
  * Collects the identifiers reachable from the root.
@@ -176,4 +177,36 @@ function countNamedTipsUnder(document: ExtractionDocument, rootId: string): numb
     }
 
     return named;
+}
+
+/**
+ * Dissolves every node with fewer than two children, repeating until none is left: a node
+ * whose only child was lost is no split, and a node with no child at all is a junction the
+ * trace found nothing beyond.
+ *
+ * @param document - Document updated in place.
+ * @returns Number of nodes dissolved.
+ */
+export function pruneDegenerateNodes(document: ExtractionDocument): number
+{
+    let dissolved = 0;
+    let found = true;
+
+    while (found)
+    {
+        found = false;
+
+        for (const node of document.nodes)
+        {
+            if (node.children.length < 2)
+            {
+                collapseDegenerateNode(document, node.id);
+                dissolved++;
+                found = true;
+                break;
+            }
+        }
+    }
+
+    return dissolved;
 }

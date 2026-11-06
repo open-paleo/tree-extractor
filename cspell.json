@@ -161,7 +161,8 @@
         "Velasco",
         "sauropodomorph",
         "spinosaurid",
-        "Bellardini"
+        "Bellardini",
+        "Rebbachisaurus"
     ],
     "ignorePaths": [
         "node_modules/**",
