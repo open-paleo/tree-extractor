@@ -162,7 +162,8 @@
         "sauropodomorph",
         "spinosaurid",
         "Bellardini",
-        "Rebbachisaurus"
+        "Rebbachisaurus",
+        "Turiasaurus"
     ],
     "ignorePaths": [
         "node_modules/**",

@@ -559,9 +559,10 @@ export function keepSmallShapes(mask: Mask, maxWidth: number, maxHeight: number)
  * @param labelReach - When given, a move is kept only when a text row begins within this many
  * pixels past the new end; shapes in any pale tint include stage bands and fills that no
  * label follows.
+ * @param labelRise - How far above or below the tip, in pixels, that row's middle may lie.
  * @returns Number of tips moved.
  */
-export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask, thickness: number, maxGap: number, labelReach: number | null = null): number
+export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask, thickness: number, maxGap: number, labelReach: number | null = null, labelRise = 0): number
 {
     const { width, height, data } = fat;
     const half = Math.max(1, Math.round(thickness));
@@ -572,7 +573,9 @@ export function extendTipsThroughMarkers(document: ExtractionDocument, fat: Mask
     {
         for (const line of document.textLines)
         {
-            if (line.glyphCount >= 2 && line.box.x0 >= end - 2 && line.box.x0 <= end + (labelReach as number) && line.box.y0 <= y + half && line.box.y1 >= y - half)
+            const center = (line.box.y0 + line.box.y1) / 2;
+
+            if (line.glyphCount >= 2 && line.box.x0 >= end - 2 && line.box.x0 <= end + (labelReach as number) && Math.abs(center - y) <= Math.max(half, labelRise))
             {
                 return true;
             }

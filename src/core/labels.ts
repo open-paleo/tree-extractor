@@ -3,7 +3,7 @@
  * against a name list.
  */
 
-import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressReporter, RotatedFrame, TextLine } from "./types.ts";
+import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressReporter, RotatedFrame, TextLine, TreeNode } from "./types.ts";
 import { cropAndScale } from "./raster.ts";
 import { mapPointToFrame } from "./geometry.ts";
 import { rotateGrayToFrame } from "./slant.ts";
@@ -61,10 +61,10 @@ function comparePairingDistances(left: Pairing, right: Pairing): number
  * junction with the parent branch), nearest first, each line used at most once.
  *
  * @param document - Document whose tips, nodes and text lines are updated in place.
- * @param slanted - Whether the tree was traced as slanted, whose labels sit higher above the tip.
  */
-export function assignLabels(document: ExtractionDocument, slanted = false): void
+export function assignLabels(document: ExtractionDocument): void
 {
+    const attached = collectAttachedTips(document);
     const glyph = document.glyphHeight;
     const used = new Set<string>();
     const tipPairings = new Array<Pairing>();
@@ -87,13 +87,19 @@ export function assignLabels(document: ExtractionDocument, slanted = false): voi
             // the row's bottom edge: from most of a row below it to about two glyphs above.
             const rowHeight = line.box.y1 - line.box.y0;
             const rise = line.frame === undefined ? (line.box.y0 + line.box.y1) / 2 - point.y : line.box.y1 - point.y;
-            // A slanted branch meets its label low, at the baseline rather than the middle, so
-            // there the row may stand up to a glyph and a fifth above the tip.
-            const fits = line.frame === undefined ? rise <= 0.8 * glyph && rise >= -(slanted ? 1.2 : 0.8) * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
+            // A label may stand above its branch rather than on it, up to a glyph and a third
+            // (Fanti 2015 sets every label that way; a slanted branch meets its label at the
+            // baseline), and rows are paired nearest first, so a row that far above belongs to
+            // this tip only when no tip sits nearer to it.
+            const fits = line.frame === undefined ? rise <= 0.8 * glyph && rise >= -1.3 * glyph : rise <= 0.7 * rowHeight && rise >= -(1.8 * glyph + 0.4 * rowHeight);
 
             if (isLabelSized(line, glyph) && fits && offset >= -reachBack && offset <= 5 * glyph)
             {
-                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(rise) });
+                // A tip of the main tree takes a row before a loose one does: a colored dot
+                // before a label can trace as a stub of its own, right where the label begins,
+                // and would otherwise take the row from the branch that ends short of it.
+                const loose = attached.has(tip.id) ? 0 : 100 * glyph;
+                tipPairings.push({ subject: tip.id, line, distance: Math.abs(offset) + Math.abs(rise) + loose });
             }
         }
     }
@@ -438,4 +444,44 @@ export async function readLabels(
             node.label = cleaned.length > 0 ? cleaned : null;
         }
     }
+}
+
+/**
+ * Collects the ids of the tips that hang from the document's root.
+ *
+ * @param document - Document.
+ * @returns Tip ids under the root.
+ */
+function collectAttachedTips(document: ExtractionDocument): Set<string>
+{
+    const attached = new Set<string>();
+    const nodeById = new Map<string, TreeNode>();
+
+    for (const node of document.nodes)
+    {
+        nodeById.set(node.id, node);
+    }
+
+    if (document.root === null)
+    {
+        return attached;
+    }
+
+    const pending = [document.root];
+
+    while (pending.length > 0)
+    {
+        const id = pending.pop() as string;
+        const node = nodeById.get(id);
+
+        if (node === undefined)
+        {
+            attached.add(id);
+            continue;
+        }
+
+        pending.push(...node.children);
+    }
+
+    return attached;
 }

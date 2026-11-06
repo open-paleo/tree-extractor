@@ -79,7 +79,11 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    figure's own node connectors (Loewen 2024 lost every short connector that way). A disc over
    a junction, a numbered or lettered node marker, is found first and replaced in the copy the
    segments are taken from by a cross of line thickness, since the disc's halves beside the
-   digit pass for glyphs and cut the branches under it. A dark solid disc is found in the text
+   digit pass for glyphs and cut the branches under it. (Spokes from each entering line to the
+   disc's center, in place of the cross, were tried for Fanti 2015's large pie charts, whose
+   branches leave at the top and bottom of a side, and dropped: the band outside a disc also
+   holds adjacent labels and pie outlines, and the spokes to those made things worse.) A dark
+   solid disc is found in the text
    ink (round to a tenth, a glyph and a half to three and a half across, half inked, with lines
    entering on two sides), a pale one in everything that is not white under a stricter fill,
    and an open ring by its hole: a white region touching no edge, a glyph to three across and
@@ -118,9 +122,14 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    are everywhere in a time tree;
    when a bar traced as a segment of its own already had a tip at that end, the tip whose
    branch started further left stays and the other goes, and its label row may start as far back as the
-   branch did. In a slanted tree the branch meets its label low, so there a level row may
-   stand up to a glyph and a fifth above the tip (Gallina 2014's Rebbachisaurus sat fifteen
-   pixels above its tip at a glyph height of eighteen). A text row's box leaves out solid blocks (a range bar touching a label), so the
+   branch did. A level row may stand up to a glyph and a third above its tip and four fifths
+   of one below: a slanted branch meets its label at the baseline (Gallina 2014's
+   Rebbachisaurus sat fifteen pixels above its tip at a glyph height of eighteen), and some
+   figures set every label above its branch (Fanti 2015). Rows are paired nearest first, so a
+   row that far above goes to this tip only when no tip sits nearer, and a tip of the main
+   tree takes a row before a loose one does, since the colored dot before a label can trace as
+   a stub of its own right where the label begins (Fanti's Turiasaurus). A text row's box
+   leaves out solid blocks (a range bar touching a label), so the
    row neither clips the branch stub next to the bar nor sits over it. Before labels are
    assigned, every node with fewer than two children is dissolved (`pruneDegenerateNodes`): a
    junction the trace found nothing beyond, or one whose other children were lost, is no

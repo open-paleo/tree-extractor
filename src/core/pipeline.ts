@@ -1323,7 +1323,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
 
         if (parameters.paleMarkers)
         {
-            extendTipsThroughMarkers(document, keepSmallShapes(paleMarkers, maxWidth, maxHeight), thickness, glyphHeight, 4 * glyphHeight);
+            extendTipsThroughMarkers(document, keepSmallShapes(paleMarkers, maxWidth, maxHeight), thickness, glyphHeight, 4 * glyphHeight, 1.3 * glyphHeight);
         }
 
         if (tipMarkers !== null)
@@ -1341,7 +1341,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         document.qc.push({ severity: "info", code: "degenerate-node-dissolved", message: `${dissolved} node(s) with fewer than two children were dissolved`, subject: null });
     }
 
-    assignLabels(document, slantedTrace !== null);
+    assignLabels(document);
 
     // A slanted tree's spurs were pruned on the skeleton, and its labels pair less surely
     // (slanted text, tips at every depth), so an unlabelled tip is not debris there.
