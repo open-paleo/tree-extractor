@@ -33,6 +33,7 @@ import {
     rotateRgbaQuarter,
     subtractMask,
     unionMask,
+    measureThinInkLuminance,
 } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
 import { extractSegments, findShortConnectors } from "./segments.ts";
@@ -191,6 +192,12 @@ export type Parameters = {
     nodeDiscs: boolean;
 
     /**
+     * Raise the ink thresholds for a figure drawn in gray, so that its lines and letters count
+     * as ink.
+     */
+    adaptiveInk: boolean;
+
+    /**
      * Whether to drop a stage chart along the top or bottom edge before tracing.
      */
     chartStrips: boolean;
@@ -256,6 +263,7 @@ export const defaultParameters: Parameters = {
     gapInkShare: 0.4,
     rotation: "auto",
     nodeDiscs: true,
+    adaptiveInk: true,
     chartStrips: true,
     paleMarkers: true,
     slantedTrees: true,
@@ -1032,6 +1040,50 @@ function replaceZoneLines(lines: Array<TextLine>, slanted: SlantedLabels): Array
 }
 
 /**
+ * Raises the ink thresholds for a figure drawn in gray: when the thin ink's commonest
+ * luminance is well above black and holds a good share of that ink, the figure's lines and
+ * letters are gray by design (a tree whose parts under discussion are black and the rest
+ * gray), and thresholds set for black ink fragment the lines and miss the letters. The
+ * thresholds move up to sit above the gray, capped short of white so that bands and the
+ * antialiased fringe of ordinary ink stay out. A scan, whose pale noise is spread thin over
+ * many luminances, has no such mode; a black figure whose fringe or light bands happen to
+ * be its commonest thin ink is told by its dark share; both are left alone.
+ *
+ * @param parameters - Parameters updated in place.
+ * @param image - Source image as analyzed.
+ * @returns A quality check describing the change, or null when nothing changed.
+ */
+function adaptInkThresholds(parameters: Parameters, image: RgbaImage): QcIssue | null
+{
+    const thinInk = measureThinInkLuminance(image);
+
+    // Gray ink lies between the near-black of ordinary ink and the near-white fringe every
+    // figure has around its lines; and the figure must be mostly gray, not a black figure
+    // with a light fringe or a light band.
+    if (thinInk.mode < 96 || thinInk.mode >= 192 || thinInk.share < 0.25 || thinInk.darkShare >= 0.5 || thinInk.pixels < 1000)
+    {
+        return null;
+    }
+
+    const binTop = thinInk.mode + 16;
+    const before = `${parameters.inkThreshold}/${parameters.lineThreshold}/${parameters.lineThresholdWeak}`;
+    const inkThreshold = Math.min(225, Math.max(parameters.inkThreshold, binTop + 16));
+    const lineThreshold = Math.min(230, Math.max(parameters.lineThreshold, binTop + 24));
+    const lineThresholdWeak = Math.min(240, Math.max(parameters.lineThresholdWeak, binTop + 44));
+
+    if (inkThreshold === parameters.inkThreshold && lineThreshold === parameters.lineThreshold && lineThresholdWeak === parameters.lineThresholdWeak)
+    {
+        return null;
+    }
+
+    parameters.inkThreshold = inkThreshold;
+    parameters.lineThreshold = lineThreshold;
+    parameters.lineThresholdWeak = lineThresholdWeak;
+
+    return { severity: "info", code: "thresholds-raised", message: `the figure's thin ink is gray (mode luminance ${thinInk.mode}-${binTop - 1}, ${Math.round(100 * thinInk.share)}% of it), so the ink thresholds were raised from ${before} to ${parameters.inkThreshold}/${parameters.lineThreshold}/${parameters.lineThresholdWeak}`, subject: null };
+}
+
+/**
  * Records how the figure's orientation was decided, when it was turned or could not be
  * decided.
  *
@@ -1078,12 +1130,19 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     // works in the turned frame, and the document says how many turns it took.
     const sourceCrop = sourceRegion === null ? sourceImage : cropImage(sourceImage, sourceRegion);
     const orientationStarted = performance.now();
+    const inkAdaptation = parameters.adaptiveInk ? adaptInkThresholds(parameters, sourceCrop) : null;
     const orientationFind = parameters.rotation === "auto" ? detectOrientation(sourceCrop, parameters.inkThreshold, parameters.lineThreshold, parameters.maxChroma) : null;
     const orientation: Orientation = orientationFind === null ? "root-left" : orientationFind.orientation;
     const slantedFigure = parameters.slantedTrees && orientationFind !== null && orientationFind.slanted;
     const quarterTurns = orientation === "root-bottom" ? 1 : orientation === "root-top" ? 3 : 0;
     const image = quarterTurns === 0 ? sourceCrop : rotateRgbaQuarter(sourceCrop, quarterTurns === 1);
     const orientationIssues = describeOrientation(orientationFind, quarterTurns);
+
+    if (inkAdaptation !== null)
+    {
+        orientationIssues.unshift(inkAdaptation);
+    }
+
     const fullWidth = quarterTurns % 2 === 0 ? sourceImage.width : sourceImage.height;
     const fullHeight = quarterTurns % 2 === 0 ? sourceImage.height : sourceImage.width;
     const region = sourceRegion === null ? null : rotateBox(sourceRegion, sourceImage.width, sourceImage.height, quarterTurns);

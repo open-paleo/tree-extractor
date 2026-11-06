@@ -30,7 +30,20 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
 
 ## Pipeline
 
-0. **Orientation.** A tree drawn with its root at the bottom or top is turned a quarter so
+0a. **Gray ink.** A figure drawn in gray, as a tree whose parts under discussion are black and
+   the rest gray (Turner 2012), has lines just under the line threshold, so their soft edges
+   fragment them, and letters above the text threshold, so nothing is read. Before anything
+   else the luminance of the thin ink is measured (`measureThinInkLuminance`: pixels darker
+   than near-white whose run of such pixels is short in one direction, which is lines and
+   letters but not fills and bands), and when its commonest sixteen-wide bin lies between 96
+   and 191, holds a quarter of the thin ink, and less than half the thin ink is near-black, the
+   thresholds move up to sit above that gray, capped short of white. A black figure whose
+   light fringe or bands happen to be its commonest thin ink is told by its dark share (Li
+   2024's fringe at 224 would otherwise have raised the thresholds and lost its tree). Turner
+   2012's figure 75 goes from 4 tips and no name to 14 and 11; two or three census figures
+   are of this kind.
+
+0b. **Orientation.** A tree drawn with its root at the bottom or top is turned a quarter so
    that its root is on the left, and everything after this works in the turned frame (the
    document records the turns, and the viewer turns its copy of the image to match). The
    decision comes from where branches end: a branch ends free at a tip, with the label just

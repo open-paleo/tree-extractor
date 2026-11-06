@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import type { Mask } from "../src/core/types.ts";
-import { dilate, erode } from "../src/core/raster.ts";
+import { dilate, erode, measureThinInkLuminance } from "../src/core/raster.ts";
 
 /**
  * The square-neighborhood definition, written the slow way, as the reference.
@@ -74,4 +74,36 @@ test("separable dilate and erode match the square-neighborhood definition", () =
         assert.deepEqual([...dilate(mask, radius).data], [...transformSlowly(mask, radius, false).data], `dilate ${width}x${height} r${radius}`);
         assert.deepEqual([...erode(mask, radius).data], [...transformSlowly(mask, radius, true).data], `erode ${width}x${height} r${radius}`);
     }
+});
+
+test("measureThinInkLuminance finds the gray of a figure drawn in gray and the black of one in black", () =>
+{
+    function createImage(shade: number): { width: number; height: number; data: Uint8ClampedArray }
+    {
+        const width = 120;
+        const height = 80;
+        const data = new Uint8ClampedArray(width * height * 4).fill(255);
+
+        for (let y = 0; y < height; y++)
+        {
+            for (let x = 0; x < width; x++)
+            {
+                const line = (y >= 10 && y < 13) || (y >= 40 && y < 43) || (y >= 70 && y < 73) || (x >= 5 && x < 8);
+
+                if (line)
+                {
+                    const index = (y * width + x) * 4;
+                    data[index] = shade;
+                    data[index + 1] = shade;
+                    data[index + 2] = shade;
+                }
+            }
+        }
+
+        return { width, height, data };
+    }
+
+    assert.equal(measureThinInkLuminance(createImage(172)).mode, 160);
+    assert.ok(measureThinInkLuminance(createImage(172)).share > 0.9);
+    assert.equal(measureThinInkLuminance(createImage(20)).mode, 16);
 });

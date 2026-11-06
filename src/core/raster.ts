@@ -902,3 +902,115 @@ export function compareNumbers(left: number, right: number): number
 {
     return left - right;
 }
+
+/**
+ * How light a figure's thin ink is.
+ */
+export type ThinInkLuminance = {
+    /**
+     * Lower edge of the most populated sixteen-wide luminance bin of the thin ink, 0 to 240.
+     */
+    mode: number;
+
+    /**
+     * Share of the thin ink in that bin.
+     */
+    share: number;
+
+    /**
+     * Thin ink pixels counted.
+     */
+    pixels: number;
+
+    /**
+     * Share of the thin ink darker than luminance 96: black and near-black ink.
+     */
+    darkShare: number;
+};
+
+/**
+ * Measures the luminance of a figure's thin ink: pixels darker than near-white whose run of
+ * such pixels is short in at least one direction, which is lines and letters but not fills
+ * and bands. A figure drawn in black has its mode near zero; one drawn in gray, as a tree
+ * whose parts under discussion are black and the rest gray, has it well up the scale.
+ *
+ * @param image - Source image.
+ * @returns The mode and its share.
+ */
+export function measureThinInkLuminance(image: RgbaImage): ThinInkLuminance
+{
+    const { width, height, data } = image;
+    const luminance = new Uint8Array(width * height);
+
+    for (let index = 0; index < width * height; index++)
+    {
+        luminance[index] = Math.round(0.299 * data[index * 4] + 0.587 * data[index * 4 + 1] + 0.114 * data[index * 4 + 2]);
+    }
+
+    const nearWhite = 235;
+    const maxRun = 12;
+    const bins = new Array<number>(16).fill(0);
+    let pixels = 0;
+
+    for (let y = 0; y < height; y++)
+    {
+        for (let x = 0; x < width; x++)
+        {
+            const value = luminance[y * width + x];
+
+            if (value >= nearWhite)
+            {
+                continue;
+            }
+
+            let vertical = 1;
+
+            for (let step = 1; step <= maxRun && y + step < height && luminance[(y + step) * width + x] < nearWhite; step++)
+            {
+                vertical++;
+            }
+
+            for (let step = 1; step <= maxRun && y - step >= 0 && luminance[(y - step) * width + x] < nearWhite; step++)
+            {
+                vertical++;
+            }
+
+            let horizontal = 1;
+
+            for (let step = 1; step <= maxRun && x + step < width && luminance[y * width + x + step] < nearWhite; step++)
+            {
+                horizontal++;
+            }
+
+            for (let step = 1; step <= maxRun && x - step >= 0 && luminance[y * width + x - step] < nearWhite; step++)
+            {
+                horizontal++;
+            }
+
+            if (Math.min(vertical, horizontal) <= maxRun)
+            {
+                bins[Math.min(15, Math.floor(value / 16))]++;
+                pixels++;
+            }
+        }
+    }
+
+    let mode = 0;
+
+    for (let bin = 1; bin < 16; bin++)
+    {
+        if (bins[bin] > bins[mode])
+        {
+            mode = bin;
+        }
+    }
+
+    let dark = 0;
+
+    for (let bin = 0; bin < 6; bin++)
+    {
+        dark += bins[bin];
+    }
+
+    return { mode: mode * 16, share: pixels === 0 ? 0 : bins[mode] / pixels, pixels, darkShare: pixels === 0 ? 0 : dark / pixels };
+}
