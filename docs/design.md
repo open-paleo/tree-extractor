@@ -326,6 +326,13 @@ Large-font figures read two to three times faster for it; small fonts are unchan
   anything left is flagged by the quality checks and is one click to delete in the viewer. Every
   real benchmark figure is now identical, so the remaining risk is a real tip whose label was
   not found being dropped as debris; such a tip is short and unlabelled, which the viewer shows.
+  A piece the trace could not connect stays in the document as a root of its own, drawn in red;
+  the quality check that names it selects it when clicked, and the viewer's Move tool, which
+  drags a tip or node onto the node it should hang from, restores it (`moveUnder` in
+  `src/core/edit.ts`). The checks about loose pieces are remade at the end of the pipeline and
+  after every edit (`refreshDisconnectedIssues`), since the trace records them before later
+  steps dissolve nodes and choose the root again, and a check naming an element that no longer
+  exists leads nowhere.
 - On the synthetic benchmark, clean, serif, dense and most touching-label figures come out
   identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
   most of a short branch, or where a range bar extends left past the branch's start; both are

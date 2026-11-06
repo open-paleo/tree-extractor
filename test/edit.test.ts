@@ -4,6 +4,7 @@ import { test } from "node:test";
 import type { ExtractionDocument } from "../src/core/types.ts";
 import { createEmptyProfile } from "../src/core/profile.ts";
 import { addNode, addTip, deleteNode, deleteTip, moveUnder } from "../src/core/edit.ts";
+import { refreshDisconnectedIssues } from "../src/core/tree.ts";
 import { formatDocumentAsNewick } from "../src/core/newick.ts";
 
 /**
@@ -137,4 +138,31 @@ test("moveUnder refuses a node's own descendant, the root and the current parent
     assert.equal(moveUnder(document, "n2", "n2").ok, false);
     assert.equal(moveUnder(document, "t2", "n2").ok, false);
     assert.equal(formatDocumentAsNewick(document), "(t1,(t2,t3));");
+});
+
+test("moveUnder reattaches the root of a disconnected piece", () =>
+{
+    const document = createFlatTree();
+    document.nodes.push({ id: "n9", x: 80, y0: 130, y1: 145, attachY: null, parent: null, children: ["t8", "t9"], textLine: null, label: null, source: "traced", age: null });
+    document.tips.push(
+        { id: "t8", x: 150, y: 130, parent: "n9", textLine: null, label: null, match: null, source: "traced", age: null },
+        { id: "t9", x: 150, y: 145, parent: "n9", textLine: null, label: null, match: null, source: "traced", age: null },
+    );
+    const result = moveUnder(document, "n9", "n1");
+    assert.equal(result.ok, true);
+    assert.equal(formatDocumentAsNewick(document), "(t1,t2,t3,(t8,t9));");
+    assert.equal(document.root, "n1");
+});
+
+test("refreshDisconnectedIssues names the loose pieces that exist now", () =>
+{
+    const document = createFlatTree();
+    document.qc.push({ severity: "warning", code: "disconnected-subtree", message: "node n99 roots a disconnected subtree with 2 tip(s)", subject: "n99" });
+    document.nodes.push({ id: "n9", x: 80, y0: 130, y1: 145, attachY: null, parent: null, children: ["t8"], textLine: null, label: null, source: "traced", age: null });
+    document.tips.push(
+        { id: "t8", x: 150, y: 130, parent: "n9", textLine: null, label: null, match: null, source: "traced", age: null },
+        { id: "t9", x: 150, y: 145, parent: null, textLine: null, label: null, match: null, source: "traced", age: null },
+    );
+    refreshDisconnectedIssues(document);
+    assert.deepEqual(document.qc.map((issue) => issue.subject), ["n9", "t9"]);
 });

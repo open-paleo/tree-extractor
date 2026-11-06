@@ -184,6 +184,8 @@ ol.items li.detached { opacity: 0.6; }
 ul#qc { padding: 4px 6px 4px 24px; font-size: 13px; max-height: 200px; }
 ul#qc li.error { color: #cf222e; }
 ul#qc li.warning { color: #9a6700; }
+ul#qc li.subject { cursor: pointer; }
+ul#qc li.subject:hover { text-decoration: underline; }
 ul#qc li.info { color: var(--muted); }
 .buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 

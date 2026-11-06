@@ -17,6 +17,7 @@ import { downloadDocumentFile, downloadNewickFile, downloadNexusFile, downloadSv
 import { PointerController } from "./interaction.ts";
 import type { EditResult } from "../core/edit.ts";
 import { addNode, addTip, deleteNode, deleteTip, findNodeById, findTipById, moveUnder } from "../core/edit.ts";
+import { refreshDisconnectedIssues } from "../core/tree.ts";
 import { ExtractionClient } from "./extraction-client.ts";
 
 /**
@@ -98,7 +99,7 @@ function updateModeHint(): void
         region: "Drag a rectangle around the tree, then press Extract tree to analyze only that area. Escape cancels.",
         "add-tip": "Click where the new tip's branch ends. Escape cancels.",
         "add-node": "Drag along the missing vertical connector, from its top to its bottom. Escape cancels.",
-        move: "Drag a tip or node and drop it on the node it should hang from. Escape leaves move mode.",
+        move: "Drag a tip or node and drop it on the node it should hang from; a loose piece, drawn in red, is restored by moving its root. Escape leaves move mode.",
     };
     const hint = hints[state.mode];
     modeHint.hidden = hint === undefined;
@@ -148,6 +149,11 @@ function finishEdit(result: EditResult, kind: "tip" | "node"): void
         redraw();
 
         return;
+    }
+
+    if (state.extraction !== null)
+    {
+        refreshDisconnectedIssues(state.extraction);
     }
 
     renderResults(results, state.extraction);
@@ -775,6 +781,7 @@ deleteButton.addEventListener("click", handleDeleteClick);
 document.addEventListener("keydown", handleKeyDown);
 results.tipsList.addEventListener("click", handleListClick);
 results.nodesList.addEventListener("click", handleListClick);
+results.qcList.addEventListener("click", handleListClick);
 results.tipsList.addEventListener("input", handleListInput);
 results.nodesList.addEventListener("input", handleListInput);
 downloadNewick.addEventListener("click", handleDownloadNewick);

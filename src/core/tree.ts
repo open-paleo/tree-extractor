@@ -2,7 +2,7 @@
  * Traversal helpers over the tree part of an extraction document.
  */
 
-import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
+import type { ExtractionDocument, QcIssue, Tip, TreeNode } from "./types.ts";
 import { collapseDegenerateNode } from "./edit.ts";
 
 /**
@@ -209,4 +209,42 @@ export function pruneDegenerateNodes(document: ExtractionDocument): number
     }
 
     return dissolved;
+}
+
+/**
+ * Replaces the quality checks about disconnected pieces with ones that match the document as
+ * it stands: the trace records them before later steps dissolve nodes, drop tips and choose
+ * the root again, and an issue naming an element that no longer exists leads nowhere.
+ *
+ * @param document - Document updated in place.
+ */
+export function refreshDisconnectedIssues(document: ExtractionDocument): void
+{
+    const kept = new Array<QcIssue>();
+
+    for (const issue of document.qc)
+    {
+        if (issue.code !== "disconnected-subtree" && issue.code !== "disconnected-tip")
+        {
+            kept.push(issue);
+        }
+    }
+
+    for (const node of document.nodes)
+    {
+        if (node.parent === null && node.id !== document.root)
+        {
+            kept.push({ severity: "warning", code: "disconnected-subtree", message: `node ${node.id} roots a disconnected subtree with ${countTipsUnder(document, node.id)} tip(s)`, subject: node.id });
+        }
+    }
+
+    for (const tip of document.tips)
+    {
+        if (tip.parent === null)
+        {
+            kept.push({ severity: "warning", code: "disconnected-tip", message: `tip ${tip.id} is not connected to any node`, subject: tip.id });
+        }
+    }
+
+    document.qc = kept;
 }

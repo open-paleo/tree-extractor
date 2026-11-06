@@ -569,7 +569,9 @@ export function addNode(document: ExtractionDocument, x: number, y0: number, y1:
  * Moves a tip or node under another node. The element leaves its parent, which collapses
  * when left with one child, and joins the new parent's children in order of height; the new
  * parent's vertical grows to reach the element when it does not already. Moving an element
- * under itself or one of its own descendants is refused, as is moving the root.
+ * under itself or one of its own descendants is refused, as is moving the root; the root of
+ * a disconnected piece, which has no parent either, may be moved, and that is how a piece the
+ * trace could not connect is restored to the tree.
  *
  * @param document - Document updated in place.
  * @param id - Tip or node to move.
@@ -604,7 +606,7 @@ export function moveUnder(document: ExtractionDocument, id: string, parentId: st
         return { ok: false, message: `${parentId} lies under ${id}; a node cannot hang from its own descendant`, id: null };
     }
 
-    if (node !== null && node.parent === null)
+    if (node !== null && node.id === document.root)
     {
         return { ok: false, message: `${id} is the root; move its children instead`, id: null };
     }
