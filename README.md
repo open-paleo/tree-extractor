@@ -55,6 +55,10 @@ npm install
 # Batch: one image in; Newick, Nexus, a redrawn SVG and the JSON document out, with a QC report on stdout
 npm run extract -- extract figure.png --names taxa.txt --out results/ --overlay
 
+# A folder of figures, each with its own name list beside it (figure.txt next to figure.png),
+# or a shared names.txt in the folder; one summary line per figure
+npm run extract -- extract figures/ --out results/
+
 # Interactive: build the browser bundle and serve the viewer at http://localhost:8787/src/web/
 npm run web
 ```
@@ -101,6 +105,7 @@ trees is read one region at a time.
 
 ```sh
 npm test                 # unit tests (node:test)
+npm run test:web         # drives the built viewer in headless Chromium through an editing session
 npm run bench            # benchmark against gold trees; see bench/README.md for supplying images
 npm run bench:strict     # the same, failing when a case expected identical is not
 npm run bench:holdout    # the held-out figures, cold

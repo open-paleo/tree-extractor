@@ -70,7 +70,11 @@ function parseArguments(argv: Array<string>): Arguments
 function printUsage(): void
 {
     console.log([
-        "Usage: tree-extractor extract <image> [options]",
+        "Usage: tree-extractor extract <image or folder> [options]",
+        "",
+        "A folder is read image by image (.png, .jpg), each with the name list of its own name",
+        "(figure.txt beside figure.png), else --names, else names.txt in the folder, and one",
+        "line is printed per figure.",
         "",
         "Options:",
         "  --names <file>   Text file with one taxon name per line to match labels against",
@@ -205,47 +209,75 @@ function parseCrop(text: string): Box
 }
 
 /**
- * Runs the extract command.
- *
- * @param parsed - Parsed arguments.
- * @returns Process exit code.
+ * What one extraction needs beyond its image.
  */
-async function runExtract(parsed: Arguments): Promise<number>
+type ExtractJob = {
+    /**
+     * Taxon names to match labels against.
+     */
+    names: Array<string>;
+
+    /**
+     * Known taxa to fall back on.
+     */
+    knownNames: Array<string>;
+
+    /**
+     * Where the outputs go.
+     */
+    outDir: string;
+
+    /**
+     * Region of the image to analyze, or null for all of it.
+     */
+    region: Box | null;
+
+    /**
+     * OCR engine, or null to skip reading labels.
+     */
+    ocr: Awaited<ReturnType<typeof createTesseractOcr>> | null;
+
+    /**
+     * Profile values fixed by the user.
+     */
+    profileOverrides: ProfileOverrides;
+
+    /**
+     * Whether to turn a figure drawn on its side.
+     */
+    rotation: "auto" | "none";
+
+    /**
+     * Whether to write branch lengths.
+     */
+    lengths: boolean;
+
+    /**
+     * Whether to write the overlay image.
+     */
+    overlay: boolean;
+
+    /**
+     * Whether to print the quality checks, profile and tree; a folder run prints one line per
+     * figure instead.
+     */
+    verbose: boolean;
+};
+
+/**
+ * Extracts one figure and writes its outputs.
+ *
+ * @param imagePath - The figure.
+ * @param job - Everything else.
+ * @returns Number of error-level quality checks.
+ */
+async function extractOne(imagePath: string, job: ExtractJob): Promise<number>
 {
-    const imagePath = parsed.positional[0];
-
-    if (imagePath === undefined)
-    {
-        printUsage();
-
-        return 2;
-    }
-
-    const namesFlag = parsed.flags.get("names");
-    const names = typeof namesFlag === "string" ? readNameList(namesFlag) : new Array<string>();
-    const knownNames = readKnownNames(parsed);
-
-    const outFlag = parsed.flags.get("out");
-    const outDir = typeof outFlag === "string" ? outFlag : process.cwd();
-    fs.mkdirSync(outDir, { recursive: true });
-
     const image = await loadImage(imagePath);
-    const cropFlag = parsed.flags.get("crop");
-    const region = typeof cropFlag === "string" ? parseCrop(cropFlag) : null;
-    const ocr = parsed.flags.has("no-ocr") ? null : await createTesseractOcr(tesseract);
-    const profileFlag = parsed.flags.get("profile");
-    const profileOverrides = typeof profileFlag === "string" ? parseProfileOverrides(profileFlag) : {};
-    const rotation = parsed.flags.has("no-rotation") ? "none" : "auto";
-    const document = await extractTree(image, { ocr, names, knownNames, source: path.basename(imagePath), region, parameters: { profileOverrides, rotation } });
-
-    if (ocr !== null)
-    {
-        await ocr.terminate();
-    }
-
-    const stem = path.join(outDir, path.basename(imagePath, path.extname(imagePath)));
+    const document = await extractTree(image, { ocr: job.ocr, names: job.names, knownNames: job.knownNames, source: path.basename(imagePath), region: job.region, parameters: { profileOverrides: job.profileOverrides, rotation: job.rotation } });
+    const stem = path.join(job.outDir, path.basename(imagePath, path.extname(imagePath)));
     fs.writeFileSync(`${stem}.json`, JSON.stringify(document, null, 2));
-    const newick = formatDocumentAsNewick(document, { branchLengths: !parsed.flags.has("no-lengths") });
+    const newick = formatDocumentAsNewick(document, { branchLengths: job.lengths });
 
     if (newick !== null)
     {
@@ -261,7 +293,7 @@ async function runExtract(parsed: Arguments): Promise<number>
         }
 
         fs.writeFileSync(`${stem}.nex`, formatNexus(newick, taxa, "extracted", `Extracted from ${path.basename(imagePath)} by tree-extractor`));
-        const svg = renderTreeSvg(document, { branchLengths: !parsed.flags.has("no-lengths") });
+        const svg = renderTreeSvg(document, { branchLengths: job.lengths });
 
         if (svg !== null)
         {
@@ -269,33 +301,188 @@ async function runExtract(parsed: Arguments): Promise<number>
         }
     }
 
-    if (parsed.flags.has("overlay"))
+    if (job.overlay)
     {
         await writeOverlay(imagePath, document, `${stem}.overlay.png`);
     }
 
-    for (const issue of document.qc)
-    {
-        console.log(`${issue.severity.padEnd(7)} ${issue.code}: ${issue.message}`);
-    }
-
-    for (const line of formatProfile(document.profile))
-    {
-        console.log(`profile ${line}`);
-    }
-
-    console.log(`timings: ${formatTimings(document.timings)}`);
-    console.log(newick ?? "(no tree)");
+    let errors = 0;
+    let warnings = 0;
 
     for (const issue of document.qc)
     {
-        if (issue.severity === "error")
+        errors += issue.severity === "error" ? 1 : 0;
+        warnings += issue.severity === "warning" ? 1 : 0;
+
+        if (job.verbose)
         {
-            return 1;
+            console.log(`${issue.severity.padEnd(7)} ${issue.code}: ${issue.message}`);
         }
     }
 
-    return 0;
+    if (job.verbose)
+    {
+        for (const line of formatProfile(document.profile))
+        {
+            console.log(`profile ${line}`);
+        }
+
+        console.log(`timings: ${formatTimings(document.timings)}`);
+        console.log(newick ?? "(no tree)");
+    }
+    else
+    {
+        let inTree = 0;
+        let named = 0;
+
+        for (const tip of document.tips)
+        {
+            if (tip.parent !== null)
+            {
+                inTree++;
+                named += tip.match !== null && tip.match.accepted ? 1 : 0;
+            }
+        }
+
+        console.log(`${path.basename(imagePath).padEnd(40)} ${String(inTree).padStart(3)} tips ${String(named).padStart(3)} named ${String(warnings).padStart(3)} warning(s) ${String(errors).padStart(2)} error(s)`);
+    }
+
+    return errors;
+}
+
+/**
+ * Lists the images in a folder, sorted by name.
+ *
+ * @param directory - The folder.
+ * @returns Image paths.
+ */
+function listImages(directory: string): Array<string>
+{
+    const images = new Array<string>();
+
+    for (const name of fs.readdirSync(directory).sort())
+    {
+        const extension = path.extname(name).toLowerCase();
+
+        if (extension === ".png" || extension === ".jpg" || extension === ".jpeg")
+        {
+            images.push(path.join(directory, name));
+        }
+    }
+
+    return images;
+}
+
+/**
+ * Finds the name list for a figure in a folder: a text file of the figure's own name beside
+ * it, else the --names file, else names.txt in the folder.
+ *
+ * @param imagePath - The figure.
+ * @param shared - Names from --names, if any.
+ * @returns The names.
+ */
+function findNamesForImage(imagePath: string, shared: Array<string> | null): Array<string>
+{
+    const own = path.join(path.dirname(imagePath), `${path.basename(imagePath, path.extname(imagePath))}.txt`);
+
+    if (fs.existsSync(own))
+    {
+        return readNameList(own);
+    }
+
+    if (shared !== null)
+    {
+        return shared;
+    }
+
+    const common = path.join(path.dirname(imagePath), "names.txt");
+
+    return fs.existsSync(common) ? readNameList(common) : [];
+}
+
+/**
+ * Runs the extract command on one image or on every image in a folder.
+ *
+ * @param parsed - Parsed arguments.
+ * @returns Process exit code.
+ */
+async function runExtract(parsed: Arguments): Promise<number>
+{
+    const target = parsed.positional[0];
+
+    if (target === undefined)
+    {
+        printUsage();
+
+        return 2;
+    }
+
+    const namesFlag = parsed.flags.get("names");
+    const sharedNames = typeof namesFlag === "string" ? readNameList(namesFlag) : null;
+    const knownNames = readKnownNames(parsed);
+    const outFlag = parsed.flags.get("out");
+    const outDir = typeof outFlag === "string" ? outFlag : process.cwd();
+    fs.mkdirSync(outDir, { recursive: true });
+    const cropFlag = parsed.flags.get("crop");
+    const region = typeof cropFlag === "string" ? parseCrop(cropFlag) : null;
+    const ocr = parsed.flags.has("no-ocr") ? null : await createTesseractOcr(tesseract);
+    const profileFlag = parsed.flags.get("profile");
+    const profileOverrides = typeof profileFlag === "string" ? parseProfileOverrides(profileFlag) : {};
+    const folder = fs.statSync(target).isDirectory();
+    const job: ExtractJob = {
+        names: sharedNames ?? [],
+        knownNames,
+        outDir,
+        region,
+        ocr,
+        profileOverrides,
+        rotation: parsed.flags.has("no-rotation") ? "none" : "auto",
+        lengths: !parsed.flags.has("no-lengths"),
+        overlay: parsed.flags.has("overlay"),
+        verbose: !folder,
+    };
+    let errors = 0;
+
+    try
+    {
+        if (!folder)
+        {
+            errors = await extractOne(target, job);
+        }
+        else
+        {
+            const images = listImages(target);
+
+            if (images.length === 0)
+            {
+                console.log(`no .png or .jpg images in ${target}`);
+
+                return 2;
+            }
+
+            for (const imagePath of images)
+            {
+                try
+                {
+                    errors += await extractOne(imagePath, { ...job, names: findNamesForImage(imagePath, sharedNames) });
+                }
+                catch (error)
+                {
+                    errors++;
+                    console.log(`${path.basename(imagePath).padEnd(40)} failed: ${error instanceof Error ? error.message : String(error)}`);
+                }
+            }
+        }
+    }
+    finally
+    {
+        if (ocr !== null)
+        {
+            await ocr.terminate();
+        }
+    }
+
+    return errors > 0 ? 1 : 0;
 }
 
 const parsed = parseArguments(process.argv.slice(2));
