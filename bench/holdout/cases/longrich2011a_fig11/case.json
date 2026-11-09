@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/longrich2011a_fig11.png",
+  "names": "names.txt",
+  "source": "Longrich 2011, Cretaceous Research 32: 264-276, Fig. 11: strict consensus of six most parsimonious trees, time-calibrated; rectangular, root left, tips right, on a green background with lighter 5-Myr bands, range bars or dots at the tips, a dashed range for Agujaceratops, support values (bootstrap/Bremer) at nodes and a curved arrow. Image: census figure (1102x834 px).",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated ceratopsid tree, 22 tips, with three polytomies: the root (Leptoceratops, Protoceratops, the rest), Styracosaurus + Einiosaurus + (Achelousaurus, Pachyrhinosaurus), and Utahceratops + Pentaceratops + the rest of Chasmosaurinae. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

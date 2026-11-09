@@ -1,0 +1,16 @@
+{
+  "image": "../../../../../corpus/census/figures/arbour2015a_fig1.png",
+  "names": "names.txt",
+  "source": "Arbour & Currie 2015, Journal of Systematic Palaeontology 14: 385-444, Fig. 1: previous phylogenetic analyses of Ankylosauria and Ankylosauridae, five rectangular trees from earlier studies with support values; the gold is the largest, Thompson et al. (2012), in the lower right. Image: census figure (998x1142 px).",
+  "region": {
+    "x0": 389,
+    "y0": 525,
+    "x1": 998,
+    "y1": 1142
+  },
+  "region_note": "Thompson et al. (2012) tree, lower right; the other four trees are excluded",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (\"Crichtonsaurus\" benxiensis without its quotation marks)",
+  "gold": "gold.nex",
+  "gold_note": "Thyreophoran tree (50% majority rule of Thompson et al. 2012), 27 tips, one polytomy: Zhongyuansaurus + Tsagantegia + the rest of Ankylosauridae. Numbers at nodes are support values. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node against the listed node lines; topology only."
+}

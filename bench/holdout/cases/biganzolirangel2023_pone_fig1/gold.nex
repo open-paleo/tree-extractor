@@ -1,0 +1,44 @@
+#NEXUS
+
+[ biganzolirangel2023_pone_fig1: Emballonurid bat tree, 31 tips, fully resolved; several tips are collapsed clades drawn as triangles and keep their printed names. 'Peropteryx macrotis' is printed four times; the gold numbers them _1 to _4 from top to bottom. The Rhynchonycteris naso samples keep their printed qualifiers without brackets (Rhynchonycteris_naso_11_Belize, _Panama, _Belize). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=31;
+    TAXLABELS
+        Taphozous_melanopogon
+        Balantiopteryx_infusca
+        Balantiopteryx_io
+        Balantiopteryx_plicata
+        Cormura_brevirostris
+        Peropteryx_kappleri
+        Peropteryx_macrotis_1
+        Peropteryx_macrotis_2
+        Peropteryx_macrotis_3
+        Peropteryx_trinitatis
+        Peropteryx_macrotis_4
+        Peropteryx_pallidoptera
+        Peropteryx_leucoptera
+        Cyttarops_alecto
+        Diclidurus_ingens/Diclidurus_albus
+        Diclidurus_scutatus
+        Diclidurus_isabellus
+        Centronycteris_centralis
+        Centronycteris_maximiliani
+        Rhynchonycteris_naso
+        Rhynchonycteris_naso_11_Belize
+        Rhynchonycteris_naso_Panama
+        Rhynchonycteris_naso_Belize
+        Saccopteryx_bilineata
+        Saccopteryx_leptura
+        Saccopteryx_canescens
+        Saccopteryx_gymnura
+        Emballonura_beccarii/Mosia_nigrescens
+        Emballonura_monticola
+        Emballonura_raffrayana
+        Taphozous_longimanus
+    ;
+END;
+
+BEGIN TREES;
+    TREE biganzolirangel2023_pone_fig1 = [&R] ((Taphozous_melanopogon,(((((Balantiopteryx_infusca,Balantiopteryx_io),Balantiopteryx_plicata),((Cormura_brevirostris,(((((((Peropteryx_kappleri,Peropteryx_macrotis_1),Peropteryx_macrotis_2),Peropteryx_macrotis_3),Peropteryx_trinitatis),Peropteryx_macrotis_4),Peropteryx_pallidoptera),Peropteryx_leucoptera)),(Cyttarops_alecto,((Diclidurus_ingens/Diclidurus_albus,Diclidurus_scutatus),Diclidurus_isabellus)))),(((Centronycteris_centralis,Centronycteris_maximiliani),((Rhynchonycteris_naso,Rhynchonycteris_naso_11_Belize),(Rhynchonycteris_naso_Panama,Rhynchonycteris_naso_Belize))),((Saccopteryx_bilineata,Saccopteryx_leptura),(Saccopteryx_canescens,Saccopteryx_gymnura)))),(Emballonura_beccarii/Mosia_nigrescens,(Emballonura_monticola,Emballonura_raffrayana)))),Taphozous_longimanus);
+END;

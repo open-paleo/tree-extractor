@@ -1,0 +1,10 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Wu et al. 2015, PLoS ONE 10: e0140933, Fig. 2: Bayesian phylogeny of Papilio subgenera; rectangular, root left, tips right, branches coloured by subgenus, support values, bracketed subgenus names and butterfly photographs at the right; butterflies (Papilionidae: Papilio). Image: the journal's figure image ('large' size from journals.plos.org, unmodified).",
+  "license": "CC BY 4.0",
+  "attribution": "Wu, L.W.; Yen, S.H.; Lees, D.C.; Lu, C.C.; Yang, P.S.; Hsu, Y.F. (2015). Phylogeny and Historical Biogeography of Asian Pterourus Butterflies (Lepidoptera: Papilionidae): A Case of Intercontinental Dispersal from North America to East Asia. PLoS ONE 10: e0140933. https://doi.org/10.1371/journal.pone.0140933. Fig. 2. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for renamed duplicates)",
+  "gold": "gold.nex",
+  "gold_note": "Swallowtail phylogeny, 40 tips, one polytomy: six lineages of subgenera Achilides, Eleppone, Princeps, Menelaides and Papilio leave one node. Tip names keep the printed form 'P. (Subgenus) species' as P._Subgenus_species (brackets dropped for Newick). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only."
+}

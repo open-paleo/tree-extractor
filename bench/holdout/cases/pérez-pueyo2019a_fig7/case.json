@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/pérez-pueyo2019a_fig7.png",
+  "names": "names.txt",
+  "source": "Pérez-Pueyo et al. 2019, Boletín Geológico y Minero 130: 375-392, Fig. 7: time-calibrated sauropod phylogeny with palaeobiogeography; rectangular, root left, tips right, a period/epoch/stage strip across the top, outlined range bars striped by continent, node dots, and clade labels with red leader lines. Image: census figure (1081x1074 px).",
+  "license": "unverified: no licence statement in the text held",
+  "names_note": "no matrix held; list = the printed tip names (collapsed clades in capitals as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated sauropod tree, 25 tips, most of them collapsed clades printed in capitals. Neosauropoda is a four-way polytomy (Jobaria, Haplocanthosaurus, Diplodocoidea, Macronaria): the four branches leave one vertical line. The drawing does not put nodes midway between their children, so nodes were read from the lines, not their positions. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

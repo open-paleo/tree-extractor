@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/d'emic2012b_fig5.png",
+  "names": "names.txt",
+  "source": "D'Emic 2012, Zoological Journal of the Linnean Society 166: 624-671, Fig. 5: cladistic hypothesis of this study, a slanted (diagonal) cladogram of sauropods with the root at the bottom centre, tips along the top with rotated italic names, open circles at named nodes with clade names beside them. Image: census figure (1334x764 px).",
+  "license": "not open (Wiley / Linnean Society of London, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('Saltasaurini' without its quotation marks)",
+  "gold": "gold.nex",
+  "gold_note": "Sauropod cladogram drawn as a slanted tree, 28 tips. Two trichotomies, drawn as three lines meeting at one point: Abydosaurus + Cedarosaurus + Venenosaurus, and Euhelopus + Daxiatitan + (Tangvayosaurus, Phuwiangosaurus). Europasaurus and Qiaowanlong run straight through the circles of Brachiosauridae and Euhelopodidae: each is the first-branching member of that clade. Chubutisaurus joins the backbone just below the Titanosauria circle, outside it. Joins along the backbone were checked by measuring each 45-degree line where it crosses rows of the image. Random-sample case (seed 20261106); topology only."
+}

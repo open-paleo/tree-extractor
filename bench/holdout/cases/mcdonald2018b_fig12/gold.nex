@@ -1,0 +1,47 @@
+#NEXUS
+
+[ mcdonald2018b_fig12: Tyrannosauroid strict consensus, 34 tips. Polytomies: Tyrannosauroidea (Proceratosauridae, Aviatyrannis, the rest), Eotyrannus + Juratyrant + Stokesosaurus, and an eight-way node of tyrannosaurines. Numbers at nodes are Bremer support. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=34;
+    TAXLABELS
+        Allosaurus
+        Compsognathus_longipes
+        Ornithomimosauria
+        Maniraptora
+        Guanlong_wucaii
+        Proceratosaurus_bradleyi
+        Kileskus_aristotocus
+        Sinotyrannus_kazuoensis
+        Yutyrannus_huali
+        Aviatyrannis_jurassica
+        Dilong_paradoxus
+        Eotyrannus_lengi
+        Juratyrant_langhami
+        Stokesosaurus_clevelandi
+        Xiongguanlong_baimoensis
+        Timurlengia_euotica
+        Iren_Dabasu_taxon
+        Dryptosaurus_aquilunguis
+        Appalachiosaurus_montgomeriensis
+        Bistahieversor_sealeyi
+        Albertosaurus_sarcophagus
+        Gorgosaurus_libratus
+        Qianzhousaurus_sinensis
+        Alioramus_remotus
+        Alioramus_altai
+        Lythronax_argestes
+        Dynamoterror_dynastes
+        Nanuqsaurus_hoglundi
+        Teratophoneus_curriei
+        Daspletosaurus_torosus
+        Daspletosaurus_horneri
+        Zhuchengtyrannus_magnus
+        Tarbosaurus_bataar
+        Tyrannosaurus_rex
+    ;
+END;
+
+BEGIN TREES;
+    TREE mcdonald2018b_fig12 = [&R] (Allosaurus,((Compsognathus_longipes,(Ornithomimosauria,Maniraptora)),((Guanlong_wucaii,(Proceratosaurus_bradleyi,(Kileskus_aristotocus,(Sinotyrannus_kazuoensis,Yutyrannus_huali)))),Aviatyrannis_jurassica,(Dilong_paradoxus,((Eotyrannus_lengi,Juratyrant_langhami,Stokesosaurus_clevelandi),(Xiongguanlong_baimoensis,((Timurlengia_euotica,Iren_Dabasu_taxon),(Dryptosaurus_aquilunguis,(Appalachiosaurus_montgomeriensis,(Bistahieversor_sealeyi,((Albertosaurus_sarcophagus,Gorgosaurus_libratus),((Qianzhousaurus_sinensis,(Alioramus_remotus,Alioramus_altai)),(Lythronax_argestes,Dynamoterror_dynastes,Nanuqsaurus_hoglundi,Teratophoneus_curriei,Daspletosaurus_torosus,Daspletosaurus_horneri,Zhuchengtyrannus_magnus,(Tarbosaurus_bataar,Tyrannosaurus_rex))))))))))))));
+END;

@@ -1,0 +1,32 @@
+#NEXUS
+
+[ brusatte2010a_fig2: Time-calibrated tyrannosauroid tree, 19 tips, fully resolved. Red segments are ghost lineages on ordinary branches, and the dotted lines join silhouettes to taxa: neither is a branch. Node bars were read from the image rotated root-left and listed per column, then checked against the figure. Random-sample case (seed 20261106); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=19;
+    TAXLABELS
+        Kileskus
+        Guanlong
+        Proceratosaurus
+        Sinotyrannus
+        Dilong
+        Eotyrannus
+        Stokesosaurus
+        Xiongguanlong
+        Dryptosaurus
+        Raptorex
+        Appalachiosaurus
+        Bistahieversor
+        Albertosaurus
+        Gorgosaurus
+        Alioramus
+        Utah_Taxon
+        Daspletosaurus
+        Tyrannosaurus
+        Tarbosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE brusatte2010a_fig2 = [&R] ((Kileskus,(Guanlong,(Proceratosaurus,Sinotyrannus))),(Dilong,((Eotyrannus,Stokesosaurus),(Xiongguanlong,(Dryptosaurus,(Raptorex,(Appalachiosaurus,(Bistahieversor,((Albertosaurus,Gorgosaurus),(Alioramus,(Utah_Taxon,(Daspletosaurus,(Tyrannosaurus,Tarbosaurus)))))))))))));
+END;

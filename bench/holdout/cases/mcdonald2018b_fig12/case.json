@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/mcdonald2018b_fig12.png",
+  "names": "names.txt",
+  "source": "McDonald et al. 2018, PeerJ 6: e5749, Fig. 12: phylogenetic relationships of Dynamoterror dynastes, strict consensus; rectangular, root left, tips right, black node dots with clade names, Bremer support at nodes. Image: census figure (1625x837 px).",
+  "license": "CC BY 4.0",
+  "attribution": "McDonald, A. T.; Wolfe, D. G.; Dooley, A. C. (2018). A new tyrannosaurid (Dinosauria: Theropoda) from the Upper Cretaceous Menefee Formation of New Mexico. PeerJ 6: e5749. https://doi.org/10.7717/peerj.5749. Fig. 12. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Tyrannosauroid strict consensus, 34 tips. Polytomies: Tyrannosauroidea (Proceratosauridae, Aviatyrannis, the rest), Eotyrannus + Juratyrant + Stokesosaurus, and an eight-way node of tyrannosaurines. Numbers at nodes are Bremer support. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

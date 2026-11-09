@@ -1,0 +1,24 @@
+#NEXUS
+
+[ yu2018a_fig5: Oviraptorosaur summary tree, 11 tips, fully resolved. Root at the bottom of the vertical trunk; Caud. and Avim. branch off its lower end, Micr. and the Anzu./Anom./Giga. clade at its top, and the oviraptorid branch leaves the trunk part-way up. Several tips (Conc., Wula., Anom.) sit on short vertical stalks directly above their nodes. Tip names are the printed abbreviations, which no matrix lists. Random-sample case (seed 20261106); the only slanted figure with a time axis left in the census. Topology transcribed from the figure and checked node by node at 3x; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=11;
+    TAXLABELS
+        Caud.
+        Avim.
+        Micr.
+        Anzu.
+        Anom.
+        Giga.
+        Nank.
+        Citi.
+        Wula.
+        Conc.
+        Neme.
+    ;
+END;
+
+BEGIN TREES;
+    TREE yu2018a_fig5 = [&R] (Caud.,(Avim.,((Micr.,(Anzu.,(Anom.,Giga.))),(Nank.,(Citi.,(Wula.,(Conc.,Neme.)))))));
+END;

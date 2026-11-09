@@ -1,0 +1,35 @@
+#NEXUS
+
+[ longrich2011a_fig11: Time-calibrated ceratopsid tree, 22 tips, with three polytomies: the root (Leptoceratops, Protoceratops, the rest), Styracosaurus + Einiosaurus + (Achelousaurus, Pachyrhinosaurus), and Utahceratops + Pentaceratops + the rest of Chasmosaurinae. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=22;
+    TAXLABELS
+        Leptoceratops
+        Protoceratops
+        Zuniceratops_christopheri
+        Turanoceratops_tardabilis
+        Avaceratops
+        Centrosaurus
+        Styracosaurus
+        Einiosaurus
+        Achelousaurus
+        Pachyrhinosaurus
+        Chasmosaurus
+        Agujaceratops
+        Mojoceratops
+        Utahceratops
+        Pentaceratops
+        Kosmoceratops
+        Anchiceratops
+        Arrhinoceratops
+        Titanoceratops
+        Eotriceratops
+        Torosaurus
+        Triceratops
+    ;
+END;
+
+BEGIN TREES;
+    TREE longrich2011a_fig11 = [&R] (Leptoceratops,Protoceratops,(Zuniceratops_christopheri,(Turanoceratops_tardabilis,((Avaceratops,(Centrosaurus,(Styracosaurus,Einiosaurus,(Achelousaurus,Pachyrhinosaurus)))),(Chasmosaurus,((Agujaceratops,Mojoceratops),(Utahceratops,Pentaceratops,(Kosmoceratops,(Anchiceratops,(Arrhinoceratops,(Titanoceratops,(Eotriceratops,(Torosaurus,Triceratops)))))))))))));
+END;

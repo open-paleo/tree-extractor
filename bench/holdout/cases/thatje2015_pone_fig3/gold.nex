@@ -1,0 +1,47 @@
+#NEXUS
+
+[ thatje2015_pone_fig3: Anomuran phylogram, 34 tips. The root is drawn as a trichotomy (Dromia dehaani, Polycheles aculeatus, the rest). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=34;
+    TAXLABELS
+        Dromia_dehaani
+        Polycheles_aculeatus
+        Upogebia_corallifora
+        Calcinus_obscurus
+        Isocheles_pilosus
+        Coenobita_perlatus
+        Discorsopagurus_schmitti
+        Oedignathus_inermis
+        Bythiopagurus_macroculus
+        Pagurus_longicarpus
+        Petrolisthes_armatus
+        Pachycheles_haigae
+        Munidopsis_rostrata
+        Shinkaia_crosnieri
+        Agononida_procera
+        Heteronida_aspinirostris
+        Munida_acantha
+        Alainus_crosnieri
+        Allogalathea_elegans
+        Emerita_analoga
+        Lepidopa_californica
+        Blepharipoda_occidentalis
+        Lomis_hirta
+        Uroptychus_nitidus
+        Uroptychus_parvalus
+        Eumunida_sternomaculata
+        Eumunida_funambulus
+        Pseudomunida_fragilis
+        Aegla_abtao
+        Aegla_alacalufi
+        Aegla_ligulata
+        Kiwa_tyleri_sp._nov.
+        Kiwa_hirsuta
+        Kiwa_puravida
+    ;
+END;
+
+BEGIN TREES;
+    TREE thatje2015_pone_fig3 = [&R] (Dromia_dehaani,Polycheles_aculeatus,(Upogebia_corallifora,((((Calcinus_obscurus,Isocheles_pilosus),Coenobita_perlatus),((Discorsopagurus_schmitti,Oedignathus_inermis),(Bythiopagurus_macroculus,Pagurus_longicarpus))),(((((Petrolisthes_armatus,Pachycheles_haigae),(Munidopsis_rostrata,Shinkaia_crosnieri)),(((Agononida_procera,Heteronida_aspinirostris),Munida_acantha),Alainus_crosnieri)),Allogalathea_elegans),(((Emerita_analoga,Lepidopa_californica),Blepharipoda_occidentalis),((Lomis_hirta,(((Uroptychus_nitidus,Uroptychus_parvalus),Eumunida_sternomaculata),(Eumunida_funambulus,Pseudomunida_fragilis))),(((Aegla_abtao,Aegla_alacalufi),Aegla_ligulata),((Kiwa_tyleri_sp._nov.,Kiwa_hirsuta),Kiwa_puravida))))))));
+END;

@@ -1,0 +1,21 @@
+#NEXUS
+
+[ ji1998a_fig9: Theropod/bird cladogram, 8 tips. The root is read as a trichotomy (Velociraptorinae, Protarchaeopteryx, the rest): the Protarchaeopteryx line is aimed at the root point and only merges into the Velociraptorinae line over the last ~25 px because the two thick lines meet at a shallow angle. Read the other way, it would make (Velociraptorinae, Protarchaeopteryx) a clade. The black bars mark clades on the backbone and are not branches. Random-sample case (seed 20261106). Topology transcribed from the figure and checked at 6x; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=8;
+    TAXLABELS
+        Velociraptorinae
+        Protarchaeopteryx
+        Caudipteryx
+        Archaeopteryx
+        Mononykus
+        Shuvuuia
+        Enantiornithes
+        Ornithurae
+    ;
+END;
+
+BEGIN TREES;
+    TREE ji1998a_fig9 = [&R] (Velociraptorinae,Protarchaeopteryx,(Caudipteryx,(Archaeopteryx,((Mononykus,Shuvuuia),(Enantiornithes,Ornithurae)))));
+END;

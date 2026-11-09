@@ -1,0 +1,33 @@
+#NEXUS
+
+[ averianov2021d_fig23: Alvarezsauroid part of the tree, 20 tips, fully resolved; drawn as diagonal forks rather than rectangular elbows. The bold numbers are node numbers, not support. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Aorun_zhaoi
+        Shishugounykus
+        Haplocheirus_sollers
+        Tugulusaurus_faciles
+        Xiyunykus_pengi
+        Bannykus_wulatensis
+        Bonapartenykus_ultimus
+        Patagonykus_puertai
+        Alvarezsaurus_calvoi
+        Achillesaurus_manazzonei
+        Albertonykus_borealis
+        Qiupanykus_zhangi
+        Nemegtonykus_citus
+        Linhenykus_monodactylus
+        Ceratonykus_oculatus
+        Parvicursor_remotus
+        Mononykus_olecranus
+        Shuvuuia_deserti
+        Albinykus_baatar
+        Xixianykus_zhangi
+    ;
+END;
+
+BEGIN TREES;
+    TREE averianov2021d_fig23 = [&R] (Aorun_zhaoi,(Shishugounykus,(Haplocheirus_sollers,((Tugulusaurus_faciles,Xiyunykus_pengi),(Bannykus_wulatensis,((Bonapartenykus_ultimus,Patagonykus_puertai),(Alvarezsaurus_calvoi,(Achillesaurus_manazzonei,(Albertonykus_borealis,((Qiupanykus_zhangi,Nemegtonykus_citus),((Linhenykus_monodactylus,(Ceratonykus_oculatus,Parvicursor_remotus)),((Mononykus_olecranus,Shuvuuia_deserti),(Albinykus_baatar,Xixianykus_zhangi)))))))))))));
+END;

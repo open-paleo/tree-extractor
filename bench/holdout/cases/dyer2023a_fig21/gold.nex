@@ -1,0 +1,31 @@
+#NEXUS
+
+[ dyer2023a_fig21: Time-calibrated pachycephalosaur tree, 18 tips; the root is drawn as a trichotomy (Pachycephalosauria, Yinlong downsi, Psittacosaurus mongoliensis). Tips keep their printed text (Amtocephale gobienses as printed). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=18;
+    TAXLABELS
+        Colepiocephale_lambei
+        Stegoceras_validum
+        Amtocephale_gobienses
+        Foraminacephale_brevis
+        Sinocephale_bexelli
+        Sphaerotholus_edmontonensis
+        Sphaerotholus_buchholtzae
+        Sphaerotholus_goodwini
+        Pachycephalosaurus_wyomingensis
+        Acrotholus_audeti
+        Prenocephale_prenes
+        Tylocephale_gilmorei
+        Homalocephale_calathocercos
+        Alaskacephale_gangloffi
+        Goyocephale_lattimorei
+        Wannanosaurus_yansiensis
+        Yinlong_downsi
+        Psittacosaurus_mongoliensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE dyer2023a_fig21 = [&R] (((Colepiocephale_lambei,(Stegoceras_validum,(((Amtocephale_gobienses,Foraminacephale_brevis),(Sinocephale_bexelli,((Sphaerotholus_edmontonensis,Sphaerotholus_buchholtzae),((Sphaerotholus_goodwini,Pachycephalosaurus_wyomingensis),((Acrotholus_audeti,Prenocephale_prenes),Tylocephale_gilmorei))))),(Homalocephale_calathocercos,(Alaskacephale_gangloffi,Goyocephale_lattimorei))))),Wannanosaurus_yansiensis),Yinlong_downsi,Psittacosaurus_mongoliensis);
+END;

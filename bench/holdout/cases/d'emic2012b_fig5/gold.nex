@@ -1,0 +1,41 @@
+#NEXUS
+
+[ d'emic2012b_fig5: Sauropod cladogram drawn as a slanted tree, 28 tips. Two trichotomies, drawn as three lines meeting at one point: Abydosaurus + Cedarosaurus + Venenosaurus, and Euhelopus + Daxiatitan + (Tangvayosaurus, Phuwiangosaurus). Europasaurus and Qiaowanlong run straight through the circles of Brachiosauridae and Euhelopodidae: each is the first-branching member of that clade. Chubutisaurus joins the backbone just below the Titanosauria circle, outside it. Joins along the backbone were checked by measuring each 45-degree line where it crosses rows of the image. Random-sample case (seed 20261106); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Shunosaurus
+        Omeisaurus
+        Jobaria
+        Atlasaurus
+        Diplodocoidea
+        Camarasaurus
+        Tehuelchesaurus
+        Europasaurus
+        Giraffatitan
+        Brachiosaurus
+        Abydosaurus
+        Cedarosaurus
+        Venenosaurus
+        Ligabuesaurus
+        Sauroposeidon
+        Tastavinsaurus
+        Qiaowanlong
+        Erketu
+        Euhelopus
+        Daxiatitan
+        Tangvayosaurus
+        Phuwiangosaurus
+        Chubutisaurus
+        Andesaurus
+        Malawisaurus
+        Opisthocoelicaudia
+        Saltasaurini
+        Alamosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE d'emic2012b_fig5 = [&R] (Shunosaurus,(Omeisaurus,(Jobaria,(Atlasaurus,(Diplodocoidea,(Camarasaurus,(Tehuelchesaurus,((Europasaurus,(Giraffatitan,(Brachiosaurus,(Abydosaurus,Cedarosaurus,Venenosaurus)))),(Ligabuesaurus,(Sauroposeidon,(Tastavinsaurus,((Qiaowanlong,(Erketu,(Euhelopus,Daxiatitan,(Tangvayosaurus,Phuwiangosaurus)))),(Chubutisaurus,(Andesaurus,(Malawisaurus,(Opisthocoelicaudia,(Saltasaurini,Alamosaurus)))))))))))))))));
+END;

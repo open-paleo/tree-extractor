@@ -13,6 +13,7 @@
  */
 
 import type { Mask, Orientation, RgbaImage } from "./types.ts";
+import { splitColoredInk } from "./markers.ts";
 import { createDarkMask, createDirectionalRunMask, createLongRunMask, dilate, findConnectedComponents, subtractMask, transposeMask, unionMask } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
 import { findEndSide } from "./slanted.ts";
@@ -288,11 +289,19 @@ function countSet(mask: Mask): number
  * @param inkThreshold - Luminance below which a pixel is text ink.
  * @param lineThreshold - Luminance below which a neutral pixel is line ink.
  * @param maxChroma - Largest channel spread still neutral.
+ * @param coloredThreshold - Luminance below which a colored pixel counts as ink.
+ * @param coloredMinChroma - Channel spread above which a pixel counts as colored.
+ * @param markerRadius - Erosion radius that tells a colored fill from a colored line.
  * @returns The decision and its evidence.
  */
-export function detectOrientation(image: RgbaImage, inkThreshold: number, lineThreshold: number, maxChroma: number): OrientationFind
+export function detectOrientation(image: RgbaImage, inkThreshold: number, lineThreshold: number, maxChroma: number, coloredThreshold = 150, coloredMinChroma = 100, markerRadius = 4): OrientationFind
 {
-    const lineInk = createDarkMask(image, lineThreshold, true, maxChroma);
+    // Branches drawn in color are line ink too (Shi 2015 draws every clade in its own color,
+    // and its neutral ink is the subfamily brackets alone, which stand on their side), but only
+    // the thin colored ink: a colored fill (Poust 2020's clade box) has edges that read as
+    // dozens of free ends.
+    const neutralInk = createDarkMask(image, lineThreshold, true, maxChroma);
+    const lineInk = unionMask(neutralInk, splitColoredInk(image, coloredThreshold, coloredMinChroma, markerRadius).thin);
     const textInk = createDarkMask(image, inkThreshold, false, maxChroma);
     const text = measureTextEitherWay(textInk);
     const glyphHeight = text.glyphHeight;
@@ -327,8 +336,9 @@ export function detectOrientation(image: RgbaImage, inkThreshold: number, lineTh
     if (slanted)
     {
         // A slanted tree's ends are its tips, all but the root, so the side of the line art its
-        // ends lie on is the tip side.
-        orientation = decideFromEndSide(lineArt);
+        // ends lie on is the tip side; the neutral line art alone, since a colored frame around
+        // part of a slanted tree (Tschopp 2015) adds ends of its own.
+        orientation = decideFromEndSide(keepLineArt(neutralInk, 4 * glyphHeight));
     }
     else if (rightEnds >= 3 && rightEnds >= 2 * standing)
     {

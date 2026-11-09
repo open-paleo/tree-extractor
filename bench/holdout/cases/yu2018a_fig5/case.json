@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/yu2018a_fig5.png",
+  "names": "names.txt",
+  "source": "Yu et al. 2018, Scientific Reports 8, doi:10.1038/s41598-018-23252-2, Fig. 5: simplified oviraptorosaurian phylogeny showing body size; a hand-drawn slanted tree with the root at the bottom on a vertical trunk, branches at 45 degrees, each tip a dot labelled with a four-letter abbreviation, a body-mass axis along the bottom, grey clade boxes, light vertical gridlines and silhouettes. Image: census figure (1250x1596 px).",
+  "license": "CC BY 4.0",
+  "attribution": "Yu, Y.; Wang, K.; Chen, S.; Sullivan, C.; Wang, S.; Wang, P.; Xu, X. (2018). A new caenagnathid dinosaur from the Upper Cretaceous Wangshi Group of Shandong, China, with comments on size variation among oviraptorosaurs. Scientific Reports 8. https://doi.org/10.1038/s41598-018-23252-2. Fig. 5. CC BY 4.0.",
+  "names_note": "no matrix lists these tips; list = the printed abbreviations, as printed with their full stops",
+  "gold": "gold.nex",
+  "gold_note": "Oviraptorosaur summary tree, 11 tips, fully resolved. Root at the bottom of the vertical trunk; Caud. and Avim. branch off its lower end, Micr. and the Anzu./Anom./Giga. clade at its top, and the oviraptorid branch leaves the trunk part-way up. Several tips (Conc., Wula., Anom.) sit on short vertical stalks directly above their nodes. Tip names are the printed abbreviations, which no matrix lists. Random-sample case (seed 20261106); the only slanted figure with a time axis left in the census. Topology transcribed from the figure and checked node by node at 3x; topology only."
+}

@@ -1,0 +1,27 @@
+#NEXUS
+
+[ soto-acuña2021a_fig3: Time-calibrated thyreophoran tree, 14 tips, fully resolved; four tips are collapsed clades (Stegosauridae, Nodosauridae, Ankylosaurinae drawn as wedges). Replacement case: drawn with seed 20261107 from the rectangular time-axis stratum after barrett2026a_fig28 was skipped. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=14;
+    TAXLABELS
+        Lesothosaurus
+        Scutellosaurus
+        Emausaurus
+        Scelidosaurus
+        Huayangosaurus
+        Stegosauridae
+        Kunbarrasaurus
+        Antarctopelta
+        Stegouros
+        Nodosauridae
+        Liaoningosaurus_paradoxus
+        Gobisaurus_domoculus
+        Shamosaurus_scutatus
+        Ankylosaurinae
+    ;
+END;
+
+BEGIN TREES;
+    TREE soto-acuña2021a_fig3 = [&R] (Lesothosaurus,(Scutellosaurus,(Emausaurus,(Scelidosaurus,((Huayangosaurus,Stegosauridae),((Kunbarrasaurus,(Antarctopelta,Stegouros)),(Nodosauridae,(Liaoningosaurus_paradoxus,(Gobisaurus_domoculus,(Shamosaurus_scutatus,Ankylosaurinae))))))))));
+END;

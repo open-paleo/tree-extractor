@@ -1,0 +1,36 @@
+#NEXUS
+
+[ gonzálezriga2018a_fig28: Time-calibrated titanosaur tree, 23 tips, fully resolved; a pectinate backbone whose nodes sit 10-15 px apart, read at 3-4x zoom against the drawing's rule that each node's stem joins its vertical midway between its first and last child. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=23;
+    TAXLABELS
+        Andesaurus
+        Baotianmansaurus
+        Dongyangosaurus
+        Diamantinasaurus
+        Savannasaurus
+        Daxiatitan
+        Xianshanosaurus
+        Malawisaurus
+        Pitekunsaurus
+        Epachthosaurus
+        Muyelensaurus
+        Rinconsaurus
+        Mendozasaurus
+        Futalognkosaurus
+        Argentinosaurus
+        Notocolossus
+        Patagotitan
+        Nemegtosaurus
+        Tapuiasaurus
+        Isisaurus
+        Opisthocoelicaudia
+        Alamosaurus
+        Jiangshanosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE gonzálezriga2018a_fig28 = [&R] (Andesaurus,((Baotianmansaurus,Dongyangosaurus),((Diamantinasaurus,Savannasaurus),((Daxiatitan,Xianshanosaurus),(Malawisaurus,((Pitekunsaurus,(Epachthosaurus,((Muyelensaurus,Rinconsaurus),(Mendozasaurus,(Futalognkosaurus,(Argentinosaurus,(Notocolossus,Patagotitan))))))),((Nemegtosaurus,Tapuiasaurus),(Isisaurus,(Opisthocoelicaudia,(Alamosaurus,Jiangshanosaurus))))))))));
+END;

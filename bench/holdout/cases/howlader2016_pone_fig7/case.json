@@ -1,0 +1,10 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Howlader et al. 2016, PLoS ONE 11: e0149597, Fig. 7: maximum-likelihood/Bayesian phylogram of Zakerana; rectangular, root left, tips right, support values at nodes, a scale bar and a frog photograph at the top right; frogs (Anura: Dicroglossidae). Image: the journal's figure image ('large' size from journals.plos.org, unmodified).",
+  "license": "CC BY 4.0",
+  "attribution": "Howlader, M.S.A.; Nair, A.; Merilä, J. (2016). A New Species of Frog (Anura: Dicroglossidae) Discovered from the Mega City of Dhaka. PLoS ONE 11: e0149597. https://doi.org/10.1371/journal.pone.0149597. Fig. 7. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for renamed duplicates)",
+  "gold": "gold.nex",
+  "gold_note": "Frog phylogram, 17 tips, one polytomy: the three Zakerana dhaka sp. nov. samples. The figure prints 'Zakerana dhaka sp. nov.' three times and two pierrei samples with places in brackets; the gold names them Zakerana_dhaka_sp._nov._Holotype, _2 and _3 (top to bottom) and Zakerana_pierrei_Bangladesh / _Nepal, since Newick names cannot repeat or hold brackets. Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only."
+}

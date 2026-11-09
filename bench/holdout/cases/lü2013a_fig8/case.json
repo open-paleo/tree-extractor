@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/lü2013a_fig8.png",
+  "names": "names.txt",
+  "source": "Lü et al. 2013, PLoS ONE 8: e80557, Fig. 8: strict consensus of two most parsimonious trees of oviraptorosaurs; a vertical rectangular tree with the root at the bottom, rotated italic tip names along the top, grey-edged lines, black node dots with clade names on leader lines. Image: census figure (1990x2101 px).",
+  "license": "CC BY (Creative Commons Attribution License, per the article; version not stated)",
+  "attribution": "Lü, J.; Yi, L.; Zhong, H.; Wei, X. (2013). A New Oviraptorosaur (Dinosauria: Oviraptorosauria) from the Late Cretaceous of Southern China and Its Paleoecological Implications. PLoS ONE 8: e80557. https://doi.org/10.1371/journal.pone.0080557. Fig. 8. CC BY.",
+  "names_note": "no matrix held; list = the printed tip names ('Citipati sp' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Oviraptorosaur strict consensus, 20 tips, one polytomy: Oviraptor + (Rinchenia, (Citipati, Citipati sp)) + Ingeniinae leave one node bar. The rest is a pectinate ladder down to Herrerasaurus. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

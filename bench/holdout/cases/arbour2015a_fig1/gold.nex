@@ -1,0 +1,40 @@
+#NEXUS
+
+[ arbour2015a_fig1: Thyreophoran tree (50% majority rule of Thompson et al. 2012), 27 tips, one polytomy: Zhongyuansaurus + Tsagantegia + the rest of Ankylosauridae. Numbers at nodes are support values. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node against the listed node lines; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=27;
+    TAXLABELS
+        Lesothosaurus_diagnosticus
+        Scutellosaurus_lawleri
+        Emausaurus_ernsti
+        Scelidosaurus_harrisonii
+        Huayangosaurus_taibaii
+        Stegosaurus_armatus
+        Nodosauridae
+        Minmi_paravertebra
+        Liaoningosaurus_paradoxus
+        Cedarpelta_bilbeyhallorum
+        Gobisaurus_domoculus
+        Shamosaurus_scutatus
+        Zhongyuansaurus_luoyangensis
+        Tsagantegia_longicranialis
+        Shanxia_tianzhenensis
+        Crichtonsaurus_benxiensis
+        Dyoplosaurus_acutosquameus
+        Pinacosaurus_mephistocephalus
+        Ankylosaurus_magniventris
+        Euoplocephalus_tutus
+        Minotaurasaurus_ramachandrani
+        Pinacosaurus_grangeri
+        Nodocephalosaurus_kirtlandensis
+        Talarurus_plicatospineus
+        Tianzhenosaurus_youngi
+        Saichania_chulsanensis
+        Tarchia_gigantea
+    ;
+END;
+
+BEGIN TREES;
+    TREE arbour2015a_fig1 = [&R] (Lesothosaurus_diagnosticus,(Scutellosaurus_lawleri,(Emausaurus_ernsti,(Scelidosaurus_harrisonii,((Huayangosaurus_taibaii,Stegosaurus_armatus),(Nodosauridae,(Minmi_paravertebra,(Liaoningosaurus_paradoxus,(Cedarpelta_bilbeyhallorum,(Gobisaurus_domoculus,(Shamosaurus_scutatus,(Zhongyuansaurus_luoyangensis,Tsagantegia_longicranialis,((Shanxia_tianzhenensis,(Crichtonsaurus_benxiensis,(Dyoplosaurus_acutosquameus,Pinacosaurus_mephistocephalus))),((Ankylosaurus_magniventris,Euoplocephalus_tutus),((Minotaurasaurus_ramachandrani,Pinacosaurus_grangeri),(Nodocephalosaurus_kirtlandensis,((Talarurus_plicatospineus,Tianzhenosaurus_youngi),(Saichania_chulsanensis,Tarchia_gigantea))))))))))))))))));
+END;

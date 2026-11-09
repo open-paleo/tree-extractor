@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/ji1998a_fig9.png",
+  "names": "names.txt",
+  "source": "Ji et al. 1998, Nature 393: 753-761, Fig. 9: cladogram of proposed relationships of Protarchaeopteryx and Caudipteryx; a slanted (V-shaped) cladogram with the root at the bottom, rotated italic tip names along the top, and two black bars on the backbone labelled Avialae and Unnamed clade. Image: census figure (1004x735 px; the embedded image extracts inverted).",
+  "license": "not open (Nature, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Theropod/bird cladogram, 8 tips. The root is read as a trichotomy (Velociraptorinae, Protarchaeopteryx, the rest): the Protarchaeopteryx line is aimed at the root point and only merges into the Velociraptorinae line over the last ~25 px because the two thick lines meet at a shallow angle. Read the other way, it would make (Velociraptorinae, Protarchaeopteryx) a clade. The black bars mark clades on the backbone and are not branches. Random-sample case (seed 20261106). Topology transcribed from the figure and checked at 6x; topology only."
+}

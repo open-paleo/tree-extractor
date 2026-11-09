@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/alarcón-muñoz2023a_fig5.png",
+  "names": "names.txt",
+  "source": "Alarcón-Muñoz et al. 2023, Science Advances 9, doi:10.1126/sciadv.adg2456, Fig. 5: time-calibrated hadrosauroid tree with ancestral-range pie charts; rectangular, root left, tips right, hairline branches on stage-coloured background bands, region letters after each name, numbered node markers with arrows, clade labels with arrows and silhouettes. Image: census figure (1500x1620 px).",
+  "license": "CC BY 4.0 (per the article)",
+  "attribution": "Alarcón-Muñoz, J.; Vargas, A. O.; Püschel, H. P.; Soto-Acuña, S.; Manríquez, L.; Leppe, M.; Kaluza, J.; Milla, V.; Gutstein, C. S.; Palma-Liberona, J.; Stinnesbeck, W.; Frey, E.; Pino, J. P.; Bajor, D.; Núñez, E.; Ortiz, H.; Rubilar-Rogers, D.; Cruzado-Caballero, P. (2023). Relict duck-billed dinosaurs survived into the last age of the dinosaurs in subantarctic Chile. Science Advances 9. https://doi.org/10.1126/sciadv.adg2456. Fig. 5. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names, without the region letters",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated hadrosauroid tree, 77 tips, fully resolved; a long pectinate backbone with nodes a few pixels apart, resolved from per-column line runs and the drawing's rule that each node's stem joins midway between its first and last child. Tip region letters (A)-(F) and clade labels are not part of the names. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

@@ -1,0 +1,49 @@
+#NEXUS
+
+[ shi2015_pone_fig4: Nymphalid tree, panel A, 36 tips. The root is drawn as a trichotomy ((Coreana, Protantigius), Spindasis takanonis, Nymphalidae). Subfamily names after the tips (–Biblidinae and the like) are labels, not part of the tip names; 'Melanitis Leda' is kept as printed. Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=36;
+    TAXLABELS
+        Apatura_ilia
+        Sasakia_funebris
+        Sasakia_charonda
+        Apatura_metis
+        Timelaea_maculata
+        Ariadne_ariadne
+        Cyrestis_thyodamas
+        Hypolimnas_bolina
+        Junonia_orithya
+        Melitaea_cinxia
+        Kallima_inachus
+        Dichorragia_nesimachus
+        Cethosia_biblis
+        Acraea_issoria
+        Heliconius_melpomene
+        Argyreus_hyperbius
+        Fabriciana_nerippe
+        Issoria_lathonia
+        Parathyma_sulpitia
+        Libythea_celtis
+        Eumenis_autonoe
+        Callerebia_suroia
+        Lethe_dura
+        Melanitis_Leda
+        Elymnias_hypermnestra
+        Stichophthalma_howqua
+        Polyura_nepenthes
+        Calinaga_davidis
+        Danaus_plexippus
+        Danaus_chrysippus
+        Euploea_mulciber
+        Ideopsis_similes
+        Parantica_aglea
+        Coreana_raphaelis
+        Protantigius_superans
+        Spindasis_takanonis
+    ;
+END;
+
+BEGIN TREES;
+    TREE shi2015_pone_fig4 = [&R] (((((((((((Apatura_ilia,Sasakia_funebris),(Sasakia_charonda,Apatura_metis)),Timelaea_maculata),(Ariadne_ariadne,Cyrestis_thyodamas)),(((Hypolimnas_bolina,Junonia_orithya),Melitaea_cinxia),Kallima_inachus)),Dichorragia_nesimachus),((((Cethosia_biblis,Acraea_issoria),Heliconius_melpomene),((Argyreus_hyperbius,Fabriciana_nerippe),Issoria_lathonia)),Parathyma_sulpitia)),Libythea_celtis),(((((((Eumenis_autonoe,Callerebia_suroia),Lethe_dura),Melanitis_Leda),Elymnias_hypermnestra),Stichophthalma_howqua),Polyura_nepenthes),Calinaga_davidis)),(((Danaus_plexippus,Danaus_chrysippus),Euploea_mulciber),(Ideopsis_similes,Parantica_aglea))),(Coreana_raphaelis,Protantigius_superans),Spindasis_takanonis);
+END;

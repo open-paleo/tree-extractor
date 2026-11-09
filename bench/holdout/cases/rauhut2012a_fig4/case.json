@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/rauhut2012a_fig4.png",
+  "names": "names.txt",
+  "source": "Rauhut et al. 2012, Proceedings of the National Academy of Sciences 109: 11746-11751, Fig. 4: phylogenetic position of Sciurumimus in the analysis of Benson et al.; rectangular, root left, tips right, thick black lines, numbered node circles; roman and italic tip names. Image: census figure (1197x1939 px; the embedded image extracts inverted).",
+  "license": "PNAS: freely available, not under an open licence (2012)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Theropod tree, 28 tips, with two polytomies: a five-way node (Afrovenator + Dubreuillosaurus + (Torvosaurus, Megalosaurus) as one three-way node, then Duriavenator, Magnosaurus, Streptospondylus, Eustreptospondylus) inside Megalosauroidea. Node circles sit on the stems and are not tips. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

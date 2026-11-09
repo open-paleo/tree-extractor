@@ -42,10 +42,32 @@ export function splitColoredInk(image: RgbaImage, threshold: number, minChroma: 
     const core = erode(colored, radius);
     const grown = dilate(core, radius + 1);
     const fat = subtractMask(colored, subtractMask(colored, grown));
-    const thin = subtractMask(colored, fat);
+    // A fat piece that is a long strip, several times longer than it is wide and no wider
+    // than a few line thicknesses, is a thick colored line, a branch drawn in color (Wu 2015's
+    // ten-pixel subgenus branches), not a marker; it goes with the thin ink.
+    const labeling = findConnectedComponents(fat);
+    const strips = new Set<number>();
+
+    for (let index = 0; index < labeling.components.length; index++)
+    {
+        const { box } = labeling.components[index];
+        const width = box.x1 - box.x0;
+        const height = box.y1 - box.y0;
+        const shorter = Math.min(width, height);
+        const longer = Math.max(width, height);
+
+        if (shorter <= 4 * radius && longer >= 4 * shorter)
+        {
+            strips.add(index + 1);
+        }
+    }
+
+    const stripMask = createMaskFromComponents(labeling.labels, strips, fat.width, fat.height);
+    const fatShapes = subtractMask(fat, stripMask);
+    const thin = subtractMask(colored, fatShapes);
     removeOutlines(thin, 8 * radius, 2 * radius + 3);
 
-    return { thin, fat };
+    return { thin, fat: fatShapes };
 }
 
 /**

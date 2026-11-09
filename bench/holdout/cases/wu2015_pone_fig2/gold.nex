@@ -1,0 +1,53 @@
+#NEXUS
+
+[ wu2015_pone_fig2: Swallowtail phylogeny, 40 tips, one polytomy: six lineages of subgenera Achilides, Eleppone, Princeps, Menelaides and Papilio leave one node. Tip names keep the printed form 'P. (Subgenus) species' as P._Subgenus_species (brackets dropped for Newick). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=40;
+    TAXLABELS
+        P._Heraclides_cresphontes
+        P._Heraclides_thoas
+        P._Heraclides_astyalus
+        P._Heraclides_torquatus
+        P._Heraclides_hectorides
+        P._Heraclides_anchisiades
+        P._Heraclides_erostratus
+        P._Chilasa_clytia
+        P._Chilasa_paradoxa
+        P._Chilasa_agestor
+        P._Chilasa_epycides
+        P._Chilasa_slateri
+        P._Chilasa_laglaizei
+        P._Chilasa_osmana
+        P._Chilasa_veiovis
+        P._Pterourus_esperanza
+        P._Pterourus_pilumnus
+        P._Pterourus_palamedes
+        P._Pterourus_troilus
+        P._Pterourus_elwesi
+        P._Pterourus_maraho
+        P._Pterourus_scamander
+        P._Pterourus_birchallii
+        P._Pterourus_garamas
+        P._Pterourus_multicaudatus
+        P._Pterourus_rutulus
+        P._Pterourus_canadensis
+        P._Pterourus_glaucus
+        P._Alexanoria_alexanor
+        P._Achilides_bianor
+        P._Eleppone_anactus
+        P._Princeps_demoleus
+        P._Menelaides_gigon
+        P._Princeps_dardanus
+        P._Papilio_indra
+        P._Papilio_machaon
+        P._Menelaides_helenus
+        P._Menelaides_polytes
+        P._Menelaides_bootes
+        P._Menelaides_memnon
+    ;
+END;
+
+BEGIN TREES;
+    TREE wu2015_pone_fig2 = [&R] (((P._Heraclides_cresphontes,P._Heraclides_thoas),(P._Heraclides_astyalus,(P._Heraclides_torquatus,(P._Heraclides_hectorides,(P._Heraclides_anchisiades,P._Heraclides_erostratus))))),((((P._Chilasa_clytia,P._Chilasa_paradoxa),(P._Chilasa_agestor,((P._Chilasa_epycides,P._Chilasa_slateri),(P._Chilasa_laglaizei,(P._Chilasa_osmana,P._Chilasa_veiovis))))),((P._Pterourus_esperanza,(P._Pterourus_pilumnus,(P._Pterourus_palamedes,P._Pterourus_troilus))),((P._Pterourus_elwesi,P._Pterourus_maraho),((P._Pterourus_scamander,(P._Pterourus_birchallii,P._Pterourus_garamas)),(P._Pterourus_multicaudatus,(P._Pterourus_rutulus,(P._Pterourus_canadensis,P._Pterourus_glaucus))))))),(P._Alexanoria_alexanor,(P._Achilides_bianor,P._Eleppone_anactus,P._Princeps_demoleus,(P._Menelaides_gigon,P._Princeps_dardanus),(P._Papilio_indra,P._Papilio_machaon),(P._Menelaides_helenus,(P._Menelaides_polytes,(P._Menelaides_bootes,P._Menelaides_memnon)))))));
+END;

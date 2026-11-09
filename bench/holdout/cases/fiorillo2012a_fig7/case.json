@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/fiorillo2012a_fig7.png",
+  "names": "names.txt",
+  "source": "Fiorillo & Tykoski 2012, Acta Palaeontologica Polonica 57: 561-573, Fig. 7: one of three most parsimonious trees, time-calibrated, of Ceratopsidae; rectangular, root left, tips right, with dashed Ma gridlines, a stage/epoch strip, range bars and node/stem-based clade symbols. Image: census figure (1459x1997 px).",
+  "license": "unverified: no licence statement in the text held (Acta Palaeontologica Polonica is open access)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated ceratopsid tree, 16 tips, fully resolved. Tips keep their printed text (TMP 2002.76.1 as TMP_2002.76.1). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

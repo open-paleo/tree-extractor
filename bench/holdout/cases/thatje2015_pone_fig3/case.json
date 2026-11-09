@@ -1,0 +1,10 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Thatje et al. 2015, PLoS ONE 10: e0127621, Fig. 3: phylogenetic position of Kiwaidae, a Bayesian phylogram; rectangular, root left, tips right, posterior probabilities at nodes, bracketed superfamily names at the right, a yellow box behind Kiwa and a scale bar; decapod crustaceans (Anomura: hermit, squat and yeti crabs). Image: the journal's figure image ('large' size from journals.plos.org, unmodified).",
+  "license": "CC BY 4.0",
+  "attribution": "Thatje, S.; Marsh, L.; Roterman, C.N.; Mavrogordato, M.N.; Linse, K. (2015). Adaptations to Hydrothermal Vent Life in Kiwa tyleri, a New Species of Yeti Crab from the East Scotia Ridge, Antarctica. PLoS ONE 10: e0127621. https://doi.org/10.1371/journal.pone.0127621. Fig. 3. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for renamed duplicates)",
+  "gold": "gold.nex",
+  "gold_note": "Anomuran phylogram, 34 tips. The root is drawn as a trichotomy (Dromia dehaani, Polycheles aculeatus, the rest). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only."
+}

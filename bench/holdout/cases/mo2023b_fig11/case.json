@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/mo2023b_fig11.png",
+  "names": "names.txt",
+  "source": "Mo et al. 2023, Cretaceous Research 144, doi:10.1016/j.cretres.2022.105449, Fig. 11B: phylogenetic analysis of Ruixinia zhangi, a sauropod cladogram; rectangular, root left, tips right, thin lines, numbered node dots; panel letter B at top left. Image: census figure (1659x2599 px).",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Sauropod cladogram, 109 tips, with six polytomies (largest: node 11 with five children, and Aeolosaurus + Rapetosaurus + Alamosaurus + the saltasaurids with four). Where a polytomy has an odd number of children, the middle child's branch continues the stem's row. Black dots mark numbered nodes and are not tips. Node lines were listed from the image and linked by script, then every polytomy and a sample of nodes were checked against the figure at 2-3x. Random-sample case (seed 20261106); topology only."
+}

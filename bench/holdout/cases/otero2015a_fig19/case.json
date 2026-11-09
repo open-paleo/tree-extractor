@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/otero2015a_fig19.png",
+  "names": "names.txt",
+  "source": "Otero et al. 2015, Zoological Journal of the Linnean Society 174: 589-634, Fig. 19: simplified reduced consensus tree with calibrated phylogeny of sauropodiforms; a vertical rectangular tree with the root at the bottom, rotated italic tip names above each tip line, a stage and period column at the left over coloured stage bands, continent silhouettes above the tips, an arrow for Eusauropoda, a question mark under Sefapanosaurus and clade names with leader lines. Image: census figure (1333x672 px).",
+  "license": "not open (Wiley, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('basalmost sauropodomorphs' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated sauropodiform tree, 19 tips, fully resolved; a pectinate ladder read from right-angle node bars (the image rotated to put the root on the left and node lines listed per column). Eusauropoda is an arrow tip. Random-sample case (seed 20261106); topology only."
+}

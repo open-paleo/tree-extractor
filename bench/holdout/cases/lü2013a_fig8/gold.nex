@@ -1,0 +1,33 @@
+#NEXUS
+
+[ lü2013a_fig8: Oviraptorosaur strict consensus, 20 tips, one polytomy: Oviraptor + (Rinchenia, (Citipati, Citipati sp)) + Ingeniinae leave one node bar. The rest is a pectinate ladder down to Herrerasaurus. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Herrerasaurus
+        Velociraptor
+        Archaeopteryx
+        Incisivosaurus
+        Caudipteryx
+        Avimimus
+        Chirostenotes
+        Gigantoraptor
+        Nankangia
+        Yulong
+        Oviraptor
+        Rinchenia
+        Citipati
+        Citipati_sp
+        Khaan
+        Conchoraptor
+        Machairasaurus
+        Ingenia
+        Heyuannia
+        Nemegtomaia
+    ;
+END;
+
+BEGIN TREES;
+    TREE lü2013a_fig8 = [&R] (Herrerasaurus,(Velociraptor,(Archaeopteryx,(Incisivosaurus,(Caudipteryx,(Avimimus,(Chirostenotes,(Gigantoraptor,(Nankangia,(Yulong,(Oviraptor,(Rinchenia,(Citipati,Citipati_sp)),(Khaan,(Conchoraptor,(Machairasaurus,(Ingenia,(Heyuannia,Nemegtomaia))))))))))))))));
+END;

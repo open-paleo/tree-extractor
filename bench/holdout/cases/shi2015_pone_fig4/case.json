@@ -1,0 +1,17 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Shi et al. 2015, PLoS ONE 10: e0124349, Fig. 4: phylogenetic relationships among 33 nymphalid species; two rectangular trees side by side (A Bayesian, B maximum likelihood), branches coloured by clade with a legend, support values, bracketed subfamily names; the gold is panel A; butterflies (Nymphalidae). Image: the journal's figure image ('large' size from journals.plos.org, unmodified).",
+  "license": "CC BY 4.0",
+  "attribution": "Shi, Q.H.; Sun, X.Y.; Wang, Y.L.; Hao, J.S.; Yang, Q. (2015). Morphological Characters Are Compatible with Mitogenomic Data in Resolving the Phylogeny of Nymphalid Butterflies (Lepidoptera: Papilionoidea: Nymphalidae). PLoS ONE 10: e0124349. https://doi.org/10.1371/journal.pone.0124349. Fig. 4. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for renamed duplicates)",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1590,
+    "y1": 1371
+  },
+  "region_note": "panel A, left half; panel B (the ML tree) is excluded",
+  "gold": "gold.nex",
+  "gold_note": "Nymphalid tree, panel A, 36 tips. The root is drawn as a trichotomy ((Coreana, Protantigius), Spindasis takanonis, Nymphalidae). Subfamily names after the tips (–Biblidinae and the like) are labels, not part of the tip names; 'Melanitis Leda' is kept as printed. Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only."
+}

@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/fiorillo2012a_fig6.png",
+  "names": "names.txt",
+  "source": "Fiorillo & Tykoski 2012, Acta Palaeontologica Polonica 57: 561-573, Fig. 6: strict consensus of the three most parsimonious trees, Ceratopsidae; rectangular, root left, tips right, open node circles with Bremer/bootstrap values. Image: census figure (996x1760 px).",
+  "license": "unverified: no licence statement in the text held (Acta Palaeontologica Polonica is open access)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Ceratopsid strict consensus, 16 tips, one polytomy: Pachyrhinosaurus perotorum, P. lakustai, P. canadensis and TMP 2002.76.1 leave one vertical line. The open circles mark nodes and carry support values; they are not tips. Same paper as fiorillo2012a_fig7 (one of the MPTs, time-calibrated). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

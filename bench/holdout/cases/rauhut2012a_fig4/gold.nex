@@ -1,0 +1,41 @@
+#NEXUS
+
+[ rauhut2012a_fig4: Theropod tree, 28 tips, with two polytomies: a five-way node (Afrovenator + Dubreuillosaurus + (Torvosaurus, Megalosaurus) as one three-way node, then Duriavenator, Magnosaurus, Streptospondylus, Eustreptospondylus) inside Megalosauroidea. Node circles sit on the stems and are not tips. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Syntarsus_kayentakatae
+        Dilophosaurus
+        Abelisauridae
+        Ceratosaurus
+        Chuandongcoelurus
+        Afrovenator
+        Dubreuillosaurus
+        Torvosaurus
+        Megalosaurus
+        Duriavenator
+        Magnosaurus
+        Streptospondylus
+        Eustreptospondylus
+        Sciurumimus
+        Baryonichinae
+        Spinosaurinae
+        Monolophosaurus
+        Xuanhanosaurus
+        Marshosaurus
+        Piatnitzkysaurus
+        Condorraptor
+        Sinraptoridae
+        Allosaurus
+        Carcharodontosauridae
+        Neovenatoridae
+        Compsognathus
+        Tanycolagreus
+        Guanlong
+    ;
+END;
+
+BEGIN TREES;
+    TREE rauhut2012a_fig4 = [&R] (Syntarsus_kayentakatae,(Dilophosaurus,((Abelisauridae,Ceratosaurus),(Chuandongcoelurus,((((((((Afrovenator,Dubreuillosaurus,(Torvosaurus,Megalosaurus)),Duriavenator,Magnosaurus,Streptospondylus,Eustreptospondylus),Sciurumimus),(Baryonichinae,Spinosaurinae)),Monolophosaurus),(Xuanhanosaurus,(Marshosaurus,(Piatnitzkysaurus,Condorraptor)))),(Sinraptoridae,(Allosaurus,(Carcharodontosauridae,Neovenatoridae)))),(Compsognathus,(Tanycolagreus,Guanlong)))))));
+END;

@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/soto-acuña2021a_fig3.png",
+  "names": "names.txt",
+  "source": "Soto-Acuña et al. 2021, Nature 600: 259-263, Fig. 3a: time-calibrated thyreophoran tree; rectangular, root left, tips right, a stage strip and Ma axis across the top, coloured stage bands, range bars, collapsed clades drawn as dark wedges with white names, silhouettes and bracketed clade names. The figure also holds panel b (a palaeogeographic globe) and panel c (tail drawings), which are not trees. Image: census figure (2355x1381 px).",
+  "license": "not open (Nature, all rights reserved)",
+  "names_note": "the paper's matrix taxa (census list, which joins several matrices); tips printed as genus only take the matrix binomial where the list has exactly one, otherwise the printed text; collapsed clades keep their printed names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated thyreophoran tree, 14 tips, fully resolved; four tips are collapsed clades (Stegosauridae, Nodosauridae, Ankylosaurinae drawn as wedges). Replacement case: drawn with seed 20261107 from the rectangular time-axis stratum after barrett2026a_fig28 was skipped. Topology transcribed from the figure and checked node by node; topology only."
+}

@@ -1,0 +1,16 @@
+{
+  "image": "../../../../../corpus/census/figures/lockwood2021a_fig23.png",
+  "names": "names.txt",
+  "source": "Lockwood et al. 2021, Journal of Systematic Palaeontology 19: 847-888, Fig. 23: three cladograms of iguanodontian relationships; the gold is panel A, the full strict consensus (rectangular, root left, tips right, black node dots, bootstrap above and Bremer below each node, bold clade names). Panels B and C are partial trees of the same taxa. Image: census figure (2014x2108 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1250,
+    "y1": 2108
+  },
+  "region_note": "panel A, left side; panel C's label 'Hadrosauriformes' reaches into the box at its right edge (x 1194-1250, y 1530-1560)",
+  "license": "CC BY-NC-ND 4.0 (per the article)",
+  "names_note": "no matrix held; list = the printed tip names, with the printed misspellings (Hysilophodon foxii, Tematosaurus transsylvanicus, Gimoreosaurus gobiensis) and the two names cut off in the figure as visible (Valdosaurus canalicu, Dysalotosaurus lett)",
+  "gold": "gold.nex",
+  "gold_note": "Iguanodontian strict consensus, panel A, 41 tips. Polytomies: Hadrosauriformes with eleven children (ten taxa plus Hadrosauroidea), Dryosauridae with three, and Equijubus + (Penelopognathus, Batyrosaurus) + the rest. Black dots mark named nodes and are not tips. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node against the listed node lines; topology only."
+}

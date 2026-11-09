@@ -50,7 +50,10 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    past the end, so free ends of long horizontal runs with loose ink to their right say
    root-left, and free ends of long vertical runs with ink above or below say root-bottom or
    root-top. An end beside a long run of the other direction is a junction, not free. Runs are
-   taken only from large pieces of line ink, so letter strokes never count whatever the glyph
+   taken only from large pieces of line ink, and the line ink here includes lines drawn in
+   color (Shi 2015 draws every clade in its own color, and its neutral ink is the subfamily
+   brackets alone, which stand on their side and turned the figure), so letter strokes never
+   count whatever the glyph
    height was judged to be, and the ink past an end may be a range bar or a silhouette as well
    as text; ink is anything darker than the background, which is measured rather than assumed
    white, since a figure on a yellow panel otherwise has ink past every end. One veto: a dense
@@ -143,7 +146,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    tree takes a row before a loose one does, since the colored dot before a label can trace as
    a stub of its own right where the label begins (Fanti's Turiasaurus). A text row's box
    leaves out solid blocks (a range bar touching a label), so the
-   row neither clips the branch stub next to the bar nor sits over it. Before labels are
+   row neither clips the branch stub next to the bar nor sits over it. A name printed at
+   several tips, a species sampled several times, is numbered in figure order in the Newick
+   and the lists, so each tip keeps a name of its own. Before labels are
    assigned, every node with fewer than two children is dissolved (`pruneDegenerateNodes`): a
    junction the trace found nothing beyond, or one whose other children were lost, is no
    split, and the slanted tracer left two such empty nodes in Gallina's output; a block is a glyph wider
@@ -178,7 +183,9 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    again as the piece with the most tips, and once
    more after labels are read, this time by named tips first (three at least, since a stray
    piece can carry a known name or two when there is no taxon list), since a stratigraphic
-   chart or a frame can have more ends than the tree but none of them reads as a taxon.
+   chart or a frame can have more ends than the tree but none of them reads as a taxon. The radius that tells a fat shape from a line is the marker radius, or the colored
+   ink's own line thickness when that is larger: branches drawn in color can be ten pixels
+   thick (Wu 2015's subgenus branches) and would otherwise pass for markers.
 
    Tip labels set at a slant, which a quarter turn leaves twenty or thirty degrees off level,
    get a frame of their own (`src/core/slant.ts`). The slant is measured in the label zone,

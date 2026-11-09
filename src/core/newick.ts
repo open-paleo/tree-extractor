@@ -51,22 +51,56 @@ export function formatLabel(label: string): string
  */
 export function getTipDisplayName(document: ExtractionDocument, tipId: string): string
 {
+    let base: string | null = null;
+
     for (const tip of document.tips)
     {
-        if (tip.id !== tipId)
+        if (tip.id === tipId)
         {
-            continue;
+            base = describeTip(tip);
         }
-
-        if (tip.match !== null && tip.match.accepted)
-        {
-            return tip.match.name;
-        }
-
-        return tip.label ?? tip.id;
     }
 
-    return tipId;
+    if (base === null)
+    {
+        return tipId;
+    }
+
+    // A name printed at several tips of the tree (a species sampled several times) is
+    // numbered in figure order, so that each tip keeps a name of its own in the Newick.
+    let count = 0;
+    let ordinal = 0;
+
+    for (const tip of document.tips)
+    {
+        if (tip.parent !== null && describeTip(tip) === base)
+        {
+            count++;
+
+            if (tip.id === tipId)
+            {
+                ordinal = count;
+            }
+        }
+    }
+
+    return count > 1 && ordinal > 0 ? `${base} ${ordinal}` : base;
+}
+
+/**
+ * A tip's name as read: the accepted match, else the label, else the identifier.
+ *
+ * @param tip - The tip.
+ * @returns The name.
+ */
+function describeTip(tip: Tip): string
+{
+    if (tip.match !== null && tip.match.accepted)
+    {
+        return tip.match.name;
+    }
+
+    return tip.label ?? tip.id;
 }
 
 /**

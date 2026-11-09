@@ -1,0 +1,29 @@
+#NEXUS
+
+[ fiorillo2012a_fig7: Time-calibrated ceratopsid tree, 16 tips, fully resolved. Tips keep their printed text (TMP 2002.76.1 as TMP_2002.76.1). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=16;
+    TAXLABELS
+        Pachyrhinosaurus_perotorum
+        Pachyrhinosaurus_canadensis
+        Pachyrhinosaurus_lakustai
+        TMP_2002.76.1
+        Achelousaurus_horneri
+        Einiosaurus_procurvicornis
+        Rubeosaurus_ovatus
+        Centrosaurus_apertus
+        Styracosaurus_albertensis
+        Centrosaurus_brinkmani
+        Albertaceratops_nesmoi
+        Diabloceratops_eatoni
+        Chasmosaurus_belli
+        Triceratops
+        Zuniceratops_christopheri
+        Protoceratops
+    ;
+END;
+
+BEGIN TREES;
+    TREE fiorillo2012a_fig7 = [&R] (((((((((((Pachyrhinosaurus_perotorum,Pachyrhinosaurus_canadensis),Pachyrhinosaurus_lakustai),TMP_2002.76.1),Achelousaurus_horneri),(Einiosaurus_procurvicornis,Rubeosaurus_ovatus)),((Centrosaurus_apertus,Styracosaurus_albertensis),Centrosaurus_brinkmani)),Albertaceratops_nesmoi),Diabloceratops_eatoni),(Chasmosaurus_belli,Triceratops)),Zuniceratops_christopheri),Protoceratops);
+END;

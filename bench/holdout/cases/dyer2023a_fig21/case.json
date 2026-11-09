@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/dyer2023a_fig21.png",
+  "names": "names.txt",
+  "source": "Dyer et al. 2023, Vertebrate Anatomy Morphology Palaeontology 11: 1-33, Fig. 21: time-calibrated Bayesian tree with forced resolution of Pachycephalosauria, rectangular, root left, tips right, with geological timescale strip, grey stage bands, coloured range bars and node support values. Image: census figure (3285x3159 px).",
+  "license": "CC BY 4.0 by the journal's policy (VAMP publishes under CC BY 4.0), not stated in the text held",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated pachycephalosaur tree, 18 tips; the root is drawn as a trichotomy (Pachycephalosauria, Yinlong downsi, Psittacosaurus mongoliensis). Tips keep their printed text (Amtocephale gobienses as printed). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

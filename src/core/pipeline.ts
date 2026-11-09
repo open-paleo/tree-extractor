@@ -385,7 +385,12 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     let textInk = createDarkMask(image, parameters.inkThreshold, false, parameters.maxChroma);
     // Lines drawn in color join the line ink; colored markers and fills stay out of it and are
     // kept aside, since a tip's branch may end at one and its label lie beyond it.
-    const colored = splitColoredInk(image, parameters.coloredThreshold, parameters.coloredMinChroma, parameters.markerRadius);
+    // Branches drawn in color can be thicker than a marker radius (Wu 2015's ten-pixel subgenus
+    // branches), and would then pass for markers; the colored ink's own line thickness sets the
+    // radius that tells a marker from a line.
+    const coloredThickness = estimateLineThickness(createColoredMask(image, parameters.coloredThreshold, parameters.coloredMinChroma));
+    const markerRadius = coloredThickness >= 2 * parameters.markerRadius ? Math.round(coloredThickness) + 1 : parameters.markerRadius;
+    const colored = splitColoredInk(image, parameters.coloredThreshold, parameters.coloredMinChroma, markerRadius);
     const paleMarkers = findFatShapes(createColoredMask(image, 235, 30), parameters.markerRadius);
     // Row boxes leave out glyphs lying on these, so a range bar beside a label neither starts
     // the row nor clips the branch that runs into it.
@@ -1131,7 +1136,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const sourceCrop = sourceRegion === null ? sourceImage : cropImage(sourceImage, sourceRegion);
     const orientationStarted = performance.now();
     const inkAdaptation = parameters.adaptiveInk ? adaptInkThresholds(parameters, sourceCrop) : null;
-    const orientationFind = parameters.rotation === "auto" ? detectOrientation(sourceCrop, parameters.inkThreshold, parameters.lineThreshold, parameters.maxChroma) : null;
+    const orientationFind = parameters.rotation === "auto" ? detectOrientation(sourceCrop, parameters.inkThreshold, parameters.lineThreshold, parameters.maxChroma, parameters.coloredThreshold, parameters.coloredMinChroma, parameters.markerRadius) : null;
     const orientation: Orientation = orientationFind === null ? "root-left" : orientationFind.orientation;
     const slantedFigure = parameters.slantedTrees && orientationFind !== null && orientationFind.slanted;
     const quarterTurns = orientation === "root-bottom" ? 1 : orientation === "root-top" ? 3 : 0;

@@ -1,0 +1,29 @@
+#NEXUS
+
+[ fiorillo2012a_fig6: Ceratopsid strict consensus, 16 tips, one polytomy: Pachyrhinosaurus perotorum, P. lakustai, P. canadensis and TMP 2002.76.1 leave one vertical line. The open circles mark nodes and carry support values; they are not tips. Same paper as fiorillo2012a_fig7 (one of the MPTs, time-calibrated). Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=16;
+    TAXLABELS
+        Pachyrhinosaurus_perotorum
+        Pachyrhinosaurus_lakustai
+        Pachyrhinosaurus_canadensis
+        TMP_2002.76.1
+        Achelousaurus_horneri
+        Einiosaurus_procurvicornis
+        Rubeosaurus_ovatus
+        Centrosaurus_apertus
+        Styracosaurus_albertensis
+        Centrosaurus_brinkmani
+        Albertaceratops_nesmoi
+        Diabloceratops_eatoni
+        Chasmosaurus_belli
+        Triceratops
+        Zuniceratops_christopheri
+        Protoceratops
+    ;
+END;
+
+BEGIN TREES;
+    TREE fiorillo2012a_fig6 = [&R] (((((((((Pachyrhinosaurus_perotorum,Pachyrhinosaurus_lakustai,Pachyrhinosaurus_canadensis,TMP_2002.76.1),Achelousaurus_horneri),(Einiosaurus_procurvicornis,Rubeosaurus_ovatus)),((Centrosaurus_apertus,Styracosaurus_albertensis),Centrosaurus_brinkmani)),Albertaceratops_nesmoi),Diabloceratops_eatoni),(Chasmosaurus_belli,Triceratops)),Zuniceratops_christopheri),Protoceratops);
+END;

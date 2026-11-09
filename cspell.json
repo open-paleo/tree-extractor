@@ -164,7 +164,9 @@
         "Bellardini",
         "Rebbachisaurus",
         "Turiasaurus",
-        "undoable"
+        "undoable",
+        "Poust",
+        "Tschopp"
     ],
     "ignorePaths": [
         "node_modules/**",

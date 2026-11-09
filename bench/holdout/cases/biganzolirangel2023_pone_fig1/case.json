@@ -1,0 +1,10 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Biganzoli-Rangel et al. 2023, PLoS ONE 18: e0285271, Fig. 1: majority-rule tree from a partitioned Bayesian analysis; rectangular, root left, tips right, thin lines, posterior-probability dots at nodes, collapsed clades drawn as open triangles, coloured clade bands and a legend box; bats (Chiroptera: Emballonuridae). Image: the journal's figure image ('large' size from journals.plos.org, unmodified).",
+  "license": "CC BY 4.0",
+  "attribution": "Biganzoli-Rangel, A.J.; Leon-Alvarado, O.D.; Robe, L.J.; Meza, M.A.; Gutiérrez, E.E.; Paladini, A. (2023). Systematics and phylogeography of bats of the genus Rhynchonycteris (Chiroptera: Emballonuridae): Integrating molecular phylogenetics, ecological niche modeling and morphometric data. PLoS ONE 18: e0285271. https://doi.org/10.1371/journal.pone.0285271. Fig. 1. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for renamed duplicates)",
+  "gold": "gold.nex",
+  "gold_note": "Emballonurid bat tree, 31 tips, fully resolved; several tips are collapsed clades drawn as triangles and keep their printed names. 'Peropteryx macrotis' is printed four times; the gold numbers them _1 to _4 from top to bottom. The Rhynchonycteris naso samples keep their printed qualifiers without brackets (Rhynchonycteris_naso_11_Belize, _Panama, _Belize). Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only."
+}

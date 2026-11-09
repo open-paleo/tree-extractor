@@ -1,0 +1,30 @@
+#NEXUS
+
+[ howlader2016_pone_fig7: Frog phylogram, 17 tips, one polytomy: the three Zakerana dhaka sp. nov. samples. The figure prints 'Zakerana dhaka sp. nov.' three times and two pierrei samples with places in brackets; the gold names them Zakerana_dhaka_sp._nov._Holotype, _2 and _3 (top to bottom) and Zakerana_pierrei_Bangladesh / _Nepal, since Newick names cannot repeat or hold brackets. Outside-corpus case: chosen to test whether the tool generalises beyond dinosaur figures, not drawn at random. Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=17;
+    TAXLABELS
+        Zakerana_dhaka_sp._nov._Holotype
+        Zakerana_dhaka_sp._nov._2
+        Zakerana_dhaka_sp._nov._3
+        Zakerana_asmati
+        Zakerana_granosa
+        Zakerana_pierrei_Bangladesh
+        Zakerana_pierrei_Nepal
+        Zakerana_syhadrensis
+        Zakerana_kudremukhensis
+        Zakerana_caperata
+        Zakerana_greenei
+        Zakerana_kirtisinghei
+        Zakerana_rufescens
+        Zakerana_mudduraja
+        Fejervarya_orissaensis
+        Euphlyctis_cyanophlyctis
+        Sphaerotheca_dobsonii
+    ;
+END;
+
+BEGIN TREES;
+    TREE howlader2016_pone_fig7 = [&R] ((((((((Zakerana_dhaka_sp._nov._Holotype,Zakerana_dhaka_sp._nov._2,Zakerana_dhaka_sp._nov._3),Zakerana_asmati),(Zakerana_granosa,(Zakerana_pierrei_Bangladesh,Zakerana_pierrei_Nepal))),((Zakerana_syhadrensis,Zakerana_kudremukhensis),(Zakerana_caperata,(Zakerana_greenei,Zakerana_kirtisinghei)))),Zakerana_rufescens),Zakerana_mudduraja),Fejervarya_orissaensis),(Euphlyctis_cyanophlyctis,Sphaerotheca_dobsonii));
+END;

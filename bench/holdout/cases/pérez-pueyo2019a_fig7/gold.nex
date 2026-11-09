@@ -1,0 +1,38 @@
+#NEXUS
+
+[ pérez-pueyo2019a_fig7: Time-calibrated sauropod tree, 25 tips, most of them collapsed clades printed in capitals. Neosauropoda is a four-way polytomy (Jobaria, Haplocanthosaurus, Diplodocoidea, Macronaria): the four branches leave one vertical line. The drawing does not put nodes midway between their children, so nodes were read from the lines, not their positions. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=25;
+    TAXLABELS
+        PROSAUROPODA
+        Isanosaurus
+        Vulcanodon
+        Barapasaurus
+        CETIOSAURIDAE
+        MAMENCHISAURIDAE
+        Turiasaurus
+        Losillasaurus
+        Jobaria
+        Haplocanthosaurus
+        REBBACHISAURIDAE
+        DICRAEOSAURIDAE
+        Apatosaurus
+        DIPLODOCINAE
+        Camarasaurus
+        Europasaurus
+        Tehuelchesaurus
+        Euhelopus
+        Lusotitan
+        Galvesaurus
+        More_derived_brachiosaurids
+        Sauroposeidon
+        Phuwiangosaurus
+        Tastavinsaurus
+        TITANOSAURIA
+    ;
+END;
+
+BEGIN TREES;
+    TREE pérez-pueyo2019a_fig7 = [&R] (PROSAUROPODA,(Isanosaurus,(Vulcanodon,(Barapasaurus,(CETIOSAURIDAE,(MAMENCHISAURIDAE,((Turiasaurus,Losillasaurus),(Jobaria,Haplocanthosaurus,(REBBACHISAURIDAE,(DICRAEOSAURIDAE,(Apatosaurus,DIPLODOCINAE))),(Camarasaurus,(Europasaurus,(Tehuelchesaurus,(Euhelopus,(((Lusotitan,Galvesaurus),More_derived_brachiosaurids),(Sauroposeidon,(Phuwiangosaurus,(Tastavinsaurus,TITANOSAURIA))))))))))))))));
+END;

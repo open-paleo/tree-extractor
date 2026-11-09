@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/gonzálezriga2018a_fig28.png",
+  "names": "names.txt",
+  "source": "González Riga et al. 2018, Zoological Journal of the Linnean Society 184: 136-181, Fig. 28: time-calibrated titanosaur tree with geographical distribution; rectangular, root left, tips right, a Cretaceous stage strip across the top, coloured range bars by continent, a pink box behind Lognkosauria, node circles and a sauropod silhouette. Image: census figure (1170x1374 px).",
+  "license": "CC BY-NC 3.0 (per the article)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated titanosaur tree, 23 tips, fully resolved; a pectinate backbone whose nodes sit 10-15 px apart, read at 3-4x zoom against the drawing's rule that each node's stem joins its vertical midway between its first and last child. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

@@ -1,0 +1,54 @@
+#NEXUS
+
+[ lockwood2021a_fig23: Iguanodontian strict consensus, panel A, 41 tips. Polytomies: Hadrosauriformes with eleven children (ten taxa plus Hadrosauroidea), Dryosauridae with three, and Equijubus + (Penelopognathus, Batyrosaurus) + the rest. Black dots mark named nodes and are not tips. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node against the listed node lines; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=41;
+    TAXLABELS
+        Lesothosaurus_diagnosticus
+        Hysilophodon_foxii
+        Rhabdodon_spp.
+        Zalmoxes_shqiperorum
+        Zalmoxes_robustus
+        Tenontosaurus_tilletti
+        Valdosaurus_canalicu
+        Dryosaurus_altus
+        Dysalotosaurus_lett
+        Camptosaurus_dispar
+        Uteodon_aphanoecetes
+        Dakotadon_lakotaensis
+        Hippodraco_scutodens
+        Mantellisaurus_atherfieldensis
+        Brighstoneus_simmondsi
+        Iguanodon_bernissartensis
+        Barilium_dawsoni
+        Ouranosaurus_nigeriensis
+        Bayannurosaurus_perfectus
+        Hypselospinus_fittoni
+        Lanzhousaurus_magnidens
+        Proa_valdearinnoensis
+        Iguanacolossus_fortis
+        Jinzhousaurus_yangi
+        Bolong_yixianensis
+        Altirhinus_kurzanovi
+        Equijubus_normani
+        Penelopognathus_weishampelli
+        Batyrosaurus_rozhdestvenskyi
+        Sirindhorna_koratensis
+        Probactrosaurus_gobiensis
+        Eolambia_caroljonesa
+        Levnesovia_transoxiana
+        Bactrosaurus_johnsoni
+        Gimoreosaurus_gobiensis
+        Tematosaurus_transsylvanicus
+        Tethyshadros_insularis
+        Edmontosaurus_regalis
+        Saurolophus_osborni
+        Lambeosaurus_lambei
+        Hypacrosaurus_altispinus
+    ;
+END;
+
+BEGIN TREES;
+    TREE lockwood2021a_fig23 = [&R] (Lesothosaurus_diagnosticus,(Hysilophodon_foxii,((Rhabdodon_spp.,(Zalmoxes_shqiperorum,Zalmoxes_robustus)),(Tenontosaurus_tilletti,((Valdosaurus_canalicu,Dryosaurus_altus,Dysalotosaurus_lett),(Camptosaurus_dispar,(Uteodon_aphanoecetes,(Dakotadon_lakotaensis,(Hippodraco_scutodens,(Mantellisaurus_atherfieldensis,Brighstoneus_simmondsi,Iguanodon_bernissartensis,Barilium_dawsoni,Ouranosaurus_nigeriensis,Bayannurosaurus_perfectus,Hypselospinus_fittoni,Lanzhousaurus_magnidens,Proa_valdearinnoensis,Iguanacolossus_fortis,((Jinzhousaurus_yangi,Bolong_yixianensis),(Altirhinus_kurzanovi,(Equijubus_normani,(Penelopognathus_weishampelli,Batyrosaurus_rozhdestvenskyi),(Sirindhorna_koratensis,(Probactrosaurus_gobiensis,(Eolambia_caroljonesa,(Levnesovia_transoxiana,(Bactrosaurus_johnsoni,(Gimoreosaurus_gobiensis,((Tematosaurus_transsylvanicus,Tethyshadros_insularis),((Edmontosaurus_regalis,Saurolophus_osborni),(Lambeosaurus_lambei,Hypacrosaurus_altispinus))))))))))))))))))))));
+END;

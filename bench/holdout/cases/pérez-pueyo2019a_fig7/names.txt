@@ -1,0 +1,25 @@
+PROSAUROPODA
+Isanosaurus
+Vulcanodon
+Barapasaurus
+CETIOSAURIDAE
+MAMENCHISAURIDAE
+Turiasaurus
+Losillasaurus
+Jobaria
+Haplocanthosaurus
+REBBACHISAURIDAE
+DICRAEOSAURIDAE
+Apatosaurus
+DIPLODOCINAE
+Camarasaurus
+Europasaurus
+Tehuelchesaurus
+Euhelopus
+Lusotitan
+Galvesaurus
+More derived brachiosaurids
+Sauroposeidon
+Phuwiangosaurus
+Tastavinsaurus
+TITANOSAURIA

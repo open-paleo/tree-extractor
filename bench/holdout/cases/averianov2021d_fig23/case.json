@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/averianov2021d_fig23.png",
+  "names": "names.txt",
+  "source": "Averianov & Lopatin 2021, Journal of Systematic Palaeontology 19: 1097-1128, Fig. 23: part of the single most parsimonious tree from TNT, Alvarezsauroidea; each node drawn as a fork (a diagonal up to the upper child and a diagonal down to a horizontal leading to the lower child), node numbers above the forks, two bold clade names. Image: census figure (2044x1188 px).",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "the paper's matrix taxa (census list, 115 taxa; the figure shows the alvarezsauroid part); tips take the matrix spelling: the figure prints 'Shishugounykus inexpectus' and 'Nemegtonicus citus' for the matrix's Shishugounykus and Nemegtonykus citus",
+  "gold": "gold.nex",
+  "gold_note": "Alvarezsauroid part of the tree, 20 tips, fully resolved; drawn as diagonal forks rather than rectangular elbows. The bold numbers are node numbers, not support. Random-sample case (seed 20261106). Topology transcribed from the figure and checked node by node; topology only."
+}

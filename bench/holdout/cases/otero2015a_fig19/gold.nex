@@ -1,0 +1,32 @@
+#NEXUS
+
+[ otero2015a_fig19: Time-calibrated sauropodiform tree, 19 tips, fully resolved; a pectinate ladder read from right-angle node bars (the image rotated to put the root on the left and node lines listed per column). Eusauropoda is an arrow tip. Random-sample case (seed 20261106); topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=19;
+    TAXLABELS
+        basalmost_sauropodomorphs
+        Jingshanosaurus
+        Yunnanosaurus
+        Seitaad
+        Anchisaurus
+        Mussaurus
+        Sefapanosaurus
+        Aardonyx
+        Leonerasaurus
+        Melanorosaurus
+        Camelotia
+        Antetonitrus
+        Lessemsaurus
+        Blikanasaurus
+        Gongxianosaurus
+        Isanosaurus
+        Tazoudasaurus
+        Vulcanodon
+        Eusauropoda
+    ;
+END;
+
+BEGIN TREES;
+    TREE otero2015a_fig19 = [&R] (basalmost_sauropodomorphs,(Jingshanosaurus,(Yunnanosaurus,(Seitaad,(Anchisaurus,(Mussaurus,(Sefapanosaurus,(Aardonyx,(Leonerasaurus,(Melanorosaurus,(Camelotia,((Antetonitrus,Lessemsaurus),(Blikanasaurus,(Gongxianosaurus,(Isanosaurus,(Tazoudasaurus,(Vulcanodon,Eusauropoda)))))))))))))))));
+END;

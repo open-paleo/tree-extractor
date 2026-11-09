@@ -1,0 +1,9 @@
+{
+  "image": "../../../../../corpus/census/figures/brusatte2010a_fig2.png",
+  "names": "names.txt",
+  "source": "Brusatte et al. 2010, Science 329: 1481-1485, Fig. 2: phylogenetic relationships of tyrannosauroid theropods against time; a vertical rectangular tree with the root at the bottom, rotated tip names above black range bars (some names in blue), red ghost lineages, black node dots with clade names, a geological time column at the left, silhouettes with dotted leader lines, and a vertical download stamp at the right edge. Image: census figure (2473x2027 px).",
+  "license": "not open (Science, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('Utah Taxon' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Time-calibrated tyrannosauroid tree, 19 tips, fully resolved. Red segments are ghost lineages on ordinary branches, and the dotted lines join silhouettes to taxa: neither is a branch. Node bars were read from the image rotated root-left and listed per column, then checked against the figure. Random-sample case (seed 20261106); topology only."
+}
