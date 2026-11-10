@@ -5,7 +5,13 @@
         "outDir": "dist",
         "rootDir": "src",
         "rewriteRelativeImportExtensions": true,
-        "declaration": false
+        "declaration": true
     },
-    "include": ["src/core/**/*.ts", "src/ocr/**/*.ts", "src/web/**/*.ts"]
+    "include": [
+        "src/index.ts",
+        "src/core/**/*.ts",
+        "src/ocr/**/*.ts",
+        "src/web/**/*.ts",
+        "src/cli/**/*.ts"
+    ]
 }

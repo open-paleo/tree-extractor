@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+The viewer becomes a component a site can mount, and accuracy is measured on a random sample.
+
+- `mountTreeExtractor(element, options)` mounts the viewer and returns a handle that reads the
+  current tree and removes the viewer again; the standalone page is a wrapper over it. The
+  same viewer is a custom element, `<tree-extractor>`, defined on request.
+- No request to a third party: the worker, Tesseract.js, its core and its language data are
+  named by the host, and the standalone page serves them from `node_modules`.
+- Styles sit under one class and take colors, fonts and radius from custom properties;
+  element ids are prefixed; the layout follows the width of its own element.
+- Package exports for the pipeline, the viewer, its stylesheet and its worker, built with type
+  declarations; `sharp` is an optional peer and `tesseract.js` is pinned.
+- Accessibility: labeled controls, visible focus, lists that select on focus, moving the
+  selection from the keyboard, checked with axe at WCAG 2.2 AA in light and dark.
+- Twenty census figures drawn at random with gold trees, and five figures from other animal
+  groups, join the holdout: 78 percent of tips named and 91 percent of splits on the random
+  twenty.
+- Orientation and marker detection see colored branches; repeated tip names are numbered;
+  pale fills no longer flood into fragmented text.
+
 ## 0.2.0 (2026-11-06)
 
 Trees drawn in more ways, a viewer that can finish a tree by hand, and a measured census.

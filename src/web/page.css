@@ -1,0 +1,14 @@
+:root { color-scheme: light dark; }
+
+body {
+    margin: 0;
+    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: light-dark(#1f2328, #e6edf3);
+    background: light-dark(#ffffff, #0d1117);
+}
+
+header { padding: 16px 20px 0; }
+header h1 { margin: 0 0 4px; font-size: 22px; }
+header p { margin: 0; color: light-dark(#59636e, #9198a1); }
+
+#app { padding: 16px 20px 32px; }

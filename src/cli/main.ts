@@ -447,7 +447,15 @@ async function runExtract(parsed: Arguments): Promise<number>
     {
         if (!folder)
         {
-            errors = await extractOne(target, job);
+            try
+            {
+                errors = await extractOne(target, job);
+            }
+            catch (error)
+            {
+                console.error(error instanceof Error ? error.message : String(error));
+                errors = 1;
+            }
         }
         else
         {

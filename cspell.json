@@ -167,7 +167,11 @@
         "undoable",
         "Poust",
         "Tschopp",
-        "Naish"
+        "Naish",
+        "Jeholosaurus",
+        "shangyuanensis",
+        "WCAG",
+        "tessdata"
     ],
     "ignorePaths": [
         "node_modules/**",

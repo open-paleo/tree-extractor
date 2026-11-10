@@ -52,13 +52,34 @@ export type TesseractWorkerLike = {
 };
 
 /**
+ * Where Tesseract.js loads its own files from, as its createWorker options name them. A host
+ * that serves these itself passes all three; absent ones fall back to Tesseract's defaults.
+ */
+export type TesseractPaths = {
+    /**
+     * URL of Tesseract.js's worker script (worker.min.js of the tesseract.js package).
+     */
+    workerPath?: string;
+
+    /**
+     * URL of the directory holding the tesseract.js-core files.
+     */
+    corePath?: string;
+
+    /**
+     * URL of the directory holding the language data (eng.traineddata.gz).
+     */
+    langPath?: string;
+};
+
+/**
  * The part of the Tesseract.js module the adapter uses.
  */
 export type TesseractLike = {
     /**
      * Creates a worker for a language.
      */
-    createWorker(language: string): Promise<TesseractWorkerLike>;
+    createWorker(language: string, engineMode?: number, options?: TesseractPaths): Promise<TesseractWorkerLike>;
 };
 
 /**
@@ -82,11 +103,12 @@ function wrapImageInput(bytes: Uint8Array): Buffer | Blob
  *
  * @param tesseract - The Tesseract.js module or global.
  * @param language - Tesseract language code.
+ * @param paths - Where Tesseract.js loads its own files from, when the host serves them.
  * @returns An engine ready to read crops.
  */
-export async function createTesseractOcr(tesseract: TesseractLike, language = "eng"): Promise<OcrEngine>
+export async function createTesseractOcr(tesseract: TesseractLike, language = "eng", paths?: TesseractPaths): Promise<OcrEngine>
 {
-    const worker = await tesseract.createWorker(language);
+    const worker = paths === undefined ? await tesseract.createWorker(language) : await tesseract.createWorker(language, 1, paths);
     await worker.setParameters({ tessedit_pageseg_mode: "7", preserve_interword_spaces: "1" });
 
     return new TesseractOcrEngine(worker);

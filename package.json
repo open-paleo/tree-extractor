@@ -8,13 +8,36 @@
         "node": ">=24"
     },
     "bin": {
-        "tree-extractor": "./src/cli/main.ts"
+        "tree-extractor": "./dist/cli/main.js"
     },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./viewer": {
+            "types": "./dist/web/viewer.d.ts",
+            "default": "./dist/web/viewer.js"
+        },
+        "./element": {
+            "types": "./dist/web/element.d.ts",
+            "default": "./dist/web/element.js"
+        },
+        "./viewer.css": "./dist/web/styles.css",
+        "./worker": "./dist/web/worker.js",
+        "./known-taxa.txt": "./names/known-taxa.txt",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "names/known-taxa.txt",
+        "CHANGELOG.md"
+    ],
     "scripts": {
         "bench": "node --experimental-strip-types bench/run.ts",
         "bench:generate": "node --experimental-strip-types bench/synthetic/generate.ts",
         "bench:strict": "node --experimental-strip-types bench/run.ts --strict",
-        "build:web": "tsc -p tsconfig.build.json",
+        "build:web": "npm run build",
         "extract": "node --experimental-strip-types src/cli/main.ts",
         "lint:fix": "eslint src/ test/ bench/ scripts/ --fix",
         "lint": "eslint src/ test/ bench/ scripts/",
@@ -26,19 +49,31 @@
         "bench:holdout": "node --experimental-strip-types bench/run.ts --holdout",
         "bench:batch": "node --experimental-strip-types bench/batch.ts",
         "bench:census": "node --experimental-strip-types bench/batch.ts --manifest=../corpus/census/manifest.json --root=../corpus/census",
-        "test:web": "node --experimental-strip-types scripts/viewer-smoke.ts"
+        "test:web": "node --experimental-strip-types scripts/viewer-smoke.ts",
+        "build": "tsc -p tsconfig.build.json && node --experimental-strip-types scripts/copy-assets.ts",
+        "prepack": "npm run build"
     },
     "dependencies": {
-        "sharp": "^0.35.5",
-        "tesseract.js": "^6.0.1"
+        "tesseract.js": "6.0.1"
+    },
+    "peerDependencies": {
+        "sharp": "^0.35.5"
+    },
+    "peerDependenciesMeta": {
+        "sharp": {
+            "optional": true
+        }
     },
     "devDependencies": {
         "@eslint/js": "^9.18.0",
         "@stylistic/eslint-plugin": "^5.10.0",
+        "@tesseract.js-data/eng": "1.0.0",
         "@types/node": "^22.19.15",
+        "axe-core": "^4.10.2",
         "cspell": "8.17.5",
         "eslint": "^9.39.5",
         "playwright": "^1.49.1",
+        "sharp": "0.35.5",
         "typescript": "5.7.3",
         "typescript-eslint": "8.22.0"
     }

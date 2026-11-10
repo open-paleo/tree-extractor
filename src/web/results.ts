@@ -85,6 +85,7 @@ function createListItem(kind: "tip" | "node", id: string, value: string, classes
     const input = document.createElement("input");
     input.value = value;
     input.placeholder = kind === "tip" ? "(no label)" : "(no support value)";
+    input.setAttribute("aria-label", kind === "tip" ? `Name of tip ${id}` : `Label of node ${id}`);
     item.append(label, input);
 
     return item;
@@ -180,6 +181,8 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
             item.dataset.kind = issue.subject.startsWith("t") ? "tip" : "node";
             item.dataset.id = issue.subject;
             item.classList.add("subject");
+            item.tabIndex = 0;
+            item.setAttribute("role", "button");
         }
 
         elements.qcList.append(item);

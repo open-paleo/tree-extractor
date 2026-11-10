@@ -63,6 +63,9 @@ npm run extract -- extract figures/ --out results/
 npm run web
 ```
 
+The viewer page loads Tesseract.js, its core and its language data from `node_modules`, so it
+makes no request to any other host.
+
 `--crop x,y,w,h` restricts the analysis to one region of the image (for example to leave out a
 time scale or a second panel); results are still reported in full-image coordinates.
 
@@ -90,6 +93,66 @@ Below the Newick, the traced tree is redrawn clean: root on the left, tips evenl
 lengths from the time axis when one was read. It updates with every edit, doubles as a check on
 the trace, and downloads as SVG, so a figure that went in on its side with silhouettes and bands
 comes out as a plain horizontal tree.
+
+## Embedding the viewer
+
+The viewer is a component a page can mount; the standalone page above is a thin wrapper over
+the same function. The package ships built JavaScript with type declarations as a tarball
+attached to each GitHub release.
+
+```ts
+import { mountTreeExtractor } from "@open-paleo/tree-extractor/viewer";
+import "@open-paleo/tree-extractor/viewer.css";
+
+const viewer = mountTreeExtractor(document.querySelector("#tool"), {
+    workerUrl,                      // URL of the package's ./worker module, built or bundled
+    loadTesseract,                  // returns the Tesseract.js module; omit to trace without reading labels
+    tesseractPaths: { workerPath, corePath, langPath },
+    knownNames,                     // an array of names, or the URL of a text file, one per line
+});
+
+viewer.getNewick();                 // the tree with the user's edits, or null
+viewer.getDocument();               // the extraction document, or null
+viewer.destroy();                   // removes listeners, worker, OCR engine and markup
+```
+
+The same viewer is available as a custom element, which mounts when it joins the page and
+removes itself when it leaves. Locations are attributes; the Tesseract.js loader and a list of
+names are properties, set before or after the element is defined:
+
+```html
+<tree-extractor worker-url="/assets/worker.js" known-names-url="/data/taxa.txt"
+    tesseract-worker-path="/assets/tesseract/worker.min.js" tesseract-core-path="/assets/tesseract-core/"
+    tesseract-lang-path="/assets/tessdata"></tree-extractor>
+```
+
+```ts
+import { defineTreeExtractorElement } from "@open-paleo/tree-extractor/element";
+
+defineTreeExtractorElement();           // importing alone defines nothing
+document.querySelector("tree-extractor").loadTesseract = loadTesseract;
+```
+
+The viewer requests nothing the host did not name. Tesseract.js loads three things of its own,
+and a host that allows no third-party requests serves them itself and passes their locations:
+the worker script (`tesseract.js` 6.0.1, `dist/worker.min.js`), the core (`tesseract.js-core`
+6.1.2, the whole package directory) and the English language data (`@tesseract.js-data/eng`
+1.0.0, the `4.0.0_best_int` directory). Those are the versions the tests here run against.
+`sharp` is an optional peer, needed only by the command line, so installing the package for
+the viewer does not bring it in.
+
+Everything the viewer adds sits inside the element it is given, which gets the class
+`tree-extractor`; ids carry a `te-` prefix. Its stylesheet has no rule outside that class and
+takes its colors, fonts and corner radius from custom properties the host may set:
+`--te-background`, `--te-surface`, `--te-ink`, `--te-muted`, `--te-line`, `--te-accent`,
+`--te-accent-soft`, `--te-on-accent`, `--te-caution`, `--te-danger`, `--te-font-sans`,
+`--te-font-mono`, `--te-radius` and `--te-canvas-height`. The fallbacks follow the page's
+`color-scheme`. The layout responds to the width of its own element, down to 320 px.
+
+Controls are labeled and reachable from the keyboard: an entry in the tip or node list selects
+on focus, Delete, Undo and Redo are buttons and keys, and *Move the selection under* moves the
+selected tip or node to a node chosen from a list. Adding a tip or a node needs a pointer. The
+browser test checks the page with axe at WCAG 2.2 AA in light and dark.
 
 ## Scope
 

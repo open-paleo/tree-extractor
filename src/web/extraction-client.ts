@@ -106,6 +106,15 @@ export class ExtractionClient
     }
 
     /**
+     * Stops the worker; the client cannot be used afterwards.
+     */
+    public terminate(): void
+    {
+        this.worker.terminate();
+        this.pendingRun = null;
+    }
+
+    /**
      * Runs the pipeline in the worker.
      *
      * @param request - Inputs.

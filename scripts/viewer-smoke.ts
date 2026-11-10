@@ -24,6 +24,7 @@ const types: Record<string, string> = {
     ".json": "application/json",
     ".png": "image/png",
     ".wasm": "application/wasm",
+    ".gz": "application/gzip",
 };
 
 /**
@@ -154,40 +155,40 @@ try
     const errors = new Array<string>();
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(`http://localhost:${port}/src/web/`);
-    await page.setInputFiles("#file", figure);
-    await page.waitForFunction(() => !(document.querySelector("#run") as HTMLButtonElement).disabled, null, { timeout: 30000 });
-    await page.uncheck("#ocr");
-    await page.click("#run");
-    await page.waitForFunction(() => (document.querySelector("#newick") as HTMLTextAreaElement).value.length > 10, null, { timeout: 120000 });
-    const original = await page.inputValue("#newick");
+    await page.setInputFiles("#te-file", figure);
+    await page.waitForFunction(() => !(document.querySelector("#te-run") as HTMLButtonElement).disabled, null, { timeout: 30000 });
+    await page.uncheck("#te-ocr");
+    await page.click("#te-run");
+    await page.waitForFunction(() => (document.querySelector("#te-newick") as HTMLTextAreaElement).value.length > 10, null, { timeout: 120000 });
+    const original = await page.inputValue("#te-newick");
     expect(original.startsWith("(") && original.endsWith(";"), "extraction produced a Newick tree");
-    expect(Number((await page.textContent("#tips-count")) ?? "0") > 20 || (await page.locator("#tips li").count()) > 20, "more than twenty tips were listed");
+    expect(Number((await page.textContent("#te-tips-count")) ?? "0") > 20 || (await page.locator("#te-tips li").count()) > 20, "more than twenty tips were listed");
 
     // Delete, undo, redo.
-    await page.click("#tips li[data-id=\"t3\"] span.id");
-    await page.click("#delete");
-    const afterDelete = await page.inputValue("#newick");
+    await page.click("#te-tips li[data-id=\"t3\"] span.id");
+    await page.click("#te-delete");
+    const afterDelete = await page.inputValue("#te-newick");
     expect(afterDelete !== original, "deleting a tip changed the tree");
-    await page.click("#undo");
-    expect((await page.inputValue("#newick")) === original, "undo restored the tree");
-    await page.click("#redo");
-    expect((await page.inputValue("#newick")) === afterDelete, "redo removed the tip again");
+    await page.click("#te-undo");
+    expect((await page.inputValue("#te-newick")) === original, "undo restored the tree");
+    await page.click("#te-redo");
+    expect((await page.inputValue("#te-newick")) === afterDelete, "redo removed the tip again");
     await page.keyboard.press("Control+z");
-    expect((await page.inputValue("#newick")) === original, "the keyboard shortcut undid it");
+    expect((await page.inputValue("#te-newick")) === original, "the keyboard shortcut undid it");
 
     // Label edit, undone in one step.
-    const input = page.locator("#tips li[data-id=\"t1\"] input");
+    const input = page.locator("#te-tips li[data-id=\"t1\"] input");
     await input.fill("Edited name");
     await input.press("X");
-    expect((await page.inputValue("#newick")).includes("Edited_nameX"), "a typed label reached the tree");
-    await page.click("#tips");
-    await page.click("#undo");
-    expect((await page.inputValue("#newick")) === original, "one undo reverted the whole label edit");
+    expect((await page.inputValue("#te-newick")).includes("Edited_nameX"), "a typed label reached the tree");
+    await page.click("#te-tips");
+    await page.click("#te-undo");
+    expect((await page.inputValue("#te-newick")) === original, "one undo reverted the whole label edit");
 
     // Move a tip by dragging its selection ring onto the farthest node in view.
-    await page.click("#move");
-    await page.click("#actual");
-    await page.click("#tips li[data-id=\"t5\"] span.id");
+    await page.click("#te-move");
+    await page.click("#te-actual");
+    await page.click("#te-tips li[data-id=\"t5\"] span.id");
     await page.waitForTimeout(200);
     const rings = await findDots(page, [255, 200, 0], 40);
     const nodes = await findDots(page, [255, 80, 0], 30);
@@ -222,10 +223,84 @@ try
 
     await page.mouse.up();
     await page.waitForTimeout(200);
-    expect(((await page.textContent("#status")) ?? "").startsWith("moved t5 under"), "dropping the tip on a node moved it");
-    expect((await page.inputValue("#newick")) !== original, "the move changed the tree");
-    await page.click("#undo");
-    expect((await page.inputValue("#newick")) === original, "undo reverted the move");
+    expect(((await page.textContent("#te-status")) ?? "").startsWith("moved t5 under"), "dropping the tip on a node moved it");
+    expect((await page.inputValue("#te-newick")) !== original, "the move changed the tree");
+    await page.click("#te-undo");
+    expect((await page.inputValue("#te-newick")) === original, "undo reverted the move");
+    // Move without a pointer: select a tip from its list field, choose a node, press the button.
+    await page.focus("#te-tips li[data-id=\"t5\"] input");
+    const targetNode = await page.evaluate(() => (document.querySelector("#te-move-target") as HTMLSelectElement).options[3].value);
+    await page.selectOption("#te-move-target", targetNode);
+    await page.focus("#te-move-apply");
+    await page.keyboard.press("Enter");
+    expect(((await page.textContent("#te-status")) ?? "") === `moved t5 under ${targetNode}`, "a tip moved from the keyboard alone");
+    await page.click("#te-undo");
+
+    // Accessibility, light and dark, and the narrow layout.
+    await page.addScriptTag({ path: path.join(root, "node_modules", "axe-core", "axe.min.js") });
+
+    for (const scheme of ["light", "dark"] as const)
+    {
+        await page.emulateMedia({ colorScheme: scheme });
+        await page.waitForTimeout(300);
+        const violations = await page.evaluate(async () =>
+        {
+            const axe = (window as unknown as { axe: { run(context: Element, options: object): Promise<{ violations: Array<{ id: string; nodes: Array<{ target: Array<string> }> }> }> } }).axe;
+            const result = await axe.run(document.querySelector("#app") as Element, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"] });
+
+            return result.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(" ")).slice(0, 4).join(", ")}`);
+        });
+        expect(violations.length === 0, `no accessibility violations in ${scheme} mode (${violations.join(" | ")})`);
+    }
+
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.waitForTimeout(200);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= 320), "no horizontal page scroll at 320 px");
+    await page.setViewportSize({ width: 1500, height: 1000 });
+
+    expect(await page.evaluate(() => document.querySelectorAll("body > *:not(header):not(#app):not(script)").length === 0), "the viewer added nothing outside its element");
+    // Tear down and mount again: nothing is left behind, and a second viewer works.
+    const remount = await page.evaluate(async () =>
+    {
+        const viewerUrl = "/dist/web/viewer.js";
+        const module = await import(viewerUrl) as { mountTreeExtractor(root: HTMLElement, options: { workerUrl: string }): { destroy(): void; getNewick(): string | null } };
+        const host = document.createElement("div");
+        document.body.append(host);
+        const handle = module.mountTreeExtractor(host, { workerUrl: "/dist/web/worker.js" });
+        const mounted = host.querySelectorAll("button").length;
+        const before = handle.getNewick();
+        handle.destroy();
+
+        const left = host.childElementCount;
+        const classes = host.className;
+        host.remove();
+
+        return { mounted, before, left, classes };
+    });
+    expect(remount.mounted > 10 && remount.before === null, "a second viewer mounts beside the first");
+    expect(remount.left === 0 && remount.classes === "", "destroy leaves its element empty and unclassed");
+    // The custom element: a property set before the tag is defined, mounting on connection,
+    // and removal when it leaves the page.
+    const element = await page.evaluate(async () =>
+    {
+        const elementUrl = "/dist/web/element.js";
+        const module = await import(elementUrl) as { defineTreeExtractorElement(): void };
+        const tag = document.createElement("tree-extractor") as HTMLElement & { knownNames: Array<string> | null; getNewick(): string | null };
+        tag.setAttribute("worker-url", "/dist/web/worker.js");
+        tag.knownNames = ["Haya griva"];
+        document.body.append(tag);
+        const before = tag.childElementCount;
+        module.defineTreeExtractorElement();
+        const mounted = tag.querySelectorAll("button").length;
+        const names = tag.knownNames;
+        const newick = tag.getNewick();
+        tag.remove();
+
+        return { before, mounted, names, newick, left: tag.childElementCount };
+    });
+    expect(element.before === 0 && element.mounted > 10, "the tree-extractor element mounts the viewer when defined");
+    expect(element.names !== null && element.names[0] === "Haya griva" && element.newick === null, "a property set before definition is kept");
+    expect(element.left === 0, "removing the element removes the viewer");
     expect(errors.length === 0, `no page errors (${errors.join("; ")})`);
 }
 finally

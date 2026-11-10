@@ -2,10 +2,26 @@
  * Image decoding and overlay rendering for Node, via sharp.
  */
 
-import sharp from "sharp";
-
 import type { ExtractionDocument, RgbaImage } from "../core/types.ts";
 import { getTipDisplayName } from "../core/newick.ts";
+
+/**
+ * Loads sharp, which the package lists as an optional peer so that a site embedding the
+ * viewer does not install it; the command line and the benchmarks need it.
+ *
+ * @returns The sharp module's entry function.
+ */
+async function loadSharp(): Promise<typeof import("sharp").default>
+{
+    try
+    {
+        return (await import("sharp")).default;
+    }
+    catch
+    {
+        throw new Error("reading and writing image files needs the sharp package; install it with `npm install sharp`");
+    }
+}
 
 /**
  * Decodes an image file to RGBA.
@@ -17,6 +33,7 @@ export async function loadImage(filePath: string): Promise<RgbaImage>
 {
     // Grayscale and 1-bit images come back with one or two channels unless converted first;
     // everything downstream expects four.
+    const sharp = await loadSharp();
     const { data, info } = await sharp(filePath).toColourspace("srgb").ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 
     return { width: info.width, height: info.height, data: new Uint8ClampedArray(data.buffer, data.byteOffset, data.byteLength) };
@@ -101,6 +118,7 @@ export function renderOverlaySvg(document: ExtractionDocument): string
 export async function writeOverlay(imagePath: string, document: ExtractionDocument, outputPath: string): Promise<void>
 {
     // The document's coordinates refer to the image as the pipeline saw it, turned if it was.
+    const sharp = await loadSharp();
     await sharp(imagePath)
         .rotate(90 * document.image.quarterTurns)
         .composite([{ input: Buffer.from(renderOverlaySvg(document)) }])

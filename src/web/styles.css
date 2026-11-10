@@ -1,197 +1,196 @@
-:root {
-    --ink: #1f2328;
-    --muted: #59636e;
-    --line: #d0d7de;
-    --accent: #0969da;
-    --selected: #fff3b0;
-    --bg: #ffffff;
-    --panel: #f6f8fa;
-    color-scheme: light dark;
+/*
+ * The viewer's styles. Every rule sits under .tree-extractor, the class the viewer puts on the
+ * element it is mounted on, and nothing here touches the host page. Colors, fonts and the
+ * corner radius come from custom properties the host may set on that element or above it
+ * (--te-background, --te-surface, --te-ink, --te-muted, --te-line, --te-accent,
+ * --te-accent-soft, --te-on-accent, --te-caution, --te-danger, --te-font-sans, --te-font-mono,
+ * --te-radius, --te-canvas-height); the fallbacks follow the page's color scheme.
+ */
+
+.tree-extractor {
+    --_background: var(--te-background, light-dark(#ffffff, #0d1117));
+    --_surface: var(--te-surface, light-dark(#f6f8fa, #161b22));
+    --_ink: var(--te-ink, light-dark(#1f2328, #e6edf3));
+    --_muted: var(--te-muted, light-dark(#59636e, #9198a1));
+    --_line: var(--te-line, light-dark(#d0d7de, #3d444d));
+    --_accent: var(--te-accent, light-dark(#0969da, #4493f8));
+    --_accent-soft: var(--te-accent-soft, light-dark(#fff3b0, #5a4a00));
+    --_on-accent: var(--te-on-accent, light-dark(#ffffff, #0d1117));
+    --_caution: var(--te-caution, light-dark(#9a6700, #d29922));
+    --_danger: var(--te-danger, light-dark(#cf222e, #f85149));
+    --_font-sans: var(--te-font-sans, system-ui, -apple-system, "Segoe UI", sans-serif);
+    --_font-mono: var(--te-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    --_radius: var(--te-radius, 6px);
+    display: block;
+    container-type: inline-size;
+    font: 15px/1.45 var(--_font-sans);
+    color: var(--_ink);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --ink: #e6edf3;
-        --muted: #9198a1;
-        --line: #3d444d;
-        --accent: #4493f8;
-        --selected: #5a4a00;
-        --bg: #0d1117;
-        --panel: #161b22;
-    }
-}
+.tree-extractor, .tree-extractor * { box-sizing: border-box; }
 
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-}
-
-header { padding: 16px 20px 0; }
-header h1 { margin: 0 0 4px; font-size: 22px; }
-header p { margin: 0; color: var(--muted); }
-
-main {
+.tree-extractor .te-layout {
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr) 360px;
     gap: 16px;
-    padding: 16px 20px 32px;
 }
 
-@media (max-width: 1100px) {
-    main { grid-template-columns: 1fr; }
+@container (max-width: 1100px) {
+    .tree-extractor .te-layout { grid-template-columns: minmax(0, 1fr); }
 }
 
-section.controls, section.results {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 8px;
+.tree-extractor section.controls, .tree-extractor section.results {
+    background: var(--_surface);
+    border: 1px solid var(--_line);
+    border-radius: var(--_radius);
     padding: 14px;
 }
 
-section.controls label { display: block; margin-bottom: 10px; }
-section.controls textarea, section.results textarea {
+.tree-extractor section.controls label { display: block; margin-bottom: 10px; }
+.tree-extractor section.controls textarea, .tree-extractor section.results textarea {
     width: 100%;
-    font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 6px;
+    font: 13px/1.4 var(--_font-mono);
+    color: var(--_ink);
+    background: var(--_background);
+    border: 1px solid var(--_line);
+    border-radius: var(--_radius);
     padding: 6px 8px;
 }
 
-label.file input { display: none; }
-label.file span {
+.tree-extractor label.file input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.tree-extractor label.file { position: relative; }
+.tree-extractor label.file span {
     display: inline-block;
     padding: 8px 12px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg);
+    border: 1px solid var(--_line);
+    border-radius: var(--_radius);
+    background: var(--_background);
     cursor: pointer;
 }
 
-button {
+.tree-extractor button {
     padding: 8px 14px;
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    background: var(--accent);
-    color: #fff;
+    border: 1px solid var(--_accent);
+    border-radius: var(--_radius);
+    background: var(--_accent);
+    color: var(--_on-accent);
     font: inherit;
     cursor: pointer;
 }
 
-button:disabled { opacity: 0.5; cursor: default; }
-button:not(:disabled):hover { filter: brightness(1.1); }
-button:not(:disabled):active { filter: brightness(0.95); }
-button:focus-visible, label.file span:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
-label.file span:hover { border-color: var(--accent); }
+.tree-extractor button:disabled { opacity: 0.5; cursor: default; }
+.tree-extractor button:not(:disabled):hover { filter: brightness(1.1); }
+.tree-extractor button:not(:disabled):active { filter: brightness(0.95); }
+.tree-extractor button:focus-visible, .tree-extractor label.file span:focus-within { outline: 2px solid var(--_accent); outline-offset: 2px; }
+.tree-extractor label.file span:hover { border-color: var(--_accent); }
 
-button.tool {
+.tree-extractor button.tool {
     padding: 4px 10px;
-    background: var(--bg);
-    color: var(--ink);
-    border-color: var(--line);
+    background: var(--_background);
+    color: var(--_ink);
+    border-color: var(--_line);
     transition: background-color 0.1s, border-color 0.1s;
 }
 
-button.tool:not(:disabled):hover { filter: none; background: var(--panel); border-color: var(--accent); }
-button.tool:not(:disabled):active { filter: none; background: var(--line); }
-button.tool.active { border-color: var(--accent); color: var(--accent); background: var(--panel); }
+.tree-extractor button.tool:not(:disabled):hover { filter: none; background: var(--_surface); border-color: var(--_accent); }
+.tree-extractor button.tool:not(:disabled):active { filter: none; background: var(--_line); }
+.tree-extractor button.tool.active { border-color: var(--_accent); color: var(--_accent); background: var(--_surface); }
 
-.status { color: var(--muted); min-height: 1.4em; }
-.mode-hint {
+.tree-extractor .status { color: var(--_muted); min-height: 1.4em; }
+.tree-extractor .mode-hint {
     margin: 0 0 8px;
     padding: 6px 10px;
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid var(--_accent);
     border-radius: 0 6px 6px 0;
-    background: var(--panel);
-    color: var(--ink);
+    background: var(--_surface);
+    color: var(--_ink);
     font-size: 13px;
 }
-.mode-hint[hidden] { display: none; }
-.hint { margin: 0 0 8px; color: var(--muted); font-size: 13px; }
-.muted { color: var(--muted); font-size: 13px; }
+.tree-extractor .mode-hint[hidden] { display: none; }
+.tree-extractor .hint { margin: 0 0 8px; color: var(--_muted); font-size: 13px; }
+.tree-extractor .muted { color: var(--_muted); font-size: 13px; }
 
-fieldset.layers { border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; }
-fieldset.layers label { display: inline-block; margin: 0 10px 0 0; }
+.tree-extractor fieldset.layers { border: 1px solid var(--_line); border-radius: var(--_radius); padding: 6px 10px; margin-bottom: 10px; }
+.tree-extractor fieldset.layers label { display: inline-block; margin: 0 10px 0 0; }
 
-.toolbar { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
-.toolbar .spacer { flex: 1; }
+.tree-extractor .toolbar { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.tree-extractor .toolbar .spacer { flex: 1; }
 
-.canvas-wrap {
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--bg);
-    height: calc(100vh - 360px);
-    min-height: 360px;
+.tree-extractor .canvas-wrap {
+    border: 1px solid var(--_line);
+    border-radius: var(--_radius);
+    background: var(--_background);
+    height: var(--te-canvas-height, clamp(360px, 70vh, 900px));
     overflow: hidden;
 }
 
-.progress { height: 4px; margin: 0 0 6px; border-radius: 2px; background: var(--line); overflow: hidden; }
-.progress .bar { width: 30%; height: 100%; background: var(--accent); border-radius: 2px; animation: slide 1.2s ease-in-out infinite; }
-.progress[hidden] { display: block; visibility: hidden; }
+.tree-extractor .progress { height: 4px; margin: 0 0 6px; border-radius: 2px; background: var(--_line); overflow: hidden; }
+.tree-extractor .progress .bar { width: 30%; height: 100%; background: var(--_accent); border-radius: 2px; animation: te-slide 1.2s ease-in-out infinite; }
+.tree-extractor .progress[hidden] { display: block; visibility: hidden; }
 
-@keyframes slide {
+@keyframes te-slide {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(400%); }
 }
 
-.box.newick { margin-top: 12px; padding: 0 10px 10px; }
-.box.newick h2 { margin: 0 -10px 8px; }
-.box.newick textarea { width: 100%; }
-.box.redraw { margin-top: 12px; }
-.redraw-canvas { padding: 10px; overflow: auto; max-height: 70vh; background: white; }
-.redraw-canvas svg { display: block; max-width: 100%; height: auto; }
+.tree-extractor .box.newick { margin-top: 12px; padding: 0 10px 10px; }
+.tree-extractor .box.newick h2 { margin: 0 -10px 8px; }
+.tree-extractor .box.newick textarea { width: 100%; }
+.tree-extractor .box.redraw { margin-top: 12px; }
+.tree-extractor .redraw-canvas { padding: 10px; overflow: auto; max-height: 70vh; background: #ffffff; }
+.tree-extractor .redraw-canvas svg { display: block; max-width: 100%; height: auto; }
 
-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
-canvas.panning { cursor: grabbing; }
-canvas.region { cursor: crosshair; }
+.tree-extractor canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.tree-extractor canvas.panning { cursor: grabbing; }
+.tree-extractor canvas.region { cursor: crosshair; }
 
-.toolbar .divider { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
-button.tool.danger { color: #cf222e; }
-button.tool.danger:disabled { color: var(--ink); }
-canvas.add { cursor: crosshair; }
-canvas.move { cursor: grab; }
+.tree-extractor .toolbar .divider { width: 1px; height: 20px; background: var(--_line); margin: 0 4px; }
+.tree-extractor button.tool.danger { color: var(--_danger); }
+.tree-extractor button.tool.danger:disabled { color: var(--_ink); }
+.tree-extractor canvas.add { cursor: crosshair; }
+.tree-extractor canvas.move { cursor: grab; }
 
-.box { border: 1px solid var(--line); border-radius: 6px; background: var(--bg); margin-bottom: 12px; overflow: hidden; }
-.box h2 { font-size: 13px; margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--line); background: var(--panel); }
-.box h2 .count { color: var(--muted); font-weight: normal; }
-.box ol, .box ul {
+.tree-extractor .box { border: 1px solid var(--_line); border-radius: var(--_radius); background: var(--_background); margin-bottom: 12px; overflow: hidden; }
+.tree-extractor .box h2 { font-size: 13px; margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--_line); background: var(--_surface); }
+.tree-extractor .box h2 .count { color: var(--_muted); font-weight: normal; }
+.tree-extractor .box ol, .tree-extractor .box ul {
     margin: 0;
     overflow-y: auto;
     scrollbar-gutter: stable;
     background:
-        linear-gradient(var(--bg) 30%, transparent) top / 100% 28px,
-        linear-gradient(transparent, var(--bg) 70%) bottom / 100% 28px,
+        linear-gradient(var(--_background) 30%, transparent) top / 100% 28px,
+        linear-gradient(transparent, var(--_background) 70%) bottom / 100% 28px,
         radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.25), transparent) top / 100% 12px,
         radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.25), transparent) bottom / 100% 12px;
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
 }
 
-ol.items { list-style: none; padding: 4px 6px; max-height: 240px; font-size: 13px; }
-ol.items li { margin: 2px 0; display: flex; gap: 8px; align-items: center; padding: 5px 8px; border-radius: 4px; cursor: pointer; }
-ol.items li:hover { background: var(--panel); }
-ol.items li.selected, ol.items li.selected:hover { background: var(--selected); }
-ol.items li span.id { min-width: 2.6em; color: var(--muted); }
-ol.items input { flex: 1; font: inherit; padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: var(--bg); min-width: 0; }
-ol.items li.unsure input { border-color: #d4a72c; }
-ol.items li.unlabelled input { border-color: #cf222e; }
-ol.items li.detached { opacity: 0.6; }
-ul#qc { padding: 4px 6px 4px 24px; font-size: 13px; max-height: 200px; }
-ul#qc li.error { color: #cf222e; }
-ul#qc li.warning { color: #9a6700; }
-ul#qc li.subject { cursor: pointer; }
-ul#qc li.subject:hover { text-decoration: underline; }
-ul#qc li.info { color: var(--muted); }
-.buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.tree-extractor ol.items { list-style: none; padding: 4px 6px; max-height: 240px; font-size: 13px; }
+.tree-extractor ol.items li { margin: 2px 0; display: flex; gap: 8px; align-items: center; padding: 5px 8px; border-radius: 4px; cursor: pointer; }
+.tree-extractor ol.items li:hover { background: var(--_surface); }
+.tree-extractor ol.items li.selected, .tree-extractor ol.items li.selected:hover { background: var(--_accent-soft); }
+.tree-extractor ol.items li span.id { min-width: 2.6em; color: var(--_muted); }
+.tree-extractor ol.items input { flex: 1; font: inherit; padding: 2px 6px; border: 1px solid var(--_line); border-radius: 4px; color: var(--_ink); background: var(--_background); min-width: 0; }
+.tree-extractor ol.items li.unsure input { border-color: var(--_caution); }
+.tree-extractor ol.items li.unlabelled input { border-color: var(--_danger); }
+.tree-extractor ol.items li.detached { opacity: 0.6; }
+.tree-extractor ul#te-qc { padding: 4px 6px 4px 24px; font-size: 13px; max-height: 200px; }
+.tree-extractor ul#te-qc li.error { color: var(--_danger); }
+.tree-extractor ul#te-qc li.warning { color: var(--_caution); }
+.tree-extractor ul#te-qc li.subject { cursor: pointer; }
+.tree-extractor ul#te-qc li.subject:hover { text-decoration: underline; }
+.tree-extractor ul#te-qc li.info { color: var(--_muted); }
+.tree-extractor .buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
-.profile {
+.tree-extractor .profile {
     margin: 0;
     padding-left: 1.2em;
     font-size: 0.9em;
-    color: var(--muted, #555);
+    color: var(--_muted, #555);
 }
+
+.tree-extractor .move-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 0 0 8px; font-size: 13px; }
+.tree-extractor .move-row select { font: inherit; padding: 3px 6px; border: 1px solid var(--_line); border-radius: var(--_radius); color: var(--_ink); background: var(--_background); max-width: 100%; }
+.tree-extractor :focus-visible { outline: 2px solid var(--_accent); outline-offset: 2px; }
+.tree-extractor input[type="checkbox"] { width: 24px; height: 24px; margin: 0 6px 0 0; vertical-align: middle; accent-color: var(--_accent); }
