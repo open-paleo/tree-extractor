@@ -208,3 +208,34 @@
 .tree-extractor input[type="checkbox"] { width: 24px; height: 24px; margin: 0 6px 0 0; vertical-align: middle; accent-color: var(--_accent); }
 .tree-extractor input, .tree-extractor select { font: inherit; }
 .tree-extractor textarea { font: var(--_small)/1.4 var(--_font-mono); color: var(--_ink); background: var(--_background); border: 1px solid var(--_line); border-radius: var(--_radius); padding: 6px 8px; }
+
+/* The start of the work: choose and extract side by side, the OCR choice under them. */
+.tree-extractor section.controls .start { display: flex; flex-direction: column; gap: 10px; }
+.tree-extractor section.controls .start-buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tree-extractor section.controls label.ocr { display: inline-flex; align-items: center; }
+.tree-extractor section.view .hint { margin: 0 0 10px; }
+.tree-extractor section.view fieldset.layers { margin: 8px 0 0; padding: 0; border: 0; align-items: center; }
+.tree-extractor section.view fieldset.layers legend { float: left; padding: 0; margin-right: 16px; color: var(--_muted); }
+
+/* A rule between starting an extraction and the optional names, with room either side; gone
+   where the bar has wrapped into a column. */
+.tree-extractor section.controls label.names { margin-left: 20px; padding-left: 36px; border-left: 1px solid var(--_line); }
+
+@container (max-width: 760px) {
+    .tree-extractor section.controls label.names { margin-left: 0; padding-left: 0; border-left: 0; }
+}
+
+/* The bar above the figure holds editing only: the pointer tools as one joined control, and
+   the edits that act at once. View controls sit on the figure itself. */
+.tree-extractor .tool-group { display: inline-flex; }
+.tree-extractor .tool-group button.tool { border-radius: 0; margin-left: -1px; }
+.tree-extractor .tool-group button.tool:first-child { border-radius: var(--_radius) 0 0 var(--_radius); margin-left: 0; }
+.tree-extractor .tool-group button.tool:last-child { border-radius: 0 var(--_radius) var(--_radius) 0; }
+.tree-extractor .tool-group button.tool.active { position: relative; z-index: 1; background: var(--_accent); border-color: var(--_accent); color: var(--_on-accent); }
+.tree-extractor .tool-row { display: inline-flex; gap: 6px; }
+.tree-extractor .canvas-wrap { position: relative; }
+.tree-extractor .view-controls { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; align-items: center; padding: 4px; border: 1px solid var(--_line); border-radius: var(--_radius); background: var(--_surface); }
+.tree-extractor .view-controls button.tool { min-width: 32px; padding: 2px 8px; }
+.tree-extractor .view-controls .zoom-level { min-width: 3.2em; padding: 0 4px; text-align: right; color: var(--_muted); font-size: var(--_small); }
+.tree-extractor .move-row[hidden] { display: none; }
+.tree-extractor section.results .move-row { margin: 0 0 12px; padding: 8px 10px; border: 1px solid var(--_line); border-radius: var(--_radius); background: var(--_background); }

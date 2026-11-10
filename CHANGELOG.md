@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1 (2026-11-10)
+
+- The top box holds only what starts an extraction: the image chooser and the extract button
+  side by side, the OCR choice and the region tools under them, and the names field beside
+  them behind a thin rule.
+- The bar above the figure holds editing only: the pointer tools (Select, Add tip, Add node,
+  Move) as one joined control, and Undo, Redo and Delete. View controls sit on the figure.
+- The layer toggles are a plain row under the figure; moving the selection from the keyboard
+  appears beside the lists when something is selected.
+
 ## 0.4.0 (2026-11-09)
 
 - Viewer layout: the controls are a bar across the top, with the figure and the results side

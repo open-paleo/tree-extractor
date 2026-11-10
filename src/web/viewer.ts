@@ -148,6 +148,8 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
     const undoButton = getElement<HTMLButtonElement>("#te-undo");
     const redoButton = getElement<HTMLButtonElement>("#te-redo");
     const deleteButton = getElement<HTMLButtonElement>("#te-delete");
+    const selectButton = getElement<HTMLButtonElement>("#te-select");
+    const moveRow = getElement<HTMLDivElement>("#te-move-row");
     const moveTarget = getElement<HTMLSelectElement>("#te-move-target");
     const moveApplyButton = getElement<HTMLButtonElement>("#te-move-apply");
     const downloadNewick = getElement<HTMLButtonElement>("#te-download-newick");
@@ -212,6 +214,9 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
         regionModeButton.disabled = !loaded;
         clearRegionButton.disabled = state.region === null;
         const extracted = state.extraction !== null;
+        selectButton.disabled = !extracted;
+        selectButton.setAttribute("aria-pressed", String(extracted && (state.mode === "pan" || state.mode === "region")));
+        selectButton.classList.toggle("active", extracted && (state.mode === "pan" || state.mode === "region"));
         addTipButton.disabled = !extracted;
         addNodeButton.disabled = !extracted;
         moveButton.disabled = !extracted;
@@ -265,6 +270,7 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
         }
 
         const usable = moveTarget.options.length > 0;
+        moveRow.hidden = !usable;
         moveTarget.disabled = !usable;
         moveApplyButton.disabled = !usable;
     }
@@ -969,6 +975,17 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
     }
 
     /**
+     * Returns to selecting and panning.
+     */
+    function handleSelectClick(): void
+    {
+        state.mode = "pan";
+        state.draftSpan = null;
+        state.draftMove = null;
+        updateToolbar();
+    }
+
+    /**
      * Enters or leaves move mode.
      */
     function handleMoveClick(): void
@@ -1100,6 +1117,7 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
     clearRegionButton.addEventListener("click", handleClearRegionClick, { signal });
     addTipButton.addEventListener("click", handleAddTipClick, { signal });
     addNodeButton.addEventListener("click", handleAddNodeClick, { signal });
+    selectButton.addEventListener("click", handleSelectClick, { signal });
     moveButton.addEventListener("click", handleMoveClick, { signal });
     undoButton.addEventListener("click", undo, { signal });
     redoButton.addEventListener("click", redo, { signal });

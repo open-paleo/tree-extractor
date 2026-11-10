@@ -79,8 +79,8 @@ skips the tier. Without any list the raw OCR text is kept and uncertain tips are
 
 The viewer runs the same pipeline on a dropped image, in a Web Worker so the page stays
 responsive, and draws what it found over the figure.
-Scroll to zoom, drag to pan, and use *Select region* to mark where the tree is when the figure
-holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
+Scroll to zoom, drag to pan (or use the view controls on the figure), and use *Select region*
+beside the extract button to mark where the tree is when the figure holds more than the tree. Clicking a tip or node on the canvas selects it in the lists and the
 other way round; labels are editable in place and the Newick updates. Missed or spurious
 elements can be fixed by hand: *Add tip* then click a branch end, *Add node* then drag along the
 missing vertical connector (it takes over the branches it crosses), *Move* then drag a tip or
