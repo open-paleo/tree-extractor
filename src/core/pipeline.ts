@@ -34,6 +34,8 @@ import {
     subtractMask,
     unionMask,
     measureThinInkLuminance,
+    createMaskFromComponents,
+    findConnectedComponents,
 } from "./raster.ts";
 import { detectTextLines } from "./text-lines.ts";
 import { extractSegments, findShortConnectors } from "./segments.ts";
@@ -330,6 +332,12 @@ export type PreparedMasks = {
     textInk: Mask;
 
     /**
+     * The text ink as the segment extractor measures run thickness on it: widened with all
+     * the faint ink, pale fills included.
+     */
+    runInk: Mask;
+
+    /**
      * Dark neutral pixels at the line threshold, mended, with glyphs removed.
      */
     lineInk: Mask;
@@ -419,10 +427,22 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     // A profile override settles the question either way.
     const fragmented = rough.fragmented;
     const widened = parameters.profileOverrides.widenText ?? (fragmented || rough.glyphHeight <= parameters.smallGlyphHeight);
+    let runInk: Mask | null = null;
 
     if (widened)
     {
-        textInk = applyHysteresis(textInk, createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma));
+        // Only strokes may rejoin: a pale band or fill behind the labels is faint ink too, and
+        // would flood into the text ink and dissolve every label standing on it (Longrich 2011).
+        const faint = createDarkMask(image, parameters.inkThresholdWeak, false, parameters.maxChroma);
+        // A fill is a fat piece of the faint ink, thicker than a stroke and at least six glyphs
+        // one way, that is mostly not certain ink: a pale band, where a thick black bar, which
+        // is fat and large too, is certain ink through and through.
+        const faintStrokes = subtractMask(faint, findPaleFills(faint, textInk, Math.max(4, Math.round(rough.glyphHeight / 3)), 6 * rough.glyphHeight));
+        // The extractor measures line width on this ink, and figures with thick range bars
+        // have come to rely on what the unfiltered faint ink does to that measure (Naish 2022),
+        // so it keeps the ink as it was.
+        runInk = applyHysteresis(textInk, faint);
+        textInk = applyHysteresis(textInk, faintStrokes);
         roughStrip = dilate(createLongRunMask(textInk, stripHorizontal, stripVertical), 1);
         rough = detectTextLines(textInk, { lineArtMask: roughStrip, minY: parameters.textMinY, markerMask: roughMarkers });
     }
@@ -447,7 +467,7 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const weakInk = subtractMask(subtractMask(weakCandidates, invertMask(nearStrong)), dilate(rough.glyphMask, 4));
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
-    return { gray, textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, paleMarkers, fragmented, widened, glyphHeight, roughLines: rough.lines };
+    return { gray, textInk, runInk: runInk ?? textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, paleMarkers, fragmented, widened, glyphHeight, roughLines: rough.lines };
 }
 
 /**
@@ -1045,6 +1065,46 @@ function replaceZoneLines(lines: Array<TextLine>, slanted: SlantedLabels): Array
 }
 
 /**
+ * Finds the pale fills in the faint ink: fat pieces at least a given size one way of which
+ * less than half is certain ink.
+ *
+ * @param faint - Faint ink.
+ * @param certain - Certain ink.
+ * @param radius - Erosion radius that tells a fat piece from a stroke.
+ * @param minSize - Smallest longer side of a fill.
+ * @returns Mask of the fills.
+ */
+function findPaleFills(faint: Mask, certain: Mask, radius: number, minSize: number): Mask
+{
+    const fat = findFatShapes(faint, radius);
+    const labeling = findConnectedComponents(fat);
+    const certainArea = new Array<number>(labeling.components.length + 1).fill(0);
+
+    for (let index = 0; index < fat.data.length; index++)
+    {
+        if (labeling.labels[index] > 0 && certain.data[index] === 1)
+        {
+            certainArea[labeling.labels[index]]++;
+        }
+    }
+
+    const fills = new Set<number>();
+
+    for (let index = 0; index < labeling.components.length; index++)
+    {
+        const component = labeling.components[index];
+        const { box } = component;
+
+        if (Math.max(box.x1 - box.x0, box.y1 - box.y0) >= minSize && certainArea[index + 1] < 0.5 * component.area)
+        {
+            fills.add(index + 1);
+        }
+    }
+
+    return createMaskFromComponents(labeling.labels, fills, faint.width, faint.height);
+}
+
+/**
  * Raises the ink thresholds for a figure drawn in gray: when the thin ink's commonest
  * luminance is well above black and holds a good share of that ink, the figure's lines and
  * letters are gray by design (a tree whose parts under discussion are black and the rest
@@ -1174,7 +1234,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     announce("Preparing masks");
-    const { gray, textInk, lineInk, glyphMask, markers, paleMarkers, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
+    const { gray, textInk, runInk, lineInk, glyphMask, markers, paleMarkers, fragmented, widened, glyphHeight, roughLines } = prepareMasks(image, parameters);
     recordLap("masks");
     announce("Finding segments");
 
@@ -1189,7 +1249,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const lineArt: Mask = { width: lineInk.width, height: lineInk.height, data: new Uint8Array(lineInk.data) };
     paintCrosses(lineArt, nodeDiscs, thickness);
     // The extractor judges a run's thickness on the text ink around it, so the disc goes there too.
-    const inkForRuns: Mask = nodeDiscs.length === 0 ? textInk : { width: textInk.width, height: textInk.height, data: new Uint8Array(textInk.data) };
+    const inkForRuns: Mask = nodeDiscs.length === 0 ? runInk : { width: runInk.width, height: runInk.height, data: new Uint8Array(runInk.data) };
     paintCrosses(inkForRuns, nodeDiscs, thickness);
     const probe = extractSegments(lineArt, minHorizontalRun, Number.MAX_SAFE_INTEGER);
     const thicknesses = new Array<number>();

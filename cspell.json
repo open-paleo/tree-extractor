@@ -166,7 +166,8 @@
         "Turiasaurus",
         "undoable",
         "Poust",
-        "Tschopp"
+        "Tschopp",
+        "Naish"
     ],
     "ignorePaths": [
         "node_modules/**",

@@ -84,7 +84,15 @@ writers are our own, so the GPL-licensed ete3 and similar are not needed.
    pass finds large letters, the strip is scaled to the glyph height and the pass repeated, since
    a stroke of a 35-pixel letter is longer than the default strip. A thin upright of about a
    letter's height is not a glyph (it may be a short connector), but a row with text on both
-   sides of it takes it in, so a tall ascender does not cut a label in two.
+   sides of it takes it in, so a tall ascender does not cut a label in two. When the text is judged fragmented, faint pixels touching certain text ink rejoin
+   it, but only strokes: a fat piece of the faint ink at least six glyphs one way, of which
+   less than half is certain ink, is a pale band or fill, and letting it in dissolved every
+   label standing on it (Longrich 2011, 4 of 22 names; 14 with the fills kept out). A thick
+   black bar is fat and large too but certain ink throughout, and stays. The segment extractor
+   still measures run thickness on the ink widened with all the faint ink (`runInk`): figures
+   with thick range bars had come to depend on what a flooded stage chart does to its line
+   width measure (Naish 2022), which is an accident worth removing but not in the same step.
+
 3. **Segments.** Horizontals are the connected components of pixels in long horizontal runs,
    verticals likewise for columns, so a thick branch cannot read as a short connector and a
    connector cannot be swallowed by the branch it crosses. The shortest run that counts is twice
