@@ -102,7 +102,7 @@ export function updateNewick(elements: ResultElements, extraction: ExtractionDoc
     const newick = extraction === null ? null : formatDocumentAsNewick(extraction);
     elements.newickOutput.value = extraction === null ? "" : (newick ?? "(no tree found)");
     // The markup is the renderer's own, with every label escaped.
-    const svg = extraction === null ? null : renderTreeSvg(extraction);
+    const svg = extraction === null ? null : renderTreeSvg(extraction, { fontSize: 14, rowHeight: 20 });
     elements.redraw.innerHTML = svg ?? "";
     elements.redraw.hidden = svg === null;
 

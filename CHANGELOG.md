@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 (2026-11-09)
+
+- Viewer layout: the controls are a bar across the top, with the figure and the results side
+  by side below it; one column under 760 px of the viewer's own width.
+- No text smaller than 14 px, and a `--te-font-size` custom property for the base size.
+- The layer toggles wrap with a gap between rows.
+
 ## 0.3.2 (2026-11-09)
 
 - The actual-size button's accessible name begins with its visible text, "1:1 (actual size)":

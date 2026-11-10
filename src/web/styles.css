@@ -4,7 +4,7 @@
  * corner radius come from custom properties the host may set on that element or above it
  * (--te-background, --te-surface, --te-ink, --te-muted, --te-line, --te-accent,
  * --te-accent-soft, --te-on-accent, --te-caution, --te-danger, --te-font-sans, --te-font-mono,
- * --te-radius, --te-canvas-height); the fallbacks follow the page's color scheme.
+ * --te-font-size, --te-radius, --te-canvas-height); the fallbacks follow the page's color scheme.
  */
 
 .tree-extractor {
@@ -23,7 +23,9 @@
     --_radius: var(--te-radius, 6px);
     display: block;
     container-type: inline-size;
-    font: 15px/1.45 var(--_font-sans);
+    --_font-size: var(--te-font-size, 15px);
+    --_small: max(14px, calc(var(--_font-size) * 0.93));
+    font: var(--_font-size)/1.45 var(--_font-sans);
     color: var(--_ink);
 }
 
@@ -31,12 +33,17 @@
 
 .tree-extractor .te-layout {
     display: grid;
-    grid-template-columns: 280px minmax(0, 1fr) 360px;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-areas: "controls controls" "view results";
     gap: 16px;
 }
 
-@container (max-width: 1100px) {
-    .tree-extractor .te-layout { grid-template-columns: minmax(0, 1fr); }
+.tree-extractor section.controls { grid-area: controls; }
+.tree-extractor section.view { grid-area: view; min-width: 0; }
+.tree-extractor section.results { grid-area: results; min-width: 0; }
+
+@container (max-width: 760px) {
+    .tree-extractor .te-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "controls" "view" "results"; }
 }
 
 .tree-extractor section.controls, .tree-extractor section.results {
@@ -46,10 +53,15 @@
     padding: 14px;
 }
 
-.tree-extractor section.controls label { display: block; margin-bottom: 10px; }
+/* The controls are a bar across the top: a row that wraps, with the names field taking the
+   room that is left and the status and the hint each on a line of their own. */
+.tree-extractor section.controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-start; }
+.tree-extractor section.controls label { display: block; margin: 0; }
+.tree-extractor section.controls label.names { flex: 1 1 260px; min-width: 0; }
+.tree-extractor section.controls .status, .tree-extractor section.controls .hint { flex: 1 1 100%; margin: 0; }
 .tree-extractor section.controls textarea, .tree-extractor section.results textarea {
     width: 100%;
-    font: 13px/1.4 var(--_font-mono);
+    font: var(--_small)/1.4 var(--_font-mono);
     color: var(--_ink);
     background: var(--_background);
     border: 1px solid var(--_line);
@@ -104,14 +116,14 @@
     border-radius: 0 6px 6px 0;
     background: var(--_surface);
     color: var(--_ink);
-    font-size: 13px;
+    font-size: var(--_small);
 }
 .tree-extractor .mode-hint[hidden] { display: none; }
-.tree-extractor .hint { margin: 0 0 8px; color: var(--_muted); font-size: 13px; }
-.tree-extractor .muted { color: var(--_muted); font-size: 13px; }
+.tree-extractor .hint { margin: 0 0 8px; color: var(--_muted); font-size: var(--_small); }
+.tree-extractor .muted { color: var(--_muted); font-size: var(--_small); }
 
-.tree-extractor fieldset.layers { border: 1px solid var(--_line); border-radius: var(--_radius); padding: 6px 10px; margin-bottom: 10px; }
-.tree-extractor fieldset.layers label { display: inline-block; margin: 0 10px 0 0; }
+.tree-extractor fieldset.layers { display: flex; flex-wrap: wrap; gap: 8px 16px; border: 1px solid var(--_line); border-radius: var(--_radius); padding: 6px 10px 8px; margin: 0; min-width: 0; }
+.tree-extractor fieldset.layers label { display: inline-flex; align-items: center; margin: 0; }
 
 .tree-extractor .toolbar { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
 .tree-extractor .toolbar .spacer { flex: 1; }
@@ -151,7 +163,7 @@
 .tree-extractor canvas.move { cursor: grab; }
 
 .tree-extractor .box { border: 1px solid var(--_line); border-radius: var(--_radius); background: var(--_background); margin-bottom: 12px; overflow: hidden; }
-.tree-extractor .box h2 { font-size: 13px; margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--_line); background: var(--_surface); }
+.tree-extractor .box h2 { font-size: var(--_small); margin: 0; padding: 6px 10px; border-bottom: 1px solid var(--_line); background: var(--_surface); }
 .tree-extractor .box h2 .count { color: var(--_muted); font-weight: normal; }
 .tree-extractor .box ol, .tree-extractor .box ul {
     margin: 0;
@@ -166,7 +178,7 @@
     background-attachment: local, local, scroll, scroll;
 }
 
-.tree-extractor ol.items { list-style: none; padding: 4px 6px; max-height: 240px; font-size: 13px; }
+.tree-extractor ol.items { list-style: none; padding: 4px 6px; max-height: 240px; font-size: var(--_small); }
 .tree-extractor ol.items li { margin: 2px 0; display: flex; gap: 8px; align-items: center; padding: 5px 8px; border-radius: 4px; cursor: pointer; }
 .tree-extractor ol.items li:hover { background: var(--_surface); }
 .tree-extractor ol.items li.selected, .tree-extractor ol.items li.selected:hover { background: var(--_accent-soft); }
@@ -175,7 +187,7 @@
 .tree-extractor ol.items li.unsure input { border-color: var(--_caution); }
 .tree-extractor ol.items li.unlabelled input { border-color: var(--_danger); }
 .tree-extractor ol.items li.detached { opacity: 0.6; }
-.tree-extractor ul#te-qc { padding: 4px 6px 4px 24px; font-size: 13px; max-height: 200px; }
+.tree-extractor ul#te-qc { padding: 4px 6px 4px 24px; font-size: var(--_small); max-height: 200px; }
 .tree-extractor ul#te-qc li.error { color: var(--_danger); }
 .tree-extractor ul#te-qc li.warning { color: var(--_caution); }
 .tree-extractor ul#te-qc li.subject { cursor: pointer; }
@@ -186,11 +198,13 @@
 .tree-extractor .profile {
     margin: 0;
     padding-left: 1.2em;
-    font-size: 0.9em;
+    font-size: var(--_small);
     color: var(--_muted, #555);
 }
 
-.tree-extractor .move-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 0 0 8px; font-size: 13px; }
+.tree-extractor .move-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 0 0 8px; font-size: var(--_small); }
 .tree-extractor .move-row select { font: inherit; padding: 3px 6px; border: 1px solid var(--_line); border-radius: var(--_radius); color: var(--_ink); background: var(--_background); max-width: 100%; }
 .tree-extractor :focus-visible { outline: 2px solid var(--_accent); outline-offset: 2px; }
 .tree-extractor input[type="checkbox"] { width: 24px; height: 24px; margin: 0 6px 0 0; vertical-align: middle; accent-color: var(--_accent); }
+.tree-extractor input, .tree-extractor select { font: inherit; }
+.tree-extractor textarea { font: var(--_small)/1.4 var(--_font-mono); color: var(--_ink); background: var(--_background); border: 1px solid var(--_line); border-radius: var(--_radius); padding: 6px 8px; }

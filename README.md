@@ -146,8 +146,10 @@ Everything the viewer adds sits inside the element it is given, which gets the c
 takes its colors, fonts and corner radius from custom properties the host may set:
 `--te-background`, `--te-surface`, `--te-ink`, `--te-muted`, `--te-line`, `--te-accent`,
 `--te-accent-soft`, `--te-on-accent`, `--te-caution`, `--te-danger`, `--te-font-sans`,
-`--te-font-mono`, `--te-radius` and `--te-canvas-height`. The fallbacks follow the page's
-`color-scheme`. The layout responds to the width of its own element, down to 320 px.
+`--te-font-mono`, `--te-font-size`, `--te-radius` and `--te-canvas-height`. No text is smaller
+than 14 px. The fallbacks follow the page's
+`color-scheme`. The controls form a bar across the top with the figure and the results side by side below;
+under 760 px of its own width the viewer becomes one column, down to 320 px.
 
 Controls are labeled and reachable from the keyboard: an entry in the tip or node list selects
 on focus, Delete, Undo and Redo are buttons and keys, and *Move the selection under* moves the
