@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 (2026-11-09)
+
+- The actual-size button's accessible name begins with its visible text, "1:1 (actual size)":
+  the 0.3.1 wording put the text in parentheses, which newer axe reads as a different word.
+  The browser test now runs the same axe version as the site.
+
 ## 0.3.1 (2026-11-09)
 
 - The actual-size button's accessible name contains its visible text, "1:1" (WCAG 2.5.3); the
