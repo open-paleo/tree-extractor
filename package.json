@@ -1,6 +1,6 @@
 {
     "name": "@open-paleo/tree-extractor",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Extract phylogenetic trees from figure images into Newick and Nexus",
     "type": "module",
     "license": "MIT",

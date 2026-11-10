@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0 (2026-11-09)
 
 The viewer becomes a component a site can mount, and accuracy is measured on a random sample.
 
