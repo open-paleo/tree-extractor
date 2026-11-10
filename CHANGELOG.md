@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 (2026-11-09)
+
+- The actual-size button's accessible name contains its visible text, "1:1" (WCAG 2.5.3); the
+  browser test now runs the WCAG 2.1 level A rules, where that check lives.
+
 ## 0.3.0 (2026-11-09)
 
 The viewer becomes a component a site can mount, and accuracy is measured on a random sample.

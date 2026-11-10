@@ -246,7 +246,7 @@ try
         const violations = await page.evaluate(async () =>
         {
             const axe = (window as unknown as { axe: { run(context: Element, options: object): Promise<{ violations: Array<{ id: string; nodes: Array<{ target: Array<string> }> }> }> } }).axe;
-            const result = await axe.run(document.querySelector("#app") as Element, { runOnly: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"] });
+            const result = await axe.run(document.querySelector("#app") as Element, { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"], rules: { "label-content-name-mismatch": { enabled: true } } });
 
             return result.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(" ")).slice(0, 4).join(", ")}`);
         });

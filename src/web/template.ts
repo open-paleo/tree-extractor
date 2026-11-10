@@ -29,7 +29,7 @@ export const viewerMarkup = `
     <section class="view">
         <div class="toolbar">
             <button id="te-fit" class="tool" disabled title="Fit the image in the view">Fit</button>
-            <button id="te-actual" class="tool" disabled title="Show at one image pixel per screen pixel" aria-label="Actual size">1:1</button>
+            <button id="te-actual" class="tool" disabled title="Show at one image pixel per screen pixel" aria-label="Actual size (1:1)">1:1</button>
             <button id="te-zoom-in" class="tool" disabled title="Zoom in" aria-label="Zoom in">+</button>
             <button id="te-zoom-out" class="tool" disabled title="Zoom out" aria-label="Zoom out">−</button>
             <span id="te-zoom-level" class="muted"></span>

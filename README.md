@@ -182,6 +182,10 @@ npm run spellcheck
 Any change under `src/core` must leave `npm run bench:strict` green; the cases it must keep
 identical are listed in `bench/expectations.json`.
 
+A release is a version tag: pushing `v1.2.3` with that version in `package.json` and its entry
+in `CHANGELOG.md` runs the checks, attaches the packed tarball to a GitHub release, and notifies
+`open-paleo/web`, which pins the tarball by URL and hash.
+
 Code style follows the Open Paleo conventions (Allman braces, four-space indent, `type` over
 `interface`, no abbreviated names, JSDoc on everything exported).
 

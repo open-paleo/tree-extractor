@@ -1,0 +1,77 @@
+name: Release
+
+# Publishes a release when a version tag is pushed: checks the code, packs the tarball,
+# attaches it to a GitHub release with the changelog entry as notes, and tells the web
+# repository, which pins the tarball by URL and hash and opens a pull request to move the pin.
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      # The tag must name the version in package.json, or the tarball and the release disagree.
+      - name: Check the tag against the package version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "tag $GITHUB_REF_NAME does not match package version $version" >&2
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:web
+
+      # npm pack runs the build again through prepack and prints the tarball's name. The
+      # integrity string is the form a package lockfile records.
+      - name: Pack the tarball
+        run: |
+          tarball=$(npm pack --silent | tail -1)
+          echo "TARBALL=$tarball" >> "$GITHUB_ENV"
+          echo "INTEGRITY=sha512-$(openssl dgst -sha512 -binary "$tarball" | base64 -w0)" >> "$GITHUB_ENV"
+
+      # The notes are the changelog entry for this version: the lines between its heading and
+      # the next one.
+      - name: Write the release notes
+        run: |
+          awk -v version="$VERSION" '
+            /^## / { printing = index($0, "## " version " ") == 1 || $0 == "## " version; next }
+            printing { print }
+          ' CHANGELOG.md > release-notes.md
+          test -s release-notes.md
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "$TARBALL" --title "tree-extractor $VERSION" --notes-file release-notes.md
+
+      # open-paleo/web depends on the tarball by URL, pinned by hash. A missed notification
+      # must not fail the release: the pin can be moved by hand. The token is a fine-grained
+      # one scoped to that repository; -f, not -F, so every value is sent as a string.
+      - name: Tell the web repository a release landed
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.WEB_DISPATCH_TOKEN }}
+        run: |
+          gh api repos/open-paleo/web/dispatches \
+            -f event_type=tree-extractor-released \
+            -f "client_payload[version]=$VERSION" \
+            -f "client_payload[tag]=$GITHUB_REF_NAME" \
+            -f "client_payload[tarball_url]=https://github.com/open-paleo/tree-extractor/releases/download/$GITHUB_REF_NAME/$TARBALL" \
+            -f "client_payload[integrity]=$INTEGRITY"
