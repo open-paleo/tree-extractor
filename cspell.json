@@ -171,7 +171,8 @@
         "Jeholosaurus",
         "shangyuanensis",
         "WCAG",
-        "tessdata"
+        "tessdata",
+        "Dryomorpha"
     ],
     "ignorePaths": [
         "node_modules/**",

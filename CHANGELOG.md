@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2 (2026-11-11)
+
+- A clade name printed at a node is kept as a name; it was read as a support value, leaving
+  only the letters that pass for digits ("Dryomorpha" became "00").
+
 ## 0.4.1 (2026-11-10)
 
 - The top box holds only what starts an extraction: the image chooser and the extract button

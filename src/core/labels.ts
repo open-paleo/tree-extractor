@@ -241,6 +241,22 @@ function dropRubbleWords(text: string): string
 }
 
 /**
+ * Whether text read at a node is a name and not a support value: four letters or more, and
+ * at least three letters for every digit. "100", "0.98" and "87/5" are values; "Dryomorpha"
+ * and "Clade A" are names.
+ *
+ * @param text - OCR text.
+ * @returns True for a name.
+ */
+export function isNameText(text: string): boolean
+{
+    const letters = text.replace(/[^\p{L}]/gu, "").length;
+    const digits = text.replace(/[^0-9]/g, "").length;
+
+    return letters >= 4 && letters >= 3 * digits;
+}
+
+/**
  * Tidies OCR output for a support value: maps look-alike letters to digits and keeps digits,
  * slashes and dots.
  *
@@ -440,7 +456,9 @@ export async function readLabels(
         if (line !== undefined)
         {
             line.ocr = await ocr.recognize(cropAndScale(chooseSource(line), line.box, 3, scale), "digits");
-            const cleaned = cleanSupportText(line.ocr.text);
+            // A row at a node is a support value or a clade name. Read as a value, a name
+            // comes out as the few of its letters that pass for digits ("Dryomorpha" as "00").
+            const cleaned = isNameText(line.ocr.text) ? cleanTaxonText(line.ocr.text) : cleanSupportText(line.ocr.text);
             node.label = cleaned.length > 0 ? cleaned : null;
         }
     }

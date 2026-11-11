@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { compareNames, computeLevenshtein, matchKnownName, matchName, normalizeName } from "../src/core/matching.ts";
-import { cleanSupportText, cleanTaxonText } from "../src/core/labels.ts";
+import { cleanSupportText, cleanTaxonText, isNameText } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
 
@@ -87,4 +87,14 @@ test("known taxa accept exact names despite their species, and only clear near m
     assert.ok(unlistedSpecies !== null && unlistedSpecies.accepted);
     assert.equal(unlistedSpecies.name, "Zalmoxes");
     assert.equal(matchKnownName("Zalmoxes", []), null);
+});
+
+test("a clade name at a node is told from a support value", () =>
+{
+    assert.equal(isNameText("Dryomorpha"), true);
+    assert.equal(isNameText("Clade A"), true);
+    assert.equal(isNameText("100"), false);
+    assert.equal(isNameText("0.98"), false);
+    assert.equal(isNameText("87/5"), false);
+    assert.equal(isNameText("lOO"), false);
 });
