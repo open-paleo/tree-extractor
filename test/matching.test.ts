@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { compareNames, computeLevenshtein, matchKnownName, matchName, normalizeName } from "../src/core/matching.ts";
-import { cleanSupportText, cleanTaxonText, isNameText } from "../src/core/labels.ts";
+import { cleanSupportText, cleanTaxonText, isNameText, chooseMatch } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
 
@@ -97,4 +97,24 @@ test("a clade name at a node is told from a support value", () =>
     assert.equal(isNameText("0.98"), false);
     assert.equal(isNameText("87/5"), false);
     assert.equal(isNameText("lOO"), false);
+});
+
+test("a species read correctly is kept when the known taxa hold only its genus", () =>
+{
+    const known = ["Zalmoxes", "Zalmoxes robustus", "Tenontosaurus tilletti"];
+    assert.equal(chooseMatch("Zalmoxes shqiperorum", [], known)?.name, "Zalmoxes shqiperorum");
+    assert.equal(chooseMatch("Zalmoxes robustus", [], known)?.name, "Zalmoxes robustus");
+    assert.equal(chooseMatch("Zalmoxes", [], known)?.name, "Zalmoxes");
+    // The paper's own list is authoritative: a genus-only entry there names the tip.
+    assert.equal(chooseMatch("Zalmoxes shqiperorum", ["Zalmoxes"], known)?.name, "Zalmoxes");
+});
+
+test("an indeterminate species stays on a genus the known taxa supplied", () =>
+{
+    const known = ["Rhabdodon", "Rhabdodon priscus"];
+    assert.equal(chooseMatch("Rhabdodon sp.", [], known)?.name, "Rhabdodon sp.");
+    assert.equal(chooseMatch("Rhabdodon sp. 1", [], known)?.name, "Rhabdodon sp. 1");
+    assert.equal(chooseMatch("Rhabdodon sp.1", [], known)?.name, "Rhabdodon sp.1");
+    assert.equal(chooseMatch("Rhabdodon sp 2", [], known)?.name, "Rhabdodon sp 2");
+    assert.equal(chooseMatch("Rhabdodon priscus", [], known)?.name, "Rhabdodon priscus");
 });

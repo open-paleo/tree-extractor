@@ -163,6 +163,48 @@ export function assignLabels(document: ExtractionDocument): void
         }
     }
 
+    // A node's label may also be drawn to the right of its junction, over the gap between its
+    // branches (Poole 2022's "Iguanodontia"). Only nodes still without a row take one from
+    // there, and it must begin close by and sit level with the junction, since rows right of a
+    // node are otherwise annotations of the branches that leave it.
+    const rightPairings = new Array<Pairing>();
+
+    for (const node of document.nodes)
+    {
+        if (node.textLine !== null)
+        {
+            continue;
+        }
+
+        const junctionY = node.attachY ?? (node.y0 + node.y1) / 2;
+
+        for (const line of document.textLines)
+        {
+            const horizontal = line.box.x0 - node.x;
+            const vertical = (line.box.y0 + line.box.y1) / 2 - junctionY;
+
+            if (!used.has(line.id) && horizontal >= 0 && horizontal <= 1.5 * glyph && Math.abs(vertical) <= 0.8 * glyph)
+            {
+                rightPairings.push({ subject: node.id, line, distance: Math.hypot(horizontal, vertical) });
+            }
+        }
+    }
+
+    rightPairings.sort(comparePairingDistances);
+
+    for (const pairing of rightPairings)
+    {
+        for (const node of document.nodes)
+        {
+            if (node.id === pairing.subject && node.textLine === null && !used.has(pairing.line.id))
+            {
+                node.textLine = pairing.line.id;
+                pairing.line.role = "node";
+                used.add(pairing.line.id);
+            }
+        }
+    }
+
     for (const line of document.textLines)
     {
         if (!used.has(line.id))
@@ -282,7 +324,7 @@ export function cleanSupportText(text: string): string
  * @param knownNames - Known taxa, possibly empty.
  * @returns The match, or null without a label or any list.
  */
-function chooseMatch(label: string | null, names: Array<string>, knownNames: Array<string>): NameMatch | null
+export function chooseMatch(label: string | null, names: Array<string>, knownNames: Array<string>): NameMatch | null
 {
     if (label === null)
     {
@@ -319,10 +361,47 @@ function chooseMatch(label: string | null, names: Array<string>, knownNames: Arr
 
     if (known !== null && known.accepted)
     {
-        return known;
+        return keepReadSpecies(label, known);
     }
 
     return own ?? known;
+}
+
+/**
+ * Keeps the species a label was read with when the known taxa supplied only its genus. The
+ * known taxa are a fallback for spelling, not the paper's own list, and they do not hold
+ * every species: a figure's "Zalmoxes shqiperorum" matched the list's "Zalmoxes" and lost
+ * its species, though it had been read correctly. The genus takes the list's spelling and the
+ * species stays as read; so does an indeterminate species, "sp." or "sp. 2".
+ *
+ * @param label - Cleaned label as read.
+ * @param match - Accepted match from the known taxa.
+ * @returns The match, with the read species added to a genus-only name.
+ */
+function keepReadSpecies(label: string, match: NameMatch): NameMatch
+{
+    const words = label.trim().split(/\s+/);
+
+    if (match.name.includes(" ") || words.length < 2)
+    {
+        return match;
+    }
+
+    // An indeterminate species, "sp." with or without a number ("Rhabdodon sp. 1"), is part
+    // of the name as printed and no list holds it; it stays, written as it was read.
+    const rest = words.slice(1).join(" ");
+
+    if (/^sp\.?\s*\d*\.?$/i.test(rest))
+    {
+        return { ...match, name: `${match.name} ${rest}` };
+    }
+
+    if (words.length !== 2 || !/^\p{Ll}{4,}$/u.test(words[1]))
+    {
+        return match;
+    }
+
+    return { ...match, name: `${match.name} ${words[1]}`, speciesAsRead: true };
 }
 
 /**

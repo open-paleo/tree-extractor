@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.3 (2026-11-12)
+
+- A node with no label to its left takes one that begins just right of its junction, level
+  with it: a clade name or support value drawn over the gap between the node's branches.
+- A tip is named as printed. The known taxa now include the original combination of every
+  species since moved to another genus, so a figure's "Zalmoxes shqiperorum" matches as it
+  stands; and a species read correctly is kept when the known taxa hold only its genus,
+  where it was being cut to the genus. The paper's own name list still decides.
+- An indeterminate species, "sp." with or without a number, stays on a genus the known taxa
+  supplied: "Rhabdodon sp. 1" was being named "Rhabdodon".
+- The quality checks remark on a known-taxa name only when it changed what was read, and note
+  a species kept as read; a name merely confirmed no longer raises a warning per tip.
+
 ## 0.4.2 (2026-11-11)
 
 - A clade name printed at a node is kept as a name; it was read as a support value, leaving

@@ -158,6 +158,7 @@ Ampelosaurus
 Ampelosaurus atacis
 Amphicoelias
 Amphicoelias altus
+Amphicoelias fragillimus
 Amphicoelicaudia
 Amphisaurus
 Amtocephale
@@ -228,6 +229,7 @@ Apatoraptor
 Apatoraptor pennatus
 Apatosaurus
 Apatosaurus ajax
+Apatosaurus grandis
 Apatosaurus louisae
 Appalachiosaurus
 Appalachiosaurus montgomeriensis
@@ -289,6 +291,7 @@ Asfaltovenator vialidadi
 Asiaceratops
 Asiaceratops salsopaludalis
 Asiamericana
+Asiamericana asiatica
 Asiatosaurus
 Asiatosaurus mongoliensis
 Asiatyrannus
@@ -462,9 +465,11 @@ Borogovia
 Borogovia gracilicrus
 Bothriospondylus
 Bothriospondylus magnus
+Bothriospondylus robustus
 Bothriospondylus suffossus
 Brachiosaurus
 Brachiosaurus altithorax
+Brachiosaurus brancai
 Brachyceratops
 Brachyceratops montanensis
 Brachylophosaurus
@@ -520,6 +525,7 @@ Caihong juji
 Calamosaurus
 Calamosaurus foxi
 Calamospondylus
+Calamospondylus foxi
 Calamospondylus oweni
 Caletodraco
 Caletodraco cottardi
@@ -542,9 +548,11 @@ Camposaurus
 Camposaurus arizonensis
 Camptonotus
 Camptosaurus
+Camptosaurus aphanoecetes
 Camptosaurus depressus
 Camptosaurus dispar
 Campylodon
+Campylodon ameghinoi
 Campylodoniscus
 Campylodoniscus ameghinoi
 Canardia
@@ -568,6 +576,7 @@ Caudipteryx
 Caudipteryx dongi
 Caudipteryx zoui
 Caudocoelus
+Caudocoelus sauvagei
 Caulodon
 Cedarosaurus
 Cedarosaurus weiskopfae
@@ -577,6 +586,7 @@ Cedrorestes
 Cedrorestes crichtoni
 Centrosaurus
 Centrosaurus apertus
+Centrosaurus brinkmani
 Cerasinops
 Cerasinops hodgskissi
 Ceratocaudia
@@ -594,6 +604,7 @@ Ceteosaurus
 Cetiosauriscus
 Cetiosauriscus stewarti
 Cetiosaurus
+Cetiosaurus brevis
 Cetiosaurus oxoniensis
 Cetiosaurus rugulosus
 Chadititan
@@ -614,6 +625,8 @@ Charonosaurus
 Charonosaurus jiayinensis
 Chasmosaurus
 Chasmosaurus belli
+Chasmosaurus irvinensis
+Chasmosaurus mariscalensis
 Chasmosaurus russelli
 Chassternbergia
 Chebsaurus
@@ -729,6 +742,7 @@ Creosaurus
 Crichtonpelta
 Crichtonpelta benxiensis
 Crichtonsaurus
+Crichtonsaurus benxiensis
 Crichtonsaurus bohlini
 Cristatusaurus
 Cristatusaurus lapparenti
@@ -806,6 +820,7 @@ Diabloceratops eatoni
 Diamantinasaurus
 Diamantinasaurus matildae
 Diceratops
+Diceratops hatcheri
 Diceratus
 Diclonius
 Diclonius mirabilis
@@ -1101,6 +1116,7 @@ Gansutitan
 Ganzhousaurus
 Ganzhousaurus nankangensis
 Gargoyleosaurus
+Gargoyleosaurus parkpini
 Gargoyleosaurus parkpinorum
 Garrigatitan
 Garrigatitan meridionalis
@@ -1132,6 +1148,7 @@ Gigantoraptor
 Gigantoraptor erlianensis
 Gigantosaurus
 Gigantosaurus africanus
+Gigantosaurus dixeyi
 Gigantosaurus megalonyx
 Gigantosaurus robustus
 Gigantoscelus
@@ -1252,6 +1269,7 @@ Heishansaurus pachycephalus
 Helioceratops
 Helioceratops brachygnathus
 Helopus
+Helopus zdanskyi
 Heptasteornis
 Heptasteornis andrewsi
 Herrerasaurus
@@ -1370,8 +1388,11 @@ Iguanodon bernissartensis
 Iguanodon dawsoni
 Iguanodon fittoni
 Iguanodon galvensis
+Iguanodon hoggii
 Iguanodon hollingtoniensis
 Iguanodon lakotaensis
+Iguanodon prestwichii
+Iguanodon suessii
 Iguanosaurus
 Iliosuchus
 Iliosuchus incognitus
@@ -1434,6 +1455,7 @@ Jainosaurus septentrionalis
 Jakapil
 Jakapil kaniukura
 Jaklapallisaurus
+Jaklapallisaurus asymmetrica
 Jaklapallisaurus asymmetricus
 Janenschia
 Janenschia robusta
@@ -1569,6 +1591,7 @@ Kotasaurus
 Kotasaurus yamanpalliensis
 Koutalisaurus
 Kritosaurus
+Kritosaurus australis
 Kritosaurus incurvimanus
 Kritosaurus navajovius
 Kryptohadros
@@ -1596,6 +1619,7 @@ Labocania
 Labocania anomala
 Labrosaurus
 Laelaps
+Laelaps aquilunguis
 Laevisuchus
 Laevisuchus indicus
 Laiyangosaurus
@@ -1615,6 +1639,7 @@ Lancangosaurus
 Lanzhousaurus
 Lanzhousaurus magnidens
 Laosaurus
+Laosaurus altus
 Laosaurus celer
 Lapampasaurus
 Lapampasaurus cholinoi
@@ -1645,6 +1670,7 @@ Lepidocheirosaurus
 Lepidus
 Lepidus praecisio
 Leptoceratops
+Leptoceratops cerorhynchus
 Leptoceratops gracilis
 Leptorhynchos
 Leptorhynchos gaddisi
@@ -1680,6 +1706,7 @@ Liliensternus liliensterni
 Limaysaurus
 Limaysaurus tessonei
 Limnosaurus
+Limnosaurus transsylvanicus
 Limusaurus
 Limusaurus inextricabilis
 Lingwulong
@@ -1829,12 +1856,16 @@ Mbiresaurus raathi
 Medusaceratops
 Medusaceratops lokii
 Megadactylus
+Megadactylus polyzelus
 Megadontosaurus
 Megalosaurus
+Megalosaurus bredai
 Megalosaurus bucklandii
 Megalosaurus crenatissimus
 Megalosaurus nasicornis
+Megalosaurus nethercombensis
 Megalosaurus oweni
+Megalosaurus saharicus
 Megalosaurus superbus
 Megapnosaurus
 Megapnosaurus rhodesiensis
@@ -1864,6 +1895,7 @@ Metriacanthosaurus parkeri
 Mexidracon
 Mexidracon longimanus
 Microceratops
+Microceratops gobiensis
 Microceratus
 Microceratus gobiensis
 Microcoelus
@@ -1898,6 +1930,7 @@ Mnyamawamtuka moyowamkia
 Moabosaurus
 Moabosaurus utahensis
 Mochlodon
+Mochlodon robustum
 Mochlodon suessi
 Mochlodon vorosi
 Mohammadisaurus
@@ -1909,6 +1942,7 @@ Mongolostegus exspectabilis
 Monkonosaurus
 Monkonosaurus lawulacus
 Monoclonius
+Monoclonius belli
 Monoclonius crassus
 Monolophosaurus
 Monolophosaurus jiangi
@@ -1924,6 +1958,7 @@ Morinosaurus typus
 Moros
 Moros intrepidus
 Morosaurus
+Morosaurus lentus
 Morrosaurus
 Morrosaurus antarcticus
 Mosaiceratops
@@ -2060,6 +2095,8 @@ Nullotitan
 Nullotitan glaciaris
 Nuthetes
 Nuthetes destructor
+Nyana
+Nyana rooiwalensis
 Nyororosaurus
 Obelignathus
 Obelignathus septimanicus
@@ -2081,9 +2118,11 @@ Olorotitan arharensis
 Omeisaurus
 Omeisaurus jiaoi
 Omeisaurus junghsiensis
+Omeisaurus maoianus
 Omeisaurus puxiani
 Omeisaurus tianfuensis
 Omosaurus
+Omosaurus armatus
 Omosaurus durobrivensis
 Ondogurvel
 Ondogurvel alifanovi
@@ -2109,6 +2148,8 @@ Ornithomerus
 Ornithomimoides
 Ornithomimoides mobilis
 Ornithomimus
+Ornithomimus altus
+Ornithomimus asiaticus
 Ornithomimus edmontonicus
 Ornithomimus velox
 Ornithopsis
@@ -2168,9 +2209,12 @@ Padillasaurus leivaensis
 Palaeopteryx
 Palaeopteryx thomsoni
 Palaeoscincus
+Palaeoscincus africanus
 Palaeoscincus costatus
 Paludititan
 Paludititan nalatzensis
+Paludohadros
+Paludohadros proudlovii
 Paluxysaurus
 Pampadromaeus
 Pampadromaeus barberenai
@@ -2198,6 +2242,7 @@ Paralititan stromeri
 Paranthodon
 Paranthodon africanus
 Pararhabdodon
+Pararhabdodon isonense
 Pararhabdodon isonensis
 Parasaurolophus
 Parasaurolophus cyrtocristatus
@@ -2285,6 +2330,7 @@ Planicoxa venenica
 Plateosauravus
 Plateosauravus cullingworthi
 Plateosaurus
+Plateosaurus cullingworthi
 Plateosaurus engelhardti
 Plateosaurus gracilis
 Plateosaurus trossingensis
@@ -2333,6 +2379,7 @@ Proa
 Proa valdearinnoensis
 Probactrosaurus
 Probactrosaurus gobiensis
+Probactrosaurus mazongshanensis
 Probrachylophosaurus
 Probrachylophosaurus bergei
 Proceratops montanus
@@ -2362,8 +2409,10 @@ Protoceratops kozlowskii
 Protognathosaurus
 Protognathosaurus oxyodon
 Protognathus
+Protognathus oxyodon
 Protohadros
 Protohadros byrdi
+Protorosaurus
 Protorosaurus belli
 Protrachodon
 Proyandusaurus
@@ -2450,6 +2499,7 @@ Rayososaurus
 Rayososaurus agrioensis
 Rebbachisaurus
 Rebbachisaurus garasbae
+Rebbachisaurus tessonei
 Regaliceratops
 Regaliceratops peterhewsi
 Regnosaurus
@@ -2457,6 +2507,7 @@ Regnosaurus northamptoni
 Revueltoraptor
 Rhabdodon
 Rhabdodon priscus
+Rhabdodon septimanicus
 Rhinorex
 Rhinorex condrupus
 Rhodanosaurus
@@ -2472,6 +2523,8 @@ Richardoestesia gilmorei
 Richardoestesia isosceles
 Rinchenia
 Rinchenia mongoliensis
+Rinconraptor
+Rinconraptor pipoae
 Rinconsaurus
 Rinconsaurus caudamirus
 Rioarribasaurus colberti
@@ -2539,6 +2592,7 @@ Saurolophus osborni
 Sauroniops
 Sauroniops pachytholus
 Sauropelta
+Sauropelta edwardsi
 Sauropelta edwardsorum
 Saurophaganax
 Saurophaganax maximus
@@ -2589,6 +2643,7 @@ Sektensaurus sanjuanboscoi
 Selimanosaurus
 Sellacoxa
 Sellosaurus
+Sellosaurus gracilis
 Serendipaceratops
 Serendipaceratops arthurcclarkei
 Serikornis
@@ -2723,6 +2778,7 @@ Spinostropheus gautieri
 Staurikosaurus
 Staurikosaurus pricei
 Stegoceras
+Stegoceras lambei
 Stegoceras sternbergi
 Stegoceras validum
 Stegopelta
@@ -2731,6 +2787,7 @@ Stegosaurides
 Stegosaurides excavatus
 Stegosaurus
 Stegosaurus duplex
+Stegosaurus longispinus
 Stegosaurus priscus
 Stegosaurus stenops
 Stegosaurus ungulatus
@@ -2746,6 +2803,7 @@ Stenotholus
 Stephanosaurus
 Stephanosaurus marginatus
 Stereocephalus
+Stereocephalus tutus
 Sterrholophus
 Stokesosaurus
 Stokesosaurus clevelandi
@@ -2755,6 +2813,7 @@ Streptospondylus
 Streptospondylus altdorfensis
 Struthiomimus
 Struthiomimus altus
+Struthiomimus brevetertius
 Struthiosaurus
 Struthiosaurus austriacus
 Struthiosaurus languedocensis
@@ -2802,6 +2861,7 @@ Tameryraptor markgrafi
 Tangvayosaurus
 Tangvayosaurus hoffeti
 Tanius
+Tanius chingkankouensis
 Tanius sinensis
 Tanycolagreus
 Tanycolagreus topwilsoni
@@ -2856,6 +2916,7 @@ Tenontosaurus dossi
 Tenontosaurus tilletti
 Teratophoneus
 Teratophoneus curriei
+Teratosaurus minor
 Terminocavus
 Terminocavus sealeyi
 Tethyshadros
@@ -2888,6 +2949,7 @@ Thescelosaurus
 Thescelosaurus assiniboiensis
 Thescelosaurus garbanii
 Thescelosaurus neglectus
+Thescelosaurus warreni
 Thespesius
 Thespesius occidentalis
 Thespesius saskatchewanensis
@@ -2924,6 +2986,7 @@ Titanosaurus
 Titanosaurus araukanicus
 Titanosaurus australis
 Titanosaurus colberti
+Titanosaurus dacus
 Titanosaurus indicus
 Titanosaurus montanus
 Titanosaurus valdensis
@@ -2932,6 +2995,7 @@ Tlatolophus galorum
 Tochisaurus
 Tochisaurus nemegtensis
 Tomodon
+Tomodon horrificus
 Tonganosaurus
 Tonganosaurus hei
 Tongnanlong
@@ -2951,6 +3015,7 @@ Tototlmimus
 Tototlmimus packardensis
 Trachodon
 Trachodon amurense
+Trachodon marginatus
 Trachodon mirabilis
 Tralkasaurus
 Tralkasaurus cuyi
@@ -2982,6 +3047,7 @@ Triunfosaurus leonardii
 Tromerosaurus
 Tromerosaurus solumons
 Troodon
+Troodon edmontonensis
 Troodon formosus
 Troodon sternbergi
 Tsaagan
@@ -3056,6 +3122,7 @@ Valdoraptor
 Valdoraptor oweni
 Valdosaurus
 Valdosaurus canaliculatus
+Valdosaurus nigeriensis
 Vallibonavenatrix
 Vallibonavenatrix cani
 Variraptor
@@ -3157,6 +3224,7 @@ Xingtianosaurus
 Xingtianosaurus ganqi
 Xingxiulong
 Xingxiulong chengi
+Xingxiulong yueorum
 Xinjiangovenator
 Xinjiangovenator parvus
 Xinjiangtitan
@@ -3246,6 +3314,7 @@ Yuzhoulong
 Yuzhoulong qurenensis
 Zalmoxes
 Zalmoxes robustus
+Zalmoxes shqiperorum
 Zanabazar
 Zanabazar junior
 Zapalasaurus

@@ -194,6 +194,12 @@ export type NameMatch = {
      * Which list the name came from: the paper's own list, or the known taxa of the data set.
      */
     source: "list" | "known";
+
+    /**
+     * True when the known taxa supplied the genus alone and the species is kept as it was
+     * read, unchecked against any list.
+     */
+    speciesAsRead?: boolean;
 };
 
 /**

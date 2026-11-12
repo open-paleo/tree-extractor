@@ -172,7 +172,10 @@
         "shangyuanensis",
         "WCAG",
         "tessdata",
-        "Dryomorpha"
+        "Dryomorpha",
+        "Iguanodontia",
+        "shqiperorum",
+        "tilletti"
     ],
     "ignorePaths": [
         "node_modules/**",

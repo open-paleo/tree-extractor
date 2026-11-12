@@ -826,12 +826,28 @@ function runQualityChecks(document: ExtractionDocument): void
     {
         if (tip.match !== null && tip.match.accepted && tip.match.source === "known")
         {
-            document.qc.push({
-                severity: "warning",
-                code: "known-name-used",
-                message: `tip ${tip.id} read as "${tip.label ?? ""}" matched "${tip.match.name}" from the known taxa, not from the supplied name list`,
-                subject: tip.id,
-            });
+            // A name the known taxa only confirmed, letter for letter, needs no remark; one
+            // they changed does, and so does a species they could not vouch for.
+            const read = (tip.label ?? "").trim();
+
+            if (tip.match.speciesAsRead === true)
+            {
+                document.qc.push({
+                    severity: "info",
+                    code: "species-as-read",
+                    message: `tip ${tip.id}: the known taxa have the genus of "${tip.match.name}" but not this species, which is kept as read`,
+                    subject: tip.id,
+                });
+            }
+            else if (read.toLowerCase() !== tip.match.name.toLowerCase())
+            {
+                document.qc.push({
+                    severity: "warning",
+                    code: "known-name-used",
+                    message: `tip ${tip.id} read as "${read}" is named "${tip.match.name}" from the known taxa, not from a supplied name list`,
+                    subject: tip.id,
+                });
+            }
         }
     }
 
