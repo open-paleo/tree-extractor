@@ -212,6 +212,30 @@ export function scoreName(target: string, name: string): number
 }
 
 /**
+ * What a match costs when it holds only with look-alike letters made alike.
+ */
+const lookalikePenalty = 0.03;
+
+/**
+ * Makes alike the letters an OCR engine takes for one another, in a normalized name: a
+ * capital O read as Q and a capital I read as a small L, both of which only begin a word,
+ * and the digits 0 and 1 read for O and L anywhere. The engine reads a leaning italic O as
+ * Q when a u follows, as its language expects ("Quranosaurus" for Ouranosaurus), however
+ * clean the figure.
+ *
+ * @param name - Normalized name.
+ * @returns The name with look-alike letters folded together.
+ */
+export function foldLookalikes(name: string): string
+{
+    return name
+        .replace(/0/g, "o")
+        .replace(/1/g, "l")
+        .replace(/(^| )q/g, "$1o")
+        .replace(/(^| )l/g, "$1i");
+}
+
+/**
  * Matches OCR output against a list of names.
  *
  * @param text - OCR output.
@@ -230,10 +254,19 @@ export function matchName(text: string, names: Array<string>): NameMatch | null
     let bestName = names[0];
     let bestScore = -1;
     let secondScore = -1;
+    const folded = foldLookalikes(target);
 
     for (const name of names)
     {
-        const score = scoreName(target, normalizeName(name));
+        const normalized = normalizeName(name);
+        let score = scoreName(target, normalized);
+
+        // A read with a letter the engine confuses is also compared with those letters made
+        // alike on both sides, a little below a match that needed no such help.
+        if (folded !== target)
+        {
+            score = Math.max(score, scoreName(folded, foldLookalikes(normalized)) - lookalikePenalty);
+        }
 
         if (score > bestScore)
         {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.1 (2026-11-13)
+
+- Name matching makes alike the letters the OCR engine takes for one another: a capital O
+  read as Q, a capital I read as a small L, and the digits 0 and 1. "Quranosaurus", which the
+  engine reads for an italic Ouranosaurus, finds its name.
+
 ## 0.5.0 (2026-11-13)
 
 - A clade's name printed on the colored box or band that shades it is read and attached to

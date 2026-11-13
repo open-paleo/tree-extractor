@@ -180,7 +180,10 @@
         "Gobivenator",
         "intermedius",
         "Ornithopoda",
-        "poda"
+        "poda",
+        "lguanodon",
+        "Lurdusaurus",
+        "Qantassaurus"
     ],
     "ignorePaths": [
         "node_modules/**",

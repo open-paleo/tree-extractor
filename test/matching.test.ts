@@ -131,3 +131,13 @@ test("a clade's name on a colored box is told from a tip's name", () =>
     assert.equal(isBoxedCladeName("Corythosaurus intermedius (C)", [], known), false);
     assert.equal(isBoxedCladeName("LATE CRETACEOUS", [], known), false);
 });
+
+test("a capital O read as Q, or I as l, still finds its name among the known taxa", () =>
+{
+    const known = ["Ouranosaurus", "Iguanodon", "Qantassaurus", "Lurdusaurus", "Uteodon"];
+    assert.equal(chooseMatch("Quranosaurus", [], known)?.name, "Ouranosaurus");
+    assert.equal(chooseMatch("Quranosaurus", [], known)?.accepted, true);
+    assert.equal(chooseMatch("lguanodon", [], known)?.name, "Iguanodon");
+    assert.equal(chooseMatch("Qantassaurus", [], known)?.name, "Qantassaurus");
+    assert.equal(chooseMatch("Lurdusaurus", [], known)?.name, "Lurdusaurus");
+});
