@@ -314,6 +314,18 @@ export type TreeNode = {
     label: string | null;
 
     /**
+     * Identifier of the text line that names this node's clade from a colored box or band
+     * shading it, if any.
+     */
+    nameLine?: string | null;
+
+    /**
+     * The clade's name as read from that line. It stands for the node in the Newick, where
+     * the support value in label then does not appear.
+     */
+    name?: string | null;
+
+    /**
      * Who produced this node.
      */
     source: Provenance;

@@ -104,6 +104,18 @@ function describeTip(tip: Tip): string
 }
 
 /**
+ * The label a node carries in the tree: its clade's name when the figure gives one, and
+ * otherwise what was read at the node, typically a support value.
+ *
+ * @param node - Node.
+ * @returns The label, or null.
+ */
+export function getNodeDisplayLabel(node: TreeNode): string | null
+{
+    return node.name ?? node.label;
+}
+
+/**
  * Choices for Newick output.
  */
 export type NewickOptions = {
@@ -184,7 +196,9 @@ export function formatDocumentAsNewick(document: ExtractionDocument, options: Ne
 
         const length = options.branchLengths && node.parent !== null ? formatLength(parentAge, node.age, node.length) : "";
 
-        return `(${parts.join(",")})${node.label === null ? "" : formatLabel(node.label)}${length}`;
+        const label = getNodeDisplayLabel(node);
+
+        return `(${parts.join(",")})${label === null ? "" : formatLabel(label)}${length}`;
     }
 
     return `${render(document.root, null)};`;

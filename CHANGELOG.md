@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-11-13)
+
+- A clade's name printed on the colored box or band that shades it is read and attached to
+  the clade's node. The region is the fill the name sits on, or a frame drawn around it; the
+  clade is the node whose tips are exactly those in the region, and a region that matches no
+  single clade is left alone. The name stands for the node in the Newick; a support value
+  read at the same node stays in the document.
+
 ## 0.4.3 (2026-11-12)
 
 - A node with no label to its left takes one that begins just right of its junction, level

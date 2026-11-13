@@ -377,3 +377,28 @@ Large-font figures read two to three times faster for it; small fonts are unchan
   identical. Time-scaled phylograms still lose a few tips where a boxed support label covers
   most of a short branch, or where a range bar extends left past the branch's start; both are
   commoner in the generator than in published figures, but real.
+
+## Clade names on colored boxes and bands
+
+A figure may shade the part of the tree a clade occupies and print the clade's name on the
+shading, away from any node (Dieudonné 2026's Dryosauridae and Dysalotosaurinae). After tips
+and nodes have taken their rows, `assignBoxedNames` looks at each unassigned row of four
+glyphs or more:
+
+1. The row sits on a fill when the light pixels in a margin around its box are tinted one
+   way more than they are blank paper. The margin is used because such names are often
+   printed in a color of their own.
+2. The region's rows are those of the fill, followed up and down the columns across the
+   label through gaps no longer than two glyphs. When a line of another color runs across
+   the label's width above and below it, with a side of the same color between them, the
+   label is framed and the region is the frame's rows: a box drawn inside a larger shaded
+   box names the smaller clade.
+3. A tip belongs to the region when it lies in those rows and its own label sits on the same
+   fill, judged from the light pixels inside its box. The second test follows a fill that is
+   not a rectangle.
+4. The name goes to the node whose tips are exactly those. No such node, no name.
+
+The row is read with the other labels and kept only when it reads as a clade's name: one
+word in capitals or with a higher taxon's ending, and not a name the lists hold, since a
+genus on a band is a tip whose branch was missed. The name is stored in the node's `name`
+and stands for the node in the Newick; `label` keeps the support value.

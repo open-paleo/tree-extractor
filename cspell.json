@@ -175,7 +175,12 @@
         "Dryomorpha",
         "Iguanodontia",
         "shqiperorum",
-        "tilletti"
+        "tilletti",
+        "Corythosaurus",
+        "Gobivenator",
+        "intermedius",
+        "Ornithopoda",
+        "poda"
     ],
     "ignorePaths": [
         "node_modules/**",

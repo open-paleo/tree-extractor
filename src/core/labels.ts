@@ -405,6 +405,49 @@ function keepReadSpecies(label: string, match: NameMatch): NameMatch
 }
 
 /**
+ * Whether text read from a colored box or band is a clade's name: one word, in capitals or
+ * with the ending of a higher taxon, and not a name the lists hold, since a genus on a band
+ * is a tip whose branch was missed.
+ *
+ * @param name - Cleaned text.
+ * @param names - The paper's own names.
+ * @param knownNames - Known taxa.
+ * @returns True for a clade's name.
+ */
+export function isBoxedCladeName(name: string, names: Array<string>, knownNames: Array<string>): boolean
+{
+    if (isCladeName(name) && !name.includes(" "))
+    {
+        return true;
+    }
+
+    if (isHigherTaxonName(name))
+    {
+        return true;
+    }
+
+    if (!/^\p{Lu}\p{Ll}+(ia|poda|oda|ida|ata|ina|ae|ea|ones)$/u.test(name))
+    {
+        return false;
+    }
+
+    const wanted = name.toLowerCase();
+
+    for (const list of [names, knownNames])
+    {
+        for (const entry of list)
+        {
+            if (entry.toLowerCase().replace(/_/g, " ") === wanted)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
  * Whether a label is set in capitals, as collapsed clades are: five or more letters, none of
  * them lower case.
  *
@@ -539,6 +582,24 @@ export async function readLabels(
             // comes out as the few of its letters that pass for digits ("Dryomorpha" as "00").
             const cleaned = isNameText(line.ocr.text) ? cleanTaxonText(line.ocr.text) : cleanSupportText(line.ocr.text);
             node.label = cleaned.length > 0 ? cleaned : null;
+        }
+
+        // The clade's name from the box or band that shades it, kept as printed.
+        const nameLine = findTextLine(document, node.nameLine ?? null);
+
+        if (nameLine !== undefined)
+        {
+            nameLine.ocr = await ocr.recognize(cropAndScale(chooseSource(nameLine), nameLine.box, 3, scale), "text");
+            const name = cleanTaxonText(nameLine.ocr.text);
+            node.name = isBoxedCladeName(name, names, knownNames) ? name : null;
+
+            // A row on the shading that reads as anything else, a tip's name that found no
+            // branch or a caption, names no clade and goes back to being unassigned.
+            if (node.name === null)
+            {
+                node.nameLine = null;
+                nameLine.role = "unassigned";
+            }
         }
     }
 }

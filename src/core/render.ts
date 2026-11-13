@@ -7,7 +7,7 @@
  */
 
 import type { ExtractionDocument, Tip, TreeNode } from "./types.ts";
-import { getTipDisplayName } from "./newick.ts";
+import { getNodeDisplayLabel, getTipDisplayName } from "./newick.ts";
 
 /**
  * How the drawing is sized and lettered.
@@ -415,7 +415,7 @@ function layOutTree(document: ExtractionDocument, options: RenderOptions): TreeL
             return;
         }
 
-        placed.push({ id, x, y, parentX, label: options.nodeLabels ? node.label : null, isTip: false, span: spanOf.get(id) ?? [0, 0] });
+        placed.push({ id, x, y, parentX, label: options.nodeLabels ? getNodeDisplayLabel(node) : null, isTip: false, span: spanOf.get(id) ?? [0, 0] });
 
         for (const child of listChildrenInOrder(index, node))
         {

@@ -5,7 +5,7 @@
 import type { ExtractionDocument } from "../core/types.ts";
 import { formatProfile } from "../core/profile.ts";
 import { renderTreeSvg } from "../core/render.ts";
-import { formatDocumentAsNewick, getTipDisplayName } from "../core/newick.ts";
+import { formatDocumentAsNewick, getNodeDisplayLabel, getTipDisplayName } from "../core/newick.ts";
 import type { Selection } from "./state.ts";
 import { collectConnected } from "./lookup.ts";
 
@@ -165,7 +165,7 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
             classes.push("detached");
         }
 
-        elements.nodesList.append(createListItem("node", node.id, node.label ?? "", classes));
+        elements.nodesList.append(createListItem("node", node.id, getNodeDisplayLabel(node) ?? "", classes));
     }
 
     for (const issue of extraction.qc)

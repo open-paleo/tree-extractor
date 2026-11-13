@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { compareNames, computeLevenshtein, matchKnownName, matchName, normalizeName } from "../src/core/matching.ts";
-import { cleanSupportText, cleanTaxonText, isNameText, chooseMatch } from "../src/core/labels.ts";
+import { cleanSupportText, cleanTaxonText, isNameText, chooseMatch, isBoxedCladeName } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
 
@@ -117,4 +117,17 @@ test("an indeterminate species stays on a genus the known taxa supplied", () =>
     assert.equal(chooseMatch("Rhabdodon sp.1", [], known)?.name, "Rhabdodon sp.1");
     assert.equal(chooseMatch("Rhabdodon sp 2", [], known)?.name, "Rhabdodon sp 2");
     assert.equal(chooseMatch("Rhabdodon priscus", [], known)?.name, "Rhabdodon priscus");
+});
+
+test("a clade's name on a colored box is told from a tip's name", () =>
+{
+    const known = ["Fostoria", "Gobivenator", "Corythosaurus intermedius"];
+    assert.equal(isBoxedCladeName("DRYOSAURIDAE", [], known), true);
+    assert.equal(isBoxedCladeName("Dysalotosaurinae", [], known), true);
+    assert.equal(isBoxedCladeName("Iguanodontia", [], known), true);
+    assert.equal(isBoxedCladeName("Ornithopoda", [], known), true);
+    assert.equal(isBoxedCladeName("Fostoria", [], known), false);
+    assert.equal(isBoxedCladeName("Gobivenator", [], known), false);
+    assert.equal(isBoxedCladeName("Corythosaurus intermedius (C)", [], known), false);
+    assert.equal(isBoxedCladeName("LATE CRETACEOUS", [], known), false);
 });

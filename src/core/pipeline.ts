@@ -42,6 +42,7 @@ import { extractSegments, findShortConnectors } from "./segments.ts";
 import { traceRectangularTree } from "./tracer.ts";
 import { assignLabels, readLabels, isCladeName, isHigherTaxonName } from "./labels.ts";
 import { getTipDisplayName } from "./newick.ts";
+import { assignBoxedNames } from "./clade-boxes.ts";
 import { normalizeName, scoreName } from "./matching.ts";
 import { clampBox, cropImage, rotateBox, translateDocument } from "./geometry.ts";
 import { deleteTip } from "./edit.ts";
@@ -1482,6 +1483,13 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     }
 
     assignLabels(document);
+
+    // A clade's name printed on the box or band that shades it. A slanted figure's rows are
+    // measured in turned frames, which the region search does not follow.
+    if (slantedTrace === null)
+    {
+        assignBoxedNames(document, image);
+    }
 
     // A slanted tree's spurs were pruned on the skeleton, and its labels pair less surely
     // (slanted text, tips at every depth), so an unlabelled tip is not debris there.

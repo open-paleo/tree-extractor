@@ -5,7 +5,7 @@
  */
 
 import type { ExtractionDocument, OcrEngine } from "../core/types.ts";
-import { formatDocumentAsNewick } from "../core/newick.ts";
+import { formatDocumentAsNewick, getNodeDisplayLabel } from "../core/newick.ts";
 import type { TesseractLike, TesseractPaths } from "../ocr/tesseract.ts";
 import { viewerMarkup } from "./template.ts";
 import { formatTimings } from "../core/pipeline.ts";
@@ -263,7 +263,7 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
                 {
                     const option = document.createElement("option");
                     option.value = node.id;
-                    option.textContent = node.label === null ? node.id : `${node.id} (${node.label})`;
+                    option.textContent = getNodeDisplayLabel(node) === null ? node.id : `${node.id} (${getNodeDisplayLabel(node)})`;
                     moveTarget.append(option);
                 }
             }
@@ -851,7 +851,16 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
 
             if (node !== null)
             {
-                node.label = target.value.length === 0 ? null : target.value;
+                // The field shows the clade's name when there is one, and edits what it shows.
+                if (node.name !== undefined && node.name !== null)
+                {
+                    node.name = target.value.length === 0 ? null : target.value;
+                }
+                else
+                {
+                    node.label = target.value.length === 0 ? null : target.value;
+                }
+
                 node.source = "manual";
             }
         }
