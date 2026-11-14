@@ -1,0 +1,41 @@
+#NEXUS
+
+[ dalsasso2011a_fig113: Coelurosaurian majority-rule consensus, fully resolved. Internal labels from the five node dots, capitalised as printed: COELUROSAURIA, TYRANNOSAUROIDEA, COMPSOGNATHIDAE, MANIRAPTORA, PARAVES. 28 tips, fully resolved; 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        OUTGROUP
+        Mirischia_asymmetrica
+        Aniksosaurus_darwini
+        Nedcolbertia_justinhoffmani
+        Eotyrannus_lengi
+        Tyrannosaurus_rex
+        Gorgosaurus_libratus
+        Guanlong_wucaii
+        Dilong_paradoxus
+        Tanycolagreus_topwilsoni
+        Coelurus_fragilis
+        Juravenator_starki
+        Sinosauropteryx_prima
+        Huaxiagnathus_orientalis
+        Compsognathus_longipes
+        Sinocalliopteryx_gigas
+        Orkoraptor_burkei
+        Scipionyx_samniticus
+        ORNITHOMIMOSAURIA
+        Ornitholestes_hermanni
+        Santanaraptor_placidus
+        THERIZINOSAUROIDEA
+        Nqwebasaurus_thwazi
+        ALVAREZSAURIDAE
+        OVIRAPTOROSAURIA
+        TROODONTIDAE
+        DROMAEOSAURIDAE
+        AVIALAE
+    ;
+END;
+
+BEGIN TREES;
+    TREE dalsasso2011a_fig113 = [&R] (OUTGROUP,(Mirischia_asymmetrica,((Aniksosaurus_darwini,Nedcolbertia_justinhoffmani),(((((Eotyrannus_lengi,(Tyrannosaurus_rex,Gorgosaurus_libratus)),Guanlong_wucaii),Dilong_paradoxus),(Tanycolagreus_topwilsoni,Coelurus_fragilis))TYRANNOSAUROIDEA,((((((Juravenator_starki,Sinosauropteryx_prima),Huaxiagnathus_orientalis),Compsognathus_longipes),Sinocalliopteryx_gigas),(Orkoraptor_burkei,Scipionyx_samniticus))COMPSOGNATHIDAE,(ORNITHOMIMOSAURIA,(Ornitholestes_hermanni,(Santanaraptor_placidus,(THERIZINOSAUROIDEA,((Nqwebasaurus_thwazi,ALVAREZSAURIDAE),(OVIRAPTOROSAURIA,((TROODONTIDAE,DROMAEOSAURIDAE),AVIALAE)PARAVES)))))MANIRAPTORA)))))COELUROSAURIA);
+END;

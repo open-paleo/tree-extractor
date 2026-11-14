@@ -1,0 +1,11 @@
+{
+  "image": "../../../../../corpus/census/figures/han2015a_fig11.png",
+  "names": "names.txt",
+  "source": "Han et al. 2015, PLOS ONE 10: e0143369, Fig. 11: ghost lineages implied by the phylogeny of early ceratopsians; vertical, root at the bottom, tips at the top, a Ma axis at the left, thick black range bars, grey ghost lineages, Psittacosaurus and Neoceratopsia drawn as hatched triangles with arrows. Image: census figure (2030x1838 px).",
+  "license": "CC BY 4.0",
+  "attribution": "Han, F.; Forster, C. A.; Clark, J. M.; Xu, X. (2015). A new taxon of basal ceratopsian from China and the early evolution of Ceratopsia. PLOS ONE 10: e0143369. https://doi.org/10.1371/journal.pone.0143369. Fig. 11. CC BY 4.0.",
+  "names_note": "the census has the paper's matrix list (37 taxa), but this figure is a summary with two collapsed groups (Psittacosaurus, Neoceratopsia drawn as triangles), so names.txt is the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Ghost-lineage summary of early ceratopsians, vertical, root at the bottom. Psittacosaurus and Neoceratopsia are collapsed clades drawn as hatched triangles and encoded as tips. Replacement case: drawn with seed 20261115 from the vertical time-axis stratum after morschhauser2018a_fig13 was skipped. 6 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

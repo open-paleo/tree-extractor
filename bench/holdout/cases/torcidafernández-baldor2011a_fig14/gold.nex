@@ -1,0 +1,29 @@
+#NEXUS
+
+[ torcidafernández-baldor2011a_fig14: Diplodocoid strict consensus (panel A). Topology from the PDF's vector paths, read junction by junction because lines run through verticals: the Diplodocus branch is the continuation of the flagellicaudatan stem, the Dicraeosaurus-row line enters the dicraeosaurid node, and the Zapalasaurus and Demandasaurus lines carry the rebbachisaurid stems. Every junction checked against panel C, which has the same topology except within Rebbachisauridae (A's strict consensus collapses it to a polytomy). 16 tips, 3 polytomies (4, 3, 5 children). Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=16;
+    TAXLABELS
+        Omeisaurus
+        Jobaria
+        Macronaria
+        Suuwassea
+        Apatosaurus
+        Diplodocus
+        Amargasaurus
+        Brachytrachylopan
+        Dicraeosaurus
+        Histriasaurus
+        Limaysaurus
+        Rebbachisaurus
+        Cathartesaura
+        Zapalasaurus
+        Nigersaurus
+        Demandasaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'torcidafernández-baldor2011a_fig14' = [&R] (Omeisaurus,Jobaria,Macronaria,((Suuwassea,(Apatosaurus,Diplodocus),(Amargasaurus,(Brachytrachylopan,Dicraeosaurus))),(Histriasaurus,(Limaysaurus,Rebbachisaurus,Cathartesaura,Zapalasaurus,(Nigersaurus,Demandasaurus)))));
+END;

@@ -1,0 +1,70 @@
+#NEXUS
+
+[ rauhut2019a_fig4: Tetanuran time tree (reduced consensus). The backbone is a staircase whose stems enter each vertical at its lower end. Internal labels: backbone names (Averostra, Tetanurae, Carnosauria, Allosauroidea), each matched to the vertical it is centred on, and the seven boxes (Ceratosauria, Coelurosauria, Spinosauridae, Megalosauridae, Piatnitzkysauridae, Metriacanthosauridae, Carcharodontosauria). Read by eye at 3-7x. 57 tips, 5 polytomies (3, 3, 3, 4, 4 children); 11 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=57;
+    TAXLABELS
+        Eoraptor
+        Herrerasaurus
+        '"Coelophysis bauri"'
+        Dilophosaurus
+        Cryolophosaurus
+        Sinosaurus
+        Ceratosaurus
+        Eoabelisaurus
+        Majungasaurus
+        Masiakasaurus
+        Elaphrosaurus
+        Chuandongocoelurus
+        Zuolong
+        Proceratosaurus
+        Guanlong
+        Ornitholestes
+        Compsognathus
+        Monolophosaurus
+        Ichthyovenator
+        Suchomimus
+        Baryonyx
+        Spinosaurus
+        Irritator
+        Angaturama
+        Streptospondylus
+        Eustreptospondylus
+        Dubreuillosaurus
+        Afrovenator
+        Wiehenvenator
+        Torvosaurus
+        Megalosaurus
+        Xuanhanosaurus
+        Marshosaurus
+        Piatnitzkysaurus
+        Condorraptor
+        Asfaltovenator
+        CV00214
+        '"S zigongensis"'
+        Shidaisaurus
+        '"Yangchuano hepingensis"'
+        '"Sinraptor dongi"'
+        Siamotyrannus
+        Allosaurus
+        Neovenator
+        Chilantaisaurus
+        Fukuiraptor
+        Australovenator
+        Megaraptor
+        Aerosteon
+        Eocarcharia
+        Concavenator
+        Acrocanthosaurus
+        Shaochilong
+        Tyrannotitan
+        Mapusaurus
+        Giganotosaurus
+        Carcharodontosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE rauhut2019a_fig4 = [&R] (Eoraptor,(Herrerasaurus,('"Coelophysis bauri"',(Dilophosaurus,(Cryolophosaurus,(Sinosaurus,((Ceratosaurus,(Eoabelisaurus,((Majungasaurus,Masiakasaurus),Elaphrosaurus)))Ceratosauria,(Chuandongocoelurus,((Zuolong,((Proceratosaurus,Guanlong),(Ornitholestes,Compsognathus)))Coelurosauria,(Monolophosaurus,(((Ichthyovenator,(Suchomimus,Baryonyx)),(Spinosaurus,Irritator,Angaturama))Spinosauridae,((Streptospondylus,(Eustreptospondylus,((Dubreuillosaurus,Afrovenator),(Wiehenvenator,Torvosaurus,Megalosaurus))))Megalosauridae,(Xuanhanosaurus,((Marshosaurus,(Piatnitzkysaurus,Condorraptor))Piatnitzkysauridae,(Asfaltovenator,(((CV00214,'"S zigongensis"'),(Shidaisaurus,('"Yangchuano hepingensis"',('"Sinraptor dongi"',Siamotyrannus))))Metriacanthosauridae,(Allosaurus,((Neovenator,Chilantaisaurus,((Fukuiraptor,Australovenator),(Megaraptor,Aerosteon))),(Eocarcharia,Concavenator,Acrocanthosaurus,(Shaochilong,(Tyrannotitan,Mapusaurus,Giganotosaurus,Carcharodontosaurus))))Carcharodontosauria)))))Allosauroidea)))Carnosauria))Tetanurae)Averostra))))));
+END;

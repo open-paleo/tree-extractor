@@ -1,0 +1,33 @@
+#NEXUS
+
+[ penkalski2018a_fig16: Specimen-level ankylosaurine time tree, vertical. Tips are the specimen numbers; the species names printed above groups of specimens are not encoded (they do not all sit over single clades). The root joins P. grangeri, the main clade and the Z. crurivastator + O. horneri clade on one bar, a trichotomy as drawn. Read by eye at 3-5x. 20 tips, 4 polytomies (3, 4, 4, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        P._grangeri
+        UA_31
+        91.127.1
+        '0210+5406'
+        R4947
+        8530
+        832
+        5238
+        97.132.1
+        784
+        5403
+        5337
+        813
+        5405
+        1930
+        5404
+        R5161
+        75860
+        11892
+        433
+    ;
+END;
+
+BEGIN TREES;
+    TREE penkalski2018a_fig16 = [&R] (P._grangeri,((((((((UA_31,91.127.1,'0210+5406',R4947),8530),832),5238,97.132.1,784),(5403,5337,813)),5405),(1930,5404)),R5161),(75860,(11892,433)));
+END;

@@ -1,0 +1,64 @@
+#NEXUS
+
+[ thompson2011a_fig2: Ankylosaurian strict consensus (panel A). Large polytomies: 25 nodosaurids and early ankylosaurs on one vertical, and a 12-branch ankylosaurid node beside Zhongyuansaurus + Tsagantegia. The tip labels sit between the two trees, so panel B's branches end at the same labels from the right. 51 tips, 3 polytomies (3, 12, 25 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=51;
+    TAXLABELS
+        Lesothosaurus_diagnosticus
+        Scutellosaurus_lawleri
+        Emausaurus_ernsti
+        Scelidosaurus_harrisonii
+        Stegosaurus_armatus
+        Huayangosaurus_taibaii
+        Minmi_paravertebra
+        Liaoningosaurus_paradoxus
+        Cedarpelta_bilbeyhallorum
+        Gobisaurus_domoculus
+        Shamosaurus_scutatus
+        Zhongyuansaurus_lauyangensis
+        Tsagantegia_longicranialis
+        Shanxia_tianzhenensis
+        '''Crichtonsaurus'' benxiensis'
+        Dyoplosaurus_acutosquameus
+        Pinacosaurus_mephistocephalus
+        Euoplocephalus_tutus
+        Ankylosaurus_marginoventris
+        Pinacosaurus_grangeri
+        Minotaurosaurus_ramachandrani
+        Nodocephalosaurus_kirtlandensis
+        Tianzhenosaurus_youngi
+        Talarurus_plicatospineus
+        Tarchia_gigantea
+        Saichania_chulsanensis
+        Antarctopelta_oliveroi
+        Mymoorapelta_maysi
+        Hylaeosaurus_armatus
+        Anoplosaurus_curtonotus
+        Tatankocephalus_cooneyorum
+        Polacanthus_rudgwickensis
+        Hoplitosaurus_marshi
+        Gargoyleosaurus_parkpinorum
+        Gastonia_burgei
+        Polacanthus_foxii
+        Peloroplites_cedrimontanus
+        Zhejiangosaurus_lishuiensis
+        Struthiosaurus_languedocensis
+        Struthiosaurus_austriacus
+        Hungarosaurus_tormai
+        Animantarx_ramaljonesi
+        Texasetes_pleurohalio
+        Stegopelta_landerensis
+        Silvisaurus_condrayi
+        Sauropelta_edwardsi
+        Pawpawsaurus_campbelli
+        Nodosaurus_textilis
+        Niobrarasaurus_coleii
+        Panoplosaurus_mirus
+        Edmontonia
+    ;
+END;
+
+BEGIN TREES;
+    TREE thompson2011a_fig2 = [&R] (Lesothosaurus_diagnosticus,(Scutellosaurus_lawleri,(Emausaurus_ernsti,(Scelidosaurus_harrisonii,((Stegosaurus_armatus,Huayangosaurus_taibaii),((Minmi_paravertebra,(Liaoningosaurus_paradoxus,(Cedarpelta_bilbeyhallorum,(Gobisaurus_domoculus,(Shamosaurus_scutatus,(Zhongyuansaurus_lauyangensis,Tsagantegia_longicranialis,(Shanxia_tianzhenensis,'''Crichtonsaurus'' benxiensis',Dyoplosaurus_acutosquameus,Pinacosaurus_mephistocephalus,Euoplocephalus_tutus,Ankylosaurus_marginoventris,(Pinacosaurus_grangeri,Minotaurosaurus_ramachandrani),Nodocephalosaurus_kirtlandensis,Tianzhenosaurus_youngi,Talarurus_plicatospineus,Tarchia_gigantea,Saichania_chulsanensis))))))),(Antarctopelta_oliveroi,Mymoorapelta_maysi,Hylaeosaurus_armatus,Anoplosaurus_curtonotus,Tatankocephalus_cooneyorum,Polacanthus_rudgwickensis,Hoplitosaurus_marshi,Gargoyleosaurus_parkpinorum,Gastonia_burgei,Polacanthus_foxii,Peloroplites_cedrimontanus,Zhejiangosaurus_lishuiensis,Struthiosaurus_languedocensis,Struthiosaurus_austriacus,Hungarosaurus_tormai,Animantarx_ramaljonesi,Texasetes_pleurohalio,Stegopelta_landerensis,Silvisaurus_condrayi,Sauropelta_edwardsi,Pawpawsaurus_campbelli,Nodosaurus_textilis,Niobrarasaurus_coleii,Panoplosaurus_mirus,Edmontonia)))))));
+END;

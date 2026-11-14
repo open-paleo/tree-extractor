@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/sánchez-fenollosa2025a_fig5.png",
+  "names": "names.txt",
+  "source": "Sánchez-Fenollosa & Cobos 2025, Vertebrate Zoology 75: 165-189, Fig. 5: time-calibrated phylogeny of Stegosauria with ranges coloured by continent; rectangular, root left, tips right, coloured range bars (some with '?'), Bremer/bootstrap values at nodes, a Ma axis and period chart below, bold clade names at nodes, shaded boxes behind three subclades with their names, silhouettes. Image: census figure (1961x1396 px).",
+  "license": "unverified: no licence statement in the text held (Vertebrate Zoology is open access through Pensoft)",
+  "names_note": "no matrix held; list = the printed tip names, abbreviated as printed ('Lo. priscus', 'He. mjosi', 'Zhongpu stegosaur (Stegosaurus sp.)', 'Qiketai stegosaur')",
+  "gold": "gold.nex",
+  "gold_note": "Stegosaurian time tree. Internal labels: the bold names at nodes (Eurypoda, Stegosauria, Stegosauridae, Neostegosauria, Ankylosauria) and the three shaded boxes (Stegosaurinae, Dacentrurinae, Huayangosauridae). Read by eye at 2-3x. 29 tips, fully resolved; 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

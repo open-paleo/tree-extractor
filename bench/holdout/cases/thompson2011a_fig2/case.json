@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/thompson2011a_fig2.png",
+  "names": "names.txt",
+  "source": "Thompson et al. 2011, Journal of Systematic Palaeontology 10: 301-312, Fig. 2A: strict component consensus of 4248 MPTs of Ankylosauria (TNT); rectangular, root left, tips in a shared middle column, bootstrap in bold and decay indices in italics at nodes. Panel B (the 50% majority rule tree) is mirrored, root right, and shares the tip labels in the middle column; it is excluded. Image: census figure (995x1125 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 597,
+    "y1": 1125
+  },
+  "region_note": "panel A; B is mirrored (root right) and shares A's tip labels in the middle column",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names, which panels A and B share ('Crichtonsaurus' benxiensis keeps its printed quotation marks; Edmontonia is genus only)",
+  "gold": "gold.nex",
+  "gold_note": "Ankylosaurian strict consensus (panel A). Large polytomies: 25 nodosaurids and early ankylosaurs on one vertical, and a 12-branch ankylosaurid node beside Zhongyuansaurus + Tsagantegia. The tip labels sit between the two trees, so panel B's branches end at the same labels from the right. 51 tips, 3 polytomies (3, 12, 25 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription",
+  "image_note": "the tip labels are shared with panel B, a mirrored tree whose branches end at the same labels from the right; the region box keeps B's branches out but each label is equally close to both trees"
+}

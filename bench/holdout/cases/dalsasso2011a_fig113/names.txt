@@ -1,0 +1,28 @@
+OUTGROUP
+Mirischia asymmetrica
+Aniksosaurus darwini
+Nedcolbertia justinhoffmani
+Eotyrannus lengi
+Tyrannosaurus rex
+Gorgosaurus libratus
+Guanlong wucaii
+Dilong paradoxus
+Tanycolagreus topwilsoni
+Coelurus fragilis
+Juravenator starki
+Sinosauropteryx prima
+Huaxiagnathus orientalis
+Compsognathus longipes
+Sinocalliopteryx gigas
+Orkoraptor burkei
+Scipionyx samniticus
+ORNITHOMIMOSAURIA
+Ornitholestes hermanni
+Santanaraptor placidus
+THERIZINOSAUROIDEA
+Nqwebasaurus thwazi
+ALVAREZSAURIDAE
+OVIRAPTOROSAURIA
+TROODONTIDAE
+DROMAEOSAURIDAE
+AVIALAE

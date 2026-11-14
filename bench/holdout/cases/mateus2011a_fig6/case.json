@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/mateus2011a_fig6.png",
+  "names": "names.txt",
+  "source": "Mateus et al. 2011, Anais da Academia Brasileira de Ciências 83(1): 221-233, Fig. 6: time-calibrated cladogram of sauropods placing Angolatitan; rectangular with short slanted risers, root left, tips right ending in dots or range bars, a Jurassic-Cretaceous stage chart above, open rings at named nodes with small clade names. Image: census figure (800x538 px, low resolution).",
+  "license": "unverified: no licence statement in the text held (Anais da Academia Brasileira de Ciências is open access on SciELO)",
+  "names_note": "no matrix held; list = the printed tip names ('Opisthocoelicaudia' is hyphenated across two lines as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Sauropod time tree. Internal labels from the six open rings (Sauropoda, Neosauropoda, Titanosauriformes, Somphospondyli, Titanosauria, Diplodocoidea). Nemegtosaurus is drawn as the sister of the Diplodocoidea ring, on a long branch from the node just below it, and is encoded so. Read by eye at 3-6x. 25 tips, fully resolved; 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

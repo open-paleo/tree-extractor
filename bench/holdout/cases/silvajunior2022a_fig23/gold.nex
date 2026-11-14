@@ -1,0 +1,69 @@
+#NEXUS
+
+[ silvajunior2022a_fig23: Titanosauriform strict consensus (panel A). Internal labels from the numbered dots via the caption key: 1 Titanosauriformes, 2 Somphospondylii (as printed), 3 Titanosauria, 4 Colossosauria, 5 Rinconsauria, 6 Aeolosaurini. Read by eye at 2-3x. 56 tips, 8 polytomies (3, 3, 3, 7, 4, 6, 8, 3 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=56;
+    TAXLABELS
+        Bellusaurus_sui
+        Camarasaurus
+        Europasaurus_holgeri
+        Galvesaurus_herreroi
+        Tehuelchesaurus_benitezii
+        Tastavinsaurus_lenzai
+        Sauroposeidon_proteles
+        Padillasaurus_leivaenses
+        Venenosaurus_dicrocei
+        Giraffatitan_brancai
+        Lusotitan_atalaiensis
+        Ceradosaurus_weiskopfe
+        Abydosaurus_mcintoshi
+        Brachiosaurus_altithorax
+        Ruyangosaurus_giganteus
+        Euhelopus_zdanskyi
+        Erketu_ellisoni
+        Phuwiangosaurus_sirindhornae
+        Qiaowanlong_kangxii
+        Chubutisaurus_insignis
+        Andesaurus_delgadoi
+        Wintonotitan_wattsi
+        Ligabuesaurus_lenzai
+        Dreadnoughtus_schrani
+        Epachtosaurus_sciuttoi
+        Malawisaurus_dixeyi
+        Rapetosaurus_krausei
+        Isisaurus_colberti
+        Tapuiasaurus_macedoi
+        Neuquensaurus_australis
+        Saltasaurus_loricatus
+        Rocasaurus_muniozi
+        Ophistocoelicaudia_skarzynskii
+        Nemegtosaurus_mongolisensis
+        Alamosaurus_sanjuanensis
+        Mendozasaurus_neguylap
+        Notocolossus_gonzalezparejasi
+        Puertasaurus_reuili
+        Quetecsaurus_rusconii
+        Futalognkosaurus_dukei
+        Bonitasauria_salgadoi
+        Drusilasaura_deseadensis
+        Patagotitan_mayorum
+        Argentinosaurus_hunculensis
+        Rinconsaurus_caudamirus
+        Uberabatitan_ribeiroi
+        Baurutitan_britoi
+        Gondwanatitan_faustoi
+        Bravasaurus_arrieosorum
+        Caieiria_allocaudata
+        Muyelensaurus_pecheni
+        Overosaurus_paradosorum
+        Arrudatitan_maximus
+        Punatitan_couhlini
+        Aeolosaurus_rionegrinus
+        Aeolosaurus_colhuehuapensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE silvajunior2022a_fig23 = [&R] (Bellusaurus_sui,Camarasaurus,(Europasaurus_holgeri,(Galvesaurus_herreroi,Tehuelchesaurus_benitezii,(Tastavinsaurus_lenzai,(Sauroposeidon_proteles,(Padillasaurus_leivaenses,Venenosaurus_dicrocei,Giraffatitan_brancai,Lusotitan_atalaiensis,Ceradosaurus_weiskopfe,Abydosaurus_mcintoshi,Brachiosaurus_altithorax),((Ruyangosaurus_giganteus,(Euhelopus_zdanskyi,(Erketu_ellisoni,(Phuwiangosaurus_sirindhornae,Qiaowanlong_kangxii)))),(Chubutisaurus_insignis,(Andesaurus_delgadoi,Wintonotitan_wattsi,Ligabuesaurus_lenzai,((Dreadnoughtus_schrani,(Epachtosaurus_sciuttoi,(Malawisaurus_dixeyi,((Rapetosaurus_krausei,(Isisaurus_colberti,Tapuiasaurus_macedoi)),(Neuquensaurus_australis,Saltasaurus_loricatus,Rocasaurus_muniozi,Ophistocoelicaudia_skarzynskii,Nemegtosaurus_mongolisensis,Alamosaurus_sanjuanensis))))),((Mendozasaurus_neguylap,Notocolossus_gonzalezparejasi,Puertasaurus_reuili,Quetecsaurus_rusconii,Futalognkosaurus_dukei,Bonitasauria_salgadoi,Drusilasaura_deseadensis,(Patagotitan_mayorum,Argentinosaurus_hunculensis)),(Rinconsaurus_caudamirus,(Uberabatitan_ribeiroi,((Baurutitan_britoi,Gondwanatitan_faustoi,(Bravasaurus_arrieosorum,Caieiria_allocaudata)),(Muyelensaurus_pecheni,(Overosaurus_paradosorum,(Arrudatitan_maximus,(Punatitan_couhlini,(Aeolosaurus_rionegrinus,Aeolosaurus_colhuehuapensis))))))Aeolosaurini))Rinconsauria)Colossosauria))Titanosauria))Somphospondylii)Titanosauriformes))));
+END;

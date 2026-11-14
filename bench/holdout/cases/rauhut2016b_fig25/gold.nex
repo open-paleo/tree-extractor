@@ -1,0 +1,35 @@
+#NEXUS
+
+[ rauhut2016b_fig25: Ceratosaurian time tree (reduced consensus). The Noasaurus branch runs straight through the vertical of the Velocisaurus + Masiakasaurus node and is its stem, so the three form a trichotomy as drawn. Read by eye at 3-5x. 22 tips, 3 polytomies (6, 3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=22;
+    TAXLABELS
+        Ceratosaurus
+        Genyodectes
+        Eoabelisaurus
+        Rahiolisaurus
+        Rugops
+        Abelisaurus
+        Genusaurus
+        Ekrixinatosaurus
+        Ilokelesia
+        Skorpiovenator
+        Aucasaurus
+        Carnotaurus
+        Rajasaurus
+        Indosaurus
+        Majungasaurus
+        Deltadromeus
+        Limusaurus
+        CCG_20011
+        Elaphrosaurus
+        Velocisaurus
+        Noasaurus
+        Masiakasaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE rauhut2016b_fig25 = [&R] ((Ceratosaurus,Genyodectes),((Eoabelisaurus,(Rahiolisaurus,(Rugops,(Abelisaurus,((Genusaurus,Ekrixinatosaurus,Ilokelesia,Skorpiovenator,Aucasaurus,Carnotaurus),(Rajasaurus,Indosaurus,Majungasaurus)))))),(Deltadromeus,((Limusaurus,(CCG_20011,Elaphrosaurus)),(Velocisaurus,Noasaurus,Masiakasaurus)))));
+END;

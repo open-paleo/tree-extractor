@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/xu2006d_fig3.png",
+  "names": "names.txt",
+  "source": "Xu & Norell 2006, Geological Journal 41: 419-437, Fig. 3: simplified cladogram of coelurosaurs from the Jehol Group; rectangular, root left, tips right, no node markers. Image: census figure (1001x1607 px), a page render of the image area.",
+  "license": "not open (Wiley, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names, including collapsed groups ('Other Dromaeosauridae', 'Other Troodontidae', Oviraptoridae, Ornithothoraces, ...)",
+  "gold": "gold.nex",
+  "gold_note": "Coelurosaurian summary cladogram, fully resolved. Read by eye. 28 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

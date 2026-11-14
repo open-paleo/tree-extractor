@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/penkalski2018a_fig16.png",
+  "names": "names.txt",
+  "source": "Penkalski 2018, Neues Jahrbuch für Geologie und Paläontologie Abhandlungen 287: 261-306, Fig. 16: time-calibrated strict consensus of ankylosaurine specimens; vertical, root at the bottom, tips at the top labelled with specimen numbers (rotated) and grouped under italic species names (E. tutus, A. lambei, A. inceptus, D. acutosquameus, P. coombsi, S. thronus, S. cutleri, Z. crurivastator, O. horneri, P. grangeri), coloured boxes by formation with solid, dashed or dotted outlines for elevation certainty, broken axis, tail-club drawings at both sides. Image: census figure (975x764 px).",
+  "license": "not open (Schweizerbart, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip labels, which are specimen numbers ('UA 31', '0210+5406', 'R4947', ...) and one species name, 'P. grangeri'; '11892' drops its superscript footnote mark",
+  "gold": "gold.nex",
+  "gold_note": "Specimen-level ankylosaurine time tree, vertical. Tips are the specimen numbers; the species names printed above groups of specimens are not encoded (they do not all sit over single clades). The root joins P. grangeri, the main clade and the Z. crurivastator + O. horneri clade on one bar, a trichotomy as drawn. Read by eye at 3-5x. 20 tips, 4 polytomies (3, 4, 4, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

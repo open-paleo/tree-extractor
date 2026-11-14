@@ -1,0 +1,41 @@
+#NEXUS
+
+[ gianechini2015a_fig8: Ceratosaurian time tree, vertical. Internal labels from the four node dots (Ceratosauria, Abelisauroidea, Noasauridae, Abelisauridae). Polytomies: Spinostropheus + Deltadromeus + (Limusaurus, Elaphrosaurus); Rahiolisaurus + Noasauridae + Abelisauridae; five noasaurids; twelve abelisaurids. Read by eye from the figure (a vector figure whose tip names are outlines; the vertical layout was read directly rather than from the paths). 28 tips, 4 polytomies (3, 3, 5, 12 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Herrerasaurus
+        Syntarsus
+        Allosaurus
+        Spinostropheus
+        Deltadromeus
+        Limusaurus
+        Elaphrosaurus
+        Genyodectes
+        Ceratosaurus
+        Eoabelisaurus
+        Rahiolisaurus
+        Noasaurus
+        Masiakasaurus
+        Laevisuchus
+        Genusaurus
+        Dahalokely
+        MPCN-PV_69
+        Aucasaurus
+        Abelisaurus
+        Kryptops
+        Rajasaurus
+        Majungasaurus
+        Carnotaurus
+        Indosaurus
+        Rugops
+        Ekrixinatosaurus
+        Ilokelesia
+        Skorpiovenator
+    ;
+END;
+
+BEGIN TREES;
+    TREE gianechini2015a_fig8 = [&R] (Herrerasaurus,(Syntarsus,(Allosaurus,((Spinostropheus,Deltadromeus,(Limusaurus,Elaphrosaurus)),((Genyodectes,Ceratosaurus),(Eoabelisaurus,(Rahiolisaurus,(Noasaurus,Masiakasaurus,Laevisuchus,Genusaurus,Dahalokely)Noasauridae,(MPCN-PV_69,Aucasaurus,Abelisaurus,Kryptops,Rajasaurus,Majungasaurus,Carnotaurus,Indosaurus,Rugops,Ekrixinatosaurus,Ilokelesia,Skorpiovenator)Abelisauridae))Abelisauroidea))Ceratosauria)));
+END;

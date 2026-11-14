@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/mocho2016a_fig22.png",
+  "names": "names.txt",
+  "source": "Mocho, Royo-Torres & Ortega 2016, Historical Biology 29: 789-817, Fig. 22: strict consensus of 3 MPTs from D'Emic's (2012) matrix placing Lusotitan; rectangular, root left, tips right, bootstrap(Bremer) at nodes, single letters at node corners keyed in the caption (E, N, M, T, So) and clade names written on three stems (Brachiosauridae, Euhelopodidae, Titanosauria). Image: census figure (1064x1245 px).",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (Diplodocoidea and Saltasaurini are collapsed clades)",
+  "gold": "gold.nex",
+  "gold_note": "Titanosauriform strict consensus. Internal labels: the letters as printed, each given to the node whose stem it marks (E Eusauropoda at the root, N Neosauropoda, M Macronaria, T Titanosauriformes, So Somphospondyli), and the three names written on stems (Brachiosauridae, Euhelopodidae, Titanosauria). The caption's key also lists L (Lithostrotia), but no L is printed on the figure, so it is not encoded. Read by eye at 2-4x. 29 tips, 2 polytomies (5, 3 children); 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

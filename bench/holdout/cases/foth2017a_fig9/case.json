@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/foth2017a_fig9.png",
+  "names": "names.txt",
+  "source": "Foth & Rauhut 2017, BMC Evolutionary Biology 17 (doi 10.1186/s12862-017-1076-y), Fig. 9: time-calibrated simplified phylogeny of maniraptoran theropods with ancestral areas; rectangular staircase, root left, tips right, a stage strip above, dashed stage lines, coloured range bars and arrows, coloured (pie) dots where each node's stem enters its vertical, numbered nodes 1-6 keyed to clade names in the caption, a colour legend. Image: census figure (1420x1059 px).",
+  "license": "unverified: no licence statement in the text held (BMC Evolutionary Biology is open access)",
+  "names_note": "the census has the paper's matrix list (132 taxa), but this simplified figure collapses most of it into higher taxa (Compsognathidae, Troodontidae, Pygostylia, ...), so names.txt is the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Simplified coelurosaur time tree, drawn as a staircase in which each node's stem enters the middle of its vertical at a coloured dot. Guanlong and Proceratosaurus are drawn as successive branches, not as a clade. Internal labels from the caption key: 1 Coelurosauria, 2 Maniraptoriformes, 3 Maniraptora, 4 Pennaraptora, 5 Paraves, 6 Avialae. Read by eye at 3-5x; the pixel listing failed on the coloured dots. 20 tips, 2 polytomies (3, 4 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

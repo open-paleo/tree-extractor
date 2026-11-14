@@ -1,0 +1,42 @@
+#NEXUS
+
+[ sánchez-fenollosa2025a_fig5: Stegosaurian time tree. Internal labels: the bold names at nodes (Eurypoda, Stegosauria, Stegosauridae, Neostegosauria, Ankylosauria) and the three shaded boxes (Stegosaurinae, Dacentrurinae, Huayangosauridae). Read by eye at 2-3x. 29 tips, fully resolved; 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=29;
+    TAXLABELS
+        L._diagnosticus
+        Sc._lawleri
+        E._ernsti
+        Y._kopchicki
+        Sce._harrisonii
+        Qiketai_stegosaur
+        Lo._priscus
+        He._mjosi
+        S._stenops
+        Ya._ultimus
+        W._homheni
+        'Zhongpu stegosaur (Stegosaurus sp.)'
+        J._junggarensis
+        Ad._boulahfa
+        D._armatus
+        Th._atlasicus
+        K._aethiopicus
+        Al._longispinus
+        T._multispinus
+        P._africanus
+        C._jiangbeiensis
+        H._taibaii
+        B._primitivus
+        Ba._baojiensis
+        G._sichuanensis
+        I._mollensis
+        Euo._tutus
+        A._magniventris
+        Eu._carbonensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'sánchez-fenollosa2025a_fig5' = [&R] (L._diagnosticus,(Sc._lawleri,(E._ernsti,(Y._kopchicki,(Sce._harrisonii,((((((((Qiketai_stegosaur,Lo._priscus),(He._mjosi,S._stenops)),(((Ya._ultimus,W._homheni),'Zhongpu stegosaur (Stegosaurus sp.)'),J._junggarensis))Stegosaurinae,((((Ad._boulahfa,D._armatus),Th._atlasicus),K._aethiopicus),Al._longispinus)Dacentrurinae)Neostegosauria,(T._multispinus,P._africanus)),C._jiangbeiensis)Stegosauridae,(((H._taibaii,B._primitivus),(Ba._baojiensis,G._sichuanensis)),I._mollensis)Huayangosauridae)Stegosauria,((Euo._tutus,A._magniventris),Eu._carbonensis)Ankylosauria)Eurypoda)))));
+END;

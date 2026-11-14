@@ -1,0 +1,38 @@
+#NEXUS
+
+[ mateus2011a_fig6: Sauropod time tree. Internal labels from the six open rings (Sauropoda, Neosauropoda, Titanosauriformes, Somphospondyli, Titanosauria, Diplodocoidea). Nemegtosaurus is drawn as the sister of the Diplodocoidea ring, on a long branch from the node just below it, and is encoded so. Read by eye at 3-6x. 25 tips, fully resolved; 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=25;
+    TAXLABELS
+        Vulcanodon
+        Shunosaurus
+        Barapasaurus
+        Omeisaurus
+        Mamenchisaurus
+        Patagosaurus
+        Jobaria
+        Camarasaurus
+        Brachiosaurus
+        Angolatitan
+        Euhelopus
+        Malawisaurus
+        Isisaurus
+        Saltasaurus
+        Alamosaurus
+        Opisthocoelicaudia
+        Nemegtosaurus
+        Haplocanthosaurus
+        Nigersaurus
+        Rayososaurus
+        Dicraeosaurus
+        Amargasaurus
+        Apatosaurus
+        Barosaurus
+        Diplodocus
+    ;
+END;
+
+BEGIN TREES;
+    TREE mateus2011a_fig6 = [&R] (Vulcanodon,(Shunosaurus,(Barapasaurus,((Omeisaurus,Mamenchisaurus),(Patagosaurus,(Jobaria,(Camarasaurus,((Brachiosaurus,(Angolatitan,(Euhelopus,(Malawisaurus,(Isisaurus,(Saltasaurus,(Alamosaurus,Opisthocoelicaudia))))Titanosauria))Somphospondyli)Titanosauriformes,(Nemegtosaurus,(Haplocanthosaurus,((Nigersaurus,Rayososaurus),((Dicraeosaurus,Amargasaurus),(Apatosaurus,(Barosaurus,Diplodocus)))))Diplodocoidea)))Neosauropoda))))))Sauropoda;
+END;

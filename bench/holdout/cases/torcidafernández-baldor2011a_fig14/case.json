@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/torcidafernández-baldor2011a_fig14.png",
+  "names": "names.txt",
+  "source": "Torcida Fernández-Baldor et al. 2011, Acta Palaeontologica Polonica 56: 535-552, Fig. 14A: strict consensus of 35 MPTs (16 taxa, 102 characters) placing Demandasaurus; rectangular, root left, tips right, drawn so that each stem continues straight through its node as one of the child branches (the stem into a node and one tip's branch are a single line crossing intermediate verticals). Panels B (majority rule) and C (Adams, with clade names) are excluded. Image: census figure (1079x2096 px), rendered from the PDF's vector figure.",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1079,
+    "y1": 796
+  },
+  "region_note": "panel A (strict consensus)",
+  "license": "unverified: no licence statement in the text held (Acta Palaeontologica Polonica is open access)",
+  "names_note": "no matrix held; list = the printed tip names ('Brachytrachylopan' as printed for Brachytrachelopan; Macronaria is a collapsed clade)",
+  "gold": "gold.nex",
+  "gold_note": "Diplodocoid strict consensus (panel A). Topology from the PDF's vector paths, read junction by junction because lines run through verticals: the Diplodocus branch is the continuation of the flagellicaudatan stem, the Dicraeosaurus-row line enters the dicraeosaurid node, and the Zapalasaurus and Demandasaurus lines carry the rebbachisaurid stems. Every junction checked against panel C, which has the same topology except within Rebbachisauridae (A's strict consensus collapses it to a polytomy). 16 tips, 3 polytomies (4, 3, 5 children). Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only.",
+  "gold_method": "pdf-vector"
+}

@@ -1,0 +1,54 @@
+#NEXUS
+
+[ gallina2019a_fig3: Sauropod tree placing Bajadasaurus. Internal labels from the four node dots, capitalised as printed: SAUROPODA, NEOSAUROPODA, DIPLODOCOIDEA, DICRAEOSAURIDAE. Replacement case: drawn with seed 20261116 from the rectangular no-time-axis stratum after senter2007a_fig4 was skipped. Read by eye at 3x. 41 tips, 5 polytomies (3, 3, 3, 3, 4 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=41;
+    TAXLABELS
+        Plateosaurus
+        Chinshakiangosaurus
+        Mussaurus
+        Antetonitrus
+        Lessemsaurus
+        Gongxianosaurus
+        Amygdalodon
+        Isanosaurus
+        Vulcanodon
+        Tazoudasaurus
+        Shunosaurus
+        Barapasaurus
+        Cetiosaurus
+        Patagosaurus
+        Omeisaurus
+        Mamenchisaurus
+        Turiasaurus
+        Losillasaurus
+        Jobaria
+        Amazonsaurus
+        Zapalasaurus
+        Histriasaurus
+        Comahuesaurus
+        Rayososaurus
+        Rebbachisaurus
+        Cathartesaura
+        Limaysaurus
+        Demandasaurus
+        Nigersaurus
+        Suuwassea
+        Lingwulong
+        Bajadasaurus
+        Pilmatueia
+        Amargasaurus
+        Dicraeosaurus
+        Brachytrachelopan
+        Apatosaurus
+        Diplodocus
+        Barosaurus
+        Calcareo_Diplodocid
+        MACRONARIA
+    ;
+END;
+
+BEGIN TREES;
+    TREE gallina2019a_fig3 = [&R] (Plateosaurus,(Chinshakiangosaurus,(Mussaurus,(Antetonitrus,(Lessemsaurus,((Gongxianosaurus,Amygdalodon),(Isanosaurus,((Vulcanodon,Tazoudasaurus),(Shunosaurus,Barapasaurus,((Cetiosaurus,Patagosaurus),((Omeisaurus,Mamenchisaurus),((Turiasaurus,Losillasaurus),(Jobaria,(((Amazonsaurus,(Zapalasaurus,Histriasaurus,(Comahuesaurus,((Rayososaurus,Rebbachisaurus,(Cathartesaura,Limaysaurus)),(Demandasaurus,Nigersaurus))))),((Suuwassea,(Lingwulong,(Bajadasaurus,(Pilmatueia,(Amargasaurus,Dicraeosaurus,Brachytrachelopan)))))DICRAEOSAURIDAE,(Apatosaurus,Diplodocus,Barosaurus,Calcareo_Diplodocid)))DIPLODOCOIDEA,MACRONARIA)NEOSAUROPODA))))))))))SAUROPODA)));
+END;

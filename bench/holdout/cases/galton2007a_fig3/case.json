@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/galton2007a_fig3.png",
+  "names": "names.txt",
+  "source": "Galton 2007, Revue de Paléobiologie 26: 505-591, Fig. 3A: one of two MPTs of basal Sauropodomorpha from Galton & Upchurch (2004); slanted (diagonal) branches, root at the lower left, tips at the right, letters s, p and sa at nodes and node numbers 1-10. Panel B (a second analysis) is excluded. Image: census figure (1008x710 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 494,
+    "y1": 710
+  },
+  "region_note": "panel A",
+  "license": "unverified: no licence statement in the text held",
+  "names_note": "no matrix held; list = the printed tip names ('Ancestor' is the hypothetical outgroup; '\"G.\" sinensis' keeps its printed quotation marks)",
+  "gold": "gold.nex",
+  "gold_note": "Basal sauropodomorph tree (Galton & Upchurch 2004), slanted. Internal labels are the letters printed at nodes, as printed: s (Sauropodomorpha), p (Prosauropoda), sa (Sauropoda); the node numbers 1-10 are not encoded. Read by eye at 3x. 24 tips, fully resolved; 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

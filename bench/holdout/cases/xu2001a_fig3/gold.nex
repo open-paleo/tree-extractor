@@ -1,0 +1,27 @@
+#NEXUS
+
+[ xu2001a_fig3: Thyreophoran majority-rule consensus, drawn with the outgroup Scutellosaurus at the bottom. The Pawpawsaurus line crosses the vertical of the Hylaeosaurus + 'Other nodosaurines' node and is that node's stem, so the three form a trichotomy as drawn. Read by eye. 14 tips, 2 polytomies (3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=14;
+    TAXLABELS
+        Emausaurus
+        Scelidosaurus
+        Stegosauria
+        Hylaeosaurus
+        Pawpawsaurus
+        Other_nodosaurines
+        Liaoningosaurus
+        Gargoyleosaurus
+        Shamosaurus
+        Minmi
+        Gastonia
+        Pinacosaurus
+        Other_ankylosaurines
+        Scutellosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE xu2001a_fig3 = [&R] ((Emausaurus,(Scelidosaurus,(Stegosauria,(((Hylaeosaurus,Pawpawsaurus,Other_nodosaurines),Liaoningosaurus),(Gargoyleosaurus,(Shamosaurus,Minmi,(Gastonia,(Pinacosaurus,Other_ankylosaurines)))))))),Scutellosaurus);
+END;

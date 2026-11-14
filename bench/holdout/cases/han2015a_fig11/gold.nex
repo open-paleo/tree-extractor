@@ -1,0 +1,19 @@
+#NEXUS
+
+[ han2015a_fig11: Ghost-lineage summary of early ceratopsians, vertical, root at the bottom. Psittacosaurus and Neoceratopsia are collapsed clades drawn as hatched triangles and encoded as tips. Replacement case: drawn with seed 20261115 from the vertical time-axis stratum after morschhauser2018a_fig13 was skipped. 6 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=6;
+    TAXLABELS
+        Psittacosaurus
+        Yinlong
+        Hualianceratops
+        Chaoyangsaurus
+        Xuanhuaceratops
+        Neoceratopsia
+    ;
+END;
+
+BEGIN TREES;
+    TREE han2015a_fig11 = [&R] ((Psittacosaurus,((Yinlong,Hualianceratops),(Chaoyangsaurus,Xuanhuaceratops))),Neoceratopsia);
+END;

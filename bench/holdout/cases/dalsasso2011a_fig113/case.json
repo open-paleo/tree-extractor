@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/dalsasso2011a_fig113.png",
+  "names": "names.txt",
+  "source": "Dal Sasso & Maganuco 2011, Memorie della Società Italiana di Scienze Naturali e del Museo Civico di Storia Naturale di Milano 37: 1-281, Fig. 113: 50% majority-rule consensus of coelurosaurs placing Scipionyx (PAUP); rectangular, root left, tips right, percentages at nodes, italic node numbers, black node dots with capitalised clade names; several tips are higher taxa in capitals. Image: census figure (2140x1889 px), a page render.",
+  "license": "unverified: no licence statement in the text held",
+  "names_note": "the census has the paper's matrix list (94 taxa), but this figure collapses several groups into capitalised higher taxa (OUTGROUP, ORNITHOMIMOSAURIA, THERIZINOSAUROIDEA, ALVAREZSAURIDAE, OVIRAPTOROSAURIA, TROODONTIDAE, DROMAEOSAURIDAE, AVIALAE), so names.txt is the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Coelurosaurian majority-rule consensus, fully resolved. Internal labels from the five node dots, capitalised as printed: COELUROSAURIA, TYRANNOSAUROIDEA, COMPSOGNATHIDAE, MANIRAPTORA, PARAVES. 28 tips, fully resolved; 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

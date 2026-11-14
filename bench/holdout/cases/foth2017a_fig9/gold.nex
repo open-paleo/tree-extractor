@@ -1,0 +1,33 @@
+#NEXUS
+
+[ foth2017a_fig9: Simplified coelurosaur time tree, drawn as a staircase in which each node's stem enters the middle of its vertical at a coloured dot. Guanlong and Proceratosaurus are drawn as successive branches, not as a clade. Internal labels from the caption key: 1 Coelurosauria, 2 Maniraptoriformes, 3 Maniraptora, 4 Pennaraptora, 5 Paraves, 6 Avialae. Read by eye at 3-5x; the pixel listing failed on the coloured dots. 20 tips, 2 polytomies (3, 4 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=20;
+    TAXLABELS
+        Tanycolagreus
+        Coelurus
+        Guanlong
+        Proceratosaurus
+        Compsognathidae
+        Ornithomimosauria
+        Ornitholestes
+        Alvarezsauroidea
+        Therizinosauroidea
+        Oviraptorosauria
+        Dromaeosauridae
+        Troodontidae
+        Xiaotingia
+        Pedopenna
+        Eosinopteryx
+        Anchiornis
+        Ostromia
+        Archaeopteryx
+        Epidexipteryx
+        Pygostylia
+    ;
+END;
+
+BEGIN TREES;
+    TREE foth2017a_fig9 = [&R] (Tanycolagreus,Coelurus,(Guanlong,(Proceratosaurus,(Compsognathidae,(Ornithomimosauria,(Ornitholestes,(Alvarezsauroidea,(Therizinosauroidea,(Oviraptorosauria,(Dromaeosauridae,(Troodontidae,((Xiaotingia,(Pedopenna,Eosinopteryx,Anchiornis,Ostromia)),(Archaeopteryx,(Epidexipteryx,Pygostylia)))Avialae))Paraves)Pennaraptora)))Maniraptora)Maniraptoriformes))))Coelurosauria;
+END;

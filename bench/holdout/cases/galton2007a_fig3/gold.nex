@@ -1,0 +1,37 @@
+#NEXUS
+
+[ galton2007a_fig3: Basal sauropodomorph tree (Galton & Upchurch 2004), slanted. Internal labels are the letters printed at nodes, as printed: s (Sauropodomorpha), p (Prosauropoda), sa (Sauropoda); the node numbers 1-10 are not encoded. Read by eye at 3x. 24 tips, fully resolved; 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=24;
+    TAXLABELS
+        Ancestor
+        Blikanasaurus
+        Kotasaurus
+        Vulcanodon
+        Barapasaurus
+        Shunosaurus
+        Thecodontosaurus
+        Saturnalia
+        Ammosaurus
+        Anchisaurus
+        Riojasaurus
+        Melanorosaurus
+        Camelotia
+        Lessemsaurus
+        Jingshanosaurus
+        Yunnanosaurus
+        Massospondylus
+        Mussaurus
+        Coloradisaurus
+        '"G." sinensis'
+        Lufengosaurus
+        Euskelosaurus
+        Plateosaurus
+        Sellosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE galton2007a_fig3 = [&R] (Ancestor,((Blikanasaurus,(Kotasaurus,(Vulcanodon,(Barapasaurus,Shunosaurus))))sa,(Thecodontosaurus,(Saturnalia,(((Ammosaurus,Anchisaurus),(Riojasaurus,(Melanorosaurus,(Camelotia,Lessemsaurus)))),(Jingshanosaurus,(Yunnanosaurus,(Massospondylus,(Mussaurus,(Coloradisaurus,(('"G." sinensis',Lufengosaurus),(Euskelosaurus,(Plateosaurus,Sellosaurus)))))))))))p)s);
+END;

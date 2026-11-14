@@ -1,0 +1,41 @@
+#NEXUS
+
+[ xu2006d_fig3: Coelurosaurian summary cladogram, fully resolved. Read by eye. 28 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=28;
+    TAXLABELS
+        Ceratosauria
+        Carnosauria
+        Huaxiagnathus
+        Sinosauropteryx
+        Compsognathus
+        Guanlong
+        Dilong
+        Tyrannosauridae
+        Pelecanimimus
+        Shenzhousaurus
+        Ornithomimidae
+        Alvarezsauridae
+        Ornithothoraces
+        Jeholornis
+        Archaeopteryx
+        Microraptor
+        Sinornithosaurus
+        Other_Dromaeosauridae
+        Mei
+        Sinovenator
+        Sinucerasaurus
+        Other_Troodontidae
+        Incisivosaurus
+        Caudipteryx
+        Protarchaeopteryx
+        Oviraptoridae
+        Beipiaosaurus
+        Therizinosauridae
+    ;
+END;
+
+BEGIN TREES;
+    TREE xu2006d_fig3 = [&R] (Ceratosauria,(Carnosauria,((Huaxiagnathus,(Sinosauropteryx,Compsognathus)),((Guanlong,(Dilong,Tyrannosauridae)),((Pelecanimimus,(Shenzhousaurus,Ornithomimidae)),(Alvarezsauridae,((((Ornithothoraces,Jeholornis),Archaeopteryx),((Microraptor,(Sinornithosaurus,Other_Dromaeosauridae)),((Mei,Sinovenator),(Sinucerasaurus,Other_Troodontidae)))),((Incisivosaurus,((Caudipteryx,Protarchaeopteryx),Oviraptoridae)),(Beipiaosaurus,Therizinosauridae)))))))));
+END;

@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/moutrille2025a_fig16.png",
+  "names": "names.txt",
+  "source": "Moutrille et al. 2025, Historical Biology 38: 1987-2018, Fig. 16: strict consensus placing Shri rapax; rectangular, root left, tips right, Bremer support at nodes, red stars (branch-based clades) and a black dot (node-based clade), yellow and blue boxes behind five subfamilies with their names. Image: census figure (1240x1425 px).",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names",
+  "gold": "gold.nex",
+  "gold_note": "Dromaeosaurid strict consensus. Internal labels: the five subfamily boxes (HALSZKARAPTORINAE, UNENLAGIINAE, MICRORAPTORINAE, DROMAEOSAURINAE, VELOCIRAPTORINAE) and EUDROMAEOSAURIA at the black dot, capitalised as printed. The red stars mark the same branch-based clades as the boxes and are not encoded separately. 38 tips, 4 polytomies (4, 3, 4, 4 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

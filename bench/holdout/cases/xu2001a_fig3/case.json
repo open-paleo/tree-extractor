@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/xu2001a_fig3.png",
+  "names": "names.txt",
+  "source": "Xu, Wang & You 2001, Naturwissenschaften 88: 297-300, Fig. 3: 50% majority-rule consensus of 24 MPTs placing Liaoningosaurus (PAUP 3.11); rectangular, root left, tips right, white lines and text on black (the census figure is inverted from the print). Image: census figure (1488x1238 px).",
+  "license": "not open (Springer, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('Other nodosaurines', 'Other ankylosaurines' and Stegosauria are collapsed groups)",
+  "gold": "gold.nex",
+  "gold_note": "Thyreophoran majority-rule consensus, drawn with the outgroup Scutellosaurus at the bottom. The Pawpawsaurus line crosses the vertical of the Hylaeosaurus + 'Other nodosaurines' node and is that node's stem, so the three form a trichotomy as drawn. Read by eye. 14 tips, 2 polytomies (3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

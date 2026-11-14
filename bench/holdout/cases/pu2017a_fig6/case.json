@@ -8,5 +8,14 @@
   "gold": "gold.nex",
   "gold_note": "Oviraptorosaur strict consensus. Read from a 250 dpi render of the PDF page, since the census image cuts off the lower-right tips; a tool that reads only the census image cannot recover those seven. Internal labels from the four curved leaders (Oviraptorosauria, Caenagnathidae, Caenagnathoidea, Oviraptoridae), each given to the node it points at. The census marks this figure as inverted on extraction and its labels as not in the raster. 37 tips, 2 polytomies (9, 3 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
   "gold_method": "image-transcription",
-  "image_note": "census image is cropped: tips Conchoraptor gracilis, Machairasaurus leptonychus, Jiangxisaurus ganzhouensis, Nemegtomaia barsboldi, Ingenia yanshini and Heyuannia huangi are cut off or absent, and Herrerasaurus ischigualastensis is clipped at the top"
+  "image_note": "census image is cropped at the right and bottom: of the 37 gold tips, 31 have a legible name in it. The six listed in image_tips_missing are cut off mid-name (Conchoraptor to Nemegtomaia) or absent (Ingenia, Heyuannia); Herrerasaurus ischigualastensis is clipped at the top but legible and counted as shown",
+  "image_tips_visible": 31,
+  "image_tips_missing": [
+    "Conchoraptor_gracilis",
+    "Machairasaurus_leptonychus",
+    "Jiangxisaurus_ganzhouensis",
+    "Nemegtomaia_barsboldi",
+    "Ingenia_yanshini",
+    "Heyuannia_huangi"
+  ]
 }

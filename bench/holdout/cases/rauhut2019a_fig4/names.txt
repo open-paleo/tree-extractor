@@ -1,0 +1,68 @@
+Eoraptor
+Herrerasaurus
+Acrocanthosaurus
+Aerosteon
+Afrovenator
+Allosaurus
+Angaturama
+Asfaltovenator
+Australovenator
+Baryonyx
+Carcharodontosaurus
+Ceratosaurus
+Chilantaisaurus
+Chuandongocoelurus
+"Coelophysis bauri"
+"Coelophysis rhodesiensis"
+Coelurus
+Compsognathus
+Concavenator
+Condorraptor
+Cryolophosaurus
+CV00214
+Sinosaurus
+Dilophosaurus
+Dubreuillosaurus
+Duriavenator
+Elaphrosaurus
+Eoabelisaurus
+Eocarcharia
+Eustreptospondylus
+Fukuiraptor
+Giganotosaurus
+Guanlong
+Ichthyovenator
+Irritator
+Leshansaurus
+Lourinhanosaurus
+Magnosaurus
+Majungasaurus
+Mapusaurus
+Marshosaurus
+Masiakasaurus
+Megalosaurus
+Megaraptor
+Metriacanthosaurus
+Monolophosaurus
+Neovenator
+Ornitholestes
+Piatnitzkysaurus
+Piveteausaurus
+Poekilopleuron
+Proceratosaurus
+Saurophaganax
+Shaochilong
+Shidaisaurus
+Siamotyrannus
+"Sinraptor dongi"
+Spinosaurus
+Streptospondylus
+Suchomimus
+"S zigongensis"
+Torvosaurus
+Tyrannotitan
+Wiehenvenator
+Xuanhanosaurus
+"Yangchuano hepingensis"
+"Yangchuano shangyuensis"
+Zuolong

@@ -1,0 +1,42 @@
+#NEXUS
+
+[ mocho2016a_fig22: Titanosauriform strict consensus. Internal labels: the letters as printed, each given to the node whose stem it marks (E Eusauropoda at the root, N Neosauropoda, M Macronaria, T Titanosauriformes, So Somphospondyli), and the three names written on stems (Brachiosauridae, Euhelopodidae, Titanosauria). The caption's key also lists L (Lithostrotia), but no L is printed on the figure, so it is not encoded. Read by eye at 2-4x. 29 tips, 2 polytomies (5, 3 children); 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=29;
+    TAXLABELS
+        Shunosaurus
+        Omeisaurus
+        Jobaria_tiguidensis
+        Atlasaurus_imelakei
+        Diplodocoidea
+        Camarasaurus
+        Tehuelchesaurus_benetezii
+        Europasaurus_holgeri
+        Giraffatitan_brancai
+        Brachiosaurus_altithorax
+        Abydosaurus_mcintoshi
+        Cedarosaurus_weiskopfae
+        Venenosaurus_dicrocei
+        Lusotitan_atalaiensis
+        Ligabuesaurus_leanzai
+        Sauroposeidon_proteles
+        Tastavinsaurus_sanzi
+        Qiaowanlong_kangxii
+        Erketu_ellisoni
+        Euhelopus_zdanskyi
+        Daxiatitan_binglingi
+        Tangvayosaurus_hoffeti
+        Phuwiangosaurus_sirindhornae
+        Chubutisaurus_insignis
+        Andesaurus_delgadoi
+        Malawisaurus_dixeyi
+        Opisthocoelicaudia_skarzynskii
+        Alamosaurus_sanjuanensis
+        Saltasaurini
+    ;
+END;
+
+BEGIN TREES;
+    TREE mocho2016a_fig22 = [&R] (Shunosaurus,(Omeisaurus,(Jobaria_tiguidensis,(Atlasaurus_imelakei,(Diplodocoidea,(Camarasaurus,(Tehuelchesaurus_benetezii,((Europasaurus_holgeri,(Giraffatitan_brancai,(Brachiosaurus_altithorax,Abydosaurus_mcintoshi,Cedarosaurus_weiskopfae,Venenosaurus_dicrocei,Lusotitan_atalaiensis)))Brachiosauridae,(Ligabuesaurus_leanzai,(Sauroposeidon_proteles,(Tastavinsaurus_sanzi,((Qiaowanlong_kangxii,(Erketu_ellisoni,(Euhelopus_zdanskyi,Daxiatitan_binglingi,(Tangvayosaurus_hoffeti,Phuwiangosaurus_sirindhornae))))Euhelopodidae,(Chubutisaurus_insignis,(Andesaurus_delgadoi,(Malawisaurus_dixeyi,(Opisthocoelicaudia_skarzynskii,(Alamosaurus_sanjuanensis,Saltasaurini)))))Titanosauria))))So)T))M)N))))E;
+END;

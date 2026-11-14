@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/silvajunior2022a_fig23.png",
+  "names": "names.txt",
+  "source": "Silva Junior et al. 2022, PeerJ 10: e14333, Fig. 23A: strict consensus of 1,500 MPTs (second iteration) of titanosauriforms placing Caieiria; rectangular, root left, tips right, black node dots numbered 1-6 and keyed to clade names in the caption. Panels B (first-iteration consensus) and C (four alternative arrangements) are excluded. Image: census figure (2230x1328 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1249,
+    "y1": 1328
+  },
+  "region_note": "panel A",
+  "license": "CC BY 4.0",
+  "attribution": "Silva Junior, J. C. G.; Martinelli, A. G.; Marinho, T. S.; da Silva, J. I.; Langer, M. C. (2022). New specimens of Baurutitan britoi and a taxonomic reassessment of the titanosaur dinosaur fauna (Sauropoda) from the Serra da Galga Formation (Late Cretaceous) of Brazil. PeerJ 10: e14333. https://doi.org/10.7717/peerj.14333. Fig. 23A. CC BY 4.0.",
+  "names_note": "the census has the paper's matrix list (95), but it spells many taxa differently from the figure (Epachthosaurus, Bonitasaura, Mendozasaurus neguyelap, Overosaurus paradasorum, Opisthocoelicaudia, Galvesaurus, ...) and lists Caieiria only as 'MCT 1719-R', so names.txt is the printed tip names, kept as printed (including 'Ceradosaurus weiskopfe', 'Ophistocoelicaudia', 'Nemegtosaurus mongolisensis', 'Bonitasauria salgadoi')",
+  "gold": "gold.nex",
+  "gold_note": "Titanosauriform strict consensus (panel A). Internal labels from the numbered dots via the caption key: 1 Titanosauriformes, 2 Somphospondylii (as printed), 3 Titanosauria, 4 Colossosauria, 5 Rinconsauria, 6 Aeolosaurini. Read by eye at 2-3x. 56 tips, 8 polytomies (3, 3, 3, 7, 4, 6, 8, 3 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

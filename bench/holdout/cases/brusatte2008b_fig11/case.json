@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/brusatte2008b_fig11.png",
+  "names": "names.txt",
+  "source": "Brusatte & Sereno 2008, Journal of Systematic Palaeontology 6: 155-182, Fig. 11: area cladogram of the continents from the carcharodontosaurid/allosauroid analysis; slanted (diagonal) branches, root at the bottom, tips at the top with rotated labels, bootstrap/Bremer values at nodes. Image: census figure (1640x1142 px).",
+  "license": "not open (Taylor & Francis / Natural History Museum, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (continents: this is an area cladogram, not a taxon tree)",
+  "gold": "gold.nex",
+  "gold_note": "Area cladogram of five continents, slanted, root at the bottom. Numbers at nodes are bootstrap/Bremer support. 5 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

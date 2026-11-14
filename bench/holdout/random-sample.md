@@ -162,3 +162,41 @@ Notes on batch 1:
 - `prieto-márquez2012d_fig13` prints *Microraptor gui* twice; the lower one is `Microraptor_gui_2`.
 - `gomez2024a_fig27`, `cerroni2022a_fig15`, `han2024a_fig7` and `tschopp2015a_fig117` have matrix lists; their tips take the list spelling, with every mapping in `names_note`.
 - `ramírez-velasco2021a_fig19` and `turner2007b_fig5`: parts of the pixel listing failed (dotted leaders and markers; a box frame) and those parts were read by eye, as each gold_note says.
+
+## Batch 2 (20 cases, two skips replaced)
+
+| Case | Layout | Time axis | Tips | Polytomies (children) | Clade labels | names.txt | Gold method | Open licence |
+|---|---|---|---:|---|---:|---|---|---|
+| brusatte2008b_fig11 | slanted | no | 5 | - | - | printed | image-transcription | no |
+| thompson2011a_fig2 | rectangular | no | 51 | 3, 12, 25 | - | printed | image-transcription | no |
+| mateus2011a_fig6 | rectangular | yes | 25 | - | 6 | printed | image-transcription | ? |
+| fonseca2024a_fig2 | rectangular | no | 170 | 6, 6, 5, 3, 12, 7, 3 | 37 | matrix | image-transcription | no |
+| moutrille2025a_fig16 | rectangular | no | 38 | 4, 3, 4, 4 | 6 | printed | image-transcription | no |
+| han2015a_fig11 | vertical | yes | 6 | - | - | printed | image-transcription | yes |
+| sánchez-fenollosa2025a_fig5 | rectangular | yes | 29 | - | 8 | printed | image-transcription | ? |
+| torcidafernández-baldor2011a_fig14 | rectangular | no | 16 | 4, 3, 5 | - | printed | pdf-vector | ? |
+| foth2017a_fig9 | rectangular | yes | 20 | 3, 4 | 6 | printed | image-transcription | ? |
+| gianechini2015a_fig8 | vertical | yes | 28 | 3, 3, 5, 12 | 4 | printed | image-transcription | no |
+| xu2006d_fig3 | rectangular | no | 28 | - | - | printed | image-transcription | no |
+| rauhut2019a_fig4 | rectangular | yes | 57 | 3, 3, 3, 4, 4 | 11 | matrix | image-transcription | yes |
+| penkalski2018a_fig16 | vertical | yes | 20 | 3, 4, 4, 3 | - | printed | image-transcription | no |
+| galton2007a_fig3 | slanted | no | 24 | - | 3 | printed | image-transcription | ? |
+| dalsasso2011a_fig113 | rectangular | no | 28 | - | 5 | printed | image-transcription | ? |
+| rauhut2016b_fig25 | rectangular | yes | 22 | 6, 3, 3 | - | matrix | image-transcription | no |
+| mocho2016a_fig22 | rectangular | no | 29 | 5, 3 | 8 | printed | image-transcription | no |
+| gallina2019a_fig3 | rectangular | no | 41 | 3, 3, 3, 3, 4 | 4 | printed | image-transcription | yes |
+| silvajunior2022a_fig23 | rectangular | no | 56 | 3, 3, 3, 7, 4, 6, 8, 3 | 6 | printed | image-transcription | yes |
+| xu2001a_fig3 | rectangular | no | 14 | 3, 3 | - | printed | image-transcription | no |
+
+Skips (replacements drawn as in the script's skip rule, from the same stratum's remaining pool, excluding all 80 drawn figures and every existing case):
+
+- `morschhauser2018a_fig13` (vertical, time axis): ghost-lineage curves with arrows (+5, +6, +44, +51) run from the Auroraceratops/Aquilops junction through several other nodes, so which branch leaves which node there cannot be decided. Replaced by seed 20261115: `han2015a_fig11`.
+- `senter2007a_fig4` (rectangular, no time axis): one tree wrapped into two columns in which many tip lines run straight across other nodes' verticals (Caenagnathus, Microvenator, Nothronychus, Archaeopteryx and others); a crossing can be read as that node's stem or as a pass-through, and the readings give different trees. Replaced by seed 20261116: `gallina2019a_fig3`.
+
+Notes on batch 2:
+
+- Where a tip line crosses a node's vertical and it is the only line that could be that node's stem (torcidafernández-baldor2011a_fig14, rauhut2016b_fig25, xu2001a_fig3, the Torvosaurus line in rauhut2019a_fig4), it is read as the stem and the tip as one of the node's children; each gold_note says so.
+- Matrix lists are used only where every printed tip maps to one list taxon (fonseca2024a_fig2, rauhut2019a_fig4, rauhut2016b_fig25, with the spellings in names_note). Summary figures that collapse the analysis into higher taxa (foth2017a_fig9, han2015a_fig11, dalsasso2011a_fig113) and silvajunior2022a_fig23, whose list spells many taxa differently, use the printed names.
+- penkalski2018a_fig16's tips are specimen numbers; the species names printed above groups of specimens are not encoded.
+- mocho2016a_fig22's caption key lists an 'L' node that is not printed on the figure; it is not encoded.
+- `image_tips_visible` / `image_tips_missing` (requested after batch 1): none of batch 2's census images is cropped; pu2017a_fig6 (batch 1) now carries them (31 of 37).

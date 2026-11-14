@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/rauhut2019a_fig4.png",
+  "names": "names.txt",
+  "source": "Rauhut & Pol 2019, Scientific Reports 9, Fig. 4a: time-calibrated reduced consensus of tetanurans placing Asfaltovenator; rectangular staircase, root left, tips right with thick range bars, grey stage bands, clade names beside the backbone, coloured boxes behind seven clades with their names. Panels b (homoplasy histogram) and c (a schematic tree) and the shared timescale strip are excluded. Image: census figure (1650x1792 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1650,
+    "y1": 1004
+  },
+  "region_note": "panel a (the tree, with its shaded time bands); b is a homoplasy histogram and the timescale strip below is shared, so it is left out; c is a schematic",
+  "license": "CC BY 4.0",
+  "attribution": "Rauhut, O. W. M.; Pol, D. (2019). Probable basal allosauroid from the early Middle Jurassic Cañadón Asfalto Formation of Argentina highlights phylogenetic uncertainty in tetanuran theropod dinosaurs. Scientific Reports 9. https://doi.org/10.1038/s41598-019-53672-7. Fig. 4a. CC BY 4.0.",
+  "names_note": "the paper's matrix taxa (census list, 68; the reduced consensus shows 57). Tips take the list spelling, which quotes four of them: \"Coelophysis bauri\", \"S zigongensis\" (printed S. zigongensis), \"Yangchuano hepingensis\" (printed Yangchuanosaurus hepingensis), \"Sinraptor dongi\"",
+  "gold": "gold.nex",
+  "gold_note": "Tetanuran time tree (reduced consensus). The backbone is a staircase whose stems enter each vertical at its lower end. Internal labels: backbone names (Averostra, Tetanurae, Carnosauria, Allosauroidea), each matched to the vertical it is centred on, and the seven boxes (Ceratosauria, Coelurosauria, Spinosauridae, Megalosauridae, Piatnitzkysauridae, Metriacanthosauridae, Carcharodontosauria). Read by eye at 3-7x. 57 tips, 5 polytomies (3, 3, 3, 4, 4 children); 11 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

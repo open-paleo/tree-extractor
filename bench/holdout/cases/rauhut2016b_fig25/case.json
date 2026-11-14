@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/rauhut2016b_fig25.png",
+  "names": "names.txt",
+  "source": "Rauhut & Carrano 2016, Zoological Journal of the Linnean Society 178: 546-610, Fig. 25: reduced consensus of ceratosaurs with stratigraphic and geographic distribution; rectangular, root left, tips right with thick range bars (grey for uncertainty), a period/epoch header, dotted stage lines, continent silhouettes beside the names. Image: census figure (1315x1148 px).",
+  "license": "not open (Wiley / Linnean Society of London, all rights reserved)",
+  "names_note": "the paper's matrix taxa (census list, 33; the reduced consensus shows 22, all printed as in the list)",
+  "gold": "gold.nex",
+  "gold_note": "Ceratosaurian time tree (reduced consensus). The Noasaurus branch runs straight through the vertical of the Velocisaurus + Masiakasaurus node and is its stem, so the three form a trichotomy as drawn. Read by eye at 3-5x. 22 tips, 3 polytomies (6, 3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

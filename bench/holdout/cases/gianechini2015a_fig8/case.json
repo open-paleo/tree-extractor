@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/gianechini2015a_fig8.png",
+  "names": "names.txt",
+  "source": "Gianechini et al. 2015, Cretaceous Research 54: 1-16, Fig. 8: strict consensus of ceratosaurians including MPCN-PV 69 on a stratigraphic framework (Velocisaurus and Berberosaurus pruned); vertical, root at the bottom, tips at the top with rotated labels, a stage column at the left, dashed boundary lines, black node dots with clade names. Image: census figure (2142x2524 px), rendered from the PDF's vector figure.",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('MPCN-PV 69' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Ceratosaurian time tree, vertical. Internal labels from the four node dots (Ceratosauria, Abelisauroidea, Noasauridae, Abelisauridae). Polytomies: Spinostropheus + Deltadromeus + (Limusaurus, Elaphrosaurus); Rahiolisaurus + Noasauridae + Abelisauridae; five noasaurids; twelve abelisaurids. Read by eye from the figure (a vector figure whose tip names are outlines; the vertical layout was read directly rather than from the paths). 28 tips, 4 polytomies (3, 3, 5, 12 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

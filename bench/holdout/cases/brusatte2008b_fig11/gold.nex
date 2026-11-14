@@ -1,0 +1,18 @@
+#NEXUS
+
+[ brusatte2008b_fig11: Area cladogram of five continents, slanted, root at the bottom. Numbers at nodes are bootstrap/Bremer support. 5 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=5;
+    TAXLABELS
+        Asia
+        Europe
+        North_America
+        South_America
+        Africa
+    ;
+END;
+
+BEGIN TREES;
+    TREE brusatte2008b_fig11 = [&R] (Asia,(Europe,(North_America,(South_America,Africa))));
+END;

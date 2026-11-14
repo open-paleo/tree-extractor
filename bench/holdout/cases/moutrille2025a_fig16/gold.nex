@@ -1,0 +1,51 @@
+#NEXUS
+
+[ moutrille2025a_fig16: Dromaeosaurid strict consensus. Internal labels: the five subfamily boxes (HALSZKARAPTORINAE, UNENLAGIINAE, MICRORAPTORINAE, DROMAEOSAURINAE, VELOCIRAPTORINAE) and EUDROMAEOSAURIA at the black dot, capitalised as printed. The red stars mark the same branch-based clades as the boxes and are not encoded separately. 38 tips, 4 polytomies (4, 3, 4, 4 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=38;
+    TAXLABELS
+        Guanlong
+        Ornitholestes
+        Aurornis
+        Archaeopteryx
+        Mahakala
+        Natovenator
+        Halszkaraptor
+        Austroraptor
+        Unenlagia_paynemili
+        Unenlagia_comahuensis
+        Neuquenraptor
+        Buitreraptor
+        Tianyuraptor
+        Zhenyuanlong
+        Daurlong
+        Graciliraptor
+        Changyuraptor
+        Sinornithosaurus
+        Zhongjianosaurus
+        Microraptor
+        Deinonychus
+        Achillobator
+        Utahraptor
+        Dromaeosaurus
+        Saurornitholestes
+        Atrociraptor
+        Bambiraptor
+        Acheroraptor
+        Yurgovuchia
+        Luanchuanraptor
+        Kuru
+        Adasaurus
+        Velociraptor_osmolskae
+        Tsaagan
+        Linheraptor
+        Velociraptor_mongoliensis
+        Shri_devi
+        Shri_rapax
+    ;
+END;
+
+BEGIN TREES;
+    TREE moutrille2025a_fig16 = [&R] (Guanlong,(Ornitholestes,((Aurornis,Archaeopteryx),(((Mahakala,(Natovenator,Halszkaraptor))HALSZKARAPTORINAE,(Austroraptor,(Unenlagia_paynemili,Unenlagia_comahuensis,Neuquenraptor,Buitreraptor))UNENLAGIINAE),(((Tianyuraptor,(Zhenyuanlong,Daurlong)),(Graciliraptor,Changyuraptor,(Sinornithosaurus,(Zhongjianosaurus,Microraptor))))MICRORAPTORINAE,((Deinonychus,Achillobator,(Utahraptor,Dromaeosaurus),((Saurornitholestes,Atrociraptor),(Bambiraptor,Acheroraptor)))DROMAEOSAURINAE,((Yurgovuchia,Luanchuanraptor,Kuru,Adasaurus),((Velociraptor_osmolskae,(Tsaagan,Linheraptor)),(Velociraptor_mongoliensis,(Shri_devi,Shri_rapax))))VELOCIRAPTORINAE)EUDROMAEOSAURIA)))));
+END;
