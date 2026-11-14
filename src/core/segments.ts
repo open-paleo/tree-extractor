@@ -363,6 +363,131 @@ function mergeCollinearBoxes(boxes: Array<Box>, alongX: boolean, maxGap: number,
 }
 
 /**
+ * Joins the two pieces of a vertical cut by a text row printed across it: a clade's name set
+ * on its own stem takes the line out of the line art for the height of the row, and the piece
+ * below, with everything hanging from it, is left without a parent (Prieto-Marquez 2012's
+ * AVIALAE, which detached half the tree). The pieces must be collinear, the gap between them
+ * must lie within one row that crosses the line, and both ends at the gap must be loose: no
+ * horizontal meets them. Two verticals of different nodes that share a column, with a label
+ * lying between them, each end at a branch.
+ *
+ * @param boxes - Vertical boxes, changed in place.
+ * @param textRows - Boxes of text rows.
+ * @param horizontals - Horizontal boxes.
+ * @returns How many pairs were joined.
+ */
+function joinVerticalsAcrossText(boxes: Array<Box>, textRows: Array<Box>, horizontals: Array<Box>): number
+{
+    if (textRows.length === 0)
+    {
+        return 0;
+    }
+
+    boxes.sort(compareTopEdges);
+    const uppers = new Array<Box>();
+    const lowers = new Array<Box>();
+
+    for (let index = 0; index < boxes.length; index++)
+    {
+        const first = boxes[index];
+
+        for (let other = index + 1; other < boxes.length; other++)
+        {
+            const second = boxes[other];
+            const gap = second.y0 - first.y1;
+            const overlap = Math.min(first.x1, second.x1) - Math.max(first.x0, second.x0);
+            const thinner = Math.min(first.x1 - first.x0, second.x1 - second.x0);
+
+            if (gap > 0 && overlap >= 0.5 * thinner && isGapInsideRow(first, second, textRows) && !hasBranchAtEnd(first, first.y1, horizontals) && !hasBranchAtEnd(second, second.y0, horizontals))
+            {
+                uppers.push(first);
+                lowers.push(second);
+            }
+        }
+    }
+
+    // A column cut by labels in several places is a rule drawn across the labels, a boundary
+    // or a bracket, and not a branch with a name on it; only a column cut once is mended.
+    let joined = 0;
+
+    for (let index = 0; index < uppers.length; index++)
+    {
+        let cuts = 0;
+
+        for (let other = 0; other < uppers.length; other++)
+        {
+            if (Math.min(uppers[index].x1, uppers[other].x1) > Math.max(uppers[index].x0, uppers[other].x0))
+            {
+                cuts++;
+            }
+        }
+
+        if (cuts === 1)
+        {
+            uppers[index].x0 = Math.min(uppers[index].x0, lowers[index].x0);
+            uppers[index].x1 = Math.max(uppers[index].x1, lowers[index].x1);
+            uppers[index].y1 = lowers[index].y1;
+            boxes.splice(boxes.indexOf(lowers[index]), 1);
+            joined++;
+        }
+    }
+
+    return joined;
+}
+
+/**
+ * Whether a horizontal meets a vertical at one of its ends.
+ *
+ * @param vertical - Vertical box.
+ * @param endY - The end to look at: the box's top or bottom.
+ * @param horizontals - Horizontal boxes.
+ * @returns True when a branch arrives at or leaves from that end.
+ */
+function hasBranchAtEnd(vertical: Box, endY: number, horizontals: Array<Box>): boolean
+{
+    const reach = 2 * (vertical.x1 - vertical.x0) + 2;
+
+    for (const horizontal of horizontals)
+    {
+        const touchesColumn = horizontal.x0 <= vertical.x1 + reach && horizontal.x1 >= vertical.x0 - reach;
+
+        if (touchesColumn && horizontal.y0 <= endY + reach && horizontal.y1 >= endY - reach)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Whether the gap between two collinear vertical boxes lies within one text row that crosses
+ * their line.
+ *
+ * @param first - Upper box.
+ * @param second - Lower box.
+ * @param textRows - Boxes of text rows.
+ * @returns True when a row accounts for the gap.
+ */
+function isGapInsideRow(first: Box, second: Box, textRows: Array<Box>): boolean
+{
+    const x = (Math.max(first.x0, second.x0) + Math.min(first.x1, second.x1)) / 2;
+
+    for (const row of textRows)
+    {
+        // The line art stops a few pixels short of the letters on each side.
+        const slack = Math.max(3, Math.round(0.4 * (row.y1 - row.y0)));
+
+        if (row.x0 <= x && row.x1 >= x && first.y1 >= row.y0 - slack && second.y0 <= row.y1 + slack)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Tells whether a box lies entirely inside any of a set of boxes.
  *
  * @param box - Box to test.
@@ -486,6 +611,7 @@ export function extractSegments(
 
     const mergedHorizontals = mergeCollinearBoxes(pieces, true, maxGap, ink, Math.round(window / 2), gapInkShare);
     const mergedVerticals = mergeCollinearBoxes(verticalBoxes, false, maxVerticalGap, ink, Math.round(window / 2), gapInkShare);
+    mergedVerticals.bridged += joinVerticalsAcrossText(mergedVerticals.boxes, textRows, mergedHorizontals.boxes);
 
     for (const box of mergedHorizontals.boxes)
     {

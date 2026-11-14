@@ -195,7 +195,9 @@
         "Hadrosauroidea",
         "Hadrosaurus",
         "Rhabdodontidae",
-        "Stegosauria"
+        "Stegosauria",
+        "AVIALAE",
+        "Prieto"
     ],
     "ignorePaths": [
         "node_modules/**",

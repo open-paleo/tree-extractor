@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.3 (unreleased)
+
+- A vertical cut by a clade's name printed across it is joined again, where the two ends at
+  the gap are loose and the column is cut only once. One such cut had left half of a tree
+  without a parent (Prieto-Marquez 2012: 37 of 70 tips named, now 68).
+- `npm run bench:causes` tallies lost tip names by the step that lost them, and a second
+  random sample of census figures with gold trees joins the holdout.
+
 ## 0.5.2 (2026-11-13)
 
 - Qualifiers of open nomenclature stay on a name as printed: "cf.", "aff.", "indet." and
