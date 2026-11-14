@@ -198,7 +198,8 @@
         "Stegosauria",
         "AVIALAE",
         "Prieto",
-        "Manitkoon"
+        "Manitkoon",
+        "Pueyo"
     ],
     "ignorePaths": [
         "node_modules/**",

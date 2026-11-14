@@ -25,7 +25,6 @@ import {
     createDarkMask,
     createDirectionalRunMask,
     createLongRunMask,
-    createMaskFromBoxes,
     dilate,
     estimateLineThickness,
     keepComponentsTouching,
@@ -475,6 +474,46 @@ export function prepareMasks(image: RgbaImage, parameters: Parameters): Prepared
     const lineInk = closeMask(applyHysteresis(strongLines, weakInk), parameters.closeRadius);
 
     return { gray, textInk, runInk: runInk ?? textInk, lineInk, glyphMask: rough.glyphMask, markers: colored.fat, paleMarkers, fragmented, widened, glyphHeight, roughLines: rough.lines };
+}
+
+/**
+ * Paints the line art the trace used: the boxes of its segments. A box no broader than a line
+ * or a bar is painted whole, so that a range bar goes with its branch. A box far broader than
+ * the line it holds, a vertical that took in a whole column of a time chart, would take every
+ * label under it out of the text (Perez-Pueyo 2019: a box 250 px wide down the figure), so
+ * there only the ink that is not a glyph is painted.
+ *
+ * @param boxes - Boxes of the used segments and their stubs.
+ * @param textInk - All dark ink.
+ * @param glyphMask - Glyph pixels from the rough text pass.
+ * @param thickness - Line thickness.
+ * @returns The line art mask, before dilation.
+ */
+function keepInkInBoxes(boxes: Array<Box>, textInk: Mask, glyphMask: Mask, thickness: number): Mask
+{
+    const { width, height } = textInk;
+    const data = new Uint8Array(width * height);
+    const broad = Math.max(40, 8 * thickness);
+
+    for (const box of boxes)
+    {
+        const isBroad = Math.min(box.x1 - box.x0, box.y1 - box.y0) > broad;
+
+        for (let y = Math.max(0, box.y0); y < Math.min(height, box.y1); y++)
+        {
+            for (let x = Math.max(0, box.x0); x < Math.min(width, box.x1); x++)
+            {
+                const index = y * width + x;
+
+                if (!isBroad || (textInk.data[index] === 1 && glyphMask.data[index] === 0))
+                {
+                    data[index] = 1;
+                }
+            }
+        }
+    }
+
+    return { width, height, data };
 }
 
 /**
@@ -1418,7 +1457,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
 
     const lineArtBoxes = [...usedBoxes, ...findStubExtensions(lineInk, usedBoxes, glyphHeight)];
     const lineArtMask = slantedTrace === null
-        ? dilate(createMaskFromBoxes(lineArtBoxes, image.width, image.height), 1)
+        ? dilate(keepInkInBoxes(lineArtBoxes, textInk, glyphMask, thickness), 1)
         : dilate(slantedTrace.skeleton, Math.max(1, Math.round(thickness / 2) + 1));
     const text = detectTextLines(textInk, { lineArtMask, minY: parameters.textMinY, markerMask: unionMask(markers, paleMarkers) });
 

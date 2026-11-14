@@ -8,6 +8,9 @@
 - A plain solid dot on a junction counts as a node disc down to three line widths across,
   so the branches run on through it; such dots had been taken for letters, cutting the tree
   at every named node (Manitkoon 2023: 55 of 74 tips named, now 71).
+- A traced segment whose box is far broader than its line no longer erases the labels under
+  it: a vertical that had taken in a whole column of a time chart was wiping out every label
+  between two stage boundaries (Perez-Pueyo 2019: 8 of 25 tips named, now 19).
 - `npm run bench:causes` tallies lost tip names by the step that lost them, and a second
   random sample of census figures with gold trees joins the holdout.
 
