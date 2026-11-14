@@ -197,7 +197,8 @@
         "Rhabdodontidae",
         "Stegosauria",
         "AVIALAE",
-        "Prieto"
+        "Prieto",
+        "Manitkoon"
     ],
     "ignorePaths": [
         "node_modules/**",

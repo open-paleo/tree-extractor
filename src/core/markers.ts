@@ -704,14 +704,24 @@ export function findNodeDiscs(textInk: Mask, lineInk: Mask, glyphHeight: number,
             const height = coreHeight + 2 * radius;
             const size = Math.max(width, height);
 
-            if (size < 1.5 * glyphHeight || size > 3.5 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || component.area < 0.6 * coreWidth * coreHeight)
+            // A disc that carries a number is a glyph and a half across at least; a plain dot on
+            // a junction is smaller, down to three line widths, below which it is the line's own
+            // rounded corner (Manitkoon 2023's dots are 21 px on 5 px lines, under 1.5 glyphs).
+            const smallest = Math.min(1.5 * glyphHeight, Math.max(3 * thickness, 0.9 * glyphHeight));
+
+            if (size < smallest || size > 3.5 * glyphHeight || Math.abs(width - height) > 0.1 * size + 1 || component.area < 0.6 * coreWidth * coreHeight)
             {
                 continue;
             }
 
             const box: Box = { x0: component.box.x0 - radius, y0: component.box.y0 - radius, x1: component.box.x1 + radius, y1: component.box.y1 + radius };
 
-            if (measureInkShare(ink, box) >= minShare && countSidesEntered(lineInk, box, thickness) >= 2 && !overlapsAny(discs, box))
+            // A dot that small must be solid: a round letter of small type is as wide and stands
+            // between branches too, but it is hollow or open, where a disc fills about four
+            // fifths of its box.
+            const wanted = size < 1.5 * glyphHeight ? Math.max(minShare, 0.72) : minShare;
+
+            if (measureInkShare(ink, box) >= wanted && countSidesEntered(lineInk, box, thickness) >= 2 && !overlapsAny(discs, box))
             {
                 discs.push(box);
             }

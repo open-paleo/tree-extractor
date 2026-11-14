@@ -5,6 +5,9 @@
 - A vertical cut by a clade's name printed across it is joined again, where the two ends at
   the gap are loose and the column is cut only once. One such cut had left half of a tree
   without a parent (Prieto-Marquez 2012: 37 of 70 tips named, now 68).
+- A plain solid dot on a junction counts as a node disc down to three line widths across,
+  so the branches run on through it; such dots had been taken for letters, cutting the tree
+  at every named node (Manitkoon 2023: 55 of 74 tips named, now 71).
 - `npm run bench:causes` tallies lost tip names by the step that lost them, and a second
   random sample of census figures with gold trees joins the holdout.
 
