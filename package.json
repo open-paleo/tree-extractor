@@ -53,7 +53,8 @@
         "bench:census": "node --experimental-strip-types bench/batch.ts --manifest=../corpus/census/manifest.json --root=../corpus/census",
         "test:web": "node --experimental-strip-types scripts/viewer-smoke.ts",
         "build": "tsc -p tsconfig.build.json && node --experimental-strip-types scripts/copy-assets.ts",
-        "prepack": "npm run build"
+        "prepack": "npm run build",
+        "bench:causes": "node --experimental-strip-types bench/causes.ts"
     },
     "dependencies": {
         "tesseract.js": "6.0.1"
