@@ -297,6 +297,12 @@ export type ExtractOptions = {
     knownNames?: Array<string>;
 
     /**
+     * Known clades of the data set, for mending the spelling of clade names read at nodes, on
+     * shaded boxes and at tips that are collapsed clades; empty to skip.
+     */
+    knownClades?: Array<string>;
+
+    /**
      * Threshold overrides.
      */
     parameters: Partial<Parameters>;
@@ -1230,6 +1236,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
     const region = sourceRegion === null ? null : rotateBox(sourceRegion, sourceImage.width, sourceImage.height, quarterTurns);
     const names = options.names ?? [];
     const knownNames = options.knownNames ?? [];
+    const knownClades = options.knownClades ?? [];
     const timings: Record<string, number> = { orientation: Math.round(performance.now() - orientationStarted) };
     let clock = performance.now();
 
@@ -1539,7 +1546,7 @@ export async function extractTree(sourceImage: RgbaImage, options: Partial<Extra
         // Large letters need no upscaling for Tesseract and cost it time in proportion to their
         // area, so the scale brings letters to about the target height and no further.
         const ocrScale = Math.min(parameters.ocrScale, Math.max(1, parameters.ocrGlyphTarget / glyphHeight));
-        await readLabels(document, erased, options.ocr, ocrScale, names, knownNames, progress);
+        await readLabels(document, erased, options.ocr, ocrScale, names, knownNames, progress, knownClades);
         // A slanted figure's leader lines to bracketed numbers run the tips' way and read as
         // numbers; they are debris whatever their length.
         removeNumericDebrisTips(document, slantedTrace === null ? 3 * glyphHeight : Infinity, slantedTrace === null && parameters.dropDebris ? 3 * glyphHeight : 0);

@@ -410,8 +410,21 @@ for (const argument of process.argv)
     }
 }
 
+/**
+ * Whether a line of a name list holds a name.
+ *
+ * @param line - Line of the file.
+ * @returns True for a line that is not blank.
+ */
+function isNonBlankLine(line: string): boolean
+{
+    return line.trim().length > 0;
+}
+
 const knownNamesPath = path.join(benchDir, "..", "names", "known-taxa.txt");
 const knownNames = fs.existsSync(knownNamesPath) ? readNames(knownNamesPath) : new Array<string>();
+const knownCladesPath = path.join(benchDir, "..", "names", "known-clades.txt");
+const knownClades = fs.existsSync(knownCladesPath) ? fs.readFileSync(knownCladesPath, "utf8").split(/\r?\n/).filter(isNonBlankLine) : new Array<string>();
 const ocr = skipOcr ? null : await createTesseractOcr(tesseract);
 fs.mkdirSync(outDir, { recursive: true });
 const resultsPath = path.join(outDir, "results.jsonl");
@@ -439,7 +452,7 @@ for (const row of rows)
 
     try
     {
-        const document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: row.image, region: row.region ?? null, parameters: overrides });
+        const document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, knownClades, source: row.image, region: row.region ?? null, parameters: overrides });
         result = summarize(row, document, names.length, Math.round(performance.now() - started));
         const figureOut = path.join(outDir, row.id);
         fs.mkdirSync(figureOut, { recursive: true });

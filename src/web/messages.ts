@@ -49,6 +49,11 @@ export type ExtractRequest = {
     knownNames: Array<string>;
 
     /**
+     * Known clades, possibly empty.
+     */
+    knownClades: Array<string>;
+
+    /**
      * Region to analyze, or null.
      */
     region: Box | null;

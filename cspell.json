@@ -183,7 +183,19 @@
         "poda",
         "lguanodon",
         "Lurdusaurus",
-        "Qantassaurus"
+        "Qantassaurus",
+        "bernissartensis",
+        "Ciplodocoidea",
+        "Diplodocidae",
+        "Diplodocoidea",
+        "DRYOSAURIDAF",
+        "Hadrosauridae",
+        "HADROSAURIDAE",
+        "HADROSAURIDAF",
+        "Hadrosauroidea",
+        "Hadrosaurus",
+        "Rhabdodontidae",
+        "Stegosauria"
     ],
     "ignorePaths": [
         "node_modules/**",

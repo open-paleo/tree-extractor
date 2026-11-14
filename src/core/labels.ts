@@ -7,7 +7,7 @@ import type { ExtractionDocument, GrayImage, NameMatch, OcrEngine, ProgressRepor
 import { cropAndScale } from "./raster.ts";
 import { mapPointToFrame } from "./geometry.ts";
 import { rotateGrayToFrame } from "./slant.ts";
-import { matchKnownName, matchName } from "./matching.ts";
+import { matchKnownName, matchName, normalizeName } from "./matching.ts";
 
 /**
  * A candidate assignment of a text line to a tip or node.
@@ -315,6 +315,36 @@ export function cleanSupportText(text: string): string
 }
 
 /**
+ * Mends the spelling of a clade's name from the known clades: a one-word read that is one of
+ * them, or nearly one and clearly nearer to it than to any other. The name keeps the capitals
+ * it was printed in.
+ *
+ * @param text - Cleaned text, as read.
+ * @param knownClades - Names of known clades, possibly empty.
+ * @returns The match, or null when the read is not one word or no clade explains it.
+ */
+export function matchCladeName(text: string, knownClades: Array<string>): NameMatch | null
+{
+    const word = text.trim();
+
+    if (knownClades.length === 0 || !/^\p{L}+$/u.test(word))
+    {
+        return null;
+    }
+
+    const match = matchName(word, knownClades);
+
+    if (match === null || !(match.similarity >= 0.98 || (match.similarity >= 0.85 && match.margin >= 0.1)))
+    {
+        return null;
+    }
+
+    const name = word === word.toUpperCase() ? match.name.toUpperCase() : match.name;
+
+    return { name, similarity: match.similarity, margin: match.margin, accepted: true, source: "known" };
+}
+
+/**
  * Matches a label: against the paper's list first, and when that gives nothing accepted,
  * against the known taxa at the stricter bar. The paper's unaccepted match is kept when the
  * known taxa do no better, so the reader still sees the nearest name.
@@ -322,9 +352,10 @@ export function cleanSupportText(text: string): string
  * @param label - Cleaned label text, or null.
  * @param names - The paper's names, possibly empty.
  * @param knownNames - Known taxa, possibly empty.
+ * @param knownClades - Known clades, possibly empty, for a tip that is a collapsed clade.
  * @returns The match, or null without a label or any list.
  */
-export function chooseMatch(label: string | null, names: Array<string>, knownNames: Array<string>): NameMatch | null
+export function chooseMatch(label: string | null, names: Array<string>, knownNames: Array<string>, knownClades: Array<string> = []): NameMatch | null
 {
     if (label === null)
     {
@@ -337,17 +368,17 @@ export function chooseMatch(label: string | null, names: Array<string>, knownNam
     {
         const exact = names.length === 0 ? null : matchName(label, names);
 
-        return exact !== null && exact.similarity >= 0.98 ? exact : null;
+        return exact !== null && exact.similarity >= 0.98 ? exact : matchCladeName(label, knownClades);
     }
 
     // So is a single word with the ending of a family, subfamily, tribe, superfamily or order
     // (Ornithomimosauria, Confuciusornithidae): the list's Ornithomimus is not its name,
-    // however well the stem matches.
+    // however well the stem matches. The known clades may still mend its spelling.
     if (isHigherTaxonName(label))
     {
         const exact = names.length === 0 ? null : matchName(label, names);
 
-        return exact !== null && exact.similarity >= 0.9 ? exact : null;
+        return exact !== null && exact.similarity >= 0.9 ? exact : matchCladeName(label, knownClades);
     }
 
     const own = names.length === 0 ? null : matchName(label, names);
@@ -382,16 +413,25 @@ function keepReadSpecies(label: string, match: NameMatch): NameMatch
 {
     const words = label.trim().split(/\s+/);
 
+    // A name printed with a qualifier of open nomenclature ("Iguanodon cf. bernissartensis",
+    // "aff. Zalmoxes robustus") is the list's name with the qualifier, and the qualifier is
+    // part of what the figure says: the read stands when nothing else separates the two.
+    if (/(^|\s)(cf|aff)\.?(\s|$)/i.test(label) && normalizeName(label.replace(/(^|\s)(cf|aff)\.?(?=\s|$)/gi, " ")) === normalizeName(match.name))
+    {
+        return { ...match, name: label.trim() };
+    }
+
     if (match.name.includes(" ") || words.length < 2)
     {
         return match;
     }
 
-    // An indeterminate species, "sp." with or without a number ("Rhabdodon sp. 1"), is part
-    // of the name as printed and no list holds it; it stays, written as it was read.
+    // An indeterminate species, "sp." or "indet." with or without a number ("Rhabdodon
+    // sp. 1"), or a species given with "cf." or "aff.", is part of the name as printed and no
+    // list holds it; it stays, written as it was read.
     const rest = words.slice(1).join(" ");
 
-    if (/^sp\.?\s*\d*\.?$/i.test(rest))
+    if (/^((sp|spp|indet)\.?\s*\d*\.?|sp\.?\s+indet\.?|(cf|aff)\.?\s+\p{Ll}{3,})$/iu.test(rest))
     {
         return { ...match, name: `${match.name} ${rest}` };
     }
@@ -508,6 +548,7 @@ function findTextLine(document: ExtractionDocument, id: string | null): TextLine
  * @param scale - Upscaling factor for crops.
  * @param names - Optional closed list to match tip labels against.
  * @param progress - Receives a count per label read, or null.
+ * @param knownClades - Known clades, for mending the spelling of clade names.
  * @returns Resolves when every label has been read.
  */
 export async function readLabels(
@@ -518,6 +559,7 @@ export async function readLabels(
     names: Array<string>,
     knownNames: Array<string>,
     progress: ProgressReporter | null = null,
+    knownClades: Array<string> = [],
 ): Promise<void>
 {
     const total = document.tips.length + document.nodes.length;
@@ -561,7 +603,7 @@ export async function readLabels(
             line.ocr = await ocr.recognize(cropAndScale(chooseSource(line), line.box, 3, scale, scale * condensing), "text");
             const cleaned = cleanTaxonText(line.ocr.text);
             tip.label = cleaned.length > 0 ? cleaned : null;
-            tip.match = chooseMatch(tip.label, names, knownNames);
+            tip.match = chooseMatch(tip.label, names, knownNames, knownClades);
         }
     }
 
@@ -581,7 +623,7 @@ export async function readLabels(
             // A row at a node is a support value or a clade name. Read as a value, a name
             // comes out as the few of its letters that pass for digits ("Dryomorpha" as "00").
             const cleaned = isNameText(line.ocr.text) ? cleanTaxonText(line.ocr.text) : cleanSupportText(line.ocr.text);
-            node.label = cleaned.length > 0 ? cleaned : null;
+            node.label = cleaned.length > 0 ? matchCladeName(cleaned, knownClades)?.name ?? cleaned : null;
         }
 
         // The clade's name from the box or band that shades it, kept as printed.
@@ -591,7 +633,8 @@ export async function readLabels(
         {
             nameLine.ocr = await ocr.recognize(cropAndScale(chooseSource(nameLine), nameLine.box, 3, scale), "text");
             const name = cleanTaxonText(nameLine.ocr.text);
-            node.name = isBoxedCladeName(name, names, knownNames) ? name : null;
+            const clade = matchCladeName(name, knownClades);
+            node.name = clade !== null ? clade.name : isBoxedCladeName(name, names, knownNames) ? name : null;
 
             // A row on the shading that reads as anything else, a tip's name that found no
             // branch or a caption, names no clade and goes back to being unassigned.

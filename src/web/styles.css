@@ -239,3 +239,4 @@
 .tree-extractor .view-controls .zoom-level { min-width: 3.2em; padding: 0 4px; text-align: right; color: var(--_muted); font-size: var(--_small); }
 .tree-extractor .move-row[hidden] { display: none; }
 .tree-extractor section.results .move-row { margin: 0 0 12px; padding: 8px 10px; border: 1px solid var(--_line); border-radius: var(--_radius); background: var(--_background); }
+.tree-extractor ol.items input.support { flex: 0 0 5.5em; }

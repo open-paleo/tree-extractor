@@ -53,6 +53,12 @@ export type TreeExtractorOptions = {
     knownNames?: Array<string> | string;
 
     /**
+     * Known clades, for mending the spelling of clade names: the names, or the URL of a text
+     * file with one name per line.
+     */
+    knownClades?: Array<string> | string;
+
+    /**
      * URL of an image to load at once.
      */
     image?: string;
@@ -90,6 +96,13 @@ export type TreeExtractorHandle = {
      * @param names - The names.
      */
     setKnownNames(names: Array<string>): void;
+
+    /**
+     * Replaces the known clades used from the next extraction on.
+     *
+     * @param names - The clade names.
+     */
+    setKnownClades(names: Array<string>): void;
 };
 
 /**
@@ -129,6 +142,7 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
     const ocrCheckbox = getElement<HTMLInputElement>("#te-ocr");
     const namesInput = getElement<HTMLTextAreaElement>("#te-names");
     let knownNames = new Array<string>();
+    let knownClades = new Array<string>();
     const runButton = getElement<HTMLButtonElement>("#te-run");
     const statusLine = getElement<HTMLParagraphElement>("#te-status");
     const progressBar = getElement<HTMLDivElement>("#te-progress");
@@ -600,6 +614,7 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
                 image: state.image,
                 names: readNames(),
                 knownNames,
+                knownClades,
                 region: state.region,
                 ocr: ocrCheckbox.checked ? ocrEngine : null,
                 source: state.fileStem,
@@ -852,7 +867,11 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
             if (node !== null)
             {
                 // The field shows the clade's name when there is one, and edits what it shows.
-                if (node.name !== undefined && node.name !== null)
+                if (target.dataset.field === "support")
+                {
+                    node.label = target.value.length === 0 ? null : target.value;
+                }
+                else if (node.name !== undefined && node.name !== null)
                 {
                     node.name = target.value.length === 0 ? null : target.value;
                 }
@@ -1180,34 +1199,45 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
     }
 
     /**
-     * Loads the known taxa for the second tier of name matching, from the list or the URL the host
-     * supplied. A missing list only means the tier is off.
+     * Loads a list of names the host supplied, as the names themselves or the URL of a text
+     * file. A missing list is an empty one.
      *
-     * @returns Resolves when the names are in place.
+     * @param source - The names, a URL, or nothing.
+     * @returns The names.
      */
-    async function loadKnownNames(): Promise<void>
+    async function loadNameList(source: Array<string> | string | undefined): Promise<Array<string>>
     {
-        if (Array.isArray(options.knownNames))
+        if (Array.isArray(source))
         {
-            knownNames = options.knownNames;
-
-            return;
+            return source;
         }
 
-        if (options.knownNames === undefined)
+        if (source === undefined)
         {
-            return;
+            return [];
         }
 
         try
         {
-            const response = await fetch(options.knownNames);
-            knownNames = response.ok ? splitNames(await response.text()) : [];
+            const response = await fetch(source);
+
+            return response.ok ? splitNames(await response.text()) : [];
         }
         catch
         {
-            knownNames = [];
+            return [];
         }
+    }
+
+    /**
+     * Loads the known taxa and the known clades the host supplied.
+     *
+     * @returns Resolves when both are in place.
+     */
+    async function loadKnownNames(): Promise<void>
+    {
+        knownNames = await loadNameList(options.knownNames);
+        knownClades = await loadNameList(options.knownClades);
     }
 
     void loadKnownNames();
@@ -1265,5 +1295,15 @@ export function mountTreeExtractor(root: HTMLElement, options: TreeExtractorOpti
         knownNames = names;
     }
 
-    return { destroy, getNewick, getDocument, loadImage: loadImageFromUrl, setKnownNames };
+    /**
+     * Replaces the known clades.
+     *
+     * @param names - The clade names.
+     */
+    function setKnownClades(names: Array<string>): void
+    {
+        knownClades = names;
+    }
+
+    return { destroy, getNewick, getDocument, loadImage: loadImageFromUrl, setKnownNames, setKnownClades };
 }

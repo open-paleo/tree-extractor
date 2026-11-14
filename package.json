@@ -1,6 +1,6 @@
 {
     "name": "@open-paleo/tree-extractor",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "Extract phylogenetic trees from figure images into Newick and Nexus",
     "type": "module",
     "license": "MIT",
@@ -26,11 +26,13 @@
         "./viewer.css": "./dist/web/styles.css",
         "./worker": "./dist/web/worker.js",
         "./known-taxa.txt": "./names/known-taxa.txt",
+        "./known-clades.txt": "./names/known-clades.txt",
         "./package.json": "./package.json"
     },
     "files": [
         "dist",
         "names/known-taxa.txt",
+        "names/known-clades.txt",
         "CHANGELOG.md"
     ],
     "scripts": {

@@ -165,7 +165,21 @@ export function renderResults(elements: ResultElements, extraction: ExtractionDo
             classes.push("detached");
         }
 
-        elements.nodesList.append(createListItem("node", node.id, getNodeDisplayLabel(node) ?? "", classes));
+        const item = createListItem("node", node.id, getNodeDisplayLabel(node) ?? "", classes);
+
+        // A node named from a shaded box keeps its support value in a field of its own.
+        if (node.name !== undefined && node.name !== null)
+        {
+            const support = document.createElement("input");
+            support.className = "support";
+            support.dataset.field = "support";
+            support.value = node.label ?? "";
+            support.placeholder = "(support)";
+            support.setAttribute("aria-label", `Support value of node ${node.id}`);
+            item.append(support);
+        }
+
+        elements.nodesList.append(item);
     }
 
     for (const issue of extraction.qc)

@@ -270,8 +270,21 @@ const strict = process.argv.includes("--strict");
 const expectedIdentical = new Set(JSON.parse(fs.readFileSync(path.join(benchDir, "expectations.json"), "utf8")).identical as Array<string>);
 const filter = process.argv.find((argument) => argument.startsWith("--only=")) ?? null;
 const ocr = skipOcr ? null : await createTesseractOcr(tesseract);
+/**
+ * Whether a line of a name list holds a name.
+ *
+ * @param line - Line of the file.
+ * @returns True for a line that is not blank.
+ */
+function isNonBlankLine(line: string): boolean
+{
+    return line.trim().length > 0;
+}
+
 const knownNamesPath = path.join(benchDir, "..", "names", "known-taxa.txt");
 const knownNames = fs.existsSync(knownNamesPath) ? fs.readFileSync(knownNamesPath, "utf8").split(/\r?\n/).filter((line) => line.trim().length > 0) : new Array<string>();
+const knownCladesPath = path.join(benchDir, "..", "names", "known-clades.txt");
+const knownClades = fs.existsSync(knownCladesPath) ? fs.readFileSync(knownCladesPath, "utf8").split(/\r?\n/).filter(isNonBlankLine) : new Array<string>();
 const caseDirs = new Array<string>();
 
 const holdout = process.argv.includes("--holdout");
@@ -364,7 +377,7 @@ for (const caseDir of caseDirs)
 
     try
     {
-        document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, source: benchCase.image, region: benchCase.region ?? null, parameters: overrides });
+        document = await extractTree(await loadImage(imagePath), { ocr, names, knownNames, knownClades, source: benchCase.image, region: benchCase.region ?? null, parameters: overrides });
     }
     catch (error)
     {

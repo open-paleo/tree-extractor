@@ -1,0 +1,75 @@
+#NEXUS
+
+[ poole2022a_fig3: Iguanodontian phylogeny as presented by McDonald (2012a), redrawn by Poole; an Adams consensus of 24,460 MPTs. 62 tips with 20 polytomies (16 of three branches, 3 of four, 1 of five); nine clade names printed beside nodes, kept here as internal node labels. Topology read from the PDF's vector branch lines (97 edges, 1.95 pt strokes) and tip order from the printed labels, checked against the figure; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=62;
+    TAXLABELS
+        Lesothosaurus
+        Hypsilophodon
+        Kangnasaurus
+        Muttaburrasaurus
+        Rhabdodon
+        Zalmoxes_robustus
+        Zalmoxes_shqiperorum
+        Tenontosaurus_dossi
+        Tenontosaurus_tilletti
+        Callovosaurus
+        Dryosaurus
+        Dysalotosaurus
+        Elrhazosaurus
+        Valdosaurus
+        Camptosaurus
+        Owenodon
+        Cumnoria
+        Uteodon
+        Cedrorestes
+        Planicoxa
+        Osmakasaurus
+        Hippodraco
+        Theiophytalia
+        Dakotadon
+        Iguanacolossus
+        Lanzhousaurus
+        Lurdusaurus
+        NHMUK_R1831-3
+        Kukufeldia
+        Barilium
+        Fukuisaurus
+        Iguanodon
+        Proa
+        Hypselospinus
+        Mantellisaurus
+        NHMUK_R3741
+        Ouranosaurus
+        Altirhinus
+        Ratchasimasaurus
+        Jinzhousaurus
+        Penelopognathus
+        Equijubus
+        Xuwulong
+        Gongpoquansaurus
+        Eolambia
+        Jintasaurus
+        Probactrosaurus
+        Jeyawati
+        Protohadros
+        Levnesovia
+        Tethyshadros
+        Nanyangosaurus
+        Gilmoreosaurus
+        Bactrosaurus
+        Claosaurus
+        Shuangmiaosaurus
+        Tanius
+        Hadrosaurus
+        Lophorhothon
+        Telmatosaurus
+        Edmontosaurus
+        Corythosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE poole2022a_fig3 = [&R] (Lesothosaurus,Hypsilophodon,(Kangnasaurus,(Muttaburrasaurus,Rhabdodon,(Zalmoxes_robustus,Zalmoxes_shqiperorum))Rhabdodontidae,((Tenontosaurus_dossi,Tenontosaurus_tilletti),((Callovosaurus,Dryosaurus,(Dysalotosaurus,Elrhazosaurus,Valdosaurus))Dryosauridae,(Camptosaurus,Owenodon,(Cumnoria,Uteodon,(Cedrorestes,Planicoxa,Osmakasaurus,(Hippodraco,Theiophytalia),(Dakotadon,Iguanacolossus,(Lanzhousaurus,Lurdusaurus,(NHMUK_R1831-3,Kukufeldia,(Barilium,Fukuisaurus,(Iguanodon,Proa,(Hypselospinus,(Mantellisaurus,NHMUK_R3741),(Ouranosaurus,(Altirhinus,Ratchasimasaurus,(Jinzhousaurus,Penelopognathus,(Equijubus,Xuwulong),(Gongpoquansaurus,((Eolambia,Jintasaurus,Probactrosaurus),(Jeyawati,(Protohadros,(Levnesovia,Tethyshadros,(Nanyangosaurus,(Gilmoreosaurus,(Bactrosaurus,(Claosaurus,Shuangmiaosaurus,Tanius,(Hadrosaurus,Lophorhothon,Telmatosaurus,(Edmontosaurus,Corythosaurus))Hadrosauridae)))))))))))))Hadrosauroidea)Hadrosauriformes))))))Styracosterna)Ankylopollexia)Dryomorpha))Iguanodontia);
+END;

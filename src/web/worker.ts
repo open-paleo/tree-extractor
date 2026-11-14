@@ -114,6 +114,7 @@ async function runExtraction(request: Extract<PageMessage, { type: "extract" }>)
             ocr: request.readLabels ? new BridgedOcrEngine() : null,
             names: request.names,
             knownNames: request.knownNames,
+            knownClades: request.knownClades,
             region: request.region,
             source: request.source,
             progress: new MessageProgressReporter(),

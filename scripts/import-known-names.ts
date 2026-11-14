@@ -17,6 +17,7 @@ import * as url from "node:url";
 type DataBuild = {
     _metadata: { version: string; built_at: string };
     genera: Record<string, GenusRecord>;
+    clades?: Record<string, unknown>;
 };
 
 /**
@@ -63,6 +64,11 @@ for (const genus of Object.values(build.genera))
 
 const sorted = [...names].sort((left, right) => left.localeCompare(right, "en"));
 fs.writeFileSync(target, `${sorted.join("\n")}\n`);
+
+// The clades above the genera, in a list of their own: among the genera, Dryosauridae would
+// stand beside Dryosaurus as a candidate for every tip.
+const clades = Object.keys(build.clades ?? {}).sort((left, right) => left.localeCompare(right, "en"));
+fs.writeFileSync(path.join(scriptDirectory, "..", "names", "known-clades.txt"), `${clades.join("\n")}\n`);
 fs.writeFileSync(path.join(scriptDirectory, "..", "names", "README.md"), [
     "# Known taxon names",
     "",
@@ -72,10 +78,15 @@ fs.writeFileSync(path.join(scriptDirectory, "..", "names", "README.md"), [
     "paper's own name list does not explain is offered to this list at a stricter threshold, and",
     "a match from it is flagged in the quality checks as coming from outside the paper's taxa.",
     "",
+    "`known-clades.txt` lists the clades above the genera. It mends the spelling of a clade's",
+    "name read at a node, on a shaded box or at a tip that is a collapsed clade, and is kept",
+    "apart so that a clade never competes with a genus for a tip.",
+    "",
     `Snapshot of open-paleo/data version ${build._metadata.version}, built ${build._metadata.built_at},`,
     `${sorted.length} names. Regenerate with \`npm run names:import -- <path to open-paleo.json>\`.`,
     "",
     "The data build is CC BY 4.0, attributed to the Open Paleo contributors.",
     "",
 ].join("\n"));
+console.log(`${clades.length} clades written to names/known-clades.txt`);
 console.log(`${sorted.length} names written to ${path.relative(process.cwd(), target)} from data ${build._metadata.version}`);

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { compareNames, computeLevenshtein, matchKnownName, matchName, normalizeName } from "../src/core/matching.ts";
-import { cleanSupportText, cleanTaxonText, isNameText, chooseMatch, isBoxedCladeName } from "../src/core/labels.ts";
+import { cleanSupportText, cleanTaxonText, isNameText, chooseMatch, isBoxedCladeName, matchCladeName } from "../src/core/labels.ts";
 
 const names = ["Cumnoria_prestwichii", "Uteodon_aphanoecetes", "Fostoria_dhimbangunmal", "Rhabdodon_sp1", "Rhabdodon_priscus", "Dryosaurus"];
 
@@ -140,4 +140,29 @@ test("a capital O read as Q, or I as l, still finds its name among the known tax
     assert.equal(chooseMatch("lguanodon", [], known)?.name, "Iguanodon");
     assert.equal(chooseMatch("Qantassaurus", [], known)?.name, "Qantassaurus");
     assert.equal(chooseMatch("Lurdusaurus", [], known)?.name, "Lurdusaurus");
+});
+
+test("qualifiers of open nomenclature stay on a name from the known taxa", () =>
+{
+    const known = ["Rhabdodon", "Rhabdodon priscus", "Iguanodon", "Iguanodon bernissartensis"];
+    assert.equal(chooseMatch("Rhabdodon indet.", [], known)?.name, "Rhabdodon indet.");
+    assert.equal(chooseMatch("Rhabdodon sp. indet.", [], known)?.name, "Rhabdodon sp. indet.");
+    assert.equal(chooseMatch("Rhabdodon cf. priscus", [], known)?.name, "Rhabdodon cf. priscus");
+    assert.equal(chooseMatch("Iguanodon aff. bernissartensis", [], known)?.name, "Iguanodon aff. bernissartensis");
+    assert.equal(chooseMatch("cf. Iguanodon bernissartensis", [], known)?.name, "cf. Iguanodon bernissartensis");
+    assert.equal(chooseMatch("Iguanodon bernissartensis", [], known)?.name, "Iguanodon bernissartensis");
+});
+
+test("a clade's name is mended from the known clades and keeps its capitals", () =>
+{
+    const clades = ["Diplodocoidea", "Diplodocidae", "Dryosauridae", "Hadrosauridae", "Hadrosauroidea"];
+    assert.equal(matchCladeName("Ciplodocoidea", clades)?.name, "Diplodocoidea");
+    assert.equal(matchCladeName("DRYOSAURIDAF", clades)?.name, "DRYOSAURIDAE");
+    assert.equal(matchCladeName("Hadrosauridae", clades)?.name, "Hadrosauridae");
+    assert.equal(matchCladeName("Rhabdodontidae 87", clades), null);
+    assert.equal(matchCladeName("Stegosauria", clades), null);
+    assert.equal(matchCladeName("Dryosauridae", []), null);
+    // A tip that is a collapsed clade is mended too, and a genus is never taken for a clade.
+    assert.equal(chooseMatch("HADROSAURIDAF", [], ["Hadrosaurus"], clades)?.name, "HADROSAURIDAE");
+    assert.equal(chooseMatch("Dryosaurus", [], ["Dryosaurus"], clades)?.name, "Dryosaurus");
 });

@@ -2,7 +2,7 @@
 /**
  * Command-line entry point.
  *
- *   tree-extractor extract <image> [--names <file>] [--known-names <file>|--no-known-names] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--no-rotation] [--profile key=value,...]
+ *   tree-extractor extract <image> [--names <file>] [--known-names <file>|--no-known-names] [--known-clades <file>] [--out <dir>] [--no-ocr] [--overlay] [--no-lengths] [--no-rotation] [--profile key=value,...]
  */
 
 import * as fs from "node:fs";
@@ -82,6 +82,8 @@ function printUsage(): void
         "  --crop x,y,w,h   Analyze only this region of the image (pixels)",
         "  --known-names <file>  Known taxa to fall back on when a label is not in --names",
         "                   (default: names/known-taxa.txt shipped with the tool; --no-known-names skips it)",
+        "  --known-clades <file>  Known clades, for mending the spelling of clade names",
+        "                   (default: names/known-clades.txt shipped with the tool; --no-known-names skips it too)",
         "  --no-ocr         Trace the tree but do not read labels",
         "  --no-lengths     Leave branch lengths out of the Newick even when a time axis was read",
         "  --no-rotation    Take the figure as drawn instead of turning a tree on its side root-left",
@@ -134,6 +136,32 @@ function readKnownNames(parsed: Arguments): Array<string>
     }
 
     const bundled = url.fileURLToPath(new URL("../../names/known-taxa.txt", import.meta.url));
+
+    return fs.existsSync(bundled) ? readNameList(bundled) : [];
+}
+
+/**
+ * Reads the known clades: the list named by --known-clades, or the one shipped with the tool;
+ * none with --no-known-names.
+ *
+ * @param parsed - Parsed arguments.
+ * @returns The clade names, possibly empty.
+ */
+function readKnownClades(parsed: Arguments): Array<string>
+{
+    if (parsed.flags.has("no-known-names"))
+    {
+        return [];
+    }
+
+    const flag = parsed.flags.get("known-clades");
+
+    if (typeof flag === "string")
+    {
+        return readNameList(flag);
+    }
+
+    const bundled = url.fileURLToPath(new URL("../../names/known-clades.txt", import.meta.url));
 
     return fs.existsSync(bundled) ? readNameList(bundled) : [];
 }
@@ -223,6 +251,11 @@ type ExtractJob = {
     knownNames: Array<string>;
 
     /**
+     * Known clades, possibly empty.
+     */
+    knownClades: Array<string>;
+
+    /**
      * Where the outputs go.
      */
     outDir: string;
@@ -274,7 +307,7 @@ type ExtractJob = {
 async function extractOne(imagePath: string, job: ExtractJob): Promise<number>
 {
     const image = await loadImage(imagePath);
-    const document = await extractTree(image, { ocr: job.ocr, names: job.names, knownNames: job.knownNames, source: path.basename(imagePath), region: job.region, parameters: { profileOverrides: job.profileOverrides, rotation: job.rotation } });
+    const document = await extractTree(image, { ocr: job.ocr, names: job.names, knownNames: job.knownNames, knownClades: job.knownClades, source: path.basename(imagePath), region: job.region, parameters: { profileOverrides: job.profileOverrides, rotation: job.rotation } });
     const stem = path.join(job.outDir, path.basename(imagePath, path.extname(imagePath)));
     fs.writeFileSync(`${stem}.json`, JSON.stringify(document, null, 2));
     const newick = formatDocumentAsNewick(document, { branchLengths: job.lengths });
@@ -420,6 +453,7 @@ async function runExtract(parsed: Arguments): Promise<number>
     const namesFlag = parsed.flags.get("names");
     const sharedNames = typeof namesFlag === "string" ? readNameList(namesFlag) : null;
     const knownNames = readKnownNames(parsed);
+    const knownClades = readKnownClades(parsed);
     const outFlag = parsed.flags.get("out");
     const outDir = typeof outFlag === "string" ? outFlag : process.cwd();
     fs.mkdirSync(outDir, { recursive: true });
@@ -432,6 +466,7 @@ async function runExtract(parsed: Arguments): Promise<number>
     const job: ExtractJob = {
         names: sharedNames ?? [],
         knownNames,
+        knownClades,
         outDir,
         region,
         ocr,

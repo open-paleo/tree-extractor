@@ -39,5 +39,6 @@ mountTreeExtractor(container, {
         langPath: new URL("/node_modules/@tesseract.js-data/eng/4.0.0_best_int", location.href).href,
     },
     knownNames: new URL("../../names/known-taxa.txt", import.meta.url).href,
+    knownClades: new URL("../../names/known-clades.txt", import.meta.url).href,
     image: new URLSearchParams(location.search).get("image") ?? undefined,
 });

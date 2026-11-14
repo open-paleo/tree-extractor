@@ -74,7 +74,8 @@ character matrix). OCR output is fuzzy-matched against it, which turns imperfect
 italic text into exact names. A label the list does not explain is then offered to the known
 taxa of the Open Paleo data set (`names/known-taxa.txt`, every genus, species and synonym) at a
 stricter threshold, and a match from there is flagged in the quality checks as coming from
-outside the paper's own taxa; `--known-names` substitutes another list and `--no-known-names`
+outside the paper's own taxa; `--known-names` substitutes another list, `--known-clades` does the same for the list of
+clades that mends the spelling of clade names, and `--no-known-names`
 skips the tier. Without any list the raw OCR text is kept and uncertain tips are flagged.
 
 The viewer runs the same pipeline on a dropped image, in a Web Worker so the page stays
@@ -109,6 +110,7 @@ const viewer = mountTreeExtractor(document.querySelector("#tool"), {
     loadTesseract,                  // returns the Tesseract.js module; omit to trace without reading labels
     tesseractPaths: { workerPath, corePath, langPath },
     knownNames,                     // an array of names, or the URL of a text file, one per line
+    knownClades,                    // the same, for clade names above the genus
 });
 
 viewer.getNewick();                 // the tree with the user's edits, or null
@@ -121,7 +123,7 @@ removes itself when it leaves. Locations are attributes; the Tesseract.js loader
 names are properties, set before or after the element is defined:
 
 ```html
-<tree-extractor worker-url="/assets/worker.js" known-names-url="/data/taxa.txt"
+<tree-extractor worker-url="/assets/worker.js" known-names-url="/data/taxa.txt" known-clades-url="/data/clades.txt"
     tesseract-worker-path="/assets/tesseract/worker.min.js" tesseract-core-path="/assets/tesseract-core/"
     tesseract-lang-path="/assets/tessdata"></tree-extractor>
 ```

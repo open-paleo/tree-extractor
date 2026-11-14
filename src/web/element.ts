@@ -35,6 +35,8 @@ export class TreeExtractorElement extends HTMLElement
 
     private names: Array<string> | null = null;
 
+    private clades: Array<string> | null = null;
+
     /**
      * The Tesseract.js loader; without one the viewer traces trees but reads no labels.
      *
@@ -78,6 +80,29 @@ export class TreeExtractorElement extends HTMLElement
     }
 
     /**
+     * Known clades, when given as a list.
+     *
+     * @returns The clade names, or null.
+     */
+    public get knownClades(): Array<string> | null
+    {
+        return this.clades;
+    }
+
+    /**
+     * Sets the known clades; takes effect at once on a mounted viewer.
+     */
+    public set knownClades(names: Array<string> | null)
+    {
+        this.clades = names;
+
+        if (this.handle !== null && names !== null)
+        {
+            this.handle.setKnownClades(names);
+        }
+    }
+
+    /**
      * Mounts the viewer.
      */
     public connectedCallback(): void
@@ -86,6 +111,7 @@ export class TreeExtractorElement extends HTMLElement
         // the accessor; it is taken off and set again through the accessor.
         this.adoptProperty("loadTesseract");
         this.adoptProperty("knownNames");
+        this.adoptProperty("knownClades");
         const workerUrl = this.getAttribute("worker-url");
 
         if (workerUrl === null)
@@ -118,6 +144,7 @@ export class TreeExtractorElement extends HTMLElement
             loadTesseract: this.callLoader.bind(this),
             tesseractPaths: workerPath === null && corePath === null && langPath === null ? undefined : paths,
             knownNames: this.names ?? this.getAttribute("known-names-url") ?? undefined,
+            knownClades: this.clades ?? this.getAttribute("known-clades-url") ?? undefined,
             image: this.getAttribute("image") ?? undefined,
         };
         this.handle = mountTreeExtractor(this, options);
@@ -190,7 +217,7 @@ export class TreeExtractorElement extends HTMLElement
      *
      * @param name - Property name.
      */
-    private adoptProperty(name: "loadTesseract" | "knownNames"): void
+    private adoptProperty(name: "loadTesseract" | "knownNames" | "knownClades"): void
     {
         if (Object.prototype.hasOwnProperty.call(this, name))
         {

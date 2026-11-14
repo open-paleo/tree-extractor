@@ -40,6 +40,11 @@ export type ExtractionRequest = {
     knownNames: Array<string>;
 
     /**
+     * Known clades, possibly empty.
+     */
+    knownClades: Array<string>;
+
+    /**
      * Region to analyze, or null.
      */
     region: Box | null;
@@ -135,6 +140,7 @@ export class ExtractionClient
             image: { width: request.image.width, height: request.image.height, buffer },
             names: request.names,
             knownNames: request.knownNames,
+            knownClades: request.knownClades,
             region: request.region,
             readLabels: request.ocr !== null,
             source: request.source,

@@ -1,0 +1,10 @@
+{
+  "image": "figure.png",
+  "names": "names.txt",
+  "source": "Poole 2022, Palaeontologia Electronica 25(3): a30, Fig. 3: iguanodontian phylogeny as presented by McDonald (2012a), an Adams consensus of 24,460 MPTs; rectangular, root left with a short root stub, tips right, 62 tips with 20 polytomies, nine clade names printed beside nodes (Iguanodontia to the right of its junction, the others to the left), two specimen tips printed in roman (NHMUK R1831-3, NHMUK R3741). Image: rendered from the PDF's vector figure at 300 dpi, cropped to the figure frame (1665x2161 px); the PDF holds no raster image for it.",
+  "license": "CC BY 4.0",
+  "attribution": "attribution.txt",
+  "names_note": "no matrix held (the figure redraws McDonald 2012a's tree; neither that matrix nor Poole's is in the corpus); list = the printed tip names, in figure order, as printed (Zalmoxes shqiperorum, not Ferenceratops)",
+  "gold": "gold.nex",
+  "gold_note": "62 tips, 20 polytomies (16 of three branches, 3 of four, 1 of five) (basal trichotomy of Lesothosaurus, Hypsilophodon and Iguanodontia). The nine printed clade names are internal node labels (Iguanodontia, Rhabdodontidae, Dryosauridae, Dryomorpha, Ankylopollexia, Styracosterna, Hadrosauriformes, Hadrosauroidea, Hadrosauridae), each matched to the junction it is drawn against. Topology read from the PDF's vector branch lines and checked against the figure; topology only."
+}

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.2 (2026-11-13)
+
+- Qualifiers of open nomenclature stay on a name as printed: "cf.", "aff.", "indet." and
+  "sp. indet.", as "sp." already did.
+- In the viewer, a node named from a shaded box shows its support value in a field of its own.
+- Poole 2022 figure 3 joins the holdout with a gold tree and its nine clade names.
+- A list of known clades mends the spelling of a clade's name read at a node, on a shaded box
+  or at a tip that is a collapsed clade, keeping the capitals it was printed in. The list
+  ships as `names/known-clades.txt` (package export `./known-clades.txt`) and is supplied to
+  the viewer as `knownClades`, to the element as `known-clades-url` or the `knownClades`
+  property, and to the command line with `--known-clades`. It is kept apart from the known
+  taxa so that a clade never competes with a genus for a tip.
+
 ## 0.5.1 (2026-11-13)
 
 - Name matching makes alike the letters the OCR engine takes for one another: a capital O
