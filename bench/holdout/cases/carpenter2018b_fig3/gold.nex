@@ -1,0 +1,21 @@
+#NEXUS
+
+[ carpenter2018b_fig3: Ornithischian summary cladogram, vertical (root at the bottom). Internal labels: Ornithischia (root stem tick), Genasauria and Cerapoda (dots), Neornithischia and Ornithopoda (stem ticks), Dryomorpha (dot; the Iguanodontia tick sits on the same stem). Ticks on terminal branches (Heterodontosauridae on Fruitadens, Ankylopollexia on Camptosaurus, Dryosauridae on Dryosaurus) label single tips and are not encoded. 8 tips, fully resolved; 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=8;
+    TAXLABELS
+        Fruitadens
+        Thyreophora
+        Nanosaurus
+        Thescelosauridae
+        Marginocephalia
+        Hypsilophodontidae
+        Camptosaurus
+        Dryosaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE carpenter2018b_fig3 = [&R] (Fruitadens,(Thyreophora,(Nanosaurus,(Thescelosauridae,(Marginocephalia,(Hypsilophodontidae,(Camptosaurus,Dryosaurus)Dryomorpha)Ornithopoda)Cerapoda))Neornithischia)Genasauria)Ornithischia;
+END;

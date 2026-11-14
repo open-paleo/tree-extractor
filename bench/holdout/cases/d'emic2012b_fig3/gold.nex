@@ -1,0 +1,20 @@
+#NEXUS
+
+[ d'emic2012b_fig3: Salgado et al. (1997) as parsed by D'Emic: a slanted (diagonal) pectinate tree, fully resolved. The other five small trees and the two consensus trees are excluded by the region. 7 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=7;
+    TAXLABELS
+        Diplodocidae
+        Camarasauridae
+        Brachiosaurus
+        Chubutisaurus
+        Andesaurus
+        Malawisaurus
+        mdt
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'd''emic2012b_fig3' = [&R] (Diplodocidae,(Camarasauridae,(Brachiosaurus,(Chubutisaurus,(Andesaurus,(Malawisaurus,mdt))))));
+END;

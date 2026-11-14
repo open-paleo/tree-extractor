@@ -1,0 +1,71 @@
+#NEXUS
+
+[ turner2007b_fig5: Coelurosaurian strict consensus. Dromaeosauridae (the node dot) is the internal label. Node lines were listed from the image pixels and checked against the figure; the boxed dromaeosaurid polytomy and the unenlagiine clade were read by eye because the box frame joins their lines in the pixel listing. 58 tips, 6 polytomies (3, 3, 3, 8, 3, 11 children); 1 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=58;
+    TAXLABELS
+        Allosaurus_fragilis
+        Sinraptor_dongi
+        Tyrannosaurus_rex
+        Albertosaurus_libratus
+        Pelecanimimus_polydon
+        Harpymimus_okladnikovi
+        Shenzhousaurus_orientalis
+        Archaeornithomimus_asiaticus
+        Garudimimus_brevipes
+        Struthiomimus_altus
+        Gallimimus_bullatus
+        Ornithomimus_edmonticus
+        Anserimimus_planinychus
+        Ornitholestes_hermanni
+        Huaxiagnathus_orientalis
+        Sinosauropteryx_prima
+        Compsognathus_longipes
+        Alvarezsaurus_calvoi
+        Patagonykus_puertai
+        Mononykus_olecranus
+        Shuuvia_deserti
+        Segnosaurus_galbinensis
+        Erlikosaurus_andrewsi
+        Alxasaurus_elesitaiensis
+        Incisivosaurus_gauthieri
+        Caudipteryx_zoui
+        Microvenator_celer
+        Chirostenotes_pergracilis
+        Avimimus_portentosus
+        Ingenia_yanshani
+        Citipati_osmolskae
+        Oviraptor_mongoliensis
+        Oviraptor_philoceratops
+        Conchoraptor_gracilis
+        Archaeopteryx_lithographica
+        Confuciusornis_sanctus
+        Mei_long
+        Sinovenator_changii
+        EK_troodontid
+        Byronosaurus_jaffei
+        Sinornithoides_youngi
+        Troodon_formosus
+        Saurornithoides_mongoliensis
+        Saurornithoides_junior
+        Buitreraptor_gonzalezorum
+        Rahonavis_ostromi
+        Unenlagia_comahuensis
+        Sinornithosaurus_millenii
+        Microraptor_zhaoianus
+        Deinonychus_antirrhopus
+        Velociraptor_mongoliensis
+        Tsaagan_mangas
+        Utahraptor_ostrommaysorum
+        Dromaeosaurus_albertensis
+        Achillobator_giganticus
+        Adasaurus_mongoliensis
+        Saurornitholestes_langstoni
+        'IGM 100/1119'
+    ;
+END;
+
+BEGIN TREES;
+    TREE turner2007b_fig5 = [&R] (Allosaurus_fragilis,(Sinraptor_dongi,((Tyrannosaurus_rex,Albertosaurus_libratus),((Pelecanimimus_polydon,(Harpymimus_okladnikovi,Shenzhousaurus_orientalis,(Archaeornithomimus_asiaticus,(Garudimimus_brevipes,(Struthiomimus_altus,Gallimimus_bullatus,(Ornithomimus_edmonticus,Anserimimus_planinychus)))))),(Ornitholestes_hermanni,((Huaxiagnathus_orientalis,(Sinosauropteryx_prima,Compsognathus_longipes)),((Alvarezsaurus_calvoi,(Patagonykus_puertai,(Mononykus_olecranus,Shuuvia_deserti))),(((Segnosaurus_galbinensis,Erlikosaurus_andrewsi,Alxasaurus_elesitaiensis),(Incisivosaurus_gauthieri,(Caudipteryx_zoui,(Microvenator_celer,Chirostenotes_pergracilis,Avimimus_portentosus,Ingenia_yanshani,Citipati_osmolskae,Oviraptor_mongoliensis,Oviraptor_philoceratops,Conchoraptor_gracilis)))),((Archaeopteryx_lithographica,Confuciusornis_sanctus),(((Mei_long,Sinovenator_changii),(EK_troodontid,(Byronosaurus_jaffei,Sinornithoides_youngi,(Troodon_formosus,(Saurornithoides_mongoliensis,Saurornithoides_junior))))),((Buitreraptor_gonzalezorum,(Rahonavis_ostromi,Unenlagia_comahuensis)),(Sinornithosaurus_millenii,Microraptor_zhaoianus,Deinonychus_antirrhopus,Velociraptor_mongoliensis,Tsaagan_mangas,Utahraptor_ostrommaysorum,Dromaeosaurus_albertensis,Achillobator_giganticus,Adasaurus_mongoliensis,Saurornitholestes_langstoni,'IGM 100/1119'))Dromaeosauridae))))))))));
+END;

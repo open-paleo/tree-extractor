@@ -1,0 +1,36 @@
+#NEXUS
+
+[ xu2010c_fig9: Ceratopsian strict consensus (Makovicky 2010 matrix + Zhuchengceratops). One polytomy at the crown: Udanoceratops + Leptoceratops + Zhuchengceratops. Numbers at nodes are Bremer support and bootstrap. 23 tips, 1 polytomies (3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=23;
+    TAXLABELS
+        Hypsilophodon
+        Stegoceras
+        Yinlong
+        Chaoyangsaurus
+        Xuanhuaceratops
+        Psittacosaurus_mongoliensis
+        Psittacosaurus_sinensis
+        Liaoceratops
+        Yamaceratops
+        Archaeoceratops
+        '''Graciliceratops'''
+        Bagaceratops
+        Protoceratops
+        Zuniceratops
+        Centrosaurus
+        Triceratops
+        Asiaceratops
+        Cerasinops
+        Montanoceratops
+        Prenoceratops
+        Udanoceratops
+        Leptoceratops
+        Zhuchengceratops
+    ;
+END;
+
+BEGIN TREES;
+    TREE xu2010c_fig9 = [&R] (Hypsilophodon,(Stegoceras,(Yinlong,((Chaoyangsaurus,Xuanhuaceratops),((Psittacosaurus_mongoliensis,Psittacosaurus_sinensis),(Liaoceratops,(Yamaceratops,(Archaeoceratops,(('''Graciliceratops''',((Bagaceratops,Protoceratops),(Zuniceratops,(Centrosaurus,Triceratops)))),(Asiaceratops,(Cerasinops,(Montanoceratops,(Prenoceratops,(Udanoceratops,Leptoceratops,Zhuchengceratops))))))))))))));
+END;

@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/czepiński2023a_fig6.png",
+  "names": "names.txt",
+  "source": "Czepiński 2023, Acta Palaeontologica Polonica 68(2): 227-243, Fig. 6A: phylogenetic relationships of Shri devi among dromaeosaurids, with coloured squares for two skull ratios; rectangular, root left, tips right, coloured boxes behind three subfamilies keyed to a legend. Panel B (a second tree) is excluded. Image: census figure (2154x941 px), rendered from the PDF's vector figure.",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1185,
+    "y1": 941
+  },
+  "region_note": "panel A; the colour legend at the lower left is inside the box",
+  "license": "CC BY 4.0",
+  "attribution": "Czepiński, Ł. (2023). Skull of a dromaeosaurid dinosaur Shri devi from the Upper Cretaceous of the Gobi Desert suggests convergence to the North American forms. Acta Palaeontologica Polonica 68(2): 227-243. https://doi.org/10.4202/app.01065.2023. Fig. 6A. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names (the quoted genus '\"Velociraptor\" osmolskae' and 'Velociraptor sp. (MPC-D 100/982)' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Dromaeosaurid tree (panel A). Internal labels from the three shaded boxes via the colour legend: Dromaeosaurinae (yellow), Saurornitholestinae (green), Velociraptorinae (peach). Read by eye from the figure (a vector figure, but its branch lines and colour boxes share the page with panel B and the legend, so the image reading was used). 16 tips, 2 polytomies (3, 3 children); 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

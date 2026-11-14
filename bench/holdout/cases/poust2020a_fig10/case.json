@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/poust2020a_fig10.png",
+  "names": "names.txt",
+  "source": "Poust et al. 2020, The Anatomical Record 303(4): 963-987, Fig. 10: time-calibrated dromaeosaurid phylogeny placing Wulong; rectangular, root left, thick branches ending in black range bars, nested coloured boxes for Paraves, Dromaeosauridae and Microraptorinae with their names, a stage chart below, a silhouette. Image: census figure (2038x1813 px).",
+  "license": "not open (Wiley, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names, including the collapsed clades Unenlagiinae and Troodontidae",
+  "gold": "gold.nex",
+  "gold_note": "Dromaeosaurid time tree. Internal labels from the three nested boxes (Paraves, Dromaeosauridae, Microraptorinae). Mahakala sits inside the Dromaeosauridae box and is encoded inside the clade, as drawn. Polytomies: the six eudromaeosaurs on one vertical with a four-taxon clade, the four achillobator-group taxa, and four microraptorines with (Sinornithosaurus, Wulong). 21 tips, 3 polytomies (7, 4, 5 children); 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

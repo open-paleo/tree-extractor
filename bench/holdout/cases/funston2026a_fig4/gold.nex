@@ -1,0 +1,32 @@
+#NEXUS
+
+[ funston2026a_fig4: Oviraptorosaur time tree, vertical. 'Avimimus spp.' labels a two-branch fork with one name; it is encoded as one tip, as are 'Caudipteryx spp.' and the Oviraptoridae wedge. Eucaenagnathinae is printed under its node and kept as an internal label; the numbered arrows 1-3 mark nodes without names and are not encoded. 19 tips, fully resolved; 1 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=19;
+    TAXLABELS
+        Incisivosaurus
+        Caudipteryx_spp.
+        Xingtianosaurus
+        Avimimus_spp.
+        Oviraptoridae
+        Microvenator
+        Gigantoraptor
+        Anomalipes
+        Caenagnathasia
+        Hagryphus
+        Chirostenotes
+        Apatoraptor
+        Anzu
+        Caenagnathus
+        Eoneophron
+        Infernogallus
+        Epichirostenotes
+        Elmisaurus
+        Citipes
+    ;
+END;
+
+BEGIN TREES;
+    TREE funston2026a_fig4 = [&R] (Incisivosaurus,(Caudipteryx_spp.,(Xingtianosaurus,(Avimimus_spp.,(Oviraptoridae,(Microvenator,(Gigantoraptor,(Anomalipes,(Caenagnathasia,((Hagryphus,Chirostenotes),((Apatoraptor,(Anzu,Caenagnathus)),(Eoneophron,(Infernogallus,(Epichirostenotes,(Elmisaurus,Citipes))))))Eucaenagnathinae)))))))));
+END;

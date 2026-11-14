@@ -1,0 +1,81 @@
+#NEXUS
+
+[ han2024a_fig7: Somphospondylan time tree (reduced consensus). Clade names are drawn beside node dots and arrows rather than at junctions and are not encoded. Thin (0.75 pt) lines are the tree; thick (1.5 pt) lines are range bars and were ignored. 68 tips, 5 polytomies (3, 3, 5, 3, 3 children). Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=68;
+    TAXLABELS
+        Puertasaurus
+        Patagotitan
+        Notocolossus
+        Argentinosaurus
+        Mendozasaurus
+        Rinconsaurus
+        Muyelensaurus
+        Vahiny
+        Jainosaurus
+        Antarctosaurus
+        Pitekunsaurus
+        Epachthosaurus
+        Opisthocoelicaudia
+        Alamosaurus
+        Saltasaurus
+        Isisaurus
+        Aeolosaurus
+        Rapetosaurus
+        Nemegtosaurus
+        Mongolosaurus
+        Tapuiasaurus
+        Malawisaurus
+        Ruyangosaurus
+        Xianshanosaurus
+        Daxiatitan
+        Gandititan
+        Abdarainurus
+        Huabeisaurus
+        Dongyangosaurus
+        Baotianmansaurus
+        Andesaurus
+        AODF_836
+        Diamantinasaurus
+        Savannasaurus
+        Huanghetitan_ruyangensis
+        Huanghetitan
+        Yongjinglong
+        Euhelopus
+        Qiaowanlong
+        Tangvayosaurus
+        Phuwiangosaurus
+        Ruixinia
+        Jiangshanosaurus
+        Gobititan
+        Cloverly_titanosauriform
+        Chubutisaurus
+        Angolatitan
+        Ligabuesaurus
+        Dongbeititan
+        Fukuititan
+        Europatitan
+        Tastavinsaurus
+        Paluxysaurus
+        Malarguesaurus
+        Brontomerus
+        Astrophocaudia
+        Soriatitan
+        Venenosaurus
+        Cedarosaurus
+        Sonorasaurus
+        Giraffatitan
+        Brachiosaurus
+        Fusuisaurus
+        Lusotitan
+        Vouivria
+        Galveosaurus
+        Europasaurus
+        Atlasaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE han2024a_fig7 = [&R] ((((((((((((((((((((((Puertasaurus,Patagotitan,Notocolossus),Argentinosaurus),Mendozasaurus),(Rinconsaurus,Muyelensaurus)),(((Vahiny,Jainosaurus),Antarctosaurus),Pitekunsaurus)),Epachthosaurus),(((((Opisthocoelicaudia,Alamosaurus),Saltasaurus),Isisaurus),(Aeolosaurus,Rapetosaurus)),((Nemegtosaurus,Mongolosaurus),Tapuiasaurus))),Malawisaurus),Ruyangosaurus),(Xianshanosaurus,Daxiatitan)),((Gandititan,Abdarainurus),Huabeisaurus,Dongyangosaurus,Baotianmansaurus,Andesaurus)),((AODF_836,Diamantinasaurus),Savannasaurus)),(Huanghetitan_ruyangensis,Huanghetitan)),(((((Yongjinglong,Euhelopus),Qiaowanlong),(Tangvayosaurus,Phuwiangosaurus)),(Ruixinia,Jiangshanosaurus)),Gobititan)),((((Cloverly_titanosauriform,Chubutisaurus),Angolatitan),(Ligabuesaurus,Dongbeititan),Fukuititan),(Europatitan,Tastavinsaurus))),((Paluxysaurus,Malarguesaurus,Brontomerus),Astrophocaudia)),(((Soriatitan,Venenosaurus),Cedarosaurus),((Sonorasaurus,Giraffatitan),Brachiosaurus))),Fusuisaurus),Lusotitan),Vouivria),Galveosaurus,Europasaurus),Atlasaurus);
+END;

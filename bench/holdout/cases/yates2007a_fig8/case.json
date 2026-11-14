@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/yates2007a_fig8.png",
+  "names": "names.txt",
+  "source": "Yates 2007, Historical Biology 19(1): 93-123, Fig. 8: strict consensus of early dinosaurs and sauropodomorphs; rectangular, root left, tips right, node dots and stem arrows with clade names to the left. Image: census figure (1553x1964 px), inverted from the PDF's image on extraction.",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names, including the collapsed clades Outgroup, Ornithischia, Neotheropoda and Neosauropoda and abbreviated binomials ('T. antiquus', 'P. gracilis')",
+  "gold": "gold.nex",
+  "gold_note": "Early saurischian strict consensus. Internal labels from node dots (Dinosauria, Eusaurischia, Plateosauria, Anchisauria, Herrerasauridae) and stem arrows, each given to the node the arrow points into (Saurischia, Theropoda, Sauropodomorpha, Plateosauridae, Massopoda tax. nov., Riojasauridae tax. nov., Massospondylidae, Sauropoda, Eusauropoda). Node lines from Eoraptor down were listed from the image pixels and checked against the figure; the top five tips, cut off by the arrowheads, were read by eye. 44 tips, 4 polytomies (3, 3, 4, 4 children); 14 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

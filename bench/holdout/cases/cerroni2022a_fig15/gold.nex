@@ -1,0 +1,55 @@
+#NEXUS
+
+[ cerroni2022a_fig15: Ceratosaurian strict consensus with a 35-branch basal polytomy (33 taxa plus two pairs). Internal labels from the numbered markers via the caption key: 1 Neotheropoda, 2 Averostra, 3 Ceratosauria (a stem marker, given to the node it leads into). 42 tips, 1 polytomies (35 children); 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=42;
+    TAXLABELS
+        Herrerasaurus
+        Dilophosaurus
+        Syntarsus
+        Allosaurus
+        Quilmesaurus
+        Laevisuchus
+        Llukalkan
+        Xenotarsosaurus
+        Afromimus
+        MPCN_PV_69
+        Viavenator
+        Vespersaurus
+        Velocisaurus
+        Spectrovenator
+        MNN_tig6
+        Skorpiovenator
+        Rugops
+        Rajasaurus
+        Rahiolisaurus
+        Pycnonemosaurus
+        Noasaurus
+        Masiakasaurus
+        Majungasaurus
+        Abelisaurus
+        Arcovenator
+        Kryptops
+        Indosaurus
+        Huinculsaurus
+        Genyodectes
+        Genusaurus
+        Eoabelisaurus
+        Berberosaurus
+        Dahalokely
+        Ceratosaurus
+        Carnotaurus
+        Ekrixinatosaurus
+        Ilokelesia
+        Limusaurus
+        Elaphrosaurus
+        CCG_20011
+        Niebla
+        Aucasaurus
+    ;
+END;
+
+BEGIN TREES;
+    TREE cerroni2022a_fig15 = [&R] (Herrerasaurus,((Dilophosaurus,Syntarsus),(Allosaurus,(Quilmesaurus,Laevisuchus,Llukalkan,Xenotarsosaurus,Afromimus,MPCN_PV_69,Viavenator,Vespersaurus,Velocisaurus,Spectrovenator,MNN_tig6,Skorpiovenator,Rugops,Rajasaurus,Rahiolisaurus,Pycnonemosaurus,Noasaurus,Masiakasaurus,Majungasaurus,Abelisaurus,Arcovenator,Kryptops,Indosaurus,Huinculsaurus,Genyodectes,Genusaurus,Eoabelisaurus,Berberosaurus,Dahalokely,Ceratosaurus,Carnotaurus,Ekrixinatosaurus,Ilokelesia,(Limusaurus,(Elaphrosaurus,CCG_20011)),(Niebla,Aucasaurus))Ceratosauria)Averostra)Neotheropoda);
+END;

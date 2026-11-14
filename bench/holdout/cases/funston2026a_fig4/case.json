@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/funston2026a_fig4.png",
+  "names": "names.txt",
+  "source": "Funston et al. 2026, Nature Communications, Fig. 4a: Bayesian (FBD-scaled) phylogeny of Oviraptorosauria; vertical, root at the bottom, tips at the top with rotated labels, a stage column at the left, a shaded 'Rise of Fruit' band, numbered node arrows (1-3), Oviraptoridae as a black wedge, dentary drawings. Panels b and c (plots) are excluded. Image: census figure (2000x1247 px).",
+  "region": {
+    "x0": 0,
+    "y0": 50,
+    "x1": 980,
+    "y1": 1247
+  },
+  "region_note": "panel a (the phylogeny); b and c are plots",
+  "license": "CC BY 4.0",
+  "attribution": "Funston, G. F.; Dudgeon, T. W.; Simon, D. J.; Dufault, D. M.; Boyd, C.; Fowler, D.; Currie, P. J.; Evans, D. C. (2026). Fruit-eating adaptations in a Late Cretaceous oviraptorosaur (Theropoda). Nature Communications. https://doi.org/10.1038/s41467-026-78343-w. Fig. 4a. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names ('Avimimus spp.' and 'Caudipteryx spp.' as printed; Oviraptoridae is a collapsed clade drawn as a wedge)",
+  "gold": "gold.nex",
+  "gold_note": "Oviraptorosaur time tree, vertical. 'Avimimus spp.' labels a two-branch fork with one name; it is encoded as one tip, as are 'Caudipteryx spp.' and the Oviraptoridae wedge. Eucaenagnathinae is printed under its node and kept as an internal label; the numbered arrows 1-3 mark nodes without names and are not encoded. 19 tips, fully resolved; 1 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

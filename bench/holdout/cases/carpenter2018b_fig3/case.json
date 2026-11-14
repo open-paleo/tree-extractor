@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/carpenter2018b_fig3.png",
+  "names": "names.txt",
+  "source": "Carpenter & Galton 2018, Geology of the Intermountain West 5: 167-207, Fig. 3: cladogram of Ornithischia placing the Morrison Formation taxa; vertical, root at the bottom, tips at the top with rotated labels (Morrison taxa in red), node dots and stem ticks labelled with clade names. Image: census figure (1151x1288 px).",
+  "license": "unverified: no licence statement in the text held (Geology of the Intermountain West is an open-access journal)",
+  "names_note": "no matrix held (a summary cladogram, not an analysis); list = the printed tip names, which are mostly higher taxa",
+  "gold": "gold.nex",
+  "gold_note": "Ornithischian summary cladogram, vertical (root at the bottom). Internal labels: Ornithischia (root stem tick), Genasauria and Cerapoda (dots), Neornithischia and Ornithopoda (stem ticks), Dryomorpha (dot; the Iguanodontia tick sits on the same stem). Ticks on terminal branches (Heterodontosauridae on Fruitadens, Ankylopollexia on Camptosaurus, Dryosauridae on Dryosaurus) label single tips and are not encoded. 8 tips, fully resolved; 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

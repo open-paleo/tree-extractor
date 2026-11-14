@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/d'emic2012b_fig3.png",
+  "names": "names.txt",
+  "source": "D'Emic 2012, Zoological Journal of the Linnean Society 166: 624-671, Fig. 3: parsed versions of earlier titanosauriform cladograms (six small slanted trees labelled by study) and two strict consensus trees below; the gold is the first small tree, Salgado et al. (1997), at the top left. Image: census figure (1247x1665 px).",
+  "region": {
+    "x0": 62,
+    "y0": 0,
+    "x1": 648,
+    "y1": 416
+  },
+  "region_note": "six small unlettered trees of earlier studies; box = the first (Salgado et al. 1997)",
+  "license": "not open (Wiley / Linnean Society of London, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('mdt' is the paper's abbreviation for the most derived titanosaurs; Diplodocidae and Camarasauridae are collapsed clades)",
+  "gold": "gold.nex",
+  "gold_note": "Salgado et al. (1997) as parsed by D'Emic: a slanted (diagonal) pectinate tree, fully resolved. The other five small trees and the two consensus trees are excluded by the region. 7 tips, fully resolved. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

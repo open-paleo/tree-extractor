@@ -1,0 +1,12 @@
+{
+  "image": "../../../../../corpus/census/figures/pu2017a_fig6.png",
+  "names": "names.txt",
+  "source": "Pu et al. 2017, Nature Communications 8: 14952, Fig. 6: strict consensus of 608 MPTs (37 taxa, 250 characters) placing Beibeilong; rectangular, root left, tips right, grey branches, curved leaders from clade names to nodes. The tip names are PDF text over the raster tree, not part of the image. Image: census figure (1005x980 px), which is cropped at the right: seven tips at the lower right (Conchoraptor to Heyuannia) are cut off or missing in it.",
+  "license": "CC BY 4.0",
+  "attribution": "Pu, H.; Zelenitsky, D. K.; Lü, J.; Currie, P. J.; Carpenter, K.; Xu, L.; Koppelhus, E. B.; Jia, S.; Xiao, L.; Chuang, H.; Li, T.; Kundrát, M.; Shen, C. (2017). Perinate and eggs of a giant caenagnathid dinosaur from the Late Cretaceous of central China. Nature Communications 8: 14952. https://doi.org/10.1038/ncomms14952. Fig. 6. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names, as printed ('Aviminus portentosus' for Avimimus, 'Ganzhousaurua nankangensis' for Ganzhousaurus, 'Epichirostenotes aurrier' for curriei, 'Zamyn Khondt oviraptorid')",
+  "gold": "gold.nex",
+  "gold_note": "Oviraptorosaur strict consensus. Read from a 250 dpi render of the PDF page, since the census image cuts off the lower-right tips; a tool that reads only the census image cannot recover those seven. Internal labels from the four curved leaders (Oviraptorosauria, Caenagnathidae, Caenagnathoidea, Oviraptoridae), each given to the node it points at. The census marks this figure as inverted on extraction and its labels as not in the raster. 37 tips, 2 polytomies (9, 3 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription",
+  "image_note": "census image is cropped: tips Conchoraptor gracilis, Machairasaurus leptonychus, Jiangxisaurus ganzhouensis, Nemegtomaia barsboldi, Ingenia yanshini and Heyuannia huangi are cut off or absent, and Herrerasaurus ischigualastensis is clipped at the top"
+}

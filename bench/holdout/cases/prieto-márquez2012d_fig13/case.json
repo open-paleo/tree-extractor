@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/prieto-márquez2012d_fig13.png",
+  "names": "names.txt",
+  "source": "Prieto-Márquez, Bolortsetseg & Horner 2012, Alcheringa 36(1): 117-136, Fig. 13: strict consensus of coelurosaurs placing the Öösh deinonychosaur (RCSP-2); rectangular, root left, tips right, bootstrap above and Bremer below branches, node dots with capitalised clade names, the new taxon boxed. Image: census figure (1645x2050 px).",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (see gold_note for the renamed duplicate)",
+  "gold": "gold.nex",
+  "gold_note": "Coelurosaurian strict consensus. 'Microraptor gui' is printed twice (in the microraptorine trio and beside Velociraptor + Deinonychus); the gold names the lower one Microraptor_gui_2, since Newick names cannot repeat. 'Microraptor celer' among the oviraptorosaurs is printed as such (the paper's name for Microvenator celer). AVIALAE is printed beside its dot and kept with the node dots (COELUROSAURIA, MANIRAPTORA, PARAVES, DEINONYCHOSAURIA, TROODONTIDAE) as internal labels. 70 tips, 10 polytomies (3, 3, 4, 3, 3, 8, 10, 3, 4, 5 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

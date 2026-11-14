@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/ramírez-velasco2021a_fig19.png",
+  "names": "names.txt",
+  "source": "Ramírez-Velasco et al. 2021, Cretaceous Research 126: 104884, Fig. 19: time-calibrated strict consensus of Hadrosauroidea placing Tlatolophus; rectangular, root left, tips ending in dots at their ages (some with range bars), a stage chart and Ma axis above, grey stage lines, ringed node markers and rotated clade names, numbered boxes on branches keyed to a legend (1-11), a shaded box for Parasaurolophini, skull drawings joined by dotted leaders. Image: census figure (2155x2376 px).",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (binomials and the specimen labels 'Hadro-HB', 'Hadro-Sabinas', 'Hadro-Big Bend 37.7' as printed)",
+  "gold": "gold.nex",
+  "gold_note": "Hadrosauroid time tree. Internal labels: the five ringed nodes (Hadrosauroidea, Hadrosauromorpha, Hadrosauridae, Saurolophidae, Saurolophinae) and the legend names of numbered boxes 3-6 and 8-11 (Claosauridae, Tsintaosaurini, Parasaurolophini, Lambeosaurini, Brachylophosaurini, Kritosaurini, Saurolophini, Edmontosaurini); boxes 1, 2 and 7 are 'Unamed clade' in the legend and are not encoded. 'Lambeosaurinae' is printed beside the Saurolophidae vertical, but the lambeosaurines join that vertical directly, so it is a polytomy, not a node. Transcribed by eye from full-resolution crops at 1-2x (the pixel listing failed on this figure's dotted leaders and markers). 92 tips, 9 polytomies (4, 5, 5, 9, 4, 4, 3, 4, 3 children); 13 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

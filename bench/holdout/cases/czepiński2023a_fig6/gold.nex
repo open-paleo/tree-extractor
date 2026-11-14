@@ -1,0 +1,29 @@
+#NEXUS
+
+[ czepiński2023a_fig6: Dromaeosaurid tree (panel A). Internal labels from the three shaded boxes via the colour legend: Dromaeosaurinae (yellow), Saurornitholestinae (green), Velociraptorinae (peach). Read by eye from the figure (a vector figure, but its branch lines and colour boxes share the page with panel B and the legend, so the image reading was used). 16 tips, 2 polytomies (3, 3 children); 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=16;
+    TAXLABELS
+        Adasaurus_mongoliensis
+        Utahraptor_ostrommaysi
+        Achillobator_giganticus
+        Dromaeosaurus_albertensis
+        Deinonychus_antirrhopus
+        Bambiraptor_feinbergi
+        Saurornitholestes_langstoni
+        Acheroraptor_temertyorum
+        Atrociraptor_marshalli
+        Kuru_kulla
+        '"Velociraptor" osmolskae'
+        Linheraptor_exquisitus
+        Tsaagan_mangas
+        Shri_devi
+        'Velociraptor sp. (MPC-D 100/982)'
+        Velociraptor_mongoliensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'czepiński2023a_fig6' = [&R] (Adasaurus_mongoliensis,(((Utahraptor_ostrommaysi,(Achillobator_giganticus,Dromaeosaurus_albertensis))Dromaeosaurinae,(Deinonychus_antirrhopus,(Bambiraptor_feinbergi,Saurornitholestes_langstoni,(Acheroraptor_temertyorum,Atrociraptor_marshalli)))Saurornitholestinae),(Kuru_kulla,(('"Velociraptor" osmolskae',(Linheraptor_exquisitus,Tsaagan_mangas)),(Shri_devi,'Velociraptor sp. (MPC-D 100/982)',Velociraptor_mongoliensis)))Velociraptorinae));
+END;

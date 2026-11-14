@@ -1,0 +1,11 @@
+{
+  "image": "../../../../../corpus/census/figures/manitkoon2023a_fig19.png",
+  "names": "names.txt",
+  "source": "Manitkoon et al. 2023, Diversity 15(7): 851, Fig. 19: strict consensus placing Minimocursor among early ornithischians; rectangular, root left, tips right, coloured boxes behind clades with their names, node dots with clade names, Bremer support at some nodes, a silhouette. Image: census figure (1593x2621 px).",
+  "license": "CC BY 4.0 (MDPI; the article states Creative Commons Attribution (CC BY))",
+  "attribution": "Manitkoon, S.; Deesri, U.; Khalloufi, B.; Nonsrirach, T.; Suteethorn, V.; Chanthasit, P.; Boonla, W.; Buffetaut, E. (2023). A new basal neornithischian dinosaur from the Phu Kradung Formation (Upper Jurassic) of northeastern Thailand. Diversity 15(7): 851. https://doi.org/10.3390/d15070851. Fig. 19. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names, kept as printed: 'Minimocursor_gen.nov.' (an underscore in the figure), 'Lioceratops' (for Liaoceratops), and abbreviated binomials such as 'Th. neglectus', 'Te. dossi', 'R. priscus'",
+  "gold": "gold.nex",
+  "gold_note": "Early ornithischian strict consensus. Internal labels from the four node dots (Ornithischia, Genasauria, Neornithischia, Cerapoda) and the five shaded boxes (Heterodontosauridae, Thyreophora, Thescelosauridae, Marginocephalia, Ornithopoda). Node lines were listed from the image pixels (our own reading, not tree-extractor output), the node dots replaced by the lines they join, and every polytomy checked against the figure at 2x. 74 tips, 8 polytomies (3, 3, 3, 6, 3, 10, 6, 4 children); 9 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

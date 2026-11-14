@@ -1,0 +1,36 @@
+#NEXUS
+
+[ maidment2020a_fig12: Thyreophoran time tree. Polytomies: Alcovasaurus + Tuojiangosaurus + Paranthodon (the stem enters at Tuojiangosaurus's row), and Jiangjunosaurus + Hesperosaurus + (Loricatosaurus, Stegosaurus). Numbers at nodes are support values. 23 tips, 2 polytomies (3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=23;
+    TAXLABELS
+        Pisanosaurus
+        Lesothosaurus
+        Laquintasaura
+        Scutellosaurus
+        Emausaurus
+        Scelidosaurus
+        Ankylosauria
+        Isaberrysaura
+        Gigantspinosaurus
+        Chungkingosaurus
+        Huayangosaurus
+        Alcovasaurus
+        Tuojiangosaurus
+        Paranthodon
+        Kentrosaurus
+        Adratiklit_boulahfa
+        Miragaia
+        Dacentrurus
+        Jiangjunosaurus
+        Hesperosaurus
+        Loricatosaurus
+        Stegosaurus_stenops
+        Stegosaurus_homheni
+    ;
+END;
+
+BEGIN TREES;
+    TREE maidment2020a_fig12 = [&R] (Pisanosaurus,(Lesothosaurus,((Laquintasaura,Scutellosaurus),(Emausaurus,(Scelidosaurus,(Ankylosauria,((Isaberrysaura,Gigantspinosaurus),((Chungkingosaurus,Huayangosaurus),((Alcovasaurus,Tuojiangosaurus,Paranthodon),(Kentrosaurus,((Adratiklit_boulahfa,(Miragaia,Dacentrurus)),(Jiangjunosaurus,Hesperosaurus,(Loricatosaurus,(Stegosaurus_stenops,Stegosaurus_homheni))))))))))))));
+END;

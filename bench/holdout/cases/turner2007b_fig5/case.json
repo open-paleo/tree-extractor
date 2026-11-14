@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/turner2007b_fig5.png",
+  "names": "names.txt",
+  "source": "Turner, Hwang & Norell 2007, American Museum Novitates 3557, Fig. 5A: strict consensus of 552 MPRs of coelurosaurs (251 characters, 56 taxa) placing IGM 100/1119; rectangular, root left, tips right, a node dot for Dromaeosauridae, the eleven-taxon dromaeosaurid polytomy boxed. Panel B (the IGM 100/1119 subtree) is excluded. Image: census figure (1694x1903 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1220,
+    "y1": 1903
+  },
+  "region_note": "panel A; the boxed panel B intrudes at the top right",
+  "license": "unverified: no licence statement in the text held (American Museum Novitates is free to read at the AMNH digital library)",
+  "names_note": "no matrix held; list = the printed tip names (binomials, 'EK troodontid', 'IGM 100/1119')",
+  "gold": "gold.nex",
+  "gold_note": "Coelurosaurian strict consensus. Dromaeosauridae (the node dot) is the internal label. Node lines were listed from the image pixels and checked against the figure; the boxed dromaeosaurid polytomy and the unenlagiine clade were read by eye because the box frame joins their lines in the pixel listing. 58 tips, 6 polytomies (3, 3, 3, 8, 3, 11 children); 1 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

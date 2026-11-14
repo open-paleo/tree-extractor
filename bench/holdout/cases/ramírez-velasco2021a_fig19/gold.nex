@@ -1,0 +1,105 @@
+#NEXUS
+
+[ ramírez-velasco2021a_fig19: Hadrosauroid time tree. Internal labels: the five ringed nodes (Hadrosauroidea, Hadrosauromorpha, Hadrosauridae, Saurolophidae, Saurolophinae) and the legend names of numbered boxes 3-6 and 8-11 (Claosauridae, Tsintaosaurini, Parasaurolophini, Lambeosaurini, Brachylophosaurini, Kritosaurini, Saurolophini, Edmontosaurini); boxes 1, 2 and 7 are 'Unamed clade' in the legend and are not encoded. 'Lambeosaurinae' is printed beside the Saurolophidae vertical, but the lambeosaurines join that vertical directly, so it is a polytomy, not a node. Transcribed by eye from full-resolution crops at 1-2x (the pixel listing failed on this figure's dotted leaders and markers). 92 tips, 9 polytomies (4, 5, 5, 9, 4, 4, 3, 4, 3 children); 13 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=92;
+    TAXLABELS
+        Iguanodon_bernissartensis
+        Jinzhousaurus_yangi
+        Koshisaurus_katsuyama
+        Bolong_yixianensis
+        Altirhinus_kurzanovi
+        Choyrodon_barsboldi
+        Sirindhorna_khoratensis
+        Equijubus_normani
+        Probactrosaurus_gobiensis
+        Gongpoquansaurus_mazongshanensis
+        Xuwulong_yueluni
+        Batyrosaurus_rozhdestvenskyi
+        Jintasaurus_meniscus
+        Eolambia_caroljonesa
+        Protohadros_byrdi
+        Jeyawati_rugoculus
+        Yunganglong_datongensis
+        Gobihadros_mongoliensis
+        Levnesovia_transoxiana
+        Shuangmiaosaurus_gilmorei
+        Nanningosaurus_dashiensis
+        Nanyangosaurus_zhugeii
+        Huehuecanauhtlus_tiquichensis
+        Bactrosaurus_johnsoni
+        Gilmoreosaurus_mongoliensis
+        Tanius_sinensis
+        Claosaurus_agilis
+        Tethyshadros_insularis
+        Telmatosaurus_transsylvanicus
+        Plesiohadros_djadokhtaensis
+        Zhanghenglong_yangchengensis
+        Eotrachodon_orientalis
+        Lophorhothon_atopus
+        Hadrosaurus_foulkii
+        Aquilarhinus_palimentus
+        Canardia_garonnensis
+        Jaxartosaurus_aralensis
+        Nipponosaurus_sachaliensis
+        Hadro-HB
+        Latirhinus_uitslani
+        Aralosaurus_tuberiferus
+        Adynomosaurus_arcanus
+        Pararhabdodon_isonensis
+        Tsintaosaurus_spinorhinus
+        Tlatolophus_galorum
+        Blasisaurus_canudoi
+        Charonosaurus_jiayinensis
+        Parasaurolophus_cyrtocristatus
+        Parasaurolophus_walkeri
+        Parasaurolophus_tubicen
+        Kazaklambia_convincens
+        Arenysaurus_ardevoli
+        Amurosaurus_riabinini
+        Sahaliyania_elunchunorum
+        Velafrons_coahuilensis
+        Hypacrosaurus_altispinus
+        Hypacrosaurus_stebingeri
+        Olorotitan_ararhensis
+        Magnapaulia_laticaudus
+        Corythosaurus_casuarius
+        Corythosaurus_intermedius
+        Lambeosaurus_lambei
+        Lambeosaurus_magnicristatus
+        Lapampasaurus_cholinoi
+        Bonapartesaurus_rionegrensis
+        Barsboldia_sicinskii
+        Wulagasaurus_dongi
+        Acristavus_gagslarsoni
+        Maiasaura_peeblesorum
+        Brachylophosaurus_canadensis
+        Probrachylophosaurus_bergei
+        Naashoibitosaurus_ostromi
+        Gryposaurus_alsatei
+        Kritosaurus_horneri
+        Kritosaurus_navajovius
+        Secernosaurus_koerneri
+        Gryposaurus_latidens
+        Rhinorex_condrupus
+        Gryposaurus_monumentensis
+        Gryposaurus_notabilis
+        Hadro-Sabinas
+        Prosaurolophus_maximus
+        Augustynolophus_morrisi
+        Saurolophus_osborni
+        Saurolophus_angustirostris
+        Shantungosaurus_giganteus
+        Edmontosaurus_regalis
+        Edmontosaurus_annectens
+        Hadro-Big_Bend_37.7
+        Kerberosaurus_manakini
+        Laiyangosaurus_youngi
+        Kamuysaurus_japonicus
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'ramírez-velasco2021a_fig19' = [&R] (Iguanodon_bernissartensis,(Jinzhousaurus_yangi,(Koshisaurus_katsuyama,((Bolong_yixianensis,(Altirhinus_kurzanovi,Choyrodon_barsboldi)),(Sirindhorna_khoratensis,(Equijubus_normani,(Probactrosaurus_gobiensis,(Gongpoquansaurus_mazongshanensis,(Xuwulong_yueluni,Batyrosaurus_rozhdestvenskyi,(Jintasaurus_meniscus,Eolambia_caroljonesa,Protohadros_byrdi,Jeyawati_rugoculus,Yunganglong_datongensis),(Gobihadros_mongoliensis,(Levnesovia_transoxiana,(Shuangmiaosaurus_gilmorei,Nanningosaurus_dashiensis,Nanyangosaurus_zhugeii,Huehuecanauhtlus_tiquichensis,(Bactrosaurus_johnsoni,(Gilmoreosaurus_mongoliensis,(Tanius_sinensis,((Claosaurus_agilis,(Tethyshadros_insularis,Telmatosaurus_transsylvanicus))Claosauridae,(Plesiohadros_djadokhtaensis,(Zhanghenglong_yangchengensis,(Eotrachodon_orientalis,(Lophorhothon_atopus,(Hadrosaurus_foulkii,(Aquilarhinus_palimentus,(Canardia_garonnensis,Jaxartosaurus_aralensis,Nipponosaurus_sachaliensis,Hadro-HB,Latirhinus_uitslani,(Aralosaurus_tuberiferus,Adynomosaurus_arcanus),(Pararhabdodon_isonensis,Tsintaosaurus_spinorhinus)Tsintaosaurini,(((Tlatolophus_galorum,(Blasisaurus_canudoi,Charonosaurus_jiayinensis)),(Parasaurolophus_cyrtocristatus,(Parasaurolophus_walkeri,Parasaurolophus_tubicen)))Parasaurolophini,(Kazaklambia_convincens,((Arenysaurus_ardevoli,Amurosaurus_riabinini,Sahaliyania_elunchunorum,Velafrons_coahuilensis),(Hypacrosaurus_altispinus,Hypacrosaurus_stebingeri,Olorotitan_ararhensis,(Magnapaulia_laticaudus,((Corythosaurus_casuarius,Corythosaurus_intermedius),(Lambeosaurus_lambei,Lambeosaurus_magnicristatus))))))Lambeosaurini),(Lapampasaurus_cholinoi,((Bonapartesaurus_rionegrensis,(Barsboldia_sicinskii,Wulagasaurus_dongi)),((Acristavus_gagslarsoni,Maiasaura_peeblesorum,(Brachylophosaurus_canadensis,Probrachylophosaurus_bergei))Brachylophosaurini,(Naashoibitosaurus_ostromi,Gryposaurus_alsatei,((Kritosaurus_horneri,Kritosaurus_navajovius),(Secernosaurus_koerneri,(Gryposaurus_latidens,Rhinorex_condrupus,(Gryposaurus_monumentensis,Gryposaurus_notabilis))))Kritosaurini,(Hadro-Sabinas,((Prosaurolophus_maximus,(Augustynolophus_morrisi,(Saurolophus_osborni,Saurolophus_angustirostris)))Saurolophini,((Shantungosaurus_giganteus,(Edmontosaurus_regalis,Edmontosaurus_annectens)),(Hadro-Big_Bend_37.7,(Kerberosaurus_manakini,(Laiyangosaurus_youngi,Kamuysaurus_japonicus))))Edmontosaurini))))))Saurolophinae)Saurolophidae))Hadrosauridae))))))))))))Hadrosauromorpha)))))))Hadrosauroidea);
+END;

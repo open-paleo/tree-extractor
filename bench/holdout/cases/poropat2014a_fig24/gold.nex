@@ -1,0 +1,49 @@
+#NEXUS
+
+[ poropat2014a_fig24: Somphospondylan cladogram, fully resolved. Internal labels from the five stem ticks, each given to the node its stem leads into (SOMPHOSPONDYLI, EUHELOPODIDAE, TITANOSAURIA, LITHOSTROTIA, SALTASAURIDAE, capitalised as printed). 36 tips, fully resolved; 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=36;
+    TAXLABELS
+        Dongbeititan_dongi
+        Liubangosaurus_hei
+        Gobititan_shenzhouensis
+        Tangvayosaurus_hoffeti
+        Phuwiangosaurus_sirindhornae
+        Qiaowanlong_kangxii
+        Euhelopus_zdanskyi
+        Erketu_ellisoni
+        Astrophocaudia_slaughteri
+        Brontomerus_mcintoshi
+        Sonorasaurus_thompsoni
+        Chubutisaurus_insignis
+        Tastavinsaurus_sanzii
+        Malarguesaurus_florenciae
+        Sauroposeidon_proteles
+        Paluxysaurus_jonesi
+        Ligabuesaurus_leanzai
+        '“Cloverly titanosauriform”'
+        Fukuititan_nipponensis
+        Angolatitan_adamastor
+        Wintonotitan_wattsi
+        Ruyangosaurus_giganteus
+        Huanghetitan_liujiaxiaensis
+        '“Huanghetitan” ruyangensis'
+        Andesaurus_delgadoi
+        Xianshanosaurus_shijiagouensis
+        Daxiatitan_binglingi
+        Malawisaurus_dixeyi
+        Rapetosaurus_krausei
+        Mongolosaurus_haplodon
+        Saltasaurus_loricatus
+        Jiangshanosaurus_lixianensis
+        Alamosaurus_sanjuanensis
+        Dongyangosaurus_sinensis
+        Opisthocoelicaudia_skarzynskii
+        Diamantinasaurus_matildae
+    ;
+END;
+
+BEGIN TREES;
+    TREE poropat2014a_fig24 = [&R] (Dongbeititan_dongi,((Liubangosaurus_hei,((Gobititan_shenzhouensis,(Tangvayosaurus_hoffeti,Phuwiangosaurus_sirindhornae)),(Qiaowanlong_kangxii,(Euhelopus_zdanskyi,Erketu_ellisoni))))EUHELOPODIDAE,(Astrophocaudia_slaughteri,(Brontomerus_mcintoshi,((Sonorasaurus_thompsoni,Chubutisaurus_insignis),(Tastavinsaurus_sanzii,(Malarguesaurus_florenciae,(((Sauroposeidon_proteles,Paluxysaurus_jonesi),(Ligabuesaurus_leanzai,'“Cloverly titanosauriform”')),(Fukuititan_nipponensis,(Angolatitan_adamastor,((Wintonotitan_wattsi,Ruyangosaurus_giganteus),(Huanghetitan_liujiaxiaensis,('“Huanghetitan” ruyangensis',(Andesaurus_delgadoi,((Xianshanosaurus_shijiagouensis,Daxiatitan_binglingi),((Malawisaurus_dixeyi,(Rapetosaurus_krausei,Mongolosaurus_haplodon)),((Saltasaurus_loricatus,(Jiangshanosaurus_lixianensis,Alamosaurus_sanjuanensis)),(Dongyangosaurus_sinensis,(Opisthocoelicaudia_skarzynskii,Diamantinasaurus_matildae)))SALTASAURIDAE)LITHOSTROTIA))TITANOSAURIA)))))))))))))SOMPHOSPONDYLI;
+END;

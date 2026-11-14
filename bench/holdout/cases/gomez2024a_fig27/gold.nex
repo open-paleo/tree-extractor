@@ -1,0 +1,27 @@
+#NEXUS
+
+[ gomez2024a_fig27: Simplified sauropodomorph time tree (14 representative taxa, not the full analysis). Internal labels from the nine ringed node markers and Brachiosauridae; Brachiosauridae is printed on the Giraffatitan branch and labels a single tip, so it is not encoded. Topology read from the figure. 14 tips, fully resolved; 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=14;
+    TAXLABELS
+        Plateosaurus_engelhardti
+        Yizhousaurus_sunae
+        Aardonyx_celestae
+        Melanorosaurus_readi
+        Tazoudasaurus_naimi
+        Shunosaurus_lii
+        Bagualia_alba
+        Mamenchisaurus
+        Jobaria_tiguidensis
+        Nigersaurus_taqueti
+        Diplodocus
+        Camarasaurus
+        Giraffatitan_brancai
+        Rapetosaurus_krausei
+    ;
+END;
+
+BEGIN TREES;
+    TREE gomez2024a_fig27 = [&R] (Plateosaurus_engelhardti,(Yizhousaurus_sunae,(Aardonyx_celestae,(Melanorosaurus_readi,(Tazoudasaurus_naimi,(Shunosaurus_lii,(Bagualia_alba,(Mamenchisaurus,(Jobaria_tiguidensis,((Nigersaurus_taqueti,Diplodocus)Diplodocoidea,(Camarasaurus,(Giraffatitan_brancai,Rapetosaurus_krausei)Titanosauriformes)Macronaria)Neosauropoda)))Eusauropoda)Sauropoda))Sauropodiformes)))Sauropodomorpha;
+END;

@@ -1,0 +1,34 @@
+#NEXUS
+
+[ poust2020a_fig10: Dromaeosaurid time tree. Internal labels from the three nested boxes (Paraves, Dromaeosauridae, Microraptorinae). Mahakala sits inside the Dromaeosauridae box and is encoded inside the clade, as drawn. Polytomies: the six eudromaeosaurs on one vertical with a four-taxon clade, the four achillobator-group taxa, and four microraptorines with (Sinornithosaurus, Wulong). 21 tips, 3 polytomies (7, 4, 5 children); 3 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=21;
+    TAXLABELS
+        Bambiraptor
+        Saurornitholestes
+        Tsaagan
+        Adasaurus
+        Balaur
+        Velociraptor
+        Deinonychus
+        Achillobator
+        Utahraptor
+        Atrociraptor
+        Dromaeosaurus
+        Hesperonychus
+        Graciliraptor
+        Microraptor
+        Tianyuraptor
+        Sinornithosaurus
+        Wulong_bohaiensis
+        Shanag
+        Unenlagiinae
+        Mahakala
+        Troodontidae
+    ;
+END;
+
+BEGIN TREES;
+    TREE poust2020a_fig10 = [&R] ((((((Bambiraptor,(Saurornitholestes,Tsaagan,Adasaurus,Balaur,Velociraptor,Deinonychus,(Achillobator,Utahraptor,Atrociraptor,Dromaeosaurus))),(Hesperonychus,Graciliraptor,Microraptor,Tianyuraptor,(Sinornithosaurus,Wulong_bohaiensis))Microraptorinae),Shanag),Unenlagiinae),Mahakala)Dromaeosauridae,Troodontidae)Paraves;
+END;

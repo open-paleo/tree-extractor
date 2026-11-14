@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/gomez2024a_fig27.png",
+  "names": "names.txt",
+  "source": "Gomez, Carballido & Pol 2024, Journal of Systematic Palaeontology 22(1): 2400471, Fig. 27: simplified time-calibrated tree of representative sauropodomorphs with skull drawings; rectangular, root left, thick branches with red range bars, a geological time chart above, ringed node markers with clade names, leaders joining tips to drawings. Image: census figure (2045x2423 px).",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "the paper's matrix taxa (census list). The figure prints genus names only; each is exactly one matrix taxon, so tips take the matrix spelling (Plateosaurus becomes Plateosaurus engelhardti, though the caption cites P. trossingensis for the drawing; Mamenchisaurus, Camarasaurus and Diplodocus are genus-only in the matrix too)",
+  "gold": "gold.nex",
+  "gold_note": "Simplified sauropodomorph time tree (14 representative taxa, not the full analysis). Internal labels from the nine ringed node markers and Brachiosauridae; Brachiosauridae is printed on the Giraffatitan branch and labels a single tip, so it is not encoded. Topology read from the figure. 14 tips, fully resolved; 8 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

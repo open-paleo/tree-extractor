@@ -1,0 +1,18 @@
+{
+  "image": "../../../../../corpus/census/figures/xu2010c_fig9.png",
+  "names": "names.txt",
+  "source": "Xu et al. 2010, PLoS ONE 5(11): e13835, Fig. 9A: strict consensus of three MPTs from Makovicky's (2010) matrix with Zhuchengceratops added; rectangular, root left, tips right, Bremer support above and bootstrap below branches. Panel B (Xu et al.'s own matrix) is excluded. Image: census figure (1008x1076 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1008,
+    "y1": 603
+  },
+  "region_note": "panel A; panel B (the second tree) is excluded",
+  "license": "CC BY 4.0",
+  "attribution": "Xu, X.; Wang, K.; Zhao, X.; Sullivan, C.; Chen, S. (2010). A new leptoceratopsid (Ornithischia: Ceratopsia) from the Upper Cretaceous of Shandong, China and its implications for neoceratopsian evolution. PLoS ONE 5(11): e13835. https://doi.org/10.1371/journal.pone.0013835. Fig. 9A. CC BY 4.0.",
+  "names_note": "no matrix held; list = the printed tip names, with 'Graciliceratops' keeping its printed quotation marks",
+  "gold": "gold.nex",
+  "gold_note": "Ceratopsian strict consensus (Makovicky 2010 matrix + Zhuchengceratops). One polytomy at the crown: Udanoceratops + Leptoceratops + Zhuchengceratops. Numbers at nodes are Bremer support and bootstrap. 23 tips, 1 polytomies (3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

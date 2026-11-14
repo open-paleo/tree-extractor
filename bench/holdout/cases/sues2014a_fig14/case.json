@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/sues2014a_fig14.png",
+  "names": "names.txt",
+  "source": "Sues & Averianov 2014, Cretaceous Research 51: 225-240, Fig. 14A: strict consensus of 2,048 MPTs of Dromaeosauridae including Itemirus (Turner et al. 2012 matrix); slanted (diagonal) branches from a root at the left, tips right. Panel B, the second consensus, is excluded; only its leftmost branches show at the right edge. Image: census figure (1237x1937 px), a page render of a rotated placement.",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1138,
+    "y1": 1395
+  },
+  "region_note": "panel A; panel B shows only its leftmost branches at the right edge, and the caption text is below the trees",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names (binomials; 'Itemirus medullaris HT' keeps its printed 'HT' for holotype)",
+  "gold": "gold.nex",
+  "gold_note": "Dromaeosaurid strict consensus, drawn with diagonal branches. The ten-way polytomy at the base of Dromaeosauridae (eight microraptorines and Shanag as separate lines, plus the unenlagiine and eudromaeosaur stems) is read from the separate lines leaving one point. The census lists this figure as rectangular; it is slanted. 26 tips, 4 polytomies (10, 4, 4, 5 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/poropat2014a_fig24.png",
+  "names": "names.txt",
+  "source": "Poropat et al. 2014, Gondwana Research 27(3): 995-1033, Fig. 24: strict consensus of somphospondylans placing Diamantinasaurus; rectangular, root left, thick black branches, stem ticks with capitalised clade names (Somphospondyli, Euhelopodidae, Titanosauria, Lithostrotia, Saltasauridae). Image: census figure (910x1056 px).",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names, keeping the printed curly quotation marks on “Huanghetitan” ruyangensis and “Cloverly titanosauriform”",
+  "gold": "gold.nex",
+  "gold_note": "Somphospondylan cladogram, fully resolved. Internal labels from the five stem ticks, each given to the node its stem leads into (SOMPHOSPONDYLI, EUHELOPODIDAE, TITANOSAURIA, LITHOSTROTIA, SALTASAURIDAE, capitalised as printed). 36 tips, fully resolved; 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

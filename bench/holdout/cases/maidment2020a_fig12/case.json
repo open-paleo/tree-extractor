@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/maidment2020a_fig12.png",
+  "names": "names.txt",
+  "source": "Maidment et al. 2020, Gondwana Research 77: 82-97, Fig. 12: time-calibrated phylogeny of Thyreophora placing Adratiklit; rectangular, root left, tips right, thin branches with thick range bars, a geological time chart above, grey stage bands, Bremer/bootstrap values at nodes; Ankylosauria is a collapsed clade. Image: census figure (1418x1775 px).",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('Stegosaurus homheni' is printed on two lines; Ankylosauria is a collapsed clade drawn as a tip)",
+  "gold": "gold.nex",
+  "gold_note": "Thyreophoran time tree. Polytomies: Alcovasaurus + Tuojiangosaurus + Paranthodon (the stem enters at Tuojiangosaurus's row), and Jiangjunosaurus + Hesperosaurus + (Loricatosaurus, Stegosaurus). Numbers at nodes are support values. 23 tips, 2 polytomies (3, 3 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

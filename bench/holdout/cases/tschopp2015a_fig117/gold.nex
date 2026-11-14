@@ -1,0 +1,90 @@
+#NEXUS
+
+[ tschopp2015a_fig117: Diplodocid specimen-level tree (pruned strict consensus, implied weighting). Tip names are glyph outlines in the PDF, read from the figure in top-to-bottom order. Internal labels from the arrows and dot: Somphospondyli, Diplodocoidea, Flagellicaudata (dot), Diplodocidae, Diplodocinae (arrows into their nodes). 77 tips, 3 polytomies (3, 3, 7 children); 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=77;
+    TAXLABELS
+        Shunosaurus_lii
+        Spinophorosaurus_nigerensis
+        Omeisaurus
+        Mamenchisaurus
+        Cetiosauriscus_stewarti_nhmuk_r3078
+        Barosaurus_affinis_ypm_419
+        Jobaria_tiguidensis
+        Amphicoelias_latus_amnh_5765
+        Lourinhasaurus_alenquerensis_lectotype
+        Camarasaurus
+        Apatosaurus_grandis_ypm_1901
+        Turiasaurus_riodevensis
+        Losillasaurus_giganteus_type
+        SMA_0009
+        Giraffatitan_brancai
+        Brachiosaurus_altithorax
+        Apatosaurus_minimus_amnh_675
+        Ligabuesaurus_leanzai
+        Isisaurus_colberti
+        Haplocanthosaurus_priscus
+        Zapalasaurus_bonapartei
+        Cathartesaura_anaerobica
+        Limaysaurus_tessonei
+        Nigersaurus_taqueti
+        Demandasaurus_darwini
+        Dyslocosaurus_polyonychius_ac_663
+        Suuwassea_emilieae_ans_21122
+        Dystrophaeus_viaemalae_usnm_2364
+        Brachytrachelopan_mesai
+        Amargasaurus_cazaui
+        Dicraeosaurus_hansemanni
+        Atlantosaurus_immanis_ypm_1840
+        NSMT-PV_20375
+        AMNH_460
+        LACM_52844
+        Apatosaurus_louisae_type
+        Apatosaurus_laticollis_ypm_1861
+        CM_3378
+        Brontosaurus_excelsus_ypm_1980
+        Brontosaurus_amplus_ypm_1981
+        Amphicoelias_altus_amnh_5764
+        FMNH_p25112
+        Eobrontosaurus_yahnahpin_tate-001
+        Elosaurus_parvus_cm_566
+        UW_15556
+        Apatosaurus_ajax_ypm_1860
+        BYU_1252-18531
+        WDC-FS001A
+        SMA_0087
+        Tornieria_africana_holotype
+        MBR_skeleton_k
+        Dinheirosaurus_lourinhanensis
+        Australodocus_bohetii_type
+        Supersaurus_vivianae_byu
+        WDC_dmj-021
+        Leinkupal_laticauda_mmch-pv_63-1
+        AMNH_969
+        USNM_2673
+        SMA_0011
+        Galeamopus_hayi_hmns_175
+        ML_418
+        Diplodocus_carnegii_cm_84
+        Diplodocus_carnegii_cm_94
+        AMNH_223
+        Seismosaurus_hallorum_nmmnh_3690
+        DMNS_1494
+        USNM_10865
+        CM_3452
+        Barosaurus_lentus_ypm_429
+        AMNH_6341
+        AMNH_7535
+        CM_11255
+        CM_11984
+        SMA_o25-8
+        Kaatedocus_siberi_sma_0004
+        AMNH_7530
+        SMA_d16-3
+    ;
+END;
+
+BEGIN TREES;
+    TREE tschopp2015a_fig117 = [&R] (Shunosaurus_lii,(Spinophorosaurus_nigerensis,(Omeisaurus,(Mamenchisaurus,((Cetiosauriscus_stewarti_nhmuk_r3078,Barosaurus_affinis_ypm_419),(Jobaria_tiguidensis,((Amphicoelias_latus_amnh_5765,(Lourinhasaurus_alenquerensis_lectotype,((Camarasaurus,Apatosaurus_grandis_ypm_1901),(Turiasaurus_riodevensis,Losillasaurus_giganteus_type)))),(SMA_0009,(((Giraffatitan_brancai,Brachiosaurus_altithorax),(Apatosaurus_minimus_amnh_675,Ligabuesaurus_leanzai,Isisaurus_colberti))Somphospondyli,(Haplocanthosaurus_priscus,((Zapalasaurus_bonapartei,((Cathartesaura_anaerobica,Limaysaurus_tessonei),(Nigersaurus_taqueti,Demandasaurus_darwini))),((Dyslocosaurus_polyonychius_ac_663,((Suuwassea_emilieae_ans_21122,Dystrophaeus_viaemalae_usnm_2364),(Brachytrachelopan_mesai,(Amargasaurus_cazaui,Dicraeosaurus_hansemanni)))),(((Atlantosaurus_immanis_ypm_1840,NSMT-PV_20375),(AMNH_460,((LACM_52844,(Apatosaurus_louisae_type,Apatosaurus_laticollis_ypm_1861,CM_3378)),((Brontosaurus_excelsus_ypm_1980,Brontosaurus_amplus_ypm_1981),(Amphicoelias_altus_amnh_5764,(FMNH_p25112,(Eobrontosaurus_yahnahpin_tate-001,(Elosaurus_parvus_cm_566,(UW_15556,(Apatosaurus_ajax_ypm_1860,BYU_1252-18531)))))))))),((WDC-FS001A,SMA_0087),((Tornieria_africana_holotype,MBR_skeleton_k),((Dinheirosaurus_lourinhanensis,(Australodocus_bohetii_type,(Supersaurus_vivianae_byu,WDC_dmj-021))),(Leinkupal_laticauda_mmch-pv_63-1,((AMNH_969,(USNM_2673,(SMA_0011,(Galeamopus_hayi_hmns_175,ML_418)))),(((Diplodocus_carnegii_cm_84,Diplodocus_carnegii_cm_94),(AMNH_223,(Seismosaurus_hallorum_nmmnh_3690,(DMNS_1494,USNM_10865)))),(CM_3452,(Barosaurus_lentus_ypm_429,AMNH_6341,AMNH_7535,CM_11255,CM_11984,SMA_o25-8,(Kaatedocus_siberi_sma_0004,(AMNH_7530,SMA_d16-3))))))))))Diplodocinae)Diplodocidae)Flagellicaudata))Diplodocoidea)))))))));
+END;

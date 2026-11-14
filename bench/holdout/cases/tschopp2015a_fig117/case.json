@@ -1,0 +1,11 @@
+{
+  "image": "../../../../../corpus/census/figures/tschopp2015a_fig117.png",
+  "names": "names.txt",
+  "source": "Tschopp, Mateus & Benson 2015, PeerJ 3: e857, Fig. 117: pruned strict consensus by implied weighting of a specimen-level analysis of Diplodocidae; rectangular, root left, tips right (some in red), arrows and a dot with clade names joined by leaders. Image: census figure (2286x2506 px), rendered from the PDF's vector figure.",
+  "license": "CC BY 4.0",
+  "attribution": "Tschopp, E.; Mateus, O.; Benson, R. B. J. (2015). A specimen-level phylogenetic analysis and taxonomic revision of Diplodocidae (Dinosauria, Sauropoda). PeerJ 3: e857. https://doi.org/10.7717/peerj.857. Fig. 117. CC BY 4.0.",
+  "names_note": "the paper's OTUs (census list, lower-cased specimen numbers as the census has them). Every printed tip maps to one OTU; tips take the list spelling. Where the figure differs from the list: 'Camarasaurus grandis YPM 1901' = 'Apatosaurus grandis ypm 1901', 'Brachiosaurus sp. SMA 0009' = 'SMA 0009', 'MB.R. skeleton k' = 'MBR skeleton k', 'Seismosaurus halli NMMNH 3690' = 'Seismosaurus hallorum nmmnh 3690', 'Supersaurus vivianae BYU+' = 'Supersaurus vivianae byu', 'Dinheirosaurus lourinhanensis ML 414' = 'Dinheirosaurus lourinhanensis', and the „quoted“ genera drop their quotes. The four OTUs the caption says were pruned are in the list but not the tree",
+  "gold": "gold.nex",
+  "gold_note": "Diplodocid specimen-level tree (pruned strict consensus, implied weighting). Tip names are glyph outlines in the PDF, read from the figure in top-to-bottom order. Internal labels from the arrows and dot: Somphospondyli, Diplodocoidea, Flagellicaudata (dot), Diplodocidae, Diplodocinae (arrows into their nodes). 77 tips, 3 polytomies (3, 3, 7 children); 5 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only.",
+  "gold_method": "pdf-vector"
+}

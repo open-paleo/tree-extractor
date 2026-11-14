@@ -1,0 +1,39 @@
+#NEXUS
+
+[ sues2014a_fig14: Dromaeosaurid strict consensus, drawn with diagonal branches. The ten-way polytomy at the base of Dromaeosauridae (eight microraptorines and Shanag as separate lines, plus the unenlagiine and eudromaeosaur stems) is read from the separate lines leaving one point. The census lists this figure as rectangular; it is slanted. 26 tips, 4 polytomies (10, 4, 4, 5 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=26;
+    TAXLABELS
+        Mahakala_omnogovae
+        Tianyuraptor_ostromi
+        Sinornithosaurus_millenii
+        Microraptor_zhaoianus
+        Graciliraptor_lujiatunensis
+        Hesperonychus_elizabethae
+        Pyroraptor_olympius
+        Neuquenraptor_argentinus
+        Shanag_ashile
+        Rahonavis_ostromi
+        Buitraptor_gonzalozorum
+        Austroraptor_cabazai
+        Unenlagia_comahuensis
+        Unenlagia_paynemili
+        Bambiraptor_feinbergorum
+        Saurornitholestes_langstoni
+        Deinonychus_antirrhopus
+        Velociraptor_mongoliensis
+        Balaur_bondoc
+        Adasaurus_mongoliensis
+        Tsaagan_mangas
+        Dromaeosaurus_albertensis
+        Atrociraptor_marshalli
+        Utahraptor_ostrommaysorum
+        Achillobator_giganticus
+        Itemirus_medullaris_HT
+    ;
+END;
+
+BEGIN TREES;
+    TREE sues2014a_fig14 = [&R] (Mahakala_omnogovae,(Tianyuraptor_ostromi,Sinornithosaurus_millenii,Microraptor_zhaoianus,Graciliraptor_lujiatunensis,Hesperonychus_elizabethae,Pyroraptor_olympius,Neuquenraptor_argentinus,Shanag_ashile,(Rahonavis_ostromi,(Buitraptor_gonzalozorum,Austroraptor_cabazai,Unenlagia_comahuensis,Unenlagia_paynemili)),(Bambiraptor_feinbergorum,(Saurornitholestes_langstoni,((Deinonychus_antirrhopus,Velociraptor_mongoliensis,Balaur_bondoc,Adasaurus_mongoliensis),(Tsaagan_mangas,(Dromaeosaurus_albertensis,Atrociraptor_marshalli,Utahraptor_ostrommaysorum,Achillobator_giganticus,Itemirus_medullaris_HT)))))));
+END;

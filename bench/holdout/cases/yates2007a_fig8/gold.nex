@@ -1,0 +1,57 @@
+#NEXUS
+
+[ yates2007a_fig8: Early saurischian strict consensus. Internal labels from node dots (Dinosauria, Eusaurischia, Plateosauria, Anchisauria, Herrerasauridae) and stem arrows, each given to the node the arrow points into (Saurischia, Theropoda, Sauropodomorpha, Plateosauridae, Massopoda tax. nov., Riojasauridae tax. nov., Massospondylidae, Sauropoda, Eusauropoda). Node lines from Eoraptor down were listed from the image pixels and checked against the figure; the top five tips, cut off by the arrowheads, were read by eye. 44 tips, 4 polytomies (3, 3, 4, 4 children); 14 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=44;
+    TAXLABELS
+        Outgroup
+        Silesaurus
+        Ornithischia
+        Herrerasaurus
+        Staurikosaurus
+        Eoraptor
+        Agnosphitys
+        Guaibasaurus
+        Chindesaurus
+        Neotheropoda
+        Saturnalia
+        T._antiquus
+        T._caducus
+        Efraasia
+        Plateosauravus
+        Ruehleia
+        Unaysaurus
+        P._gracilis
+        P._engelhardti
+        P._ingens
+        Eucnemesaurus
+        Riojasaurus
+        Massospondylus
+        Coloradisaurus
+        Lufengosaurus
+        Jingshanosaurus
+        Anchisaurus
+        Yunnanosaurus
+        Melanorosaurus
+        Blikanasaurus
+        Antetonitrus
+        Lessemsaurus
+        Camelotia
+        Gongxianosaurus
+        Isanosaurus
+        Vulcanodon
+        Tazoudasaurus
+        Shunosaurus
+        Barapasaurus
+        Patagosaurus
+        Omeisaurus
+        Mamenchisaurus
+        Cetiosaurus
+        Neosauropoda
+    ;
+END;
+
+BEGIN TREES;
+    TREE yates2007a_fig8 = [&R] (Outgroup,(Silesaurus,(Ornithischia,((Herrerasaurus,Staurikosaurus)Herrerasauridae,(Eoraptor,((Agnosphitys,(Guaibasaurus,(Chindesaurus,Neotheropoda)))Theropoda,(Saturnalia,(T._antiquus,T._caducus,(Efraasia,(Plateosauravus,(Ruehleia,((Unaysaurus,(P._gracilis,(P._engelhardti,P._ingens)))Plateosauridae,((Eucnemesaurus,Riojasaurus)Riojasauridae_tax._nov.,((Massospondylus,(Coloradisaurus,Lufengosaurus))Massospondylidae,(Jingshanosaurus,(Anchisaurus,(Yunnanosaurus,(Melanorosaurus,(Blikanasaurus,(Antetonitrus,Lessemsaurus),(Camelotia,(Gongxianosaurus,(Isanosaurus,Vulcanodon,Tazoudasaurus,(Shunosaurus,(Barapasaurus,Patagosaurus),(Omeisaurus,Mamenchisaurus),(Cetiosaurus,Neosauropoda))Eusauropoda))))Sauropoda)))Anchisauria)))Massopoda_tax._nov.)Plateosauria)))))Sauropodomorpha)Eusaurischia))Saurischia)Dinosauria));
+END;

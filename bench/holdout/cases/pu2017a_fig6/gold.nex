@@ -1,0 +1,50 @@
+#NEXUS
+
+[ pu2017a_fig6: Oviraptorosaur strict consensus. Read from a 250 dpi render of the PDF page, since the census image cuts off the lower-right tips; a tool that reads only the census image cannot recover those seven. Internal labels from the four curved leaders (Oviraptorosauria, Caenagnathidae, Caenagnathoidea, Oviraptoridae), each given to the node it points at. The census marks this figure as inverted on extraction and its labels as not in the raster. 37 tips, 2 polytomies (9, 3 children); 4 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=37;
+    TAXLABELS
+        Herrerasaurus_ischigualastensis
+        Velociraptor_mongoliensis
+        Archaeopteryx_lithographica
+        Incisivosaurus_gauthieri
+        Caudipteryx_dongi
+        Caudipteryx_zoui
+        Aviminus_portentosus
+        Microvenator_celer
+        Beibeilong_sinensis
+        Gigantoraptor_erlianensis
+        Epichirostenotes_aurrier
+        Anzu_wyliei
+        Hagryphus_giganteus
+        Chirostenotes_pergracilis
+        Apatoraptor_pennatus
+        Elmisaurus_rarus
+        Leptorhynchos_elegans
+        Caenagnathus_collinsi
+        Caenagnathasia_martinsoni
+        Nankangia_jiangxiensis
+        Ganzhousaurua_nankangensis
+        Yulong_mini
+        Nomingia_gobiensis
+        Oviraptor_philoceratops
+        Rinchenia_mongoliensis
+        Zamyn_Khondt_oviraptorid
+        Citipati_osmolskae
+        Wulatelong_gobiensis
+        Banji_long
+        Shixinggia_oblita
+        Khaan_mckennai
+        Conchoraptor_gracilis
+        Machairasaurus_leptonychus
+        Jiangxisaurus_ganzhouensis
+        Nemegtomaia_barsboldi
+        Ingenia_yanshini
+        Heyuannia_huangi
+    ;
+END;
+
+BEGIN TREES;
+    TREE pu2017a_fig6 = [&R] (Herrerasaurus_ischigualastensis,(Velociraptor_mongoliensis,(Archaeopteryx_lithographica,(Incisivosaurus_gauthieri,((Caudipteryx_dongi,Caudipteryx_zoui),(Aviminus_portentosus,((Microvenator_celer,(Beibeilong_sinensis,(Gigantoraptor_erlianensis,(Epichirostenotes_aurrier,Anzu_wyliei,Hagryphus_giganteus,Chirostenotes_pergracilis,Apatoraptor_pennatus,Elmisaurus_rarus,Leptorhynchos_elegans,Caenagnathus_collinsi,Caenagnathasia_martinsoni))))Caenagnathidae,(Nankangia_jiangxiensis,(Ganzhousaurua_nankangensis,((Yulong_mini,Nomingia_gobiensis),(Oviraptor_philoceratops,(Rinchenia_mongoliensis,(Zamyn_Khondt_oviraptorid,Citipati_osmolskae)),((Wulatelong_gobiensis,Banji_long),(Shixinggia_oblita,(Khaan_mckennai,(Conchoraptor_gracilis,(Machairasaurus_leptonychus,(Jiangxisaurus_ganzhouensis,(Nemegtomaia_barsboldi,(Ingenia_yanshini,Heyuannia_huangi))))))))))))Oviraptoridae)Caenagnathoidea)))Oviraptorosauria)));
+END;

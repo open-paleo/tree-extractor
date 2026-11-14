@@ -1,0 +1,25 @@
+#NEXUS
+
+[ serrano-brañas2016a_fig11: Ornithomimosaur strict consensus. One polytomy: Struthiomimus, Ornithomimus, Sinornithomimus, Tototlmimus and (Gallimimus, Anserimimus) on one vertical, as the caption says. Character numbers and state boxes along the branches are not encoded. 12 tips, 1 polytomies (5 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=12;
+    TAXLABELS
+        Allosaurus
+        Tyrannosaurids
+        Pelecanimimus
+        Harpymimus
+        Garudimimus
+        Archaeornithomimus
+        Struthiomimus
+        Ornithomimus
+        Sinornithomimus
+        Tototlmimus
+        Gallimimus
+        Anserimimus
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'serrano-brañas2016a_fig11' = [&R] (Allosaurus,(Tyrannosaurids,(Pelecanimimus,(Harpymimus,(Garudimimus,(Archaeornithomimus,(Struthiomimus,Ornithomimus,Sinornithomimus,Tototlmimus,(Gallimimus,Anserimimus))))))));
+END;

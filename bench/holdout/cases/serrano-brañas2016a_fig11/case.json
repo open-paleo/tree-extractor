@@ -1,0 +1,17 @@
+{
+  "image": "../../../../../corpus/census/figures/serrano-brañas2016a_fig11.png",
+  "names": "names.txt",
+  "source": "Serrano-Brañas et al. 2016, Cretaceous Research 58: 49-62, Fig. 11a: strict consensus of ornithomimosaurs placing Tototlmimus (TNT); rectangular, root left, tips right, character-state boxes and circles with numbers along branches. Panels b and c (two of the most parsimonious trees) are excluded. Image: census figure (1707x2237 px).",
+  "region": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 1707,
+    "y1": 761
+  },
+  "region_note": "panel a; panels b and c are separate trees below",
+  "license": "not open (Elsevier, all rights reserved)",
+  "names_note": "no matrix held; list = the printed tip names ('Tyrannosaurids' is a collapsed clade)",
+  "gold": "gold.nex",
+  "gold_note": "Ornithomimosaur strict consensus. One polytomy: Struthiomimus, Ornithomimus, Sinornithomimus, Tototlmimus and (Gallimimus, Anserimimus) on one vertical, as the caption says. Character numbers and state boxes along the branches are not encoded. 12 tips, 1 polytomies (5 children). Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only.",
+  "gold_method": "image-transcription"
+}

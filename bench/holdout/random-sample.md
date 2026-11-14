@@ -76,3 +76,89 @@ Open licence: `yes` = CC BY (images may be promoted with attribution); `NC` = a 
 - **Topology only;** support values, node numbers, dots and bars are not encoded.
 - **Uncertain reading:** `ji1998a_fig9`'s root is a trichotomy as read; the other reading is (Velociraptorinae, Protarchaeopteryx). Its gold note explains why.
 - **Regions:** `arbour2015a_fig1` (the largest of five trees) and `lockwood2021a_fig23` (panel A of three) carry a `region`.
+
+# Random gold sample 2 (2026-11-14)
+
+Eighty further census figures drawn at random, for tallying lost tips and splits by cause across many figures. Delivered in four batches of twenty.
+
+## How the sample was drawn
+
+- **Population:** the census rows with `is_tree: true`, minus every figure that already had a case in `bench/cases/` or `bench/holdout/cases/` when drawn (ids compared with accents folded): 132 rows, 129 of them in the six layout strata (the circular and root-right trees are not in any stratum).
+- **Strata:** layout (rectangular, slanted, vertical) by time axis, as in sample 1. Here the 80 were allocated in proportion to the pools (largest remainder): rectangular 16 + 46, slanted 0 + 9, vertical 6 + 3 (with + without time axis). The slanted-with-time-axis pool was empty.
+- **Draw:** `random.Random(20261114)`; for each stratum in the order above, `rng.sample` of the stratum's rows sorted by id. The 80 were then shuffled with `random.Random(20261114 + 1000)` into four batches, so each batch spans the strata.
+- **Skip rule:** as in sample 1: a figure whose topology cannot be decided is skipped, its reason recorded here, and replaced from its stratum's remaining pool by a draw with seed 20261114 + k.
+- **Gold method:** each case.json has `gold_method`: `image-transcription` (read from the figure image, by eye from 1-2x crops or from a listing of node lines taken from the pixels) or `pdf-vector` (read from the PDF's own vector branch lines, with tip names read from the figure).
+
+The script, as run:
+
+```python
+"""Random gold sample 2, 2026-11-14: 80 further census trees, stratified by layout and time axis."""
+import json, random, unicodedata, collections
+from pathlib import Path
+CENSUS = Path.home() / "GitHub/open-paleo/corpus/census/manifest.json"
+TE = Path.home() / "GitHub/open-paleo/tree-extractor/bench"
+SEED = 20261114
+N = 80
+fold = lambda s: unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+have = {fold(p.name) for d in (TE / "cases", TE / "holdout/cases") for p in d.iterdir() if p.is_dir()}
+rows = [r for r in json.loads(CENSUS.read_text()) if r.get("is_tree") and fold(r["id"]) not in have]
+strata = collections.defaultdict(list)
+for r in rows:
+    if r["layout"] in ("rectangular", "slanted", "vertical"):
+        strata[(r["layout"], "time_axis" in r["flags"])].append(r)
+total = sum(len(v) for v in strata.values())
+# allocate N proportionally (largest remainder), each stratum capped at its pool
+alloc = {k: N * len(v) / total for k, v in strata.items()}
+plan = {k: int(a) for k, a in alloc.items()}
+for k in sorted(alloc, key=lambda k: alloc[k] - plan[k], reverse=True)[: N - sum(plan.values())]: plan[k] += 1
+rng = random.Random(SEED)
+order = [("rectangular", True), ("rectangular", False), ("slanted", True), ("slanted", False), ("vertical", True), ("vertical", False)]
+picks = []
+for k in order:
+    pool = sorted(strata.get(k, []), key=lambda r: r["id"])
+    n = min(plan.get(k, 0), len(pool))
+    pick = rng.sample(pool, n) if n else []
+    print(f"{k[0]:12} time={k[1]!s:5} pool={len(pool):3} drawn={n:2}  " + " ".join(r["id"] for r in pick))
+    picks += [(k, r["id"]) for r in pick]
+print("population", len(rows), "in strata", total, "drawn", len(picks))
+# batch order: interleave strata so each batch of 20 spans them
+rng2 = random.Random(SEED + 1000); batch_order = [p[1] for p in picks]; rng2.shuffle(batch_order)
+json.dump({"picks": picks, "batch_order": batch_order}, open(Path(__file__).with_name("draw.json"), "w"), ensure_ascii=False)
+for i in range(0, len(batch_order), 20): print(f"batch {i//20+1}:", " ".join(batch_order[i:i+20]))
+def replace(k, exclude, j):
+    pool = sorted((r for r in strata[k] if r["id"] not in exclude), key=lambda r: r["id"])
+    return random.Random(SEED + j).choice(pool)["id"]
+```
+
+## Batch 1 (20 cases, no skips)
+
+| Case | Layout | Time axis | Tips | Polytomies (children) | Clade labels | names.txt | Gold method | Open licence |
+|---|---|---|---:|---|---:|---|---|---|
+| xu2010c_fig9 | rectangular | no | 23 | 3 | - | printed | image-transcription | yes |
+| han2024a_fig7 | rectangular | yes | 68 | 3, 3, 5, 3, 3 | - | matrix | pdf-vector | no |
+| carpenter2018b_fig3 | vertical | no | 8 | - | 6 | printed | image-transcription | ? |
+| manitkoon2023a_fig19 | rectangular | no | 74 | 3, 3, 3, 6, 3, 10, 6, 4 | 9 | printed | image-transcription | yes |
+| ramírez-velasco2021a_fig19 | rectangular | yes | 92 | 4, 5, 5, 9, 4, 4, 3, 4, 3 | 13 | printed | image-transcription | no |
+| maidment2020a_fig12 | rectangular | yes | 23 | 3, 3 | - | printed | image-transcription | no |
+| yates2007a_fig8 | rectangular | no | 44 | 3, 3, 4, 4 | 14 | printed | image-transcription | no |
+| poust2020a_fig10 | rectangular | yes | 21 | 7, 4, 5 | 3 | printed | image-transcription | no |
+| funston2026a_fig4 | vertical | yes | 19 | - | 1 | printed | image-transcription | yes |
+| sues2014a_fig14 | rectangular | no | 26 | 10, 4, 4, 5 | - | printed | image-transcription | no |
+| turner2007b_fig5 | rectangular | no | 58 | 3, 3, 3, 8, 3, 11 | 1 | printed | image-transcription | ? |
+| serrano-brañas2016a_fig11 | rectangular | no | 12 | 5 | - | printed | image-transcription | no |
+| gomez2024a_fig27 | rectangular | yes | 14 | - | 8 | matrix | image-transcription | no |
+| cerroni2022a_fig15 | rectangular | no | 42 | 35 | 3 | matrix | image-transcription | no |
+| poropat2014a_fig24 | rectangular | no | 36 | - | 5 | printed | image-transcription | no |
+| tschopp2015a_fig117 | rectangular | no | 77 | 3, 3, 7 | 5 | matrix | pdf-vector | yes |
+| d'emic2012b_fig3 | slanted | no | 7 | - | - | printed | image-transcription | no |
+| pu2017a_fig6 | rectangular | no | 37 | 9, 3 | 4 | printed | image-transcription | yes |
+| prieto-márquez2012d_fig13 | rectangular | no | 70 | 3, 3, 4, 3, 3, 8, 10, 3, 4, 5 | 6 | printed | image-transcription | no |
+| czepiński2023a_fig6 | rectangular | no | 16 | 3, 3 | 3 | printed | image-transcription | yes |
+
+Notes on batch 1:
+
+- `pu2017a_fig6`: the census image is cropped at the right and cuts off seven tips; the gold was read from a page render and has all 37 (the caption's taxon count). Its case.json carries an `image_note`.
+- `sues2014a_fig14` is listed as rectangular in the census but is drawn with diagonal branches.
+- `prieto-márquez2012d_fig13` prints *Microraptor gui* twice; the lower one is `Microraptor_gui_2`.
+- `gomez2024a_fig27`, `cerroni2022a_fig15`, `han2024a_fig7` and `tschopp2015a_fig117` have matrix lists; their tips take the list spelling, with every mapping in `names_note`.
+- `ramírez-velasco2021a_fig19` and `turner2007b_fig5`: parts of the pixel listing failed (dotted leaders and markers; a box frame) and those parts were read by eye, as each gold_note says.

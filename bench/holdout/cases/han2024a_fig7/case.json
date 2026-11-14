@@ -1,0 +1,10 @@
+{
+  "image": "../../../../../corpus/census/figures/han2024a_fig7.png",
+  "names": "names.txt",
+  "source": "Han et al. 2024, Journal of Systematic Palaeontology 22(1): 2293038, Fig. 7: time-calibrated reduced consensus tree of Somphospondyli (equal weights); rectangular, root left, tips right, thick stratigraphic range bars on thin branches, a stage chart below, grey stage bands, node dots and arrows with clade names (Macronaria, Titanosauriformes, Brachiosauridae, Somphospondyli, Euhelopodidae, Titanosauria, Lithostrotia). Image: census figure (2070x2072 px), rendered from the PDF's vector figure.",
+  "license": "not open (Taylor & Francis, all rights reserved)",
+  "names_note": "the paper's matrix taxa (census list); every printed tip is a matrix taxon as printed. Tip names are glyph outlines in the PDF (not text), read from the figure in top-to-bottom order",
+  "gold": "gold.nex",
+  "gold_note": "Somphospondylan time tree (reduced consensus). Clade names are drawn beside node dots and arrows rather than at junctions and are not encoded. Thin (0.75 pt) lines are the tree; thick (1.5 pt) lines are range bars and were ignored. 68 tips, 5 polytomies (3, 3, 5, 3, 3 children). Random-sample case (seed 20261114). Topology read from the PDF's own vector branch lines (each edge a stroked path from child to parent junction) and checked against the figure; tip names read from the figure; topology only.",
+  "gold_method": "pdf-vector"
+}

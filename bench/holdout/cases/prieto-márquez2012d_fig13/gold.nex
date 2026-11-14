@@ -1,0 +1,83 @@
+#NEXUS
+
+[ prieto-márquez2012d_fig13: Coelurosaurian strict consensus. 'Microraptor gui' is printed twice (in the microraptorine trio and beside Velociraptor + Deinonychus); the gold names the lower one Microraptor_gui_2, since Newick names cannot repeat. 'Microraptor celer' among the oviraptorosaurs is printed as such (the paper's name for Microvenator celer). AVIALAE is printed beside its dot and kept with the node dots (COELUROSAURIA, MANIRAPTORA, PARAVES, DEINONYCHOSAURIA, TROODONTIDAE) as internal labels. 70 tips, 10 polytomies (3, 3, 4, 3, 3, 8, 10, 3, 4, 5 children); 6 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=70;
+    TAXLABELS
+        Sinraptor_dongi
+        Allosaurus_fragilis
+        Daspletosaurus_torosus
+        Albertosaurus_libratus
+        Tyrannosaurus_rex
+        Coelurus_fragilis
+        Dilong_paradoxus
+        Compsognathus_longipes
+        Sinosauropteryx_prima
+        Huaxiagnathus_orientalis
+        Ornitholestes_hermanni
+        Pelecanimimus_polydon
+        Archaeornithomimus_asiaticus
+        Shenzhousaurus_orientalis
+        Harpymimus_okladnikovi
+        Garudimimus_brevipes
+        Gallimimus_bullatus
+        Struthiomimus_altus
+        Anserimimus_planinychus
+        Ornithomimus_edmonticus
+        Alvarezsaurus_calvoi
+        Patagonykus_puertai
+        Shuvuuia_deserti
+        Mononykus_olecranus
+        Alxasaurus_elesitaiensis
+        Erlikosaurus_andrewsi
+        Segnosaurus_galbinensis
+        Incisivosaurus_gauthieri
+        Caudipteryx_zoui
+        Avimimus_portentosus
+        Chirostenotes_pergracilis
+        Microraptor_celer
+        Conchoraptor_gracilis
+        Oviraptor_philoceratops
+        Oviraptor_mongoliensis
+        Citipati_osmolskae
+        Ingenia_yanshani
+        Archaeopteryx_lithographica
+        Jeholornis_prima
+        Sapeornis_chaoyangensis
+        Confuciusornis_sanctus
+        Apsaravis_ukhaana
+        Yixianornis_grabaui
+        'Öösh deinonychosaur (RCSP-2)'
+        Shanag_ashile
+        Unenlagia_comahuensis
+        Buitreraptor_gonzalezorum
+        Rahonavis_ostromi
+        Sinornithosaurus_milleni
+        Mahakala_omnogovae
+        Graciliraptor_lujiatunensis
+        Microraptor_gui
+        Microraptor_zhaoianus
+        Tsaagan_mangas
+        Microraptor_gui_2
+        Velociraptor_mongoliensis
+        Deinonychus_antirrhopus
+        Achillobator_giganticus
+        Adasaurus_mongoliensis
+        Utahraptor_ostrommaysorum
+        Dromaeosaurus_albertensis
+        'EK troodontid (IGM 100/44)'
+        Mei_long
+        Sinovenator_changii
+        Jinfengopteryx
+        Sinornithoides_youngi
+        Byronosaurus_jaffei
+        Troodon_formosus
+        Saurornithoides_junior
+        Saurornithoides_mongoliensis
+    ;
+END;
+
+BEGIN TREES;
+    TREE 'prieto-márquez2012d_fig13' = [&R] (Sinraptor_dongi,(Allosaurus_fragilis,((Daspletosaurus_torosus,(Albertosaurus_libratus,Tyrannosaurus_rex)),(Coelurus_fragilis,(Dilong_paradoxus,((Compsognathus_longipes,Sinosauropteryx_prima,Huaxiagnathus_orientalis),(Ornitholestes_hermanni,(Pelecanimimus_polydon,(Archaeornithomimus_asiaticus,Shenzhousaurus_orientalis,Harpymimus_okladnikovi,(Garudimimus_brevipes,(Gallimimus_bullatus,Struthiomimus_altus,(Anserimimus_planinychus,Ornithomimus_edmonticus))))),(((Alvarezsaurus_calvoi,(Patagonykus_puertai,(Shuvuuia_deserti,Mononykus_olecranus))),((Alxasaurus_elesitaiensis,Erlikosaurus_andrewsi,Segnosaurus_galbinensis),(Incisivosaurus_gauthieri,(Caudipteryx_zoui,(Avimimus_portentosus,Chirostenotes_pergracilis,Microraptor_celer,Conchoraptor_gracilis,Oviraptor_philoceratops,Oviraptor_mongoliensis,Citipati_osmolskae,Ingenia_yanshani))))),(((Archaeopteryx_lithographica,Jeholornis_prima),(Sapeornis_chaoyangensis,(Confuciusornis_sanctus,(Apsaravis_ukhaana,Yixianornis_grabaui))))AVIALAE,('Öösh deinonychosaur (RCSP-2)',Shanag_ashile,Unenlagia_comahuensis,Buitreraptor_gonzalezorum,Rahonavis_ostromi,Sinornithosaurus_milleni,Mahakala_omnogovae,(Graciliraptor_lujiatunensis,Microraptor_gui,Microraptor_zhaoianus),((Tsaagan_mangas,(Microraptor_gui_2,(Velociraptor_mongoliensis,Deinonychus_antirrhopus))),(Achillobator_giganticus,Adasaurus_mongoliensis,Utahraptor_ostrommaysorum,Dromaeosaurus_albertensis)),('EK troodontid (IGM 100/44)',Mei_long,Sinovenator_changii,Jinfengopteryx,(Sinornithoides_youngi,(Byronosaurus_jaffei,(Troodon_formosus,(Saurornithoides_junior,Saurornithoides_mongoliensis)))))TROODONTIDAE)DEINONYCHOSAURIA)PARAVES))MANIRAPTORA))))COELUROSAURIA));
+END;

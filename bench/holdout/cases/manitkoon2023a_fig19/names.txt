@@ -1,0 +1,74 @@
+Marasuchus
+Silesaurus
+Asilisaurus
+Tawa
+Sanjuansaurus
+Herrerasaurus
+Pisanosaurus
+Eocursor
+Echinodon
+Abrictosaurus
+Fruitadens
+Manidens
+Tianyulong
+Pegomastax
+Heterodontosaurus
+Lycorhinus
+Scutellosaurus
+Scelidosaurus
+Emausaurus
+Lesothosaurus
+Agilisaurus
+Hexinlusaurus
+Yandusaurus
+Kulindadromeus
+Minimocursor gen.nov.
+Jeholosaurus
+Yueosaurus
+Nanosaurus
+Parksosaurus
+Th. neglectus
+Th. assiniboiensis
+Th. garbanii
+Changchunsaurus
+Haya
+Zephyrosaurus
+Orodromeus
+Albertadromeus
+Kaiparowits orodr.
+Oryctodromeus
+Koreanosaurus
+Hypsilophodon
+Stenopelix
+Micropachycephalosaurus
+Archaeoceratops
+Wannanosaurus
+Lioceratops
+Yinlong
+Gideonmantellia
+Atlascopcosaurus
+Talenkauen
+Macrogryphosaurus
+Qantassaurus
+Anabisetia
+Gasparinisaura
+Trinisaura
+Morrosaurus
+Burianosaurus
+Te. dossi
+Te. tilletti
+Eousdryosaurus
+Elrhazosaurus
+Dysalotosaurus
+Dryosaurus
+Callovosaurus
+Valdosaurus
+Camptosaurus
+Iguanodon
+Ouranosaurus
+Muttaburrasaurus
+R. priscus
+Z. robustus
+Z. shqiperorum
+M. suessi
+M. vorosi

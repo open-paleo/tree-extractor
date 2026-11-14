@@ -1,0 +1,87 @@
+#NEXUS
+
+[ manitkoon2023a_fig19: Early ornithischian strict consensus. Internal labels from the four node dots (Ornithischia, Genasauria, Neornithischia, Cerapoda) and the five shaded boxes (Heterodontosauridae, Thyreophora, Thescelosauridae, Marginocephalia, Ornithopoda). Node lines were listed from the image pixels (our own reading, not tree-extractor output), the node dots replaced by the lines they join, and every polytomy checked against the figure at 2x. 74 tips, 8 polytomies (3, 3, 3, 6, 3, 10, 6, 4 children); 9 printed clade names kept as internal node labels. Random-sample case (seed 20261114). Topology transcribed from the figure image and checked node by node; topology only. ]
+
+BEGIN TAXA;
+    DIMENSIONS NTAX=74;
+    TAXLABELS
+        Marasuchus
+        Silesaurus
+        Asilisaurus
+        Tawa
+        Sanjuansaurus
+        Herrerasaurus
+        Pisanosaurus
+        Eocursor
+        Echinodon
+        Abrictosaurus
+        Fruitadens
+        Manidens
+        Tianyulong
+        Pegomastax
+        Heterodontosaurus
+        Lycorhinus
+        Scutellosaurus
+        Scelidosaurus
+        Emausaurus
+        Lesothosaurus
+        Agilisaurus
+        Hexinlusaurus
+        Yandusaurus
+        Kulindadromeus
+        Minimocursor_gen.nov.
+        Jeholosaurus
+        Yueosaurus
+        Nanosaurus
+        Parksosaurus
+        Th._neglectus
+        Th._assiniboiensis
+        Th._garbanii
+        Changchunsaurus
+        Haya
+        Zephyrosaurus
+        Orodromeus
+        Albertadromeus
+        Kaiparowits_orodr.
+        Oryctodromeus
+        Koreanosaurus
+        Hypsilophodon
+        Stenopelix
+        Micropachycephalosaurus
+        Archaeoceratops
+        Wannanosaurus
+        Lioceratops
+        Yinlong
+        Gideonmantellia
+        Atlascopcosaurus
+        Talenkauen
+        Macrogryphosaurus
+        Qantassaurus
+        Anabisetia
+        Gasparinisaura
+        Trinisaura
+        Morrosaurus
+        Burianosaurus
+        Te._dossi
+        Te._tilletti
+        Eousdryosaurus
+        Elrhazosaurus
+        Dysalotosaurus
+        Dryosaurus
+        Callovosaurus
+        Valdosaurus
+        Camptosaurus
+        Iguanodon
+        Ouranosaurus
+        Muttaburrasaurus
+        R._priscus
+        Z._robustus
+        Z._shqiperorum
+        M._suessi
+        M._vorosi
+    ;
+END;
+
+BEGIN TREES;
+    TREE manitkoon2023a_fig19 = [&R] (Marasuchus,((Silesaurus,Asilisaurus),((Tawa,(Sanjuansaurus,Herrerasaurus)),(Pisanosaurus,(Eocursor,(Echinodon,Abrictosaurus,(Fruitadens,(Manidens,(Tianyulong,(Pegomastax,(Heterodontosaurus,Lycorhinus)))))))Heterodontosauridae,((Scutellosaurus,(Scelidosaurus,Emausaurus))Thyreophora,(Lesothosaurus,(Agilisaurus,((Hexinlusaurus,Yandusaurus),(Kulindadromeus,(Minimocursor_gen.nov.,((Jeholosaurus,Yueosaurus),(Nanosaurus,(((Parksosaurus,(Th._neglectus,Th._assiniboiensis,Th._garbanii)),(Changchunsaurus,(Haya,Zephyrosaurus,Orodromeus,Albertadromeus,Kaiparowits_orodr.,(Oryctodromeus,Koreanosaurus))))Thescelosauridae,(Hypsilophodon,((Stenopelix,Micropachycephalosaurus,((Archaeoceratops,Wannanosaurus),(Lioceratops,Yinlong)))Marginocephalia,(Gideonmantellia,(Atlascopcosaurus,Talenkauen,Macrogryphosaurus,Qantassaurus,Anabisetia,Gasparinisaura,Trinisaura,Morrosaurus,Burianosaurus,(((Te._dossi,Te._tilletti),((Eousdryosaurus,Elrhazosaurus,Dysalotosaurus,Dryosaurus,Callovosaurus,Valdosaurus),(Camptosaurus,(Iguanodon,Ouranosaurus)))),(Muttaburrasaurus,(R._priscus,(Z._robustus,Z._shqiperorum,M._suessi,M._vorosi))))))Ornithopoda)Cerapoda)))))))))Neornithischia)Genasauria)Ornithischia)));
+END;
